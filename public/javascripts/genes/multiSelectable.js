@@ -4,6 +4,7 @@
  *
  * @author crispy
  */
+/** @DONE */
 
 module.exports = {
     /** Indicates a union multi-select operation */

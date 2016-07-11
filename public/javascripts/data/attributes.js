@@ -111,7 +111,7 @@ Attributes.prototype = {
      * @return the mapped attribute, or the default value if no mapped attribute
      */
     get : function(key, defaultValue) {
-        if (defaultValue !== "undefined") {
+        if (typeof defaultValue !== 'undefined') {
             var o = this.attrib[key];
             return (o === null ? defaultValue : o);
         }

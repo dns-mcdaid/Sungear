@@ -61,8 +61,9 @@ module.exports = {
 
         console.log(JSON.stringify(myTest));
         console.log(myTest.getFullCount());
-        myTest.cleanup();
+
         console.log(myTest);
+        myTest.cleanup();
     }
 
 };
