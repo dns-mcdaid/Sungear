@@ -5,6 +5,7 @@ var TreeSet = javascript.util.TreeSet;
 var DataSource = require('../data/dataSource');
 var ParseException = require('../data/parseException');
 var GeneEvent = require('./geneEvent');
+var MultiSelectable = require('./multiSelectable');
 
 /**
  * The central class for gene subset selection operations.
@@ -133,6 +134,135 @@ GeneList.prototype = {
      */
     getSelectedSet : function() {
         return this.selectionS;
+    },
+    /**
+     * Determines if a gene is in the current selection.
+     * @param g the gene to test
+     * @return true if selected, otherwise false
+     */
+    isSelected : function(g) {
+        return this.selectionS.contains(g);
+    },
+    /**
+     * Sets the current selected set.
+     * @param src the source of the selection change
+     * @param sel the new selection
+     * @param sendEvent true to generate a {@link GeneEvent} with selection, otherwise false
+     * @param addHist true to update browsing history, otherwise false
+     */
+    setSelection : function(src, sel, sendEvent, addHist) {
+        if (typeof sendEvent === 'undefined') {
+            sendEvent = true;
+            addHist = true;
+        }
+        this.selectionS = new SortedSet();
+        for (var i = 0; i < sel.length; i++) {
+            if (this.activeS.indexOf(sel[i]) > -1) {
+                this.selectionS.add(sel[i]);
+            }
+        }
+        if (addHist) {
+            this.hist.push(this.selectionS);
+        }
+        if (sendEvent) {
+            var e = new GeneEvent(this, src, GeneEvent.SELECT);
+            this.notifyGeneListeners(e);
+        }
+    },
+    /**
+     * Performs a Narrow operation: updates the active set by setting to all currently selected genes.
+     * @param src the object that generated the Narrow operation
+     */
+    narrow : function(src) {
+        this.setActive(src, this.selectionS);
+    },
+    /**
+     * Performs a Restart operation: returns all sets to their condition immediately after initial load.
+     * @param src the source of the Restart operation
+     */
+    restart : function(src) {
+        this.setActive(src, this.genesS, false);
+        var e = new GeneEvent(this, src, GeneEvent.RESTART);
+        this.notifyGeneListeners(e);
+        this.setMulti(false, src);
+    },
+    /**
+     * Sets the active gene set
+     * @param src object that generated the change to the active set
+     * @param s the new active set
+     * @param sendEvent true to generate a {@link GeneEvent} on set change, otherwise false
+     */
+    setActive : function(src, s, sendEvent) {
+        if (typeof sendEvent === 'undefined') {
+            sendEvent = true;
+        }
+        this.activeS = new SortedSet();
+        this.activeS.addAll(s);
+        this.hist = null;
+        this.hist = [];
+        this.setSelection(this, this.activeS, false, true);
+        if (sendEvent) {
+            var e = new GeneEvent(this, src, GeneEvent.NARROW);
+            this.notifyGeneListeners(e);
+            this.setMulti(false, src);
+        }
+    },
+    /**
+     * Finds the gene whose name matches the passed name.
+     * @param pub the name to match
+     * @return the matching gene, or null if no match found
+     */
+    find : function(pub) {
+        return this.master.get(pub.toLowerCase());
+    },
+
+    // MULTI-SELECT (UNION, INTERSECT) STUFF
+
+    /**
+     * Registers a multi-select event listener.
+     * @param comp the object to register
+     */
+    addMultiSelect : function(comp) {
+        this.multiSelectable.push(comp);
+    },
+    /**
+     * Sets the state of the multi-select indicator.
+     * @param b true if performing a multiple select, otherwise false
+     * @param source the object generating the state switch request
+     */
+    setMulti : function(b, source) {
+        if (this.multi != b) {
+            var e = null;
+            if (b) {
+                e = new GeneEvent(this, source, GeneEvent.MULTI_START);
+            } else {
+                e = new GeneEvent(this, source, GeneEvent.MULTI_FINISH);
+            }
+            this.notifyGeneListeners(e);
+            this.multi = b;
+        }
+    },
+    /**
+     * Starts a multiple select operation.
+     * @param source the object initiating the multi-select
+     */
+    startMultiSelect : function(source) {
+        this.setMulti(true, source);
+    },
+    /**
+     * Finalizes a multiple select operation - gathers the selected genes from all components
+     * and performs the appropriate set operation on the sets.
+     * @param source the object requesting the multi-select finalization
+     * @param operation one of the {@link MultiSelectable} operations (currently union or intersect)
+     */
+    finishMultiSelect : function(source, operation) {
+        var s = new TreeSet();
+        if (operation == MultiSelectable.INTERSECT) {
+            s.addAll(this.selectionS);
+        }
+        for (var it = this.multiSelectable.iterator(); it.hasNext(); ) {
+            var g = it.next().getMultiSelection(operation);
+        }
     }
 };
 
