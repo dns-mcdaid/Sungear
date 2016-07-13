@@ -4,11 +4,19 @@
  *
  * @author crispy
  */
-/** @DONE */
 
-module.exports = {
-    /** Indicates a union multi-select operation */
-    UNION : 0,
-    /** Indicates an intersect multi-select operations */
-    INTERSECT : 1
+function MultiSelectable() {
+    // TODO: @Dennis find instantiation in SG
+}
+
+/** Indicates a union multi-select operation */
+MultiSelectable.UNION = 0;
+/** Indicates an intersect multi-select operations */
+MultiSelectable.INTERSECT = 1;
+
+MultiSelectable.prototype.getMultiSelection = function() {
+    // TODO: @Dennis implement better.
+    return [];
 };
+
+module.exports = MultiSelectable;

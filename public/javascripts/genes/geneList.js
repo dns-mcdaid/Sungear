@@ -262,6 +262,47 @@ GeneList.prototype = {
         }
         for (var it = this.multiSelectable.iterator(); it.hasNext(); ) {
             var g = it.next().getMultiSelection(operation);
+            if (g !== null) {
+                if (operation == MultiSelectable.UNION) {
+                    s.addAll(g);
+                } else {
+                    s = new TreeSet();
+                    s.addAll(g);
+                }
+            }
+        }
+        this.setMulti(false, source);
+        this.setSelection(source, s);
+    },
+
+    // STANDARD LISTENER STUFF
+
+    /**
+     * Registers a regular {@link GeneEvent} listener.
+     * @param l the object to register
+     */
+    addGeneListener : function(l) {
+        if (this.listeners.indexOf(l) < 0) {
+            this.listeners.push(l);
+        }
+    },
+    /**
+     * Removes an object from the list of {@link GeneEvent} listeners.
+     * @param l the object to remove
+     */
+    removeGeneListener : function(l) {
+        var idx = this.listeners.indexOf(l);
+        if (idx > -1) {
+            this.listeners.splice(idx, 1);
+        }
+    },
+    /**
+     * Notifies all registered {@link GeneListener}s of a new gene event.
+     * @param e the gene event
+     */
+    notifyGeneListeners : function(e) {
+        for (var i = 0; i < this.listeners.length; i++) {
+            this.listeners[i].listUpdated(e);
         }
     }
 };
