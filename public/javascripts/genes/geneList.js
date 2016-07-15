@@ -35,7 +35,7 @@ function GeneList() {
     this.highlightS = new SortedSet();  /** List of the currently highlighted genes */
     this.listeners = [];                /** {@link GeneEvent} listeners */
     this.multiSelectable = [];          /** Components that participate in multiple selection */
-    this.hist = [];                  /** Gene list browsing history */
+    this.hist = new History();                  /** Gene list browsing history */
     this.source = null;                 /** Data source for this gene list */
     this.multi = false;                 /** True if within a multi-select operation */
 }
@@ -53,7 +53,7 @@ GeneList.prototype = {
         this.highlightS = null;
         this.listeners = null;
         this.multiSelectable = null;
-        this.hist = null;
+        this.hist.clear();
     },
     /**
      * Associates this gene list with a data source; called when the master data is (re)read.
@@ -85,8 +85,8 @@ GeneList.prototype = {
                 this.activeS.addAll(this.genesS);
                 this.selectionS = new SortedSet();
                 this.selectionS.addAll(this.genesS);
-                this.hist = [];
-                this.hist.push(this.selectionS);
+                this.hist.clear();
+                this.hist.add(this.selectionS);
                 console.log("working items: " + this.genesS.size());
                 var ge = new GeneEvent(this, this, GeneEvent.NEW_LIST);
                 this.notifyGeneListeners(ge);
@@ -162,7 +162,7 @@ GeneList.prototype = {
             }
         }
         if (addHist) {
-            this.hist.push(this.selectionS);
+            this.hist.add(this.selectionS);
         }
         if (sendEvent) {
             var e = new GeneEvent(this, src, GeneEvent.SELECT);
@@ -198,8 +198,7 @@ GeneList.prototype = {
         }
         this.activeS = new SortedSet();
         this.activeS.addAll(s);
-        this.hist = null;
-        this.hist = [];
+        this.hist.clear();
         this.setSelection(this, this.activeS, false, true);
         if (sendEvent) {
             var e = new GeneEvent(this, src, GeneEvent.NARROW);
@@ -304,6 +303,134 @@ GeneList.prototype = {
         for (var i = 0; i < this.listeners.length; i++) {
             this.listeners[i].listUpdated(e);
         }
+    },
+
+    // BROWSING HISTORY
+
+    /**
+     * Determines if there is a &quot;previous&quot; selection in the browsing history.
+     * @return true if such a set exists, otherwise false
+     */
+    hasPrev : function() {
+        return this.hist.hasPrev();
+    },
+    /**
+     * Determines if there is a &quot;next&quot; selection in the browsing history.
+     * @return true if such a set exists, otherwise false
+     */
+    hasNext : function() {
+        return this.hist.hasNext();
+    },
+    /**
+     * Moves forward one selection in the browsing history,
+     * and updates the current selection.
+     * @param src the source of the selection change
+     */
+    forward : function(src) {
+        var s = this.hist.forward();
+        if (s !== null) {
+            this.setSelection(src, s, true, false);
+        }
+    },
+    /**
+     * Moves back one selection in the browsing history,
+     * and updates the current selection.
+     * @param src the source of the selection change
+     */
+    back : function(src) {
+        var s = this.hist.back();
+        if (s !== null) {
+            this.setSelection(src, s, true, false);
+        }
+    }
+};
+
+/**
+ * Provides a web-browser-like &quot;history&quot; of
+ * selected sets.
+ * @author crispy
+ */
+function History() {
+    this.past = []; /** The list of sets in the history */
+    this.curr = 0;  /** Index of the current set */
+    this.clear();
+}
+
+History.MAX = 100;  /** Maximum number of sets to retain */
+
+History.prototype = {
+    constructor : History,
+    /**
+     * Clears the browsing history.
+     */
+    clear : function() {
+        this.past = [];
+        this.curr = -1;
+    },
+    /**
+     * Indicates whether or not a previous set exists.
+     * @return true if there is a previous set, otherwise false
+     */
+    hasPrev : function() {
+        return this.curr > 0;
+    },
+    /**
+     * Indicates whether or not a next set exists.
+     * @return true if there is a next set, otherwise false
+     */
+    hasNext : function() {
+        return this.curr < this.past.length - 1;
+    },
+    /**
+     * Returns the previous set in this history, and updates
+     * the current set index.
+     * @return the previous set
+     */
+    back : function() {
+        if (!this.hasPrev()) {
+            return null;
+        } else {
+            this.curr--;
+            var s = this.past[this.curr];
+            return s;
+        }
+    },
+    /**
+     * Returns the next set in this history, and updates
+     * the current set index.
+     * @return the next set
+     */
+    forward : function() {
+        if (!this.hasNext()) {
+            return null;
+        } else {
+            this.curr++;
+            return this.past[this.curr];
+        }
+    },
+    /**
+     * Adds a set to the browsing history, eliminating the oldest
+     * set if capacity has been reached.
+     * @param s the set to add { SortedSet<Gene> }
+     */
+    add : function(s) {
+        if (this.curr == History.MAX-1) {
+            this.past.splice(0,1);
+        } else {
+            // TODO: @Dennis try implementing this alternative.
+            /**
+             * var numOfElements = this.past.length - this.curr - 1;
+             * this.past.splice(curr+1, numOfElements);
+             */
+            for (var i = this.past.length; i > this.curr; i--) {
+                this.past.splice(i, 1);
+            }
+        }
+
+        var t = new TreeSet();
+        t.addAll(s);
+        this.past.push(t);
+        this.curr++;
     }
 };
 

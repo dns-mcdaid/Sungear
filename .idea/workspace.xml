@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9816b8db-785b-4fa1-8ec9-489e3f46b9fa" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/javascripts/gui/sungear/comp.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/javascripts/genes/geneList.js" afterPath="$PROJECT_DIR$/public/javascripts/genes/geneList.js" />
     </list>
     <list id="65f3eea4-4a02-4869-b6a5-dd5400670a53" name="New changelist" comment="" />
     <ignored path="Sungear.iws" />
@@ -25,21 +25,21 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="geneList.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/public/javascripts/genes/geneList.js">
+      <file leaf-file-name="visGene.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/public/javascripts/app/visGene.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="4635">
-              <caret line="309" column="26" selection-start-line="309" selection-start-column="26" selection-end-line="309" selection-end-column="26" />
+            <state relative-caret-position="418">
+              <caret line="92" column="5" selection-start-line="92" selection-start-column="5" selection-end-line="92" selection-end-column="5" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="comp.js" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/public/javascripts/gui/sungear/comp.js">
+      <file leaf-file-name="geneList.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/public/javascripts/genes/geneList.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="270">
-              <caret line="18" column="2" selection-start-line="18" selection-start-column="2" selection-end-line="18" selection-end-column="2" />
+            <state relative-caret-position="448">
+              <caret line="436" column="23" selection-start-line="436" selection-start-column="23" selection-end-line="436" selection-end-column="23" />
               <folding />
             </state>
           </provider>
@@ -96,8 +96,8 @@
         <option value="$PROJECT_DIR$/public/javascripts/data/dataSource.js" />
         <option value="$PROJECT_DIR$/public/javascripts/genes/geneEvent.js" />
         <option value="$PROJECT_DIR$/public/javascripts/genes/multiSelectable.js" />
-        <option value="$PROJECT_DIR$/public/javascripts/genes/geneList.js" />
         <option value="$PROJECT_DIR$/public/javascripts/gui/sungear/comp.js" />
+        <option value="$PROJECT_DIR$/public/javascripts/genes/geneList.js" />
       </list>
     </option>
   </component>
@@ -437,12 +437,12 @@
       <workItem from="1468005657705" duration="378000" />
       <workItem from="1468006154575" duration="237000" />
       <workItem from="1468006487421" duration="4716000" />
-      <workItem from="1468174311732" duration="21430000" />
+      <workItem from="1468174311732" duration="23081000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="54070000" />
+    <option name="totallyTimeSpent" value="55721000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -852,14 +852,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/javascripts/app/visGene.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="418">
-          <caret line="92" column="5" selection-start-line="92" selection-start-column="5" selection-end-line="92" selection-end-column="5" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/public/javascripts/genes/vessel.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="120">
@@ -904,18 +896,26 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/javascripts/genes/geneList.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4635">
-          <caret line="309" column="26" selection-start-line="309" selection-start-column="26" selection-end-line="309" selection-end-column="26" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/public/javascripts/gui/sungear/comp.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="270">
           <caret line="18" column="2" selection-start-line="18" selection-start-column="2" selection-end-line="18" selection-end-column="2" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/javascripts/app/visGene.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="418">
+          <caret line="92" column="5" selection-start-line="92" selection-start-column="5" selection-end-line="92" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/javascripts/genes/geneList.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="448">
+          <caret line="436" column="23" selection-start-line="436" selection-start-column="23" selection-end-line="436" selection-end-column="23" />
           <folding />
         </state>
       </provider>
