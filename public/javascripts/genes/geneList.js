@@ -35,7 +35,7 @@ function GeneList() {
     this.highlightS = new SortedSet();  /** List of the currently highlighted genes */
     this.listeners = [];                /** {@link GeneEvent} listeners */
     this.multiSelectable = [];          /** Components that participate in multiple selection */
-    this.hist = new History();                  /** Gene list browsing history */
+    this.hist = new History();          /** Gene list browsing history */
     this.source = null;                 /** Data source for this gene list */
     this.multi = false;                 /** True if within a multi-select operation */
 }

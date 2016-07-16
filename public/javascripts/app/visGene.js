@@ -90,6 +90,32 @@ VisGene.prototype = {
         // prepare for data source
         this.src = new DataSource(this.dataU);
         this.geneList = new GeneList();
+        
+        // build GUI
+        this.desk = document.createElement("div");
+        this.desk.id = "desk";
+
+        var fileM = document.createElement("div");
+        fileM.id = "fileM";
+        fileM.class = "label";  // TODO: Maybe change?
+
+        var fileBtn = document.createElement("button");
+        fileBtn.innerHTML = "File";
+
+        var loadI = document.createElement("a");
+        var screenI = document.createElement("a");
+        loadI.innerHTML = "Load...";
+        screenI.innerHTML = "Screen Shot";
+        // TODO: @Dennis add keyboard shortcuts.
+
+        var fileDropDown = document.createElement("div");
+        fileDropDown.class = "dropdown-content";
+        fileDropDown.appendChild(loadI);
+        fileDropDown.appendChild(screenI);
+
+        fileM.appendChild(fileBtn);
+        fileM.appendChild(fileDropDown);
+        this.desk.appendChild(fileM);
     }
 
 };

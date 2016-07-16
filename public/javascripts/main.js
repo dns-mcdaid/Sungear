@@ -12,3 +12,9 @@ var p5 = require('p5');
 var geneTest= require('./test/geneTest');
 
 geneTest.testVessel();
+
+var aPls = document.getElementsByTagName("a")[0];
+
+aPls.addEventListener("click", function() {
+    alert("OH NO! IT WORKED!");
+});
