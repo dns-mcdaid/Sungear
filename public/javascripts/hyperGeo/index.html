@@ -1,0 +1,38 @@
+<!--Unit test by Radhika Mattoo, adapted from Ilyas Mounaime's TestHyper file in Sungear package-->
+<!-- Use to test very basic hypergeo calculations; will translate error files to let program handle
+various possible errors (number too large, etc...) -->
+<!DOCTYPE html>
+<html>
+<head>
+	<h1> Hypergeometric JS Test</h1>
+	<style>
+	body { text-align: center; background-color: AntiqueWhite;}
+	h1 {color: DarkRed; }
+	</style>
+
+	<!-- <script src = "FastMathLiteralArrays" type="text/javascript"> </script>
+	<script src = "FastMath.js" type = "text/javascript"></script>
+	<script src = "Gamma.js" type="text/javascript"> </script>
+	<script src = "MathUtils.js" type="text/javascript"> </script>
+	<script src = "Gamma.js" type="text/javascript"> </script>
+	<script src = "SaddlePointExpansion.js" type="text/javascript"> </script>
+	<script src = "RandomGenerator.js" type="text/javascript"> </script>
+	<script src = "BitsStreamGenerator.js" type="text/javascript"> </script>
+	<script src = "AbstractWell.js" type="text/javascript"> </script>
+	<script src = "Well19937c.js" type="text/javascript"> </script>
+	<script src = "HypergeometricDistribution.js" type="text/javascript"> </script>
+	<script src = "Test.js" type="text/javascript"> </script> -->
+</head>
+<body>
+
+<fieldset> <legend> Information for Hypergeo Calculation </legend>
+	Population Size: <input type = number id = "populationSize" name = "populationSize"> <br>
+	Success Number: <input type = number id = "successNumber" name = "successNumber"> <br>
+	Sample Size: <input type = number id = "sampleSize" name = "sampleSize"> <br>
+	Sucess-Number in a Sample: <input type = number id = "successPerSample" name = "successPerSample"> <br>
+	<button type = button onclick = "testHyper()" id='submission'> Test Hypergeometric JS Function </button>
+</fieldset>
+<textarea cols = 60 rows = 5 id = "output">Output goes here. </textarea>
+
+</body>
+</html>
