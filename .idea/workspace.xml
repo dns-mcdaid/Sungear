@@ -2,9 +2,19 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9816b8db-785b-4fa1-8ec9-489e3f46b9fa" name="Default" comment="">
+<<<<<<< HEAD
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/runConfigurations/bin_www.xml" afterPath="$PROJECT_DIR$/.idea/runConfigurations/bin_www.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/package.json" afterPath="$PROJECT_DIR$/package.json" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/javascripts/genes/term.js" afterPath="$PROJECT_DIR$/public/javascripts/genes/term.js" />
+=======
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/javascripts/app/goBrowser.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/stylesheets/testStyle.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/javascripts/app/visGene.js" afterPath="$PROJECT_DIR$/public/javascripts/app/visGene.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/javascripts/main.js" afterPath="$PROJECT_DIR$/public/javascripts/main.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/javascripts/out.js" afterPath="$PROJECT_DIR$/public/javascripts/out.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/layout.jade" afterPath="$PROJECT_DIR$/views/layout.jade" />
+>>>>>>> 67c400a9b7fb620097e2ad8e1b46d735b01a87d2
     </list>
     <list id="65f3eea4-4a02-4869-b6a5-dd5400670a53" name="New changelist" comment="" />
     <ignored path="Sungear.iws" />
@@ -24,11 +34,27 @@
     <favorites_list name="Sungear" />
   </component>
   <component name="FileEditorManager">
+<<<<<<< HEAD
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
+=======
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file leaf-file-name="goBrowser.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/public/javascripts/app/goBrowser.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="413">
+              <caret line="83" column="7" selection-start-line="83" selection-start-column="7" selection-end-line="83" selection-end-column="7" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+>>>>>>> 67c400a9b7fb620097e2ad8e1b46d735b01a87d2
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
+        <option value="CSS File" />
         <option value="JavaScript File" />
       </list>
     </option>
@@ -49,7 +75,6 @@
         <option value="$PROJECT_DIR$/public/javascripts/gui/geneLights.js" />
         <option value="$PROJECT_DIR$/public/javascripts/gui/exportList.js" />
         <option value="$PROJECT_DIR$/public/javascripts/test/testTest.js" />
-        <option value="$PROJECT_DIR$/views/layout.jade" />
         <option value="$PROJECT_DIR$/routes/index.js" />
         <option value="$PROJECT_DIR$/package.json" />
         <option value="$PROJECT_DIR$/public/javascripts/test/geneTest.js" />
@@ -67,8 +92,10 @@
         <option value="$PROJECT_DIR$/public/javascripts/gui/sungear/comp.js" />
         <option value="$PROJECT_DIR$/public/javascripts/genes/geneList.js" />
         <option value="$PROJECT_DIR$/views/index.jade" />
-        <option value="$PROJECT_DIR$/public/javascripts/main.js" />
+        <option value="$PROJECT_DIR$/public/stylesheets/testStyle.css" />
+        <option value="$PROJECT_DIR$/views/layout.jade" />
         <option value="$PROJECT_DIR$/public/javascripts/app/visGene.js" />
+<<<<<<< HEAD
         <option value="$PROJECT_DIR$/public/javascripts/hyperGeo/exception/util/LocalizedFormats.js" />
         <option value="$PROJECT_DIR$/public/javascripts/hyperGeo/distribution/SaddlePointExpansion.js" />
         <option value="$PROJECT_DIR$/public/javascripts/hyperGeo/distribution/AbstractMultivariateRealDistribution.js" />
@@ -90,6 +117,10 @@
         <option value="$PROJECT_DIR$/public/javascripts/hyperGeo/exception/NumberIsTooSmallException.js" />
         <option value="$PROJECT_DIR$/public/javascripts/hyperGeo/exception/NotPositiveException.js" />
         <option value="$PROJECT_DIR$/public/javascripts/hyperGeo/special/Gamma.js" />
+=======
+        <option value="$PROJECT_DIR$/public/javascripts/main.js" />
+        <option value="$PROJECT_DIR$/public/javascripts/app/goBrowser.js" />
+>>>>>>> 67c400a9b7fb620097e2ad8e1b46d735b01a87d2
       </list>
     </option>
   </component>
@@ -180,6 +211,24 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="stylesheets" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Sungear" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Sungear" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="public" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="javascripts" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -245,6 +294,11 @@
     <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
     <property name="settings.editor.splitter.proportion" value="0.2" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+<<<<<<< HEAD
+=======
+    <property name="FullScreen" value="true" />
+    <property name="list.type.of.created.stylesheet" value="CSS" />
+>>>>>>> 67c400a9b7fb620097e2ad8e1b46d735b01a87d2
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -342,13 +396,21 @@
       <workItem from="1468005657705" duration="378000" />
       <workItem from="1468006154575" duration="237000" />
       <workItem from="1468006487421" duration="4716000" />
+<<<<<<< HEAD
       <workItem from="1468174311732" duration="24522000" />
       <workItem from="1468697130934" duration="10131000" />
+=======
+      <workItem from="1468174311732" duration="28593000" />
+>>>>>>> 67c400a9b7fb620097e2ad8e1b46d735b01a87d2
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
+<<<<<<< HEAD
     <option name="totallyTimeSpent" value="67293000" />
+=======
+    <option name="totallyTimeSpent" value="61233000" />
+>>>>>>> 67c400a9b7fb620097e2ad8e1b46d735b01a87d2
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -422,6 +484,7 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
+<<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/public/javascripts/hyperGeo/analysis/UnivariateFunction.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="135">
@@ -453,6 +516,9 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/node_modules/seedrandom/seedrandom.js">
+=======
+    <entry file="file://$PROJECT_DIR$/public/javascripts/data/attributes.js">
+>>>>>>> 67c400a9b7fb620097e2ad8e1b46d735b01a87d2
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1950">
           <caret line="152" column="2" selection-start-line="152" selection-start-column="2" selection-end-line="152" selection-end-column="2" />
@@ -598,6 +664,7 @@
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/public/javascripts/hyperGeo/distribution/AbstractIntegerDistribution.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="300">
@@ -609,6 +676,9 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/public/javascripts/hyperGeo/distribution/AbstractMultivariateRealDistribution.js">
+=======
+    <entry file="file://$PROJECT_DIR$/public/javascripts/test/testTest.js">
+>>>>>>> 67c400a9b7fb620097e2ad8e1b46d735b01a87d2
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="195">
           <caret line="13" column="0" selection-start-line="13" selection-start-column="0" selection-end-line="13" selection-end-column="0" />
@@ -876,6 +946,7 @@
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/public/javascripts/hyperGeo/exception/NonMonotonicSequenceException.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -893,23 +964,73 @@
           <folding>
             <element signature="n#!!doc" expanded="true" />
           </folding>
+=======
+    <entry file="file://$PROJECT_DIR$/views/index.jade">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="5" column="18" selection-start-line="5" selection-start-column="18" selection-end-line="5" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/stylesheets/testStyle.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="214">
+          <caret line="28" column="1" selection-start-line="28" selection-start-column="1" selection-end-line="28" selection-end-column="1" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/views/layout.jade">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="7" column="17" selection-start-line="7" selection-start-column="17" selection-end-line="7" selection-end-column="17" />
+          <folding />
+>>>>>>> 67c400a9b7fb620097e2ad8e1b46d735b01a87d2
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/public/javascripts/hyperGeo/exception/MaxCountExceededException.js">
       <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="n#!!doc" expanded="true" />
           </folding>
+=======
+        <state relative-caret-position="428">
+          <caret line="75" column="41" selection-start-line="75" selection-start-column="41" selection-end-line="75" selection-end-column="41" />
+          <folding />
+>>>>>>> 67c400a9b7fb620097e2ad8e1b46d735b01a87d2
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/public/javascripts/hyperGeo/special/Gamma.js">
       <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
         <state relative-caret-position="450">
           <caret line="36" column="39" selection-start-line="36" selection-start-column="39" selection-end-line="36" selection-end-column="39" />
+=======
+        <state relative-caret-position="143">
+          <caret line="102" column="28" selection-start-line="102" selection-start-column="28" selection-end-line="102" selection-end-column="28" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/javascripts/test/geneTest.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360">
+          <caret line="24" column="6" selection-start-line="24" selection-start-column="6" selection-end-line="24" selection-end-column="6" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/javascripts/app/goBrowser.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="413">
+          <caret line="83" column="7" selection-start-line="83" selection-start-column="7" selection-end-line="83" selection-end-column="7" />
+>>>>>>> 67c400a9b7fb620097e2ad8e1b46d735b01a87d2
           <folding />
         </state>
       </provider>
