@@ -95,6 +95,9 @@ VisGene.prototype = {
         this.desk = document.createElement("div");
         this.desk.id = "desk";
 
+        var bar = document.createElement("div");
+        bar.id = "navbar";
+
         var fileM = document.createElement("div");
         fileM.id = "fileM";
         fileM.class = "label";  // TODO: Maybe change?
@@ -115,7 +118,9 @@ VisGene.prototype = {
 
         fileM.appendChild(fileBtn);
         fileM.appendChild(fileDropDown);
-        this.desk.appendChild(fileM);
+        bar.appendChild(fileM);
+        this.desk.appendChild(bar);
+        document.body.appendChild(this.desk);
     }
 
 };
