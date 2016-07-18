@@ -89,6 +89,21 @@ BrowserPanel.prototype = {
             this.addNodes(root, this.roots[i]);
         }
         // TODO: @Dennis maybe implement line 213?
+    },
+    /**
+     * Recursively adds GO terms to the display tree.
+     * @param r parent node in tree
+     * @param n child node to add to tree at parent
+     */
+    addNodes : function(r, n) {
+        if (n.isActive()) {
+            // TODO: @Dennis write/find a js substitution to DefaultMutableTree
+        }
+    },
+    getShortPath : function(n) {
+        var an = null;
+        var af = null;
+        
     }
 };
 
