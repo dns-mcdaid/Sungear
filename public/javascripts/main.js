@@ -76,4 +76,4 @@ function Potato() {
     document.body.appendChild(this.desk);
 }
 
-Potato();
+//Potato();

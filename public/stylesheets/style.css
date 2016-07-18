@@ -1,8 +1,132 @@
 body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+    background-color: #F3EFE0;
+    color: #404040;
+    font-family: 'Noto Sans', sans-serif;
+}
+
+h1 {
+    padding-left: 20px;
+}
+
+h3 {
+    color: #F3EFE0;
+    padding-left: 10px;
 }
 
 a {
-  color: #00B7FF;
+    color: #3399FF;
+}
+
+#sunGui {
+    width: 100%;
+    height: 300px;
+}
+
+.container {
+    padding-top: 20px;
+}
+
+.btn {
+    border: 0 none;
+    padding: 4px 6px;
+    font-size: 15px;
+    margin-top: 3px;
+    margin-bottom: 3px;
+}
+
+.btn-primary {
+    background-color: #3399FF;
+    border: 0 none;
+}
+
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active {
+    background-color: #2288EE;
+}
+
+#genes {
+    background-color: #404040;
+    padding: 5px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#sunMain {
+    background-color: #111;
+    height: 400px;
+    padding: 5px;
+    color: #F3EFE0;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#sunGui {
+    width: 100%;
+    height: 325px;
+}
+
+#controls {
+    background-color: #404040;
+    padding: 5px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#ctrlTable, #geneTable {
+    background-color: #ddd;
+    width: 100%;
+    height: 100px;
+    color: #404040;
+}
+
+tr {
+    width: 100%;
+}
+
+.table-striped tbody tr.highlight td {
+    background-color: #9A3334;
+    color: #F3EFE0;
+}
+
+#ctrlbtns {
+    padding: 0;
+    list-style-type: none;
+    list-style: none;
+    text-align: center;
+}
+
+#ctrlbtns li {
+    display: inline-block;
+    padding-left: 1px;
+    padding-right: 1px;
+}
+
+#ctrlBtm, #goTop {
+    text-align: center;
+}
+
+#goTerms {
+    background-color: #404040;
+    padding: 5px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#goHierarchy {
+    background-color: #ddd;
+    margin-top: 10px;
+    height: 100px;
+    overflow: auto;
+}
+
+#goZscore {
+    background-color: #ddd;
+    margin-top: 10px;
+    height: 200px;
+    overflow: auto;
+    margin-bottom: 10px;
+}
+
+#goCount, #geneCount {
+    padding-top: 10px;
+    color: #F3EFE0;
 }
