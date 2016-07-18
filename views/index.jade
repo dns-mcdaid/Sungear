@@ -52,10 +52,78 @@ block content
                                 a(href='#') File Info...
 
     div(class='container')
+
         div(class='col-md-3')
             div(id='genes', class='img-rounded')
                 h3 Genes
                 table(class='table table-striped img-rounded', id='geneTable')
+                    thead
+                        tr
+                            th ID
+                            th Description
+                    tbody(id='geneTableBody')
+
+                input(type='text', name='geneSearch', id='geneSearch')
+                a(class='btn btn-primary', id='geneFind', role='button') Find
+                p(id='geneCount') TBD
+                a(class='btn btn-primary', id='geneQuery', role='button') Query
+                a(class='btn btn-primary', id='geneCopy', role='button') Copy
+
+        div(class='col-md-6')
+            div(id='controls', class='img-rounded')
+                // Control Dialog
+                h3 Controls
+                ul(id='controlsButtons')
+                    li
+                        a(class='btn btn-primary', id='restart', role='button') Restart
+                        a(class='btn btn-primary', id='all', role='button') All
+                        a(class='btn btn-primary', id='none', role='button') None
+                        a(class='btn btn-primary', id='left', role='button') <<
+                        a(class='btn btn-primary', id='right', role='button') >>
+                        a(class='btn btn-primary', id='narrow', role='button') Narrow
+                        a(class='btn btn-primary', id='union', role='button') Union
+                        a(class='btn btn-primary', id='intersect', role='button') Intersect
+                        a(class='btn btn-primary', id='findCool', role='button') Find Cool
+                table(class='table table-striped img-rounded', id='controlsTable')
+                    thead
+                        tr
+                            th +/-
+                            th Name
+                            th # of Genes
+                            th View Group
+                    tbody
+
+                div(id='controlsBottom')
+                    a(class='btn btn-primary', id='remove', role='button') Remove
+                    a(class='btn btn-primary', id='export', role='button') Export
+
+            div(id='sunMain', class='img-rounded')
+                h3 Sungear Dialog
+                div(id='sunGui')
+
+        div(class='col-md-3')
+            div(id='goTerms', class='img-rounded')
+                h3 GO Terms
+                div(id='goTop')
+                    a(class='btn btn-primary', id='expand', role='button') Expand
+                    a(class='btn btn-primary', id='collapse', role='button') Collapse
+                div(id='goHierarchy', class='img-rounded')
+                    ul
+                        li GO Terms
+                        ul(id='goDir')
+
+                div(id='goZscore', class='img-rounded')
+                    ul(id='goList')
+
+                input(type='text', name='zSearch', id='zSearch')
+                a(class='btn btn-primary', id='zFind', role='button') Find
+                p(id='goCount') GO Terms: ####
+                a(class='btn btn-primary', id='goCopy', role='button') Copy
+                select(id='sort', class='btn btn-primary')
+                    option(disabled, selected, value) --select a sort option--
+                    option(value='zScore') Sort by Z-Score
+                    option(value='name') Sort by Name
+                    option(value='count') Sort by Count
 
     script(src='/javascripts/out.js')
     script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js')

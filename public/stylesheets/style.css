@@ -30,8 +30,7 @@ a {
     border: 0 none;
     padding: 4px 6px;
     font-size: 15px;
-    margin-top: 3px;
-    margin-bottom: 3px;
+    margin: 3px;
 }
 
 .btn-primary {
@@ -71,7 +70,7 @@ a {
     margin-bottom: 10px;
 }
 
-#ctrlTable, #geneTable {
+#controlsTable, #geneTable {
     background-color: #ddd;
     width: 100%;
     height: 100px;
@@ -87,20 +86,20 @@ tr {
     color: #F3EFE0;
 }
 
-#ctrlbtns {
+#controlsButtons {
     padding: 0;
     list-style-type: none;
     list-style: none;
     text-align: center;
 }
 
-#ctrlbtns li {
+#controlsButtons li {
     display: inline-block;
     padding-left: 1px;
     padding-right: 1px;
 }
 
-#ctrlBtm, #goTop {
+#controlsBottom, #goTop {
     text-align: center;
 }
 
