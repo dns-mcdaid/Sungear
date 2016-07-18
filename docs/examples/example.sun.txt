@@ -1,0 +1,4 @@
+Anchor 1 | Anchor 2 | Anchor 3 | List Element
+1 | 0 | 0 | Element00001
+1 | 0 | 0 | Element00002
+1 | 0 | 1 | Element00003

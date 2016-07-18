@@ -1,0 +1,3 @@
+Grouping1 | 1.0 | Element00001 Element00002
+Grouping2 | 1.0 | 
+Grouping3 | 1.0 | Element00003

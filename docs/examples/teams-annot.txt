@@ -1,0 +1,41 @@
+{ categoriesLabel = Teams }
+AL | American League
+ALE | American League East
+ALW | American League West
+ALC | American League Central
+NL | National League
+NLE | National League East
+NLW | National League West
+NLC | National League Central
+ANA | Anaheim Angels
+ARI | Arizona Diamondbacks
+ATL | Atlanta Braves
+BAL | Baltimore Orioles
+BNA | Boston Red Stockings
+BOS | Boston Red Sox
+CHN | Chicago Cubs
+CHA | Chicago White Sox
+CIN | Cincinnati Reds
+CLE | Cleveland Indians
+CNA | Chicago White Stockings
+COL | Colorado Rockies
+DET | Detroit Tigers
+FLO | Florida Marlins
+HOU | Houston Astros
+KCA | Kansas City Royals
+LAN | Los Angeles Dodgers
+MIL | Milwaukee Brewers
+MIN | Minnesota Twins
+MON | Montreal Expos
+NYN | New York Mets
+NYA | New York Yankees
+OAK | Oakland Athletics
+PHI | Philadelphia Phillies
+PIT | Pittsburgh Pirates
+SDN | San Diego Padres
+SEA | Seattle Mariners
+SFN | San Francisco Giants
+SLN | St. Louis Cardinals
+TBA | Tampa Bay Devil Rays
+TEX | Texas Rangers
+TOR | Toronto Blue Jays
