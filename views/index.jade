@@ -85,13 +85,13 @@ block content
                         a(class='btn btn-primary', id='intersect', role='button') Intersect
                         a(class='btn btn-primary', id='findCool', role='button') Find Cool
                 table(class='table table-striped img-rounded', id='controlFtable')
-                    thead
+                    thead(id='controlFtableHeader')
                         tr
-                            th +/-
+                            th(id='controlFtableAdd') +/-
                             th Name
                             th # of Genes
                             th View Group
-                    tbody
+                    tbody(id='controlFtableBody')
 
                 div(id='controlFbottom')
                     a(class='btn btn-primary', id='removeB', role='button') Remove

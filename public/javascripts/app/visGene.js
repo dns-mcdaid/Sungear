@@ -108,7 +108,9 @@ VisGene.prototype = {
         this.sungearF = document.getElementById("sungearF");
         var statsF = null; // TODO: @Dennis fix.
         this.gear = new SunGear(this.geneList, statsF);
-
+        // TODO: @Dennis implement resultsF (333-335)
+        var resultsF = null;
+        this.go = new GoTerm(this.geneList, resultsF);
         // control panel component
         this.export = new ExportList(this.geneList, this.context);
     },
@@ -166,3 +168,5 @@ VisGene.prototype = {
         }
     }
 };
+
+module.exports = VisGene;
