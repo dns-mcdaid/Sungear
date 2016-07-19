@@ -1,3 +1,6 @@
-/**
- * Created by dennismcdaid on 7/9/16.
- */
+function ExportList(g, context) {
+    this.genes = g; /** {GeneList} */
+    this.context = context;
+    this.localUpdate = false;
+    // TODO: @Dennis finish.
+}

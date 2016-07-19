@@ -11,38 +11,38 @@ block content
                         a(href='#', class='dropdown-toggle', data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='false') File
                         ul(class='dropdown-menu')
                             li
-                                a(href='#') Load...
+                                a(href='#', id='nav-load') Load...
                             li
-                                a(href='#') Screen Shot
+                                a(href='#', id='screenshot') Screen Shot
                     li(class='dropdown')
                         a(href='#', class='dropdown-toggle', data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='false') View
                         ul(class='dropdown-menu')
                             li
                                 a(href='#') Genes
-                                    span(class='glyphicon glyphicon-ok')
+                                    //span(class='glyphicon glyphicon-ok')
                             li
                                 a(href='#') Controls
-                                    span(class='glyphicon glyphicon-ok')
+                                    //span(class='glyphicon glyphicon-ok')
                             li
                                 a(href='#') Sungear
-                                    span(class='glyphicon glyphicon-ok')
+                                    //span(class='glyphicon glyphicon-ok')
                             li
                                 a(href='#') GO Terms
-                                    span(class='glyphicon glyphicon-ok')
+                                    //span(class='glyphicon glyphicon-ok')
                             li(role='separator', class='divider')
                             li
                                 a(href='#') GeneLights
-                                    span(class='glyphicon glyphicon-ok')
+                                    //span(class='glyphicon glyphicon-ok')
                             li(role='separator', class='divider')
                             li
                                 a(href='#') Reposition
-                                    span(class='glyphicon glyphicon-ok')
+                                    //span(class='glyphicon glyphicon-ok')
                             li
                                 a(href='#') Relax Vessels
-                                    span(class='glyphicon glyphicon-ok')
+                                    //span(class='glyphicon glyphicon-ok')
                             li(class='disabled')
                                 a(href='#') Full Screen
-                                    span(class='glyphicon glyphicon-ok')
+                                    //span(class='glyphicon glyphicon-ok')
                     li(class='dropdown')
                         a(href='#', class='dropdown-toggle', data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='false') Help
                         ul(class='dropdown-menu')
@@ -54,9 +54,9 @@ block content
     div(class='container')
 
         div(class='col-md-3')
-            div(id='genes', class='img-rounded')
+            div(id='geneF', class='img-rounded')
                 h3 Genes
-                table(class='table table-striped img-rounded', id='geneTable')
+                table(class='table table-striped img-rounded', id='geneFtable')
                     thead
                         tr
                             th ID
@@ -70,10 +70,10 @@ block content
                 a(class='btn btn-primary', id='geneCopy', role='button') Copy
 
         div(class='col-md-6')
-            div(id='controls', class='img-rounded')
+            div(id='controlF', class='img-rounded')
                 // Control Dialog
                 h3 Controls
-                ul(id='controlsButtons')
+                ul(id='controlFbuttons')
                     li
                         a(class='btn btn-primary', id='restart', role='button') Restart
                         a(class='btn btn-primary', id='all', role='button') All
@@ -84,7 +84,7 @@ block content
                         a(class='btn btn-primary', id='union', role='button') Union
                         a(class='btn btn-primary', id='intersect', role='button') Intersect
                         a(class='btn btn-primary', id='findCool', role='button') Find Cool
-                table(class='table table-striped img-rounded', id='controlsTable')
+                table(class='table table-striped img-rounded', id='controlFtable')
                     thead
                         tr
                             th +/-
@@ -93,13 +93,13 @@ block content
                             th View Group
                     tbody
 
-                div(id='controlsBottom')
+                div(id='controlFbottom')
                     a(class='btn btn-primary', id='remove', role='button') Remove
                     a(class='btn btn-primary', id='export', role='button') Export
 
-            div(id='sunMain', class='img-rounded')
+            div(id='sungearF', class='img-rounded')
                 h3 Sungear Dialog
-                div(id='sunGui')
+                div(id='sungearGui')
 
         div(class='col-md-3')
             div(id='goTerms', class='img-rounded')

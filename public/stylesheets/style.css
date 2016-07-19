@@ -42,14 +42,14 @@ a {
     background-color: #2288EE;
 }
 
-#genes {
+#geneF {
     background-color: #404040;
     padding: 5px;
     margin-top: 10px;
     margin-bottom: 10px;
 }
 
-#sunMain {
+#sungearF {
     background-color: #111;
     height: 400px;
     padding: 5px;
@@ -58,19 +58,19 @@ a {
     margin-bottom: 10px;
 }
 
-#sunGui {
+#sungearGui {
     width: 100%;
     height: 325px;
 }
 
-#controls {
+#controlF {
     background-color: #404040;
     padding: 5px;
     margin-top: 10px;
     margin-bottom: 10px;
 }
 
-#controlsTable, #geneTable {
+#controlFtable, #geneFtable {
     background-color: #ddd;
     width: 100%;
     height: 100px;
@@ -86,20 +86,20 @@ tr {
     color: #F3EFE0;
 }
 
-#controlsButtons {
+#controlFbuttons {
     padding: 0;
     list-style-type: none;
     list-style: none;
     text-align: center;
 }
 
-#controlsButtons li {
+#controlFbuttons li {
     display: inline-block;
     padding-left: 1px;
     padding-right: 1px;
 }
 
-#controlsBottom, #goTop {
+#controlFbottom, #goTop {
     text-align: center;
 }
 

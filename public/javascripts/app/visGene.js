@@ -8,6 +8,9 @@
 var DataReader = require('../data/dataReader');
 var DataSource = require('../data/dataSource');
 
+var SunGear = require('../gui/sunGear');
+var ExportList = require('../gui/exportList');
+
 /**
  * @param u {URL}
  * @param w {boolean}
@@ -90,37 +93,76 @@ VisGene.prototype = {
         // prepare for data source
         this.src = new DataSource(this.dataU);
         this.geneList = new GeneList();
-        
-        // build GUI
-        this.desk = document.createElement("div");
-        this.desk.id = "desk";
+        var loadI = document.getElementById('nav-load');
+        var screenI = document.getElementById('screenshot');
+        loadI.addEventListener("click", function() {
+            // TODO: @Dennis implement lines 241 - 287
+                // Should open a new alert
+                // Allow the user to pick a set from a table
+                // Then reload the page
+        });
+        screenI.addEventListener("click", function() {
+            // TODO: @Dennis implement lines 288 - 310
+        });
+        this.geneF = document.getElementById("geneF");
+        this.sungearF = document.getElementById("sungearF");
+        var statsF = null; // TODO: @Dennis fix.
+        this.gear = new SunGear(this.geneList, statsF);
 
-        var bar = document.createElement("div");
-        bar.id = "navbar";
-
-        var fileM = document.createElement("div");
-        fileM.id = "fileM";
-        fileM.class = "label";  // TODO: Maybe change?
-
-        var fileBtn = document.createElement("button");
-        fileBtn.innerHTML = "File";
-
-        var loadI = document.createElement("a");
-        var screenI = document.createElement("a");
-        loadI.innerHTML = "Load...";
-        screenI.innerHTML = "Screen Shot";
-        // TODO: @Dennis add keyboard shortcuts.
-
-        var fileDropDown = document.createElement("div");
-        fileDropDown.class = "dropdown-content";
-        fileDropDown.appendChild(loadI);
-        fileDropDown.appendChild(screenI);
-
-        fileM.appendChild(fileBtn);
-        fileM.appendChild(fileDropDown);
-        bar.appendChild(fileM);
-        this.desk.appendChild(bar);
-        document.body.appendChild(this.desk);
+        // control panel component
+        this.export = new ExportList(this.geneList, this.context);
+    },
+    /**
+     * Show the usage message and exit.
+     */
+    usage : function() {
+        console.log("Launches Sungear application");
+        console.log("--version: shows current Sungear application version");
+        console.log("--usage or --help: shows this message");
+        console.log("-nowarn: suppress warning message dialogs (useful for giving demos)");
+        console.log("-data_dir {dirname}: use absolute or relative path {dirname} as data directory (default: ../data)");
+        console.log("-plugin: followed by comma-separate list of plugins to load, e.g. gui.GeneLights");
+        console.log("GeneLights plugin is distributed with Sungear; others must be available in classpath");
+        console.log("-plugin flag can appear multiple times instead of or in combination with using comma-separation");
+    },
+    /**
+     * @param args {String[]}
+     */
+    main : function(args) {
+        try {
+            var i = 0;
+            var warn = true;
+            var plugin = [];
+            var dataDir = null;
+            while (i < args.length && args[i][0] == "-" || args[i] == "demo") {
+                if (args[i].localeCompare("--version")) {
+                    console.log(VisGene.VERSION);
+                } else if (args[i] == "--usage" || args[i] == "--help") {
+                    this.usage();
+                } else if (args[i] == "demo" || args[i] == "-nowarn") {
+                    warn = false;
+                    i++;
+                } else if (args[i] == "-plugin") {
+                    var f = args[i+1].split(",");
+                    for (var s = 0; s < f.length; s++) {
+                        plugin.push(f[s]);
+                    }
+                    i += 2;
+                } else if (args[i] == "-data_dir") {
+                    dataDir = args[i+1];
+                    i += 2;
+                } else {
+                    console.log("ERROR: Unkown argument " + args[i]);
+                    this.usage();
+                }
+            }
+            for (var j = i; j < args.length; j++) {
+                plugin.push(args[j]);
+            }
+            var vis = new VisGene(new URL("./"), warn, plugin, dataDir);
+            vis.init();
+        } catch(mu) {
+            console.log(mu);
+        }
     }
-
 };

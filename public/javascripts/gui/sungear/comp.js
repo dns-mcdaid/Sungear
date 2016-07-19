@@ -1,4 +1,8 @@
-VesselActSize.compare = function(v1, v2) {
+function VesselActSize() {
+
+}
+
+VesselActSize.prototype.compare = function(v1, v2) {
     return v2.getActiveCount() - v1.getActiveCount();
 };
 
@@ -18,7 +22,11 @@ CoolVessel.prototype.compareTo = function(o) {
     }
 };
 
-VesselACount.compare = function(v1, v2) {
+function VesselACount() {
+
+}
+
+VesselACount.prototype.compare = function(v1, v2) {
     if (v1.anchor.length < v2.anchor.length) {
         return -1;
     } else if (v1.anchor.length > v2.anchor.length) {
@@ -28,6 +36,17 @@ VesselACount.compare = function(v1, v2) {
     }
 };
 
-VesselSelSize.compare = function(v1, v2) {
+function VesselSelSize() {
+
+}
+
+VesselSelSize.prototype.compare = function(v1, v2) {
     return v2.getSelectedCount() - v1.getSelectedCount();
+};
+
+module.exports = {
+    VesselActSize : VesselActSize,
+    CoolVessel : CoolVessel,
+    VesselACount : VesselACount,
+    VesselSelSize : VesselSelSize
 };
