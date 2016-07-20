@@ -51,6 +51,53 @@ SunGear.C_SELECT = "#217C7E";
 SunGear.prototype = {
     constructor : SunGear,
     cleanup : function() {
+        var i = 0;
+        for (i = 0; i < this.anchors.length; i++) {
+            this.anchors[i].cleanup();
+        }
+        this.anchors = null;
+        for (i = 0; i < this.vessels.length; i++) {
+            this.vessels[i].cleanup();
+        }
+        this.vessels = null;
+        this.genes = null;
+        this.lastAnchor = null;
+        this.lastVessel = null;
+    },
+    getVessels : function() {
+        return this.vessels;
+    },
+    makeButton : function(main, rollover, pressed) {
+        // Likely unnecessary
+    },
+    order : function(n) {
+        if (n != -1) {
+            try {
+                var v = this.orderedVessels[n];
+                this.lastVessel = v;
+                this.highlightVessel(v);
+                this.updateCount();
+                // repaint?
+            } catch (e) {
+                console.log(e);
+            }
+        }
+    },
+    set : function(src) {
+        // make the displayable components
+        var t = this.thresh;
+        console.log("thresh: " + this.thresh);
+        if(isNaN(t)) {
+            console.log("check");
+            t = 1.0;
+            try {
+                t = src.getAttributes().get("threshold");
+            } catch(e) {
+                console.log("Oops! From Sungear.set");
+            }
+        }
+        console.log("t: " + t);
+        var v = [];
         
     }
 };
