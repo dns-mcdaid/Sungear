@@ -35,21 +35,21 @@ block content
                                     //span(class='glyphicon glyphicon-ok')
                             li(role='separator', class='divider')
                             li
-                                a(href='#') Reposition
+                                a(href='#', id='reposition') Reposition
                                     //span(class='glyphicon glyphicon-ok')
                             li
-                                a(href='#') Relax Vessels
+                                a(href='#', id='relax-vessels', title='true') Relax Vessels
                                     //span(class='glyphicon glyphicon-ok')
                             li(class='disabled')
-                                a(href='#') Full Screen
+                                a(href='#', id='full-screen') Full Screen
                                     //span(class='glyphicon glyphicon-ok')
                     li(class='dropdown')
-                        a(href='#', class='dropdown-toggle', data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='false') Help
+                        a(href='#', class='dropdown-toggle', data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='false', id='helpM') Help
                         ul(class='dropdown-menu')
                             li
-                                a(href='#') About...
+                                a(href='#', id='helpI') About...
                             li
-                                a(href='#') File Info...
+                                a(href='#', id='infoI') File Info...
 
     div(class='container')
 
@@ -64,10 +64,12 @@ block content
                     tbody(id='geneTableBody')
 
                 input(type='text', name='geneSearch', id='geneSearch')
-                a(class='btn btn-primary', id='geneFind', role='button') Find
+                a(class='btn btn-primary', id='findSelectB', role='button', data-toggle='tooltip') Find
+                a(class='btn btn-primary', id='collapseT', role='button', data-toggle='tooltip')
+                    span(class='glyphicon glyphicon-align-justify')
                 p(id='geneCount') TBD
-                a(class='btn btn-primary', id='geneQuery', role='button') Query
-                a(class='btn btn-primary', id='geneCopy', role='button') Copy
+                a(class='btn btn-primary', id='queryB', role='button', data-toggle="tooltip") Query
+                a(class='btn btn-primary', id='copyB', role='button', data-toggle="tooltip") Copy
 
         div(class='col-md-6')
             div(id='controlF', class='img-rounded')

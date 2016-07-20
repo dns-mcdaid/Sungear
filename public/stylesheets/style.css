@@ -129,3 +129,9 @@ tr {
     padding-top: 10px;
     color: #F3EFE0;
 }
+
+
+#geneSearch {
+    /**width: 150px;*/
+    width: 65%;
+}

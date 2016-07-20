@@ -2,14 +2,16 @@
  * Top-level GUI component for Sungear.  Can be instantiated
  * as an applet or an application.
  *
- * @author crispy
+ * @author RajahBimmy
  */
 
 var DataReader = require('../data/dataReader');
 var DataSource = require('../data/dataSource');
 
+
 var SunGear = require('../gui/sunGear');
 var ExportList = require('../gui/exportList');
+var Controls = require('../gui/controls');
 
 /**
  * @param u {URL}
@@ -79,6 +81,11 @@ VisGene.notice = "Copyright Chris Poultney, Radhika Mattoo, and Dennis McDaid 20
 
 VisGene.prototype = {
     constructor : VisGene,
+    /**
+     * This function initializes the top navbar options
+     * And instantiates the GO Terms, Controls, SunGear, and (I believe) Gene Frame
+     * It is not totally complete, however most of it should work.
+     */
     init : function() {
         // RIP lines 144 - 206
         console.log(this.extAttrib);
@@ -115,6 +122,69 @@ VisGene.prototype = {
         this.controlF = document.getElementById("controlF");
         this.export = new ExportList(this.geneList, this.context);
         this.control = new Controls(this.geneList, this.export);
+        
+        
+        // Picking up from 388
+        var helpI = document.getElementById('helpI');
+        var infoI = document.getElementById('infoI');
+        helpI.addEventListener("click", function() {
+            this.showAbout();
+        });
+        infoI.addEventListener("click", function() {
+            this.showInfo();
+        });
+
+        // init component sizes
+        this.positionWindows();
+        // TODO: lines 404 - 445
+        document.getElementById('reposition').addEventListener("click", function() {
+            this.positionWindows();
+        });
+        var relaxC = document.getElementById('relax-vessels');
+        relaxC.addEventListener("click", function() {
+            var val = (relaxC.title === 'true');
+            this.gear.setRelax(val);
+            val = !val;
+            relaxC.title = val.toString();
+        });
+        var fullC = document.getElementById('full-screen');
+        fullC.addEventListener("click", function() {
+            // TODO: Make full screen function.
+        });
+    },
+    run : function() {
+        try {
+            if (this.extAttrib !== null && this.extAttrib.get("sungearU") !== null) {
+                this.src.setAttributes(this.extAttrib, this.dataU);
+                this.openFile(this.extAttrib);  // TODO: Implement
+            }
+        } catch (e) {
+            console.log(e);
+        }
+    },
+    /**
+     * TODO: Ensure this works. It probably doesn't.
+     * @param p {Container}
+     */
+    destroyAll : function(p) {
+        var c = p;
+        for (var i = 0; i < c.length; i++) {
+            if (Array.isArray(c[i])) {
+                this.destroyAll(c[i]);
+            }
+        }
+        p = null;
+    },
+    /**
+     *
+     */
+    destroy : function() {
+        console.log("Destroy Enter");
+        // this.super.destroy?
+        this.topFrame = null;
+        // destroyAll(getContentPane())?
+        this.desk = null;
+        this.l1.cleanup();
     },
     /**
      * Show the usage message and exit.
