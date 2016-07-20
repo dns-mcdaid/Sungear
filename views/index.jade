@@ -75,15 +75,18 @@ block content
                 h3 Controls
                 ul(id='controlFbuttons')
                     li
-                        a(class='btn btn-primary', id='restart', role='button') Restart
-                        a(class='btn btn-primary', id='all', role='button') All
-                        a(class='btn btn-primary', id='none', role='button') None
-                        a(class='btn btn-primary', id='left', role='button') <<
-                        a(class='btn btn-primary', id='right', role='button') >>
-                        a(class='btn btn-primary', id='narrow', role='button') Narrow
-                        a(class='btn btn-primary', id='union', role='button') Union
-                        a(class='btn btn-primary', id='intersect', role='button') Intersect
-                        a(class='btn btn-primary', id='findCool', role='button') Find Cool
+                        a(class='btn btn-primary', id='restartB', role='button', data-toggle='tooltip') Restart
+                        a(class='btn btn-primary', id='allB', role='button', data-toggle='tooltip') All
+                        a(class='btn btn-primary', id='noneB', role='button', data-toggle='tooltip') None
+                        a(class='btn btn-primary', id='backB', role='button', data-toggle='tooltip') <<
+                        a(class='btn btn-primary', id='forwardB', role='button', data-toggle='tooltip') >>
+                        a(class='btn btn-primary', id='narrowB', role='button', data-toggle='tooltip') Narrow
+                        a(class='btn btn-primary', id='unionB', role='button', data-toggle='tooltip')
+                            span(class='glyphicon glyphicon-plus-sign')
+                        a(class='btn btn-primary', id='intersectB', role='button', data-toggle='tooltip')
+                            span(class='glyphicon glyphicon-adjust')
+                        a(class='btn btn-primary', id='coolB', role='button', data-toggle='tooltip') Find Cool
+                            // TODO: @Dennis add a dropdown menu to this button which is toggle-able.
                 table(class='table table-striped img-rounded', id='controlFtable')
                     thead(id='controlFtableHeader')
                         tr

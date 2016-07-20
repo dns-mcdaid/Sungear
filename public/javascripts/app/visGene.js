@@ -112,7 +112,9 @@ VisGene.prototype = {
         var resultsF = null;
         this.go = new GoTerm(this.geneList, resultsF);
         // control panel component
+        this.controlF = document.getElementById("controlF");
         this.export = new ExportList(this.geneList, this.context);
+        this.control = new Controls(this.geneList, this.export);
     },
     /**
      * Show the usage message and exit.

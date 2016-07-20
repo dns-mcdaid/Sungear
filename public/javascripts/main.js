@@ -7,11 +7,9 @@
  * browserify public/javascripts/main.js -o public/javascripts/out.js -d
  */
 
+var Controls = require('./gui/controls');
 
-var p5 = require('p5');
-var geneTest= require('./test/geneTest');
-
-geneTest.testVessel();
+var x = new Controls('potato', 'tomato');
 
 // var aPls = document.getElementsByTagName("a")[0];
 //
