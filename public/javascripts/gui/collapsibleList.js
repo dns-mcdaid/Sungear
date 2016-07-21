@@ -3,6 +3,9 @@
  * @author RajahBimmy
  */
 
+require('javascript.util');
+var TreeSet = javascript.util.TreeSet;
+
 /**
  * @param g {GeneList}
  * @constructor

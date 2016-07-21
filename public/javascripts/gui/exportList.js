@@ -112,7 +112,7 @@ function ExportModel() {
     this.subI.className = "glyphicon glyphicon-minus-sign";
     this.exportList = [];
     this.root = new ListEntry("root", new TreeSet(), null);
-    this.curr = root;
+    this.curr = this.root;
 }
 
 ExportModel.prototype = {

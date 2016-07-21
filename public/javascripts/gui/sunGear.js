@@ -1,5 +1,3 @@
-var p5 = require('p5');
-
 var Comp = require('./sungear/comp');
 
 /**
@@ -24,7 +22,7 @@ function SunGear(genes, thresh, statsF) {
     
     // TODO: @Dennis Use p5 to add Sungear GUI components from lines 141 - 192
     
-    this.setShowArrows(this.showArrows);
+    //this.setShowArrows(this.showArrows);
 
     this.highCnt = 0;
     this.lastAnchor = null;
@@ -32,7 +30,7 @@ function SunGear(genes, thresh, statsF) {
     
     // TODO: @Dennis use p5 for lines 196 - 255
     
-    this.setFocusable(true);
+    //this.setFocusable(true);
     this.genes.addGeneListener(this);
     this.genes.addMultiSelect(this);
     this.anchors = [];

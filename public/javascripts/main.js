@@ -8,11 +8,10 @@
  */
 
 var Controls = require('./gui/controls');
+var VisGene = require('./app/visGene');
 
-var x = new Controls('potato', 'tomato');
+var strings = [ "wow", "okay", "cool" ];
 
-// var aPls = document.getElementsByTagName("a")[0];
-//
-// aPls.addEventListener("click", function() {
-//     alert("OH NO! IT WORKED!");
-// });
+var x = new VisGene("http://potato.com", true, strings, "./");
+
+x.init();

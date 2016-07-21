@@ -7,11 +7,16 @@
 
 var DataReader = require('../data/dataReader');
 var DataSource = require('../data/dataSource');
+var ParseException = require('../data/parseException');
 
+var GeneList = require('../genes/geneList');
 
-var SunGear = require('../gui/sunGear');
 var ExportList = require('../gui/exportList');
+var GoTerm = require('../gui/goTerm');
+var SunGear = require('../gui/sunGear');
+
 var Controls = require('../gui/controls');
+var CollapsibleList = require('../gui/collapsibleList');
 
 /**
  * @param u {URL}
@@ -112,6 +117,8 @@ VisGene.prototype = {
             // TODO: @Dennis implement lines 288 - 310
         });
         this.geneF = document.getElementById("geneF");
+        this.l1 = new CollapsibleList(this.geneList);
+        // TODO: Attach l1 to geneF
         this.sungearF = document.getElementById("sungearF");
         var statsF = null; // TODO: @Dennis fix.
         this.gear = new SunGear(this.geneList, statsF);
@@ -127,15 +134,16 @@ VisGene.prototype = {
         // Picking up from 388
         var helpI = document.getElementById('helpI');
         var infoI = document.getElementById('infoI');
+        var temp = this;
         helpI.addEventListener("click", function() {
-            this.showAbout();
+            temp.showAbout();
         });
         infoI.addEventListener("click", function() {
             this.showInfo();
         });
 
         // init component sizes
-        this.positionWindows();
+        // this.positionWindows();
         // TODO: lines 404 - 445
         document.getElementById('reposition').addEventListener("click", function() {
             this.positionWindows();
@@ -185,6 +193,109 @@ VisGene.prototype = {
         // destroyAll(getContentPane())?
         this.desk = null;
         this.l1.cleanup();
+        this.l1 = null;
+        this.geneF = null;
+        this.sungearM = null;
+        this.controlM = null;
+        this.geneM = null;
+        this.gear.cleanup();
+        this.gear = null;
+        this.sungearF = null;
+        this.go.cleanup();
+        this.goF = null;
+        this.goM = null;
+        this.control.cleanup();
+        this.control = null;
+        this.export.cleanup();
+        this.export = null;
+        this.controlF = null;
+        // this.geneLightsF = null;
+        this.src.cleanup();
+        this.src = null;
+        this.geneList.cleanup();
+        this.geneList = null;
+        console.log("Done.")
+    },
+    toggleFullScreen : function() {
+        // TODO: Implement this later.
+    },
+    poisitionWindows : function() {
+        // TODO: Implement this later.
+    },
+    /**
+     * Sets all desktop window sizes and positions to their defaults.
+     */
+    makeFrame : function() {
+        // TODO: Implement this later.
+    },
+    /**
+     * Makes a check box menu item with JInternalFrame iconify control.
+     * @param f the internal frame to control
+     * @return the check box item
+     */
+    makeItem : function(f) {
+        // TODO: Implement this later.
+    },
+    /**
+     * Opens an experiment file.
+     * @throws IOException
+     * @throws ParseException
+     */
+    openFile : function(attrib) {
+        console.log("data file: " + attrib.get("sungearU"));
+        var f = null; // FIXME: Should be JOptionPane.getFrameForComponent(this)
+        var status = new StatusDialog(f, this);
+        var t = new LoadThread(attrib, status);
+        t.start();
+        // TODO: Make status visible.
+        if (t.getException() !== null) {
+            console.log(t.getException());
+            if (typeof t.getException() === 'ParseException') {
+                console.log("line: " + t.getException().getLine());
+                alert("Error reading Data: " + t.getException().getMessage());
+            }
+        } else {
+            var iL = attrib.get("itemsLabel", "items");
+            var cL = attrib.get("categoriesLabel", "categories");
+            // TODO: Change the geneF, geneM, goF, and goM titles
+            var r = this.src.getReader();
+            if (this.showWarning && r.missingGenes.size() + r.dupGenes.size() > 0) {
+                var msg = "There are inconsistencies in this data file:";
+                if (r.missingGenes.size() > 0) {
+                    msg += "\n" + r.missingGenes.size() + " input " + iL + " unknown to Sungear have been ignored.";
+                }
+                if (r.dupGenes.size() > 0) {
+                    msg += "\n" + r.dupGenes.size() + " " + iL + " duplicated in the input file; only the first occurence of each has been used.";
+                }
+                msg += "\nThis will not prevent Sungear from running, but you may want to resolve these issues.";
+                msg += "\nSee Help | File Info for details about the " + iL + " involved.";
+                alert(msg);
+            }
+        }
+    },
+    capFirst : function(s) {
+        if (s.length > 1) {
+            return s[0].toUpperCase();
+        } else if (s.length == 1) {
+            return s.toUpperCase();
+        } else {
+            return s;
+        }
+    },
+    showAbout : function() {
+        var msg = "";
+        msg += "Sungear Version " + VisGene.VERSION + "\n\n";
+        msg += "Sungear is a collaboration between the Biology Department and the Courant Institute of Mathematical Sciences, New York University.\n\n";
+        msg += "Primary Developer:\nChris Poultney\n\n";
+        msg += "Seconday Developers:\nRadhika Mattoo\nDennis McDaid\n\n";
+        msg += "GeneLights Developers:\nDelin Yang\nEric Leung\n\n";
+        msg += "NYU-Biology:\nGloria Coruzzi\nRodrigo A. Gutierrez\nManpreet Katari\n\n";
+        msg += "NYU-Courant:\nDennis Shasha\n\n";
+        msg += "Additional Collaborators:\nBradford Paley (Didi, Inc.)\n\n";
+        msg += "This work has been partly supported by the U.S. National Science Foundation under grants NSF IIS-9988345, N2010-0115586, and MCB-0209754. This support is greatly appreciated.\n\n";
+        msg += "For more information visit: http://virtualplant.bio.nyu.edu/\n\n";
+        msg += "Copyright 2016, New York University";
+        alert(msg);
     },
     /**
      * Show the usage message and exit.
@@ -238,6 +349,50 @@ VisGene.prototype = {
         } catch(mu) {
             console.log(mu);
         }
+    }
+};
+
+/**
+ * Generic status dialog class that tries to position itself in the
+ * center of the parent window and automatically size itself to its
+ * message (which can be changed dynamically).
+ * @author RajahBimmy
+ */
+function StatusDialog(f, parent) {
+    this.parent = parent;
+    this.progress = null; // FIXME: Should be a progress bar.
+    // TODO: Make progress bar load.
+}
+
+StatusDialog.prototype.updateStatus = function(msg, prog) {
+    // this.progress.setString(msg);
+    // this.progress.setValue(prog);
+};
+
+/**
+ * Experiment and master data load thread to separate the load
+ * operation from the main GUI thread.
+ * @author RajahBimmy
+ */
+/**
+ * Loads an experiment and, if necessary, master data, giving
+ * load status updates.
+ * @param u URL of the experiment file to load
+ * @param status dialog for status updates
+ */
+function LoadThread(attrib, status) {
+    this.attrib = attrib;
+    this.status = status;
+    this.ex = null;
+}
+
+LoadThread.prototype = {
+    constructor : LoadThread,
+    run : function() {
+        // TODO: Implement. Figure out how to impact a VisGene member.
+    },
+    getException : function() {
+        return this.ex;
     }
 };
 

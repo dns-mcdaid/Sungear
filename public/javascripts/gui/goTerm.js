@@ -1,3 +1,6 @@
+require('javascript.util');
+var TreeSet = javascript.util.TreeSet;
+
 function GoTerm(genes, fd) {
     this.genes = genes;
     this.geneThresh = 1;
