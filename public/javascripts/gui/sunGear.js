@@ -140,6 +140,25 @@ SunGear.prototype = {
             t.addAll(this.getGeneTerms(c[it]));
         }
         return t;
+    },
+    getCool : function(maxVessels, minScore, method) {
+        console.log("method: " + method);
+        var cool = new TreeSet();
+        var debug = true; // TODO: Change this in production
+        var ag = this.getAssocGenes();
+        for (var i = 0; i < this.vessels.length; i++) {
+            if (this.vessels[i].getActiveCount() == 0) {
+                continue;
+            }
+            if (debug) {
+                console.log("sz: " + this.vessels[i].activeGenes.size());
+            }
+            var tt = this.getTerms(this.vessels[i].activeGenes);
+            var ct = [];
+            for (var it = tt.iterator(); it.hasNext(); ) {
+
+            }
+        }
     }
 };
 
