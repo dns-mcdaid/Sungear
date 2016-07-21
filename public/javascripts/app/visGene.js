@@ -139,7 +139,7 @@ VisGene.prototype = {
             temp.showAbout();
         });
         infoI.addEventListener("click", function() {
-            this.showInfo();
+            temp.showInfo();
         });
 
         // init component sizes
@@ -272,6 +272,7 @@ VisGene.prototype = {
                 alert(msg);
             }
         }
+        // TODO: Finish
     },
     capFirst : function(s) {
         if (s.length > 1) {
@@ -295,6 +296,43 @@ VisGene.prototype = {
         msg += "This work has been partly supported by the U.S. National Science Foundation under grants NSF IIS-9988345, N2010-0115586, and MCB-0209754. This support is greatly appreciated.\n\n";
         msg += "For more information visit: http://virtualplant.bio.nyu.edu/\n\n";
         msg += "Copyright 2016, New York University";
+        alert(msg);
+    },
+    formatComment : function(a, commentName) {
+        var comment = a.get(commentName, "(none)\n");
+        return comment.substring(0, Math.max(0, comment.length -1));
+    },
+    showInfo : function() {
+        var msg = "";
+        msg += "Sungear File Information\n\n";
+        if (this.src === null || this.src.getAttributes() === null || this.src.getAttributes().get("sungearU") === null) {
+            msg += "No file loaded.";
+        } else {
+            var a = this.src.getAttributes();
+            var il = a.get("itemsLabel", "items");
+            var cl = a.get("categoriesLabel", "categories");
+            msg += "Sungear file:\t\t" + a.get("sungearU") + "\n";
+            msg += "Species:\t\t" + a.get("species") + "\n";
+            msg += "File info:\t\t" + this.formatComment(a, "comment-sungear") + "\n";
+            msg += il + " annotation file:\t\t" + a.get("geneU") + "\n";
+            msg += "File info:\t\t" + this.formatComment(a, "comment-items") + "\n";
+            msg += cl + " annotation file:\t\t" + a.get("listU") + "\n";
+            msg += "File info:\t\t" + this.formatComment(a, "comment-categories") + "\n";
+            msg += cl + " hierarchy file:\t\t" + a.get("hierU") + "\n";
+            msg += "File info:\t\t" + this.formatComment(a, "comment-hierarchy") + "\n";
+            msg += il + "/" + cl + " correspondence:\t\t" + a.get("assocU");
+            msg += "File info:\t\t" + this.formatComment(a, "comment-correspondence") + "\n";
+            msg += "Background:\t\t" + a.get("background", "(none)") + "\n";
+            msg += "Unknown " + il + " (" + this.src.getReader().missingGenes.size() + "):\t\t";
+            if (this.src.getReader().missingGenes.size() == 0) {
+                msg += "(none)";
+            } else {
+                for (var it = this.src.getReader().missingGenes.iterator(); it.hasNext(); ) {
+                    msg += it.next() + " ";
+                }
+            }
+            // TODO: Include plugin information? Maybe? Maybe not?
+        }
         alert(msg);
     },
     /**

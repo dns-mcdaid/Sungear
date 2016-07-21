@@ -22,7 +22,7 @@ function SunGear(genes, thresh, statsF) {
     
     // TODO: @Dennis Use p5 to add Sungear GUI components from lines 141 - 192
     
-    //this.setShowArrows(this.showArrows);
+    this.setShowArrows(this.showArrows);
 
     this.highCnt = 0;
     this.lastAnchor = null;
@@ -30,7 +30,7 @@ function SunGear(genes, thresh, statsF) {
     
     // TODO: @Dennis use p5 for lines 196 - 255
     
-    //this.setFocusable(true);
+    this.setFocusable(true);
     this.genes.addGeneListener(this);
     this.genes.addMultiSelect(this);
     this.anchors = [];
@@ -96,7 +96,50 @@ SunGear.prototype = {
         }
         console.log("t: " + t);
         var v = [];
-        
+        // FIXME
+        var tempReader = new DataReader();
+        tempReader.setThreshold(t, this.genes.getGenesSet(), this.src.getReader().anchors, v);
+        // FIXME
+        this.makeDisplay(this.src.getReader().anchors, v);
+        console.log("Anchors: " + this.anchors.length + " vessels: " + this.vessels.length);
+    },
+    setGo : function(t) {
+        this.goTerm = t;
+    },
+    setRelax : function(b) {
+        this.relax = b;
+        this.positionVessels();
+    },
+    getRelax : function() {
+        return this.relax;
+    },
+    setMinVesselSizeIdx : function(n) {
+        // TODO: Find out if this is necessary
+    },
+    setShowArrows : function(b) {
+        // TODO: Find out if this is necessary
+    },
+    showStats : function() {
+        // TODO: Make sure this works.
+        var val = (this.statsF.title == 'true');
+        this.statsF.title = !val;
+    },
+    getGeneTerms : function(g) {
+        if (this.goTerm === null || this.goTerm.get() === null) {
+            return [];
+        } else {
+            return this.goTerm.get().getCurrentTerms(g);
+        }
+    },
+    getAssocGenes : function() {
+        return (this.goTerm === null || this.goTerm.get() === null) ? new TreeSet() : this.goTerm.get().assocGenes;
+    },
+    getTerms : function(c) {
+        var t = new TreeSet();
+        for (var it = 0; it < c.length; it++) {
+            t.addAll(this.getGeneTerms(c[it]));
+        }
+        return t;
     }
 };
 
