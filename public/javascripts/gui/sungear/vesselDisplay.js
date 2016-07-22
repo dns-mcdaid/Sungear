@@ -237,7 +237,16 @@ VesselDisplay.prototype = {
         p5.pop();
     },
     drawArrow : function(p5, theta) {
-        // TODO: Implement me.
+        p5.push();
+        p5.translate(this.center.x, this.center.y);
+        p5.scale(this.radOuter, this.radOuter);
+        p5.rotate(theta);
+        var w = 0.05 * this.radMax / this.radOuter;
+        p5.strokeWeight(w);
+        p5.line(1.0, 0, 1.0 + VesselDisplay.ARROW_LINE, 0);
+        p5.line(1.0 + VesselDisplay.ARROW_LINE, 0, 1.0 + VesselDisplay.ARROW_LINE - VesselDisplay.ARROW_END, VesselDisplay.ARROW_END);
+        p5.line(1.0 + VesselDisplay.ARROW_LINE, 0, 1.0 + VesselDisplay.ARROW_LINE - VesselDisplay.ARROW_END, -(VesselDisplay.ARROW_END));
+        p5.pop();
     }
 };
 
