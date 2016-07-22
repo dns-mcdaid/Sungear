@@ -1,3 +1,6 @@
+require('javascript.util');
+var TreeSet = javascript.util.TreeSet;
+
 function Stats(genes, sun) {
     this.genes = genes;         /** {GeneList} */
     this.sun = sun;             /** {SunGear} */
@@ -48,6 +51,26 @@ StatsModel.prototype = {
     constructor : StatsModel,
     update : function(c) {
         this.titles[2]
+    }
+};
+
+function VesselInfo(cnt) {
+    this.anchorCount = cnt; /** {int} */
+    this.vessels = [];      /** {Vector<VesselDisplay>} */
+    this.genes = new TreeSet(); /** {TreeSet<Gene>} */
+}
+
+VesselInfo.prototype = {
+    constructor : VesselInfo,
+    addVessel : function(v) {
+        this.vessels.push(v);
+        var selected = v.selectedGenes.toArray();
+        for (var i = 0; i < selected.length; i++) {
+            this.genes.add(selected[i]);
+        }
+    },
+    compareTo : function(o) {
+        return this.anchorCount - o.anchorCount;
     }
 };
 
