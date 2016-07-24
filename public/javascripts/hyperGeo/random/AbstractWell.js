@@ -38,6 +38,7 @@ function AbstractWell(k, m1, m2, m3, seed){
         i2[j]   = (j + m2)    % r;
         i3[j]   = (j + m3)    % r;
     }
+    console.log(typeof seed);
     this.setSeed(passedSeed);
 
 }
@@ -48,11 +49,14 @@ AbstractWell.prototype.constructor = BitsStreamGenerator;
 AbstractWell.prototype = {
     constructor: AbstractWell,
     setSeed: function(seed){
+
+        var self = this;
         if(seed instanceof Number){
-            this.setSeed([seed]);
+            var array = [seed];
+            self.setSeed.call(self,array);
         }
         if(seed == null){
-            this.setSeed(Date.now());
+            self.setSeed.call(self, [Date.now()]);
             return;
         }
         this.v = seed.slice(0, Math.min(seed.length, this.v.length));

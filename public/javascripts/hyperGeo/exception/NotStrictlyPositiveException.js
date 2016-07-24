@@ -9,23 +9,13 @@ Translated from Ilyas Mounaime's Java code
 //extends NumberIsTooSmallException
 
 var serialVersionUID = -7824848630829852237;
+var NumberIsTooSmallException = require('./NumberIsTooSmallException');
 
-
-//IMPLEMENT INHERITANCE
-NotStrictlyPositive.prototype = new NumberIsTooSmallException();
-
-//corect the constructor pointer, because it points to AbstractIntegerDistribution right now
-NotStrictlyPositive.prototype.constructor = NotStrictlyPositive;
-
-//create a parent property for NotStrictlyPositive to call superClass methods,
-//rather than having to use NumberIsTooSmallException.prototype.functionName.call() everytime
-NotStrictlyPositive.prototype.parent = NumberIsTooSmallException.prototype;
+NotStrictlyPositiveException.prototype = Object.create(NumberIsTooSmallException.prototype);
+NotStrictlyPositiveException.prototype.constructor = NotStrictlyPositiveException;
 
 function NotStrictlyPositiveException(value){
-	this.parent.NumberIsTooSmallException.call(this, value, 0, false);
+	NumberIsTooSmallException.call(this, "NotStrictlyPositiveException", value);
 }
 
-// //exception with a specific context
-// function NotStrictlyPositiveException(specific, value){
-// 	this.parent.NumberIsTooSmallException.call(this, specific, value, 0, false);
-// }
+module.exports = NotStrictlyPositiveException;
