@@ -4,9 +4,6 @@
       <env name="DEBUG" value="Sungear:*" />
     </envs>
     <browser with-js-debugger="true" url="http://localhost:3000/" />
-    <EXTENSION ID="com.jetbrains.nodejs.run.NodeJSStartBrowserRunConfigurationExtension">
-      <browser with-js-debugger="true" url="http://localhost:3000/" />
-    </EXTENSION>
     <method />
   </configuration>
 </component>

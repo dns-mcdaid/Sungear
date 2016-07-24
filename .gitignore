@@ -35,3 +35,4 @@ jspm_packages
 .npm
 
 .idea/workspace.xml
+public/javascripts/out.js
