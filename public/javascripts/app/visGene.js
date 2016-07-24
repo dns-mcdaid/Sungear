@@ -83,6 +83,16 @@ function VisGene(u, w, pn, dataDir) {
 VisGene.VERSION = "0.2.0";
 VisGene.DEFAULT_DATA_DIR = "../data";
 VisGene.notice = "Copyright Chris Poultney, Radhika Mattoo, and Dennis McDaid 2016";
+VisGene.usage = function(){
+    console.log("Launches Sungear application");
+    console.log("--version: shows current Sungear application version");
+    console.log("--usage or --help: shows this message");
+    console.log("-nowarn: suppress warning message dialogs (useful for giving demos)");
+    console.log("-data_dir {dirname}: use absolute or relative path {dirname} as data directory (default: ../data)");
+    console.log("-plugin: followed by comma-separate list of plugins to load, e.g. gui.GeneLights");
+    console.log("GeneLights plugin is distributed with Sungear; others must be available in classpath");
+    console.log("-plugin flag can appear multiple times instead of or in combination with using comma-separation");
+};
 
 VisGene.prototype = {
     constructor : VisGene,

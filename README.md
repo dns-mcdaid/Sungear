@@ -80,7 +80,9 @@ List1 | List2 | gene
 
 In order to run on a modern web browser, Sungear requires the following dependencies, which are loaded at runtime:
 
+* [Node.js](https://nodejs.org/en/): Runtime environment for entire program.
+* [p5](http://p5js.org/): Data visualizer for Sungear GUI and GeneLights description.
+* [Browserify](http://browserify.org/): A magical gift from the Gods which brings all of the fun Node has to offer to the client side.
+* [javascript.util](https://www.npmjs.com/package/javascript.util): Data Structure resource.
 * [jQuery](https://jquery.com/): Necessary for Bootstrap and fluid controllers.
 * [Bootstrap](http://getbootstrap.com/): Grid System allowing clean formatting of Sungear Interface.
-* [p5](http://p5js.org/): Data visualizer for Sungear GUI and GeneLights description.
-* [RequireJS](http://requirejs.org/): Simplify Javascript dependencies.
