@@ -64,7 +64,16 @@ BrowserPanel.prototype = {
      * Populate popup menu with terms matching search string.
      */
     findMatches : function() {
-        // TODO: @Dennis implement
+        var p = new RegExp(".*"+this.findT.value+".*", "i");
+        var v = [];
+        for (var i = 0; i < this.nodes.length; i++) {
+            var t = this.nodes[i];
+            if (p.test(t.getName())) {
+                v.push(t)
+            }
+        }
+        // TODO: Update the findL list to reflect the search results.
+        this.statusT.innerHTML = "Matches: " + v.length;
     },
     /**
      * @param n {DefaultMutableTreeNode}
@@ -103,7 +112,7 @@ BrowserPanel.prototype = {
     getShortPath : function(n) {
         var an = null;
         var af = null;
-        
+
     }
 };
 
