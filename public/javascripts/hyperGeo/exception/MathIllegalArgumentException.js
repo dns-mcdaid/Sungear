@@ -14,21 +14,16 @@ Translated from Ilyas Mounaime's Java code
 
 var serialVersionUID = -6024911025449780478;
 
-var context;
 
-function MathIllegalArgumentException(pattern, args){
-	context = new ExceptionContext(this);
-	//context.addMessage(pattern, args); UNCOMMENT WHEN EXCEPTIONCONTEXT IS IMPLEMENTED
+function MathIllegalArgumentException(message, errorObject){
+	this.message = new Error(message);
+	this.errorObject = errorObject;
 }
-function getContext(){
-	return context;
-}
+MathIllegalArgumentException.prototype = {
+	getMessage: function(){
+		return this.context;
+	}
+};
 
-function getMessage(){
-	//return context.getMessage(); SEE CONSTRUCTOR COMMENT
-}
-function getLocalizedMessage(){
-	//return context.getLocalizedMessage(); SEE CONSTRUCTOR COMMENT
-}
 
 module.exports = MathIllegalArgumentException;

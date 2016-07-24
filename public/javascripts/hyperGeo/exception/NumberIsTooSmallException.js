@@ -25,7 +25,8 @@ function NumberIsTooSmallException(specific, wrong, min, boundIsAllowed){
 		this.min = min;
 		this.boundIsAllowed = boundIsAllowed;
 	}
-	MathIllegalNumberException.call(this, format, passedWrong, min);
+
+	MathIllegalNumberException.call(this, format, this);
 }
 
 NumberIsTooSmallException.prototype = {

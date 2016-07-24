@@ -8,7 +8,6 @@ Translated from Ilyas Mounaime's Java code
 var seedrandom = require("seedrandom");
 var IntegerDistribution = require("./IntegerDistribution");
 var Well19937c = require("../random/Well19937c");
-var WeibullDistribution = require("./WeibullDistribution");
 var LocalizedFormats = require("../exception/util/LocalizedFormats");
 var OutOfRangeException = require("../exception/OutOfRangeException");
 var NumberIsTooLargeException = require("../exception/NumberIsTooLargeException");
@@ -36,7 +35,7 @@ var NotStrictlyPositiveException = require("../exception/NotStrictlyPositiveExce
 	AbstractIntegerDistribution.prototype.checkedCumulativeProbability = function(argument){ //throws MathInternalError
 		var result = Number.NaN;
 		result = this.cumulativeProbability(argument);
-		if(result === Number.Nan){
+		if(result === Number.NaN){
 			console.log("ERROR: result from AbstractRealDistribution's cumulative probability is NaN");
 
 		}
@@ -86,8 +85,8 @@ var NotStrictlyPositiveException = require("../exception/NotStrictlyPositiveExce
 		}
 
 		// use the one-sided Chebyshev inequality to narrow the bracket
-	    var mu = getNumericalMean(); // defined in WeibullDistribution.java
-	    var sigma = Math.sqrt(WeibullDistribution.getNumericalVariance()); //defined in WeibullDistribution.java
+	    var mu = this.getNumericalMean();
+	    var sigma = Math.sqrt(this.getNumericalVariance());
 
 	    var chebsyshevApplies = !((mu === Number.POSITIVE_INFINITY || mu === Number.NEGATIVE_INFINITY) || isNaN(mu) || (sigma === Number.POSITIVE_INFINITY || sigma === Number.NEGATIVE_INFINITY)|| isNaN(sigma) || sigma === 0);
 	    if(chebsyshevApplies){

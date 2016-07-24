@@ -28,9 +28,9 @@ var numericalVariance = Math.NaN;
 
 
         if(arguments.length < 4){
-			var newRNG= new Well19937c();
-			rng = null;
-			rng = newRNG;
+			// var newRNG= new Well19937c();
+			// rng = null;
+			// rng = newRNG;
 		}
 
 		if (populationSize <= 0) {

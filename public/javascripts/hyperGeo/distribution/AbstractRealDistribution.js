@@ -12,6 +12,7 @@ var LocalizedFormats = require("../exception/util/LocalizedFormats");
 var OutOfRangeException = require('../exception/OutOfRangeException');
 var UnivariateSolverUtils = require("../analysis/solvers/UnivariateSolverUtils");
 var UnivariateFunction = require("../analysis/UnivariateFunction");
+var NumberIsTooLargeException = require('../exception/NumberIsTooLargeException');
 
   AbstractRealDistribution.prototype = Object.create(RealDistribution.prototype);
   AbstractRealDistribution.prototype.constructor = AbstractRealDistribution;
@@ -34,8 +35,7 @@ var UnivariateFunction = require("../analysis/UnivariateFunction");
   AbstractRealDistribution.prototype.probability = function (x0, x1){
     if(x0 > x1){
       throw new NumberIsTooLargeException(LocalizedFormats.LOWER_ENDPOINT_ABOVE_UPPER_ENDPOINT,
-                                                  // x0, x1, true);
-    console.log("AbstractRealDistribution ERROR: arg passed to probability function is too numerically large");
+                                                  x0, x1, true);
     }
     return this.cumulativeProbability(x1) - this.cumulativeProbability(x0);
   };
@@ -97,7 +97,7 @@ var UnivariateFunction = require("../analysis/UnivariateFunction");
   };
 
   //FIXME
-  AbstractRealDistribution.prototype.reseedRandomGenerator(seed){
+  AbstractRealDistribution.prototype.reseedRandomGenerator = function(seed){
   }
 
 module.exports = AbstractRealDistribution;

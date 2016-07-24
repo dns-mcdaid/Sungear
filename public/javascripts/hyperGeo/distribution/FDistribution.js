@@ -1,3 +1,7 @@
+var LocalizedFormats = require("../exception/util/LocalizedFormats.js");
+var AbstractIntegerDistribution = require("../distribution/AbstractIntegerDistribution");
+var Well19937 = require("../random/Well19937c");
+var Beta = require("../special/Beta");
 /*
 Radhika Mattoo, February 2016 N.Y.
 
@@ -7,8 +11,10 @@ Translated from Ilyas Mounaime's Java code
 */
 FDistribution.prototype = Object.create(AbstractIntegerDistribution.prototype);
 FDistribution.prototype.constructor = FDistribution;
+var NotStrictlyPositiveException = require("../exception/NotStrictlyPositiveException");
 
-var EFAULT_INVERSE_ABSOLUTE_ACCURACY = 1e-9;
+var DEFAULT_INVERSE_ABSOLUTE_ACCURACY = 1e-9;
+var solverAbsoluteAccuracy;
 
 function FDistribution(rng, numeratorDegreesOfFreedom, denominatorDegreesOfFreedom, inverseCumAccuracy){
   var passedRNG;
@@ -41,14 +47,14 @@ FDistribution.prototype.density = function(x) {
         var nhalf = this.numeratorDegreesOfFreedom / 2;
         var mhalf = this.denominatorDegreesOfFreedom / 2;
         var logx = Math.log(x);
-        var logn = Math.log(htis.numeratorDegreesOfFreedom);
+        var logn = Math.log(this.numeratorDegreesOfFreedom);
         var logm = Math.log(this.denominatorDegreesOfFreedom);
         var lognxm = Math.log(this.numeratorDegreesOfFreedom * x +
                                            this.denominatorDegreesOfFreedom);
         return Math.exp(nhalf * logn + nhalf * logx - logx +
                             mhalf * logm - nhalf * lognxm - mhalf * lognxm -
                             Beta.logBeta(nhalf, mhalf));
-    };;
+    };
 
 
 
@@ -68,15 +74,15 @@ FDistribution.prototype.cumulativeProbability = function( x)  {
         return ret;
     };
 
-FDistribution.prototype.getNumeratorDegreesOfFreedom = function() {return numeratorDegreesOfFreedom;};
+FDistribution.prototype.getNumeratorDegreesOfFreedom = function() {return this.numeratorDegreesOfFreedom;};
 
 
 FDistribution.prototype.getDenominatorDegreesOfFreedom = function(){ return this.denominatorDegreesOfFreedom;};
 
-FDistribution.prototype.getSolverAbsoluteAccuracy = function(){ return this.solverAbsoluteAccuracy;};
+FDistribution.prototype.getSolverAbsoluteAccuracy = function(){ return solverAbsoluteAccuracy;};
 
 FDistribution.prototype.getNumericalMean = function() {
-        var denominatorDF = getDenominatorDegreesOfFreedom();
+        var denominatorDF = this.getDenominatorDegreesOfFreedom();
 
         if (denominatorDF > 2) {
             return denominatorDF / (denominatorDF - 2);
@@ -87,7 +93,7 @@ FDistribution.prototype.getNumericalMean = function() {
 
 FDistribution.prototype.getNumericalVariance = function() {
         if (!this.numericalVarianceIsCalculated) {
-            this.numericalVariance = calculateNumericalVariance();
+            this.numericalVariance = this.calculateNumericalVariance();
             this.numericalVarianceIsCalculated = true;
         }
         return this.numericalVariance;
@@ -95,17 +101,17 @@ FDistribution.prototype.getNumericalVariance = function() {
 
 
 FDistribution.prototype.calculateNumericalVariance = function () {
-        var denominatorDF = getDenominatorDegreesOfFreedom();
+        var denominatorDF = this.getDenominatorDegreesOfFreedom();
 
         if (denominatorDF > 4) {
-            var numeratorDF = getNumeratorDegreesOfFreedom();
+            var numeratorDF = this.getNumeratorDegreesOfFreedom();
             var denomDFMinusTwo = denominatorDF - 2;
 
             return ( 2 * (denominatorDF * denominatorDF) * (numeratorDF + denominatorDF - 2) ) /
                    ( (numeratorDF * (denomDFMinusTwo * denomDFMinusTwo) * (denominatorDF - 4)) );
         }
 
-        return Double.NaN;
+        return Number.NaN;
     };
 
 

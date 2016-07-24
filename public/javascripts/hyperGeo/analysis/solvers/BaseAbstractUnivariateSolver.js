@@ -7,15 +7,13 @@ Translated from Ilyas Mounaime's Java code
 */
 var DEFAULT_RELATIVE_ACCURACY = 1e-14;
 var DEFAULT_FUNCTION_VALUE_ACCURACY = 1e-15;
+var Incrementor = require("../../util/Incrementor");
+
 //implements BaseUnivariateSolver
 
 
 function BaseUnivariateSolver(relativeAccuracy, absoluteAccuracy, functionValueAccuracy){
-  this.evaluations = 0;
-  this.counterMax;
-  this.searchMin;
-  this.searchMax;
-  this.searchStart;
+  this.evaluations = new Incrementor();
 
   if(arguments.length == 1){
     this.relativeAccuracy = DEFAULT_RELATIVE_ACCURACY;
@@ -32,12 +30,16 @@ function BaseUnivariateSolver(relativeAccuracy, absoluteAccuracy, functionValueA
   }
 }
 
-BaseUnivariateSolver.prototype.getMaxEvaluations = function () {
-  return counterMax;
-};
-
-BaseUnivariateSolver.prototype.getEvaluations = function () {
-  return this.evaluations;
+BaseUnivariateSolver.prototype = {
+    getMaxEvaluations: function(){
+        return this.evaluations.getMaximalCount();
+    },
+    getEvaluations: function(){
+        return this.evaluation.getCount();
+    },
+    getMin: function(){
+        return this.searchMin;
+    }
 };
 
 module.exports = BaseUnivariateSolver;
