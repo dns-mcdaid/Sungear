@@ -16,9 +16,9 @@
  * @param desc - the gene description.
  */
 function Gene(name, desc) {
-    this.name = name; /** Type: String. Gene PUB name */
-    this.desc = desc; /** Type: String. Gene description. */
-    this.exp = [];    /** Type: float[]. Gene expression values */
+    this.name = name; /** {String} Gene PUB name */
+    this.desc = desc; /** {String} Gene description. */
+    this.exp = [];    /** {float[]} Gene expression values */
 }
 
 Gene.prototype = {
@@ -42,7 +42,7 @@ Gene.prototype = {
      * @param e the expression values (float[])
      */
     setExp : function(e) {
-        this.exp = [e.length];
+        this.exp = [];
         this.exp = e.slice();
     },
     /**
@@ -52,6 +52,10 @@ Gene.prototype = {
     getExp : function(){
         return this.exp;
     },
+    /**
+     * @param g {Gene}
+     * @returns {number}
+     */
     compareTo : function(g){
         var str1 = this.name.toLowerCase();
         var str2 = g.getName().toLowerCase();

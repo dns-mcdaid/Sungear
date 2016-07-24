@@ -76,15 +76,21 @@ GeneList.prototype = {
             throw new ParseException("data source not initialized.");
         } else {
             this.genesS = new SortedSet();
-            this.genesS.addAll(this.source.getReader().expGenes);
+            var toAdd = this.source.getReader().expGenes.toArray(); // TODO: Ensure this works.
+            for (var i = 0; i < toAdd.length; i++) {
+                this.geneS.add(toAdd[i]);
+            }
             var iL = this.source.getAttributes().get("itemsLabel", "items");
             if (this.genesS.isEmpty()) {
                 throw new ParseException("no " + iL + " in data set");
             } else {
                 this.activeS = new SortedSet();
-                this.activeS.addAll(this.genesS);
                 this.selectionS = new SortedSet();
-                this.selectionS.addAll(this.genesS);
+                var tempGenesS = this.genesS.toArray();
+                for (i = 0; i < tempGenesS.length; i++) {
+                    this.activeS.add(tempGenesS[i]);
+                    this.selectionS.add(tempGenesS[i]);
+                }
                 this.hist.clear();
                 this.hist.add(this.selectionS);
                 console.log("working items: " + this.genesS.size());

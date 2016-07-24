@@ -14,7 +14,6 @@ Anchor.prototype = {
 
     cleanup : function() {
         console.log("Cleaning up Anchor");
-        return;
     },
 
     compareTo : function(a) {

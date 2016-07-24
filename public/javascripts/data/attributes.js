@@ -29,7 +29,7 @@ var ParseException = require('./parseException');
  * @param queryString the query string, usually the one used to open Sungear
  */
 function Attributes(queryString) {
-    this.attrib = {}; /** @type Hashtable<String, Object> Master hash table that stores all attributes */
+    this.attrib = {}; /** {Hashtable<String, Object>} Master hash table that stores all attributes */
     if (typeof queryString !== "undefined") {
         var nvp = queryString.split("\\&");
         var tempReader = new DataReader();
