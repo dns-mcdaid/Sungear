@@ -57,10 +57,10 @@ var NumberIsTooLargeException = require('../exception/NumberIsTooLargeException'
 
     if(lowerBound === Number.POSITIVE_INFINITY){
       if(chebyshevApplies){
-        upperBound = mu + sig * FastMathSqrt(p/(1-p));
+        upperBound = mu + sig * Math.sqrt(p/(1-p));
       }else{
         upperBound = 1.0;
-        while(this.cumulativeProbability(upperBoung) < p){
+        while(this.cumulativeProbability(upperBound) < p){
           upperBound *= 2.0;
         }
       }

@@ -9,6 +9,8 @@ Translated from Ilyas Mounaime's Java code
 //IMPLEMENT INHERITANCE
 var MultivariateRealDistribution = require('./MultivariateRealDistribution');
 var LocalizedFormats = require("../exception/util/LocalizedFormats");
+var NotStrictlyPositiveException = require("../exception/NotStrictlyPositiveException");
+
 AbstractMultivariateRealDistribution.prototype = Object.create(MultivariateRealDistribution.prototype);
 AbstractMultivariateRealDistribution.prototype.constructor = AbstractMultivariateRealDistribution;
 
