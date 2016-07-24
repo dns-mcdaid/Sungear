@@ -17,6 +17,10 @@ a {
     color: #3399FF;
 }
 
+textarea {
+    width: 100%;
+}
+
 #sunGui {
     width: 100%;
     height: 300px;

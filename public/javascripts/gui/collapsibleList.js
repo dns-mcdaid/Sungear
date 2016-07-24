@@ -23,23 +23,24 @@ function CollapsibleList(g) {
     this.copyB = document.getElementById('copyB');
     this.queryB = document.getElementById('queryB');
     this.copyB.title = "Copy the currently selected items to the clipboard";
+    this.queryB.title = "Search the active items using a query list";
     this.genes.addGeneListener(this);
     this.genes.addMultiSelect(this);
 
-    // TODO: Implement a custom EventListener which can be applied to each row of the table individually.
+    // Difference between this and Java SunGear:
+        // queryB opens a modal in both,
+        // however querySubmit is added in this version
+        // to actually handle the queries a person is searching for.
+    this.queryDSubmit = document.getElementById('queryDSubmit');
+    this.queryDLabel = document.getElementById('queryDLabel');
+    this.queryA = document.getElementById('queryA');
 
-    this.queryB.addEventListener("click", function() {
-        this.queryGenes();
-    });
-    this.copyB.addEventListener("click", function() {
-        this.copyGenes();   // TODO: Implement a way to copy to clipboard when copyB is pressed.
-    });
-    this.findSelectB.addEventListener("click", function() {
-        this.findSelectGenes();
-    });
-    this.collapseT.addEventListener("click", function() {
-        this.setCollapsed(/** TODO: INCLUDE A PARAMETER */);
-    });
+    // TODO: Implement a custom EventListener which can be applied to each row of the table individually.
+    this.queryB.addEventListener("click", this.updateQueryDLabel.bind(this));
+    this.queryDSubmit.addEventListener("click", this.queryGenes.bind(this));
+    this.copyB.addEventListener("click", this.copyGenes.bind(this));
+    this.findSelectB.addEventListener("click", this.findSelectGenes.bind(this));
+    this.collapseT.addEventListener("click", this.setCollapsed.bind(this)/** TODO: Include Parameters */);
     this.collapsed = false;
 }
 
@@ -56,9 +57,16 @@ CollapsibleList.prototype = {
     },
     copyGenes : function() {
         // TODO: Find a .js package which grants access to the clipboard.
+        console.log("Might work!");
     },
     queryGenes : function() {
-        
+        var results = this.queryA.value;
+        // TODO: Finish implementation.
+        this.queryA.value = "";
+    },
+    updateQueryDLabel : function() {
+        var msg = "Query " /** TODO: + this.genes.getSource().getAttributes().get("itemsLabel", "items")*/;
+        this.queryDLabel.innerHTML = msg;
     }
 };
 

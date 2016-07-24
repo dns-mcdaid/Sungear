@@ -1,12 +1,3 @@
-require('javascript.util');
-var SortedSet = javascript.util.SortedSet;
-var TreeSet = javascript.util.TreeSet;
-
-var DataSource = require('../data/dataSource');
-var ParseException = require('../data/parseException');
-var GeneEvent = require('./geneEvent');
-var MultiSelectable = require('./multiSelectable');
-
 /**
  * The central class for gene subset selection operations.
  * Maintains master gene table as well as relevant gene sets: all genes in the
@@ -20,8 +11,17 @@ var MultiSelectable = require('./multiSelectable');
  * <p>Generally one copy of this class should be instantiated by the main class,
  * and kept alive throughout the existence of that class.
  *
- * @author crispy
+ * @author RajahBimmy
  */
+
+require('javascript.util');
+var SortedSet = javascript.util.SortedSet;
+var TreeSet = javascript.util.TreeSet;
+
+var DataSource = require('../data/dataSource');
+var ParseException = require('../data/parseException');
+var GeneEvent = require('./geneEvent');
+var MultiSelectable = require('./multiSelectable');
 
 /**
  * Constructs a new gene list.  The list is useless until
@@ -375,14 +375,14 @@ History.prototype = {
     },
     /**
      * Indicates whether or not a previous set exists.
-     * @return true if there is a previous set, otherwise false
+     * @return {boolean} true if there is a previous set, otherwise false
      */
     hasPrev : function() {
         return this.curr > 0;
     },
     /**
      * Indicates whether or not a next set exists.
-     * @return true if there is a next set, otherwise false
+     * @return {boolean} true if there is a next set, otherwise false
      */
     hasNext : function() {
         return this.curr < this.past.length - 1;

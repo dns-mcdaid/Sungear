@@ -7,6 +7,9 @@
  */
 
 const p5 = require('p5');
+const VisGene = require('./app/visGene');
+
+var args = [ "" ];
 
 var hereWeGo = new p5(function(p5) {
     var WIDTH;
@@ -26,6 +29,7 @@ var hereWeGo = new p5(function(p5) {
         }
         p5.ellipse(p5.mouseX, p5.mouseY, 80, 80);
     };
+    VisGene.main(args);
 }, 'sungearGui');
 
 
@@ -45,8 +49,7 @@ var hereWeGo = new p5(function(p5) {
 
 
 
-
-// const VisGene = require('./app/visGene');
+//
 //
 // function main(args) {
 //     try {

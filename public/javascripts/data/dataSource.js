@@ -19,14 +19,15 @@ var DataReader = require('./dataReader');
 function DataSource(dataDir) {
     this.dataDir = dataDir; /** Data directory for relative file locations */
 
+    /** {URL}s */
     this.geneSrc = null;    /** Location of gene list file */
     this.glSrc = null;      /** Location of GO term list file */
     this.ghSrc = null;      /** Location of GO term hierarchy file */
     this.ggSrc = null;      /** Location of GO-to-gene association file */
     this.sunSrc = null;     /** Location of Sungear experimentfile */
 
-    this.reader = null;     /** Reader object that performs actual file parsing */
-    this.attrib = null;     /** Holds arbitrary information about the current experiment */
+    this.reader = null;     /** {DataReader} Reader object that performs actual file parsing */
+    this.attrib = null;     /** {Attributes} Holds arbitrary information about the current experiment */
 }
 
 /** Default name of gene description file if none is given */

@@ -83,25 +83,18 @@ function VisGene(u, w, pn, dataDir) {
 VisGene.VERSION = "0.2.0";
 VisGene.DEFAULT_DATA_DIR = "../data";
 VisGene.notice = "Copyright Chris Poultney, Radhika Mattoo, and Dennis McDaid 2016";
-VisGene.usage = function(){
-    console.log("Launches Sungear application");
-    console.log("--version: shows current Sungear application version");
-    console.log("--usage or --help: shows this message");
-    console.log("-nowarn: suppress warning message dialogs (useful for giving demos)");
-    console.log("-data_dir {dirname}: use absolute or relative path {dirname} as data directory (default: ../data)");
-    console.log("-plugin: followed by comma-separate list of plugins to load, e.g. gui.GeneLights");
-    console.log("GeneLights plugin is distributed with Sungear; others must be available in classpath");
-    console.log("-plugin flag can appear multiple times instead of or in combination with using comma-separation");
-};
 
 VisGene.prototype = {
     constructor : VisGene,
     /**
+     * TODO: FINISH
+     *
      * This function initializes the top navbar options
      * And instantiates the GO Terms, Controls, SunGear, and (I believe) Gene Frame
      * It is not totally complete, however most of it should work.
      */
     init : function() {
+        console.log("Made it to VisGene.init!");
         // RIP lines 144 - 206
         console.log(this.extAttrib);
         if (this.dataDir === null) {
@@ -110,22 +103,25 @@ VisGene.prototype = {
         if (this.dataDir[this.dataDir.length-1] != "/") {
             this.dataDir += "/";
         }
-        this.dataU = new DataReader().makeURL(this.base, this.dataDir);
+        this.dataU = DataReader.makeURL(this.base, this.dataDir);
 
         // prepare for data source
         this.src = new DataSource(this.dataU);
         this.geneList = new GeneList();
+
+        // build desktop
         var loadI = document.getElementById('nav-load');
         var screenI = document.getElementById('screenshot');
         loadI.addEventListener("click", function() {
             // TODO: @Dennis implement lines 241 - 287
-                // Should open a new alert
+                // Should open a frame.
                 // Allow the user to pick a set from a table
                 // Then reload the page
         });
         screenI.addEventListener("click", function() {
             // TODO: @Dennis implement lines 288 - 310
         });
+
         this.geneF = document.getElementById("geneF");
         this.l1 = new CollapsibleList(this.geneList);
         // TODO: Attach l1 to geneF
@@ -344,59 +340,6 @@ VisGene.prototype = {
             // TODO: Include plugin information? Maybe? Maybe not?
         }
         alert(msg);
-    },
-    /**
-     * Show the usage message and exit.
-     */
-    usage : function() {
-        console.log("Launches Sungear application");
-        console.log("--version: shows current Sungear application version");
-        console.log("--usage or --help: shows this message");
-        console.log("-nowarn: suppress warning message dialogs (useful for giving demos)");
-        console.log("-data_dir {dirname}: use absolute or relative path {dirname} as data directory (default: ../data)");
-        console.log("-plugin: followed by comma-separate list of plugins to load, e.g. gui.GeneLights");
-        console.log("GeneLights plugin is distributed with Sungear; others must be available in classpath");
-        console.log("-plugin flag can appear multiple times instead of or in combination with using comma-separation");
-    },
-    /**
-     * @param args {String[]}
-     */
-    main : function(args) {
-        try {
-            var i = 0;
-            var warn = true;
-            var plugin = [];
-            var dataDir = null;
-            while (i < args.length && args[i][0] == "-" || args[i] == "demo") {
-                if (args[i].localeCompare("--version")) {
-                    console.log(VisGene.VERSION);
-                } else if (args[i] == "--usage" || args[i] == "--help") {
-                    this.usage();
-                } else if (args[i] == "demo" || args[i] == "-nowarn") {
-                    warn = false;
-                    i++;
-                } else if (args[i] == "-plugin") {
-                    var f = args[i+1].split(",");
-                    for (var s = 0; s < f.length; s++) {
-                        plugin.push(f[s]);
-                    }
-                    i += 2;
-                } else if (args[i] == "-data_dir") {
-                    dataDir = args[i+1];
-                    i += 2;
-                } else {
-                    console.log("ERROR: Unkown argument " + args[i]);
-                    this.usage();
-                }
-            }
-            for (var j = i; j < args.length; j++) {
-                plugin.push(args[j]);
-            }
-            var vis = new VisGene(new URL("./"), warn, plugin, dataDir);
-            vis.init();
-        } catch(mu) {
-            console.log(mu);
-        }
     }
 };
 
@@ -436,11 +379,85 @@ function LoadThread(attrib, status) {
 
 LoadThread.prototype = {
     constructor : LoadThread,
-    run : function() {
-        // TODO: Implement. Figure out how to impact a VisGene member.
+    run : function(parent) {
+        try {
+            parent.src.set(this.attrib, this.status);
+            this.status.updateStatus("Preparing Sungear Display", 4);
+            parent.geneList.setSource(parent.src);
+            parent.geneList.update();
+            this.status.updateStatus("Done", 5);
+        } catch (oo) {
+            if (typeof oo !== ParseException) {
+                console.log("Out of memory?");
+                this.status.updateStatus("ERROR: Out of memory", 5);
+                // this.status.setModal(false);
+                parent.src.getReader().clear();
+                this.ex = new ParseException("Out of memory");
+            } else {
+                this.ex = oo;
+            }
+        }
+        // this.status.setVisible(false);
+        // this.status.dispose();
+        return;
     },
     getException : function() {
         return this.ex;
+    }
+};
+
+/**
+ * Show the usage message and exit.
+ */
+VisGene.usage = function(){
+    console.log("Launches Sungear application");
+    console.log("--version: shows current Sungear application version");
+    console.log("--usage or --help: shows this message");
+    console.log("-nowarn: suppress warning message dialogs (useful for giving demos)");
+    console.log("-data_dir {dirname}: use absolute or relative path {dirname} as data directory (default: ../data)");
+    console.log("-plugin: followed by comma-separate list of plugins to load, e.g. gui.GeneLights");
+    console.log("GeneLights plugin is distributed with Sungear; others must be available in classpath");
+    console.log("-plugin flag can appear multiple times instead of or in combination with using comma-separation");
+};
+/**
+ * @param args {String[]}
+ */
+VisGene.main = function(args) {
+    try {
+        var i = 0;
+        var warn = true;
+        var plugin = [];
+        var dataDir = null;
+        while (i < args.length && args[i][0] == "-" || args[i] == "demo") {
+            if (args[i].localeCompare("--version")) {
+                console.log(VisGene.VERSION);
+            } else if (args[i] == "--usage" || args[i] == "--help") {
+                this.usage();
+            } else if (args[i] == "demo" || args[i] == "-nowarn") {
+                warn = false;
+                i++;
+            } else if (args[i] == "-plugin") {
+                var f = args[i+1].split(",");
+                for (var s = 0; s < f.length; s++) {
+                    plugin.push(f[s]);
+                }
+                i += 2;
+            } else if (args[i] == "-data_dir") {
+                dataDir = args[i+1];
+                i += 2;
+            } else {
+                console.log("ERROR: Unkown argument " + args[i]);
+                this.usage();
+            }
+        }
+        for (var j = i; j < args.length; j++) {
+            plugin.push(args[j]);
+        }
+        // FIXME: Potentially replace first arg with new URL()
+        var vis = new VisGene(new URL("file:./"), warn, plugin, dataDir);
+        vis.init();
+    } catch(mu) {
+        console.log(mu);
     }
 };
 
