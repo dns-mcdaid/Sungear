@@ -25,13 +25,13 @@ var numericalVariance = Math.NaN;
 	HypergeometricDistribution.prototype.constructor = HypergeometricDistribution;
 
 	function HypergeometricDistribution(populationSize, numberOfSuccesses, sampleSize, rng){
-
-
-        if(arguments.length < 4){
-			// var newRNG= new Well19937c();
-			// rng = null;
-			// rng = newRNG;
-		}
+		var passedRNG;
+		//ok so it doesn't really use the rng, just for calling the super class
+        // if(arguments.length < 4){
+		// 	passedRNG= new Well19937c();
+		// }else{
+		// 	passedRNG = rng;
+		// }
 
 		if (populationSize <= 0) {
 			throw NotStrictlyPositiveException(LocalizedFormats.POPULATION_SIZE,populationSize);
@@ -53,7 +53,7 @@ var numericalVariance = Math.NaN;
 			this.populationSize = populationSize;
 			this.sampleSize = sampleSize;
 		}
-
+		// AbstractIntegerDistribution.call(this, passedRNG);
 	}
 
 	//GETTERS AND HELPERS
@@ -78,7 +78,6 @@ var numericalVariance = Math.NaN;
 	HypergeometricDistribution.prototype.getDomain = function(n, m, k){
 		var ret1 = this.getLowerDomain(n,m,k);
 		var ret2 = this.getUpperDomain(m,k);
-		console.log(ret1 + " , " + ret2);
 		return [ret1, ret2];
 	};
 

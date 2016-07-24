@@ -17,3 +17,5 @@ NotStrictlyPositiveException.prototype.constructor = NotStrictlyPositiveExceptio
 function NotStrictlyPositiveException(value){
 	NumberIsTooSmallException.call(this, "NotStrictlyPositiveException", value);
 }
+
+module.exports = NotStrictlyPositiveException;
