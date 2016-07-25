@@ -1,4 +1,5 @@
-var Comp = require('./sungear/comp');
+const Comp = require('./sungear/comp');
+const Icons = require('./sungear/icons');
 
 /**
  * Interactive generalization of a Venn diagram to many dimensions.
@@ -8,6 +9,9 @@ function SunGear(genes, thresh, statsF) {
         statsF = thresh;
         thresh = 0.0;
     }
+    // Custom Rajah object for p5
+    this.visuals = [];
+
     this.minRad = [ 0.0, 0.005, 0.010, 0.015, 0.020 ];
 
     this.genes = genes;
@@ -19,8 +23,19 @@ function SunGear(genes, thresh, statsF) {
     this.polarPlot = false;
     this.showArrows = true;
     this.minRadIdx = 0;
-    
-    // TODO: @Dennis Use p5 to add Sungear GUI components from lines 141 - 192
+
+    this.prevB = new Icons.ArrowIcon(2, 4, SunGear.C_PLAIN, SunGear.C_HIGHLIGHT, SunGear.C_SELECT, false);
+    this.selB = new Icons.EllipseIcon(3, SunGear.C_PLAIN, SunGear.C_HIGHLIGHT, SunGear.C_SELECT, false);
+    this.nextB = new Icons.ArrowIcon(0, 4, SunGear.C_PLAIN, SunGear.C_HIGHLIGHT, SunGear.C_SELECT, false);
+    this.statsB = new Icons.StatsIcon(SunGear.C_PLAIN, SunGear.C_HIGHLIGHT, SunGear.C_SELECT);
+    this.saI = [];
+    this.saI.push(new Icons.ShowArrowIcon(SunGear.C_PLAIN, SunGear.C_HIGHLIGHT, SunGear.C_SELECT, true));
+    this.saI.push(new Icons.ShowArrowIcon(SunGear.C_PLAIN, SunGear.C_HIGHLIGHT, SunGear.C_SELECT, false));
+    this.vsI = [];
+    for (var i = 0; i < this.minRad.length; i++) {
+        this.vsI.push(new Icons.VesselMinIcon(SunGear.C_PLAIN, SunGear.C_HIGHLIGHT, SunGear.C_SELECT, this.minRad.length, 2, i));
+    }
+    // TODO: Set tooltips for icons.
     
     this.setShowArrows(this.showArrows);
 
@@ -42,9 +57,10 @@ function SunGear(genes, thresh, statsF) {
 
 SunGear.R_OUTER = 1.2;
 SunGear.R_CIRCLE = 1.0;
-SunGear.C_PLAIN = "#F3FE0F";
+SunGear.C_PLAIN = "#F3EFE0";
 SunGear.C_HIGHLIGHT = "#9A3334";
-SunGear.C_SELECT = "#217C7E";
+SunGear.C_SELECT = "#3399FF";
+SunGear.C_SELECT_ALT = "#217C7E";
 
 SunGear.prototype = {
     constructor : SunGear,

@@ -1,7 +1,11 @@
-function ArrowIcon(type, scale, color, fill) {
+function ArrowIcon(type, scale, plain, highlight, select, fill) {
+    this.arrowX = [0, 2, 0, 0,-2,-2,0];
+    this.arrowY = [2, 0,-2,-1,-1, 1,1];
     this.type = type;
     this.scale = scale;
-    this.color = color;
+    this.plain = plain;
+    this.highlight = highlight;
+    this.select = select;
     this.fill = fill;
 }
 
@@ -14,12 +18,34 @@ ArrowIcon.prototype = {
         return this.scale * 4;
     },
     paintIcon : function(c, p5, x, y) {
-        
+        p5.push();
+        p5.translate(x + 2 * this.scale, y + 2 * this.scale);
+        p5.rotate(.5 * Math.PI * this.type);
+        p5.scale(this.scale, this.scale);
+        // p5.strokeWeight(.5);
+        p5.noStroke();
+        if (p5.dist(p5.mouseX, p5.mouseY, x+4, y+4) < this.scale*2) {
+            if (p5.mouseIsPressed) {
+                p5.fill(this.select);
+            } else {
+                p5.fill(this.highlight);
+            }
+        } else {
+            p5.fill(this.plain);
+        }
+        p5.beginShape();
+        for (var i = 0; i < this.arrowX.length; i++) {
+            p5.vertex(this.arrowX[i], this.arrowY[i]);
+        }
+        p5.endShape(p5.CLOSE);
+        p5.pop();
     }
 };
 
-function VesselMinIcon(color, steps, stepSize, step) {
-    this.color = color;
+function VesselMinIcon(plain, highlight, select, steps, stepSize, step) {
+    this.plain = plain;
+    this.highlight = highlight;
+    this.select = select;
     this.steps = steps;
     this.stepSize = stepSize;
     this.step = step;
@@ -44,8 +70,10 @@ VesselMinIcon.prototype = {
     }
 };
 
-function ShowArrowIcon(color, arrow) {
-    this.color = color;
+function ShowArrowIcon(plain, highlight, select, arrow) {
+    this.plain = plain;
+    this.highlight = highlight;
+    this.select = select;
     this.arrow = arrow;
 }
 
@@ -66,9 +94,17 @@ ShowArrowIcon.prototype = {
     }
 };
 
-function EllipseIcon(scale, color, fill) {
+function EllipseIcon(scale, plain, highlight, select, fill) {
+    this.ellipse = {
+        x : -2,
+        y : -2,
+        w : 4,
+        h : 4
+    };
     this.scale = scale;
-    this.color = color;
+    this.plain = plain;
+    this.highlight = highlight;
+    this.select = select;
     this.fill = fill;
 }
 
@@ -81,12 +117,29 @@ EllipseIcon.prototype = {
         return this.scale * 4;
     },
     paintIcon : function(c, p5, x, y) {
-
+        p5.push();
+        p5.translate(x+2*this.scale, y+2*this.scale);
+        p5.scale(this.scale, this.scale);
+        // p5.strokeWeight(.5);
+        p5.noStroke();
+        if (p5.dist(p5.mouseX, p5.mouseY, x, y) < 2*this.scale) {
+            if (p5.mouseIsPressed) {
+                p5.fill(this.select);
+            } else {
+                p5.fill(this.highlight);
+            }
+        } else {
+            p5.fill(this.plain);
+        }
+        p5.ellipse(this.ellipse.x, this.ellipse.y, this.ellipse.w, this.ellipse.h);
+        p5.pop();
     }
 };
 
-function StatsIcon(color) {
-    this.color = color;
+function StatsIcon(plain, highlight, select) {
+    this.plain = plain;
+    this.highlight = highlight;
+    this.select = select;
     this.W = 15;
     this.H = 16;
 }
@@ -99,8 +152,24 @@ StatsIcon.prototype = {
     getIconHeight : function() {
         return this.H;
     },
-    paintIcon : function(c, g, x, y) {
-
+    paintIcon : function(c, p5, x, y) {
+        p5.push();
+        if (p5.dist(p5.mouseX, p5.mouseY, x+(this.W/2), y+(this.H/y)) < this.H) {
+            if (p5.mouseIsPressed) {
+                p5.stroke(this.select);
+            } else {
+                p5.stroke(this.highlight);
+            }
+        } else {
+            p5.stroke(this.plain);
+        }
+        for (var i = 0; i < 3; i++) {
+            p5.line(x+7*i, y+0, x+7*i, y+this.H-1);
+        }
+        for (i = 0; i < 6; i++) {
+            p5.line(x+0, y+3*i, x+this.W-1, y+3*i);
+        }
+        p5.pop();
     }
 };
 

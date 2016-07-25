@@ -149,16 +149,9 @@ VisGene.prototype = {
         // init component sizes
         // this.positionWindows();
         // TODO: lines 404 - 445
-        document.getElementById('reposition').addEventListener("click", function() {
-            this.positionWindows();
-        });
-        var relaxC = document.getElementById('relax-vessels');
-        relaxC.addEventListener("click", function() {
-            var val = (relaxC.title === 'true');
-            this.gear.setRelax(val);
-            val = !val;
-            relaxC.title = val.toString();
-        });
+        document.getElementById('reposition').addEventListener("click", this.positionWindows.bind(this));
+        this.relaxC = document.getElementById('relax-vessels');
+        this.relaxC.addEventListener("click", this.toggleRelax.bind(this));
         var fullC = document.getElementById('full-screen');
         fullC.addEventListener("click", function() {
             // TODO: Make full screen function.
@@ -225,15 +218,18 @@ VisGene.prototype = {
     },
     toggleFullScreen : function() {
         // TODO: Implement this later.
+        console.log("visGene.toggleFullScreen called! Please implement me.")
     },
-    poisitionWindows : function() {
+    positionWindows : function() {
         // TODO: Implement this later.
+        console.log("visGene.positionWindows called! Please implement me.");
     },
     /**
      * Sets all desktop window sizes and positions to their defaults.
      */
     makeFrame : function() {
         // TODO: Implement this later.
+        console.log("visGene.makeFrame called! Please implement me.")
     },
     /**
      * Makes a check box menu item with JInternalFrame iconify control.
@@ -242,6 +238,7 @@ VisGene.prototype = {
      */
     makeItem : function(f) {
         // TODO: Implement this later.
+        console.log("visGene.makeItem called! Please implement me.");
     },
     /**
      * Opens an experiment file.
@@ -290,38 +287,19 @@ VisGene.prototype = {
             return s;
         }
     },
-    /**
-     * TODO: FINISH ME.
-     */
     showAbout : function() {
         this.aboutDLabel.innerHTML = "Sungear Version " + VisGene.VERSION;
-        try {
-            var msg;
-
-            var p = "/";
-            fs.readdir(p, function (err, files) {
-                if (err) {
-                    console.log(err);
-                }
-                console.log(files.toString());
-            });
-
-            this.aboutDBody.innerHTML = msg;
-
-            // msg += "Sungear is a collaboration between the Biology Department and the Courant Institute of Mathematical Sciences, New York University.";
-            // msg += "Primary Developer:\nChris Poultney\n\n";
-            // msg += "Seconday Developers:\nRadhika Mattoo\nDennis McDaid\n\n";
-            // msg += "GeneLights Developers:\nDelin Yang\nEric Leung\n\n";
-            // msg += "NYU-Biology:\nGloria Coruzzi\nRodrigo A. Gutierrez\nManpreet Katari\n\n";
-            // msg += "NYU-Courant:\nDennis Shasha\n\n";
-            // msg += "Additional Collaborators:\nBradford Paley (Didi, Inc.)\n\n";
-            // msg += "This work has been partly supported by the U.S. National Science Foundation under grants NSF IIS-9988345, N2010-0115586, and MCB-0209754. This support is greatly appreciated.\n\n";
-            // msg += "For more information visit: http://virtualplant.bio.nyu.edu/\n\n";
-            // msg += "Copyright 2016, New York University";
-        } catch (e) {
-            console.log("Error reading about pane text:");
-            console.log(e);
-        }
+        var msg = "<p>Sungear is a collaboration between the Biology Department and the Courant Institute of Mathematical Sciences, New York University.</p><br />";
+        msg += "<p>Primary Developer:</p><p>Chris Poultney</p><br />";
+        msg += "<p>Javascript Developers:</p><p><a href='https://github.com/radhikamattoo'>Radhika Mattoo</a></p><p><a href='https://github.com/RajahBimmy'>Dennis McDaid</a></p><br />";
+        msg += "<p>GeneLights Developers:</p><p>Delin Yang</p><p>Eric Leung</p><br />";
+        msg += "<p>NYU-Biology:</p><p>Gloria Coruzzi</p><p>Rodrigo A. Gutierrez</p><p>Manpreet Katari</p><br />";
+        msg += "<p>NYU-Courant:</p><p>Dennis Shasha</p><br />";
+        msg += "<p>Additional Collaborators:</p><p>Bradford Paley (<a href='http://www.didi.com/'>Didi, Inc.</a>)</p><br />";
+        msg += "<p>This work has been partly supported by the U.S. National Science Foundation under grants NSF IIS-9988345, N2010-0115586, and MCB-0209754. This support is greatly appreciated.</p><br />";
+        msg += "<p>For more information visit: <a href='http://virtualplant.bio.nyu.edu/'>http://virtualplant.bio.nyu.edu/</a></p><br />";
+        msg += "<p>Copyright 2005-2016, New York University</p>";
+        this.aboutDBody.innerHTML = msg;
     },
     formatComment : function(a, commentName) {
         var comment = a.get(commentName, "(none)\n");
@@ -359,8 +337,22 @@ VisGene.prototype = {
             // TODO: Include plugin information? Maybe? Maybe not?
         }
         alert(msg);
+    },
+    toggleRelax : function() {
+        var val = (this.relaxC.title === 'true');
+        this.gear.setRelax(val);
+        val = !val;
+        this.relaxC.title = val.toString();
+    },
+    /**
+     * TODO: Implement. Should return all items for p5 to draw.
+     * @returns {*}
+     */
+    getSunGearVisuals : function(){
+        return this.gear.getVisuals();
     }
-};
+}
+;
 
 /**
  * Generic status dialog class that tries to position itself in the
