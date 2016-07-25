@@ -1,3 +1,5 @@
+/** DONE */
+
 function ArrowIcon(type, scale, plain, highlight, select, fill) {
     this.arrowX = [0, 2, 0, 0,-2,-2,0];
     this.arrowY = [2, 0,-2,-1,-1, 1,1];
@@ -31,6 +33,9 @@ ArrowIcon.prototype = {
                 p5.fill(this.highlight);
             }
         } else {
+            // p5.strokeWeight(.3);
+            // p5.fill("#111111");
+            // p5.stroke(this.plain);
             p5.fill(this.plain);
         }
         p5.beginShape();
@@ -63,8 +68,20 @@ VesselMinIcon.prototype = {
     },
     paintIcon : function(c, p5, x, y) {
         p5.push();
-        for (var i = this.steps -1; i >= 0; i--) {
-            // TODO: Finish
+        p5.noStroke();
+        p5.ellipseMode(p5.CENTER);
+        for (var i = this.steps - 1; i >= 0; i--) {
+            if (this.step == i) {
+                p5.fill(this.select);
+            } else {
+                if (p5.dist(p5.mouseX, p5.mouseY, x, y) < this.stepSize * this.steps) {
+                    p5.fill(this.highlight);
+                } else {
+                    p5.fill(this.plain);
+                }
+            }
+            var sz = this.stepSize * (i+1) * 2;
+            p5.ellipse(x, y, sz, sz);
         }
         p5.pop();
     }
@@ -90,7 +107,32 @@ ShowArrowIcon.prototype = {
         return ShowArrowIcon.H;
     },
     paintIcon : function(c, p5, x, y) {
-
+        p5.push();
+        // Set color and build oval
+        if (p5.dist(p5.mouseX, p5.mouseY, x, y) < 7) {
+            if (p5.mouseIsPressed) {
+                p5.stroke(this.select);
+                p5.fill(this.select);
+            } else {
+                p5.stroke(this.highlight);
+                p5.fill(this.highlight);
+            }
+        } else {
+            p5.stroke(this.plain);
+            p5.fill(this.plain);
+        }
+        p5.ellipse(x, y, 7, 7);
+        p5.translate(x, y);
+        for (var i = 0; i < 4; i++) {
+            p5.push();
+            p5.rotate(i*2*Math.PI/4.0);
+            p5.translate(1, -.5);
+            p5.line(4, 0, 7, 0);
+            p5.line(7, 0, 7-ShowArrowIcon.A, -ShowArrowIcon.A);
+            p5.line(7, 0, 7-ShowArrowIcon.A, ShowArrowIcon.A);
+            p5.pop();
+        }
+        p5.pop();
     }
 };
 
@@ -129,6 +171,9 @@ EllipseIcon.prototype = {
                 p5.fill(this.highlight);
             }
         } else {
+            // p5.strokeWeight(.5);
+            // p5.fill("#111111");
+            // p5.stroke(this.plain);
             p5.fill(this.plain);
         }
         p5.ellipse(this.ellipse.x, this.ellipse.y, this.ellipse.w, this.ellipse.h);

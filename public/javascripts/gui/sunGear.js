@@ -58,8 +58,8 @@ function SunGear(genes, thresh, statsF) {
 SunGear.R_OUTER = 1.2;
 SunGear.R_CIRCLE = 1.0;
 SunGear.C_PLAIN = "#F3EFE0";
-SunGear.C_HIGHLIGHT = "#9A3334";
-SunGear.C_SELECT = "#3399FF";
+SunGear.C_HIGHLIGHT = "#3399FF";
+SunGear.C_SELECT = "#9A3334";
 SunGear.C_SELECT_ALT = "#217C7E";
 
 SunGear.prototype = {
