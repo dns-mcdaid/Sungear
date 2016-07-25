@@ -19,7 +19,11 @@ ArrowIcon.prototype = {
     getIconHeight : function() {
         return this.scale * 4;
     },
-    paintIcon : function(c, p5, x, y) {
+    paintIcon : function(p5, x, y) {
+        if (typeof y == 'undefined') {
+            y = x[1];
+            x = x[0];
+        }
         p5.push();
         p5.translate(x + 2 * this.scale, y + 2 * this.scale);
         p5.rotate(.5 * Math.PI * this.type);
@@ -66,7 +70,11 @@ VesselMinIcon.prototype = {
     getIconHeight : function() {
         return this.H;
     },
-    paintIcon : function(c, p5, x, y) {
+    paintIcon : function(p5, x, y) {
+        if (typeof y == 'undefined') {
+            y = x[1];
+            x = x[0];
+        }
         p5.push();
         p5.noStroke();
         p5.ellipseMode(p5.CENTER);
@@ -106,7 +114,11 @@ ShowArrowIcon.prototype = {
     getIconHeight : function() {
         return ShowArrowIcon.H;
     },
-    paintIcon : function(c, p5, x, y) {
+    paintIcon : function(p5, x, y) {
+        if (typeof y == 'undefined') {
+            y = x[1];
+            x = x[0];
+        }
         p5.push();
         // Set color and build oval
         if (p5.dist(p5.mouseX, p5.mouseY, x, y) < 7) {
@@ -158,7 +170,11 @@ EllipseIcon.prototype = {
     getIconHeight : function() {
         return this.scale * 4;
     },
-    paintIcon : function(c, p5, x, y) {
+    paintIcon : function(p5, x, y) {
+        if (typeof y == 'undefined') {
+            y = x[1];
+            x = x[0];
+        }
         p5.push();
         p5.translate(x+2*this.scale, y+2*this.scale);
         p5.scale(this.scale, this.scale);
@@ -197,7 +213,11 @@ StatsIcon.prototype = {
     getIconHeight : function() {
         return this.H;
     },
-    paintIcon : function(c, p5, x, y) {
+    paintIcon : function(p5, x, y) {
+        if (typeof y == 'undefined') {
+            y = x[1];
+            x = x[0];
+        }
         p5.push();
         if (p5.dist(p5.mouseX, p5.mouseY, x+(this.W/2), y+(this.H/y)) < this.H) {
             if (p5.mouseIsPressed) {

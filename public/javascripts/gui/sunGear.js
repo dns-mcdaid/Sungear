@@ -28,14 +28,32 @@ function SunGear(genes, thresh, statsF) {
     this.selB = new Icons.EllipseIcon(3, SunGear.C_PLAIN, SunGear.C_HIGHLIGHT, SunGear.C_SELECT, false);
     this.nextB = new Icons.ArrowIcon(0, 4, SunGear.C_PLAIN, SunGear.C_HIGHLIGHT, SunGear.C_SELECT, false);
     this.statsB = new Icons.StatsIcon(SunGear.C_PLAIN, SunGear.C_HIGHLIGHT, SunGear.C_SELECT);
-    this.saI = [];
-    this.saI.push(new Icons.ShowArrowIcon(SunGear.C_PLAIN, SunGear.C_HIGHLIGHT, SunGear.C_SELECT, true));
-    this.saI.push(new Icons.ShowArrowIcon(SunGear.C_PLAIN, SunGear.C_HIGHLIGHT, SunGear.C_SELECT, false));
-    this.vsI = [];
-    for (var i = 0; i < this.minRad.length; i++) {
-        this.vsI.push(new Icons.VesselMinIcon(SunGear.C_PLAIN, SunGear.C_HIGHLIGHT, SunGear.C_SELECT, this.minRad.length, 2, i));
-    }
+    // this.saI = [];
+    // this.saI.push(new Icons.ShowArrowIcon(SunGear.C_PLAIN, SunGear.C_HIGHLIGHT, SunGear.C_SELECT, true));
+    // this.saI.push(new Icons.ShowArrowIcon(SunGear.C_PLAIN, SunGear.C_HIGHLIGHT, SunGear.C_SELECT, false));
+    this.saI = new Icons.ShowArrowIcon(SunGear.C_PLAIN, SunGear.C_HIGHLIGHT, SunGear.C_SELECT, true);
+    // this.vsI = [];
+    // for (var i = 0; i < this.minRad.length; i++) {
+    //     this.vsI.push(new Icons.VesselMinIcon(SunGear.C_PLAIN, SunGear.C_HIGHLIGHT, SunGear.C_SELECT, this.minRad.length, 2, i));
+    // }
+    this.vsI = new Icons.VesselMinIcon(SunGear.C_PLAIN, SunGear.C_HIGHLIGHT, SunGear.C_SELECT, this.minRad.length, 2, 0);
     // TODO: Set tooltips for icons.
+    var WIDTH = document.getElementById('sungearGui').offsetWidth;
+    var HEIGHT = document.getElementById('sungearGui').offsetHeight;
+
+    var prevBParams = [ 10, HEIGHT-30 ];
+    this.visuals.push(new Visual(this.prevB, this.prevB.paintIcon.bind(this.prevB), prevBParams, true));
+    var selBParams = [ 35.5, HEIGHT-22 ];
+    this.visuals.push(new Visual(this.selB, this.selB.paintIcon.bind(this.selB), selBParams, true));
+    var nextBParams = [ 45, HEIGHT-30 ];
+    this.visuals.push(new Visual(this.nextB, this.nextB.paintIcon.bind(this.nextB), nextBParams, true));
+    var statsBParams = [ 13, HEIGHT-108 ];
+    this.visuals.push(new Visual(this.statsB, this.statsB.paintIcon.bind(this.statsB), statsBParams, true));
+    var saIParams = [ 20, HEIGHT-50 ];
+    this.visuals.push(new Visual(this.saI, this.saI.paintIcon.bind(this.saI), saIParams, true));
+    var vsIParams = [ 20, HEIGHT-75 ];
+    this.visuals.push(new Visual(this.vsI, this.vsI.paintIcon.bind(this.vsI), vsIParams, true));
+
     
     this.setShowArrows(this.showArrows);
 
@@ -45,7 +63,7 @@ function SunGear(genes, thresh, statsF) {
     
     // TODO: @Dennis use p5 for lines 196 - 255
     
-    this.setFocusable(true);
+    // this.setFocusable(true);
     this.genes.addGeneListener(this);
     this.genes.addMultiSelect(this);
     this.anchors = [];
@@ -175,7 +193,18 @@ SunGear.prototype = {
 
             }
         }
+    },
+
+    getVisuals : function() {
+        return this.visuals;
     }
 };
+
+function Visual(model, drawFunction, params, draw) {
+    this.model = model;
+    this.drawFunction = drawFunction;
+    this.params = params;
+    this.draw = draw;
+}
 
 module.exports = SunGear;

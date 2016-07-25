@@ -130,7 +130,7 @@ VisGene.prototype = {
         // TODO: Attach l1 to geneF
         this.sungearF = document.getElementById("sungearF");
         var statsF = null; // TODO: @Dennis fix.
-        //this.gear = new SunGear(this.geneList, statsF);
+        this.gear = new SunGear(this.geneList, statsF);
         // TODO: @Dennis implement resultsF (333-335)
         var resultsF = null;
         this.go = new GoTerm(this.geneList, resultsF);
@@ -467,6 +467,7 @@ VisGene.main = function(args) {
         // FIXME: Potentially replace first arg with new URL()
         var vis = new VisGene(new URL("file:./"), warn, plugin, dataDir);
         vis.init();
+        return vis;
     } catch(mu) {
         console.log(mu);
     }
