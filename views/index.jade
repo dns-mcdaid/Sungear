@@ -47,7 +47,7 @@ block content
                         a(href='#', class='dropdown-toggle', data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='false', id='helpM') Help
                         ul(class='dropdown-menu')
                             li
-                                a(href='#', id='helpI') About...
+                                a(href='#', id='helpI', data-toggle='modal', data-target='#aboutD') About...
                             li
                                 a(href='#', id='infoI') File Info...
 
@@ -131,6 +131,17 @@ block content
                     option(value='name') Sort by Name
                     option(value='count') Sort by Count
 
+    // About Dialog
+    div(class='modal fade', id='aboutD', tabindex='-1', role='dialog', aria-labelledby='aboutDLabel')
+        div(class='modal-dialog', role='document')
+            div(class='modal-content')
+                div(class='modal-header')
+                    button(type='button', class='close', data-dismiss='modal', aria-label='Close')
+                        span(aria-hidden='true') &times;
+                    h4(class='modal-title', id='aboutDLabel') TBA
+                div(class='modal-body', id='aboutDBody')
+                div(class='modal-footer')
+                    button(type='button', class='btn btn-default', data-dismiss='modal') Close
     // Query Dialog
     div(class='modal fade', id='queryD', tabindex='-1', role='dialog', aria-labelledby='queryDLabel')
         div(class='modal-dialog', role='document')

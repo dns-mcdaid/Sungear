@@ -5,18 +5,21 @@
  * @author RajahBimmy
  */
 
-var DataReader = require('../data/dataReader');
-var DataSource = require('../data/dataSource');
-var ParseException = require('../data/parseException');
+const fs = require('browserify-fs');
+const path = require('path');
 
-var GeneList = require('../genes/geneList');
+const DataReader = require('../data/dataReader');
+const DataSource = require('../data/dataSource');
+const ParseException = require('../data/parseException');
 
-var ExportList = require('../gui/exportList');
-var GoTerm = require('../gui/goTerm');
-var SunGear = require('../gui/sunGear');
+const GeneList = require('../genes/geneList');
 
-var Controls = require('../gui/controls');
-var CollapsibleList = require('../gui/collapsibleList');
+const ExportList = require('../gui/exportList');
+const GoTerm = require('../gui/goTerm');
+const SunGear = require('../gui/sunGear');
+
+const Controls = require('../gui/controls');
+const CollapsibleList = require('../gui/collapsibleList');
 
 /**
  * @param u {URL}
@@ -80,7 +83,7 @@ function VisGene(u, w, pn, dataDir) {
     }
 }
 
-VisGene.VERSION = "0.2.0";
+VisGene.VERSION = "1.2.0";
 VisGene.DEFAULT_DATA_DIR = "../data";
 VisGene.notice = "Copyright Chris Poultney, Radhika Mattoo, and Dennis McDaid 2016";
 
@@ -127,7 +130,7 @@ VisGene.prototype = {
         // TODO: Attach l1 to geneF
         this.sungearF = document.getElementById("sungearF");
         var statsF = null; // TODO: @Dennis fix.
-        this.gear = new SunGear(this.geneList, statsF);
+        //this.gear = new SunGear(this.geneList, statsF);
         // TODO: @Dennis implement resultsF (333-335)
         var resultsF = null;
         this.go = new GoTerm(this.geneList, resultsF);
@@ -140,13 +143,8 @@ VisGene.prototype = {
         // Picking up from 388
         var helpI = document.getElementById('helpI');
         var infoI = document.getElementById('infoI');
-        var temp = this;
-        helpI.addEventListener("click", function() {
-            temp.showAbout();
-        });
-        infoI.addEventListener("click", function() {
-            temp.showInfo();
-        });
+        helpI.addEventListener("click", this.showAbout.bind(this));
+        infoI.addEventListener("click", this.showInfo.bind(this));
 
         // init component sizes
         // this.positionWindows();
@@ -165,6 +163,9 @@ VisGene.prototype = {
         fullC.addEventListener("click", function() {
             // TODO: Make full screen function.
         });
+
+        this.aboutDLabel = document.getElementById('aboutDLabel');
+        this.aboutDBody = document.getElementById('aboutDBody');
     },
     run : function() {
         try {
@@ -289,20 +290,38 @@ VisGene.prototype = {
             return s;
         }
     },
+    /**
+     * TODO: FINISH ME.
+     */
     showAbout : function() {
-        var msg = "";
-        msg += "Sungear Version " + VisGene.VERSION + "\n\n";
-        msg += "Sungear is a collaboration between the Biology Department and the Courant Institute of Mathematical Sciences, New York University.\n\n";
-        msg += "Primary Developer:\nChris Poultney\n\n";
-        msg += "Seconday Developers:\nRadhika Mattoo\nDennis McDaid\n\n";
-        msg += "GeneLights Developers:\nDelin Yang\nEric Leung\n\n";
-        msg += "NYU-Biology:\nGloria Coruzzi\nRodrigo A. Gutierrez\nManpreet Katari\n\n";
-        msg += "NYU-Courant:\nDennis Shasha\n\n";
-        msg += "Additional Collaborators:\nBradford Paley (Didi, Inc.)\n\n";
-        msg += "This work has been partly supported by the U.S. National Science Foundation under grants NSF IIS-9988345, N2010-0115586, and MCB-0209754. This support is greatly appreciated.\n\n";
-        msg += "For more information visit: http://virtualplant.bio.nyu.edu/\n\n";
-        msg += "Copyright 2016, New York University";
-        alert(msg);
+        this.aboutDLabel.innerHTML = "Sungear Version " + VisGene.VERSION;
+        try {
+            var msg;
+
+            var p = "/";
+            fs.readdir(p, function (err, files) {
+                if (err) {
+                    console.log(err);
+                }
+                console.log(files.toString());
+            });
+
+            this.aboutDBody.innerHTML = msg;
+
+            // msg += "Sungear is a collaboration between the Biology Department and the Courant Institute of Mathematical Sciences, New York University.";
+            // msg += "Primary Developer:\nChris Poultney\n\n";
+            // msg += "Seconday Developers:\nRadhika Mattoo\nDennis McDaid\n\n";
+            // msg += "GeneLights Developers:\nDelin Yang\nEric Leung\n\n";
+            // msg += "NYU-Biology:\nGloria Coruzzi\nRodrigo A. Gutierrez\nManpreet Katari\n\n";
+            // msg += "NYU-Courant:\nDennis Shasha\n\n";
+            // msg += "Additional Collaborators:\nBradford Paley (Didi, Inc.)\n\n";
+            // msg += "This work has been partly supported by the U.S. National Science Foundation under grants NSF IIS-9988345, N2010-0115586, and MCB-0209754. This support is greatly appreciated.\n\n";
+            // msg += "For more information visit: http://virtualplant.bio.nyu.edu/\n\n";
+            // msg += "Copyright 2016, New York University";
+        } catch (e) {
+            console.log("Error reading about pane text:");
+            console.log(e);
+        }
     },
     formatComment : function(a, commentName) {
         var comment = a.get(commentName, "(none)\n");

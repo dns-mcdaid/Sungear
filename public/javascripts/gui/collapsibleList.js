@@ -39,8 +39,8 @@ function CollapsibleList(g) {
     this.queryB.addEventListener("click", this.updateQueryDLabel.bind(this));
     this.queryDSubmit.addEventListener("click", this.queryGenes.bind(this));
     this.copyB.addEventListener("click", this.copyGenes.bind(this));
-    this.findSelectB.addEventListener("click", this.findSelectGenes.bind(this));
-    this.collapseT.addEventListener("click", this.setCollapsed.bind(this)/** TODO: Include Parameters */);
+    // this.findSelectB.addEventListener("click", this.findSelectGenes.bind(this));
+    // this.collapseT.addEventListener("click", this.setCollapsed.bind(this)/** TODO: Include Parameters */);
     this.collapsed = false;
 }
 
@@ -60,13 +60,23 @@ CollapsibleList.prototype = {
         console.log("Might work!");
     },
     queryGenes : function() {
-        var results = this.queryA.value;
-        // TODO: Finish implementation.
-        this.queryA.value = "";
+        var v = this.queryA.value;
+        if (v !== null) {
+            var s = new TreeSet();
+            var gene = v.split("\n");
+            for (var i = 0; i < gene.length; i++) {
+                var g = this.genes.find(gene[i]);
+                if (g !== null) {
+                    s.add(g);
+                }
+            }
+            this.genes.setSelection(this, s);
+        }
     },
     updateQueryDLabel : function() {
         var msg = "Query " /** TODO: + this.genes.getSource().getAttributes().get("itemsLabel", "items")*/;
         this.queryDLabel.innerHTML = msg;
+        this.queryA.value = "";
     }
 };
 
