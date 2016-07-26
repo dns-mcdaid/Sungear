@@ -139,47 +139,9 @@ DataReader.prototype = {
 
         }
     },
-    /**
-     * Updates vessel membership based on the provided threshold value.
-     * @param t {float} threshold for vessel inclusion
-     * @param expGenes {SortedSet<Gene>} all genes in the experiment set
-     * @param anchors {Vector<Anchor>} experiment anchors (static)
-     * @param vessels {Vector<Vessel>} updated vessels are placed here
-     */
-    setThreshold : function(t, expGenes, anchors, vessels) {
-        var m = "";
-        var last = "";
-        var vh = {};
-        var curr = null;
-        for (var it = expGenes.iterator(); it.hasNext(); ) {
-            var g = it.next();
-            var e = g.getExp();
-            for (var i = 0; i < e.length; i++) {
-                if (e[i] < t) {
-                    m += "0";
-                } else {
-                    m += "1";
-                }
-            }
-            var sig = m;    // May be redundant
-            if (m != last) {
-                curr = vh[sig];
-                if (curr === null) {
-                    var va = [];
-                    for (var j = 0; j < sig.length; j++) {
-                        if (sig[j] == "1") {
-                            va.push(anchors[j]);
-                        }
-                    }
-                    curr = new Vessel(va);
-                    vessels.push(curr);
-                    vh[sig] = curr;
-                }
-                last = sig;
-            }
-            curr.addGene(g);
-        }
-    },
+
+    // NOTE: setThreshold has moved to the static area.
+    
     /**
      * Trims all the elements of an array of Strings, and returns the result.
      * The original array's contents are not modified.
@@ -253,6 +215,48 @@ DataReader.makeURL = function(base, s) {
         u = new URL(s, base);
     }
     return u;
+};
+
+/**
+ * Updates vessel membership based on the provided threshold value.
+ * @param t {float} threshold for vessel inclusion
+ * @param expGenes {SortedSet<Gene>} all genes in the experiment set
+ * @param anchors {Vector<Anchor>} experiment anchors (static)
+ * @param vessels {Vector<Vessel>} updated vessels are placed here
+ */
+DataReader.setThreshold = function(t, expGenes, anchors, vessels) {
+    var m = "";
+    var last = "";
+    var vh = {};
+    var curr = null;
+    for (var it = expGenes.iterator(); it.hasNext(); ) {
+        var g = it.next();
+        var e = g.getExp();
+        for (var i = 0; i < e.length; i++) {
+            if (e[i] < t) {
+                m += "0";
+            } else {
+                m += "1";
+            }
+        }
+        var sig = m;    // May be redundant
+        if (m != last) {
+            curr = vh[sig];
+            if (curr === null) {
+                var va = [];
+                for (var j = 0; j < sig.length; j++) {
+                    if (sig[j] == "1") {
+                        va.push(anchors[j]);
+                    }
+                }
+                curr = new Vessel(va);
+                vessels.push(curr);
+                vh[sig] = curr;
+            }
+            last = sig;
+        }
+        curr.addGene(g);
+    }
 };
 
 module.exports = DataReader;
