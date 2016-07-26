@@ -141,20 +141,8 @@ DataReader.prototype = {
     },
 
     // NOTE: setThreshold has moved to the static area.
-    
-    /**
-     * Trims all the elements of an array of Strings, and returns the result.
-     * The original array's contents are not modified.
-     * @param s the array of Strings to trim
-     * @return the array of trimmed Strings
-     */
-    trimAll : function(s) {
-        var r = []; /** @type String[] */
-        for (var i = 0; i < s.length; i++) {
-            r[i] = s[i].trim();
-        }
-        return r;
-    },
+
+    // NOTE: trimALl has moved to the static area.
     /**
      * Chops a StringBuffer into an array of lines.
      * @param b the data to separate into lines
@@ -257,6 +245,20 @@ DataReader.setThreshold = function(t, expGenes, anchors, vessels) {
         }
         curr.addGene(g);
     }
+};
+
+/**
+ * Trims all the elements of an array of Strings, and returns the result.
+ * The original array's contents are not modified.
+ * @param s the array of Strings to trim
+ * @return the array of trimmed Strings
+ */
+DataReader.trimAll = function(s) {
+    var r = []; /** {String[]} */
+    for (var i = 0; i < s.length; i++) {
+        r[i] = s[i].trim();
+    }
+    return r;
 };
 
 module.exports = DataReader;

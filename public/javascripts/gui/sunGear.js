@@ -1,3 +1,6 @@
+require('javascript.util');
+const TreeSet = javascript.util.TreeSet;
+
 const DataReader = require('../data/dataReader');
 
 const AnchorDisplay = require('./sungear/anchorDisplay');
@@ -65,7 +68,7 @@ function SunGear(genes, thresh, statsF) {
         w : 2*SunGear.R_CIRCLE,
         h : 2*SunGear.R_CIRCLE
     };
-    
+
     this.setShowArrows(this.showArrows);
 
     this.highCnt = 0;
@@ -190,11 +193,13 @@ SunGear.prototype = {
      */
     setShowArrows : function(b) {
         this.showArrows = b;
-        if (this.vessels !== null) {
+        if (this.vessels !== null && typeof this.vessels !== 'undefined') {
+            console.log("Made it here!");
             for (var i = 0; i < this.vessels.length; i++) {
                 this.vessels[i].setShowArrows(b);
                 this.positionVessels();
             }
+            console.log("Made it out!");
         }
     },
     showStats : function() {
@@ -527,8 +532,6 @@ SunGear.prototype = {
      * @return {double}
      */
     relaxStep : function(eta) {
-        // TODO: Find out if this next line is necessary
-        var rand = Math.random();
         // scaling factor to give extra space for vessels (and arrows)
         var sf = 1.5;
         // random factor added to or substracted from movement
@@ -601,6 +604,166 @@ SunGear.prototype = {
         }
         return e;
     },
+    adjustCenters : function(scl) {
+        // split vessels into groups by location
+        var l = [];
+        var i = 0;
+        for (i = 0; i < this.vessels.length; i++) {
+            if (this.vessels[i].getActiveCount() == 0) {
+                continue;
+            }
+            var p = this.vessels[i].getCenter();
+            var added = false;
+            for (var j = 0; j < l.length && !added; j++) {
+                var v = l[j];
+                // TODO: Get distance.
+                var distX = p.x - v[0].getCenter().x;
+                var distY = p.y - v[0].getCenter().y;
+                var dist = Math.sqrt((distX*distX) + (distY*distY));
+                if (dist < .0001) {
+                    v.push(this.vessels[i]);
+                    added = true;
+                }
+            }
+            if (!added) {
+                var v = [];
+                v.push(this.vessels[i]);
+                l.push(v);
+            }
+        }
+
+        // offset centers of same-centered vessels
+        for (i = 0; i < l.length; i++) {
+            var v = l[i];
+            if (v.length == 1) {
+                continue;
+            }
+            for (var k = 0; k < v.length; k++) {
+                var curr = v[k];
+                var p = curr.getCenter();
+                curr.setCenter(p.x + scl*curr.getRadOuter() * Math.sqrt(v.length) * Math.cos(Math.PI*2*k/v.length),  p.y + scl*curr.getRadOuter() * Math.sqrt(v.length) * Math.sin(Math.PI*2*k/v.length), this.rad_inner);
+                curr.makeShape(this.rad_inner);
+            }
+        }
+    },
+    /**
+     * @param p {Point}
+     * @returns {boolean}
+     */
+    isInGear : function(p) {
+        try {
+            // TODO: Find a way to check for this.
+        } catch(nt) {
+            console.log(nt);
+            return false;
+        }
+    },
+    /**
+     * Finds the anchor at a point in sungear coordinates.
+     * @param p {Point} in sungear coordinates
+     * @return {AnchorDisplay} at the given location, or null if none
+     */
+    getAnchor : function(p) {
+        for (var i = 0; i < this.anchors.length; i++) {
+            if (this.anchors[i].contains(p)) {
+                return this.anchors[i];
+            }
+        }
+        return null;
+    },
+    /**
+     * Finds the vessel at a point in sungear coordinates.
+     * @param p {Point} in sungear coordinates
+     * @return {VesselDisplay} at the given location, or null if none
+     */
+    getVessel : function(p) {
+        for (var i = 0; i < this.vessels.length; i++) {
+            if (this.vessels[i].contains(p)) {
+                return this.vessels[i];
+            }
+        }
+    },
+    /**
+     * Updates the selected state of anchors/vessels based on mouse location.
+     * Changes appearance only, not selected gene sets.
+     * @param p5 {p5} for processing the mouseEvent
+     */
+    checkSelect : function(p5) {
+        var p = {
+            x : p5.mouseX,
+            y : p5.mouseY
+        };
+        var chg = false;
+        var a = this.getAnchor(p);
+        var i = 0;
+        for (i = 0; i < this.anchors.length; i++) {
+            chg = chg || (this.anchors[i].getSelect() != (this.anchors[i] == a));
+            this.anchors[i].setSelect(this.anchors[i] == a);
+        }
+        var v = this.getVessel(p);
+        for (i = 0; i < this.vessels.length; i++) {
+            chg = chg || (this.vessels[i].getSelect() != (this.vessels[i] == v));
+            this.vessels[i].setSelect(this.vessels[i] == v);
+        }
+        if (chg) {
+            // TODO: Maybe do something here.
+            console.log("Hey Dennis, maybe implement a repaint function?");
+        }
+    },
+    setMulti : function(b) {
+        this.multi = b;
+        if (!b) {
+            var i = 0;
+            for (i = 0; i < this.vessels.length; i++) {
+                this.vessels[i].setSelect(false);
+            }
+            for (i = 0; i < this.anchors.length; i++) {
+                this.anchors[i].setSelect(false);
+            }
+        }
+    },
+    handleSelect : function(p5) {
+        var p = {
+            x : p5.mouseX,
+            y : p5.mouseY
+        };
+        var a = this.getAnchor(p);
+        var i = 0;
+        if (a !== null) {
+            if (this.multi) {
+                if (p5.keyIsPressed) {
+                    if (p5.keyCode == p5.CONTROL) {
+                        a.setSelect(!a.getSelect());
+                    }
+                } else {
+                    for (i = 0; i < this.anchors.length; i++) {
+                        this.anchors[i].setSelect(this.anchors[i] == a);
+                    }
+                }
+            } else {
+                if (p5.keyIsPressed) {
+                    if (p5.keyCode == p5.ALT && a !== null) {
+                        this.genes.startMultiSelect(this);
+                        a.setSelect(true);
+                    } else if (p5.keyCode == p5.CONTROL) {
+                        var ag = new TreeSet();
+                        var add = true;
+                        for (i = 0; i < a.vessels.length; i++) {
+                            var av = a.vessels[i];
+                            var activeArray = av.activeGenes.toArray();
+                            for (var j = 0; j < activeArray.length; j++) {
+                                ag.add(activeArray[j]);
+                            }
+                            add = add && (av.selectedGenes.size() == 0);
+                        }
+                        a.setSelect(false);
+                        // TODO: Pick up at 816
+                    }
+                }
+            }
+        }
+    },
+
     getVisuals : function() {
         return this.visuals;
     }

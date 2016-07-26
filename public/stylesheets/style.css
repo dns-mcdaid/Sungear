@@ -1,5 +1,6 @@
 body {
     /*background-color: #F3EFE0;*/
+    background-color: #EEEEEE;
     color: #404040;
     font-family: 'Noto Sans', sans-serif;
 }
@@ -9,7 +10,8 @@ h1 {
 }
 
 h3 {
-    color: #F3EFE0;
+    /*color: #F3EFE0;*/
+    color: #DDDDDD;
     padding-left: 10px;
 }
 
@@ -57,7 +59,8 @@ textarea {
     background-color: #111;
     height: 400px;
     padding: 5px;
-    color: #F3EFE0;
+    /*color: #F3EFE0;*/
+    color: #DDDDDD;
     margin-top: 10px;
     margin-bottom: 10px;
 }
@@ -87,7 +90,8 @@ tr {
 
 .table-striped tbody tr.highlight td {
     background-color: #9A3334;
-    color: #F3EFE0;
+    /*color: #F3EFE0;*/
+    color: #DDDDDD;
 }
 
 #controlFbuttons {
@@ -131,7 +135,8 @@ tr {
 
 #goCount, #geneCount {
     padding-top: 10px;
-    color: #F3EFE0;
+    /*color: #F3EFE0;*/
+    color: #DDDDDD;
 }
 
 

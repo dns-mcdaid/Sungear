@@ -31,6 +31,8 @@ var hereWeGo = new p5(function(p5) {
     };
     p5.draw = function() {
         p5.background("#111111");
+
+        // TODO: Potentially replace with paint function.
         var visuals = vis.getSunGearVisuals();
         for (var i = 0; i < visuals.length; i++) {
             var visual = visuals[i];
@@ -42,6 +44,7 @@ var hereWeGo = new p5(function(p5) {
     };
 
     p5.mouseReleased = function() {
+        vis.gear.checkSelect(p5);
         // TODO: Increment the VesselMinIcon on Press?
     };
 
