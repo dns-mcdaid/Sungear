@@ -74,7 +74,6 @@ GoTerm.prototype = {
      */
     updateActiveGeneCounts : function() {
         this.assocGenes = new TreeSet();
-        // TODO: Finish me.
     }
 };
 

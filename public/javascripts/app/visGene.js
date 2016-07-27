@@ -343,16 +343,8 @@ VisGene.prototype = {
         this.gear.setRelax(val);
         val = !val;
         this.relaxC.title = val.toString();
-    },
-    /**
-     * TODO: Implement. Should return all items for p5 to draw.
-     * @returns {*}
-     */
-    getSunGearVisuals : function(){
-        return this.gear.getVisuals();
     }
-}
-;
+};
 
 /**
  * Generic status dialog class that tries to position itself in the

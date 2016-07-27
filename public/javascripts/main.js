@@ -32,29 +32,29 @@ var hereWeGo = new p5(function(p5) {
     p5.draw = function() {
         p5.background("#111111");
 
-        p5.textSize(18);
-        p5.textFont("Helvetica");
-        p5.fill("#ffffff");
-        p5.noStroke();
-        // TODO: Check coordinates of these 3.
-        p5.text("0", WIDTH-30, 18);
-        p5.text("107", WIDTH-30, HEIGHT-40);
-        p5.text("107", WIDTH-30, HEIGHT-18);
+        //vis.gear.paintComponent(p5);
+        vis.gear.displayButtons(p5)
+    };
 
-        // TODO: Potentially replace with paint function.
-        var visuals = vis.getSunGearVisuals();
-        for (var i = 0; i < visuals.length; i++) {
-            var visual = visuals[i];
-            var visFunction = visual.drawFunction;
-            if (visual.draw) {
-                visFunction(p5, visual.params);
-            }
+    p5.mouseMoved = function() {
+        vis.gear.checkHighlight(p5);
+    };
+
+    p5.mouseDragged = function() {
+        vis.gear.checkHighlight(p5);
+        if (!vis.gear.multi) {
+            vis.gear.checkSelect(p5);
+        }
+    };
+
+    p5.mousePressed = function() {
+        if (!vis.gear.multi) {
+            vis.gear.checkSelect(p5);
         }
     };
 
     p5.mouseReleased = function() {
-        vis.gear.checkSelect(p5);
-        // TODO: Increment the VesselMinIcon on Press?
+        vis.gear.handleSelect(p5);
     };
 
 }, 'sungearGui');

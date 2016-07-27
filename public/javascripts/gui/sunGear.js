@@ -20,6 +20,7 @@ function SunGear(genes, thresh, statsF) {
         statsF = thresh;
         thresh = 0.0;
     }
+    this.test = 0;
     // Custom Rajah object for p5
     this.visuals = [];
 
@@ -41,31 +42,24 @@ function SunGear(genes, thresh, statsF) {
     this.selB = new Icons.EllipseIcon(3, SunGear.C_PLAIN, SunGear.C_HIGHLIGHT, SunGear.C_SELECT, false);
     this.nextB = new Icons.ArrowIcon(0, 4, SunGear.C_PLAIN, SunGear.C_HIGHLIGHT, SunGear.C_SELECT, false);
     this.statsB = new Icons.StatsIcon(SunGear.C_PLAIN, SunGear.C_HIGHLIGHT, SunGear.C_SELECT);
-    // this.saI = [];
-    // this.saI.push(new Icons.ShowArrowIcon(SunGear.C_PLAIN, SunGear.C_HIGHLIGHT, SunGear.C_SELECT, true));
-    // this.saI.push(new Icons.ShowArrowIcon(SunGear.C_PLAIN, SunGear.C_HIGHLIGHT, SunGear.C_SELECT, false));
-    this.saI = new Icons.ShowArrowIcon(SunGear.C_PLAIN, SunGear.C_HIGHLIGHT, SunGear.C_SELECT, true);
-    // this.vsI = [];
-    // for (var i = 0; i < this.minRad.length; i++) {
-    //     this.vsI.push(new Icons.VesselMinIcon(SunGear.C_PLAIN, SunGear.C_HIGHLIGHT, SunGear.C_SELECT, this.minRad.length, 2, i));
-    // }
-    this.vsI = new Icons.VesselMinIcon(SunGear.C_PLAIN, SunGear.C_HIGHLIGHT, SunGear.C_SELECT, this.minRad.length, 2, 0);
+    this.showArrowB = new Icons.ShowArrowIcon(SunGear.C_PLAIN, SunGear.C_HIGHLIGHT, SunGear.C_SELECT, true);
+    this.minSizeB = new Icons.VesselMinIcon(SunGear.C_PLAIN, SunGear.C_HIGHLIGHT, SunGear.C_SELECT, this.minRad.length, 2, 0);
     // TODO: Set tooltips for icons.
     this.WIDTH = document.getElementById('sungearGui').offsetWidth;
     this.HEIGHT = document.getElementById('sungearGui').offsetHeight;
 
     var prevBParams = [ 10, this.HEIGHT-30 ];
-    this.visuals.push(new Visual(this.prevB, this.prevB.paintIcon.bind(this.prevB), prevBParams, true));
+    this.visuals.push(new Visual(this.prevB, this.prevB.paintIcon.bind(this.prevB), prevBParams, this.prevBFunction.bind(this)));
     var selBParams = [ 35.5, this.HEIGHT-22 ];
-    this.visuals.push(new Visual(this.selB, this.selB.paintIcon.bind(this.selB), selBParams, true));
+    this.visuals.push(new Visual(this.selB, this.selB.paintIcon.bind(this.selB), selBParams, this.selBFunction.bind(this)));
     var nextBParams = [ 45, this.HEIGHT-30 ];
-    this.visuals.push(new Visual(this.nextB, this.nextB.paintIcon.bind(this.nextB), nextBParams, true));
+    this.visuals.push(new Visual(this.nextB, this.nextB.paintIcon.bind(this.nextB), nextBParams, this.nextBFunction.bind(this)));
     var statsBParams = [ 13, this.HEIGHT-108 ];
-    this.visuals.push(new Visual(this.statsB, this.statsB.paintIcon.bind(this.statsB), statsBParams, true));
-    var saIParams = [ 20, this.HEIGHT-50 ];
-    this.visuals.push(new Visual(this.saI, this.saI.paintIcon.bind(this.saI), saIParams, true));
-    var vsIParams = [ 20, this.HEIGHT-75 ];
-    this.visuals.push(new Visual(this.vsI, this.vsI.paintIcon.bind(this.vsI), vsIParams, true));
+    this.visuals.push(new Visual(this.statsB, this.statsB.paintIcon.bind(this.statsB), statsBParams, this.statsBFunction.bind(this)));
+    var showArrowBParams = [ 20, this.HEIGHT-50 ];
+    this.visuals.push(new Visual(this.showArrowB, this.showArrowB.paintIcon.bind(this.showArrowB), showArrowBParams, this.showArrowBFunction.bind(this)));
+    var minSizeBParams = [ 20, this.HEIGHT-75 ];
+    this.visuals.push(new Visual(this.minSizeB, this.minSizeB.paintIcon.bind(this.minSizeB), minSizeBParams, this.minSizeBFunction.bind(this)));
 
     this.exterior = {
         x : -(SunGear.R_CIRCLE),
@@ -861,7 +855,7 @@ SunGear.prototype = {
         }
         // TODO: Possibly call repaint?
     },
-    highlightVessels : function(v) {
+    highlightVessel : function(v) {
         var i = 0;
         for (i = 0; i < this.vessels.length; i++) {
             this.vessels[i].setHighlight(this.vessels[i] == v);
@@ -1092,16 +1086,51 @@ SunGear.prototype = {
                 break;
         }
     },
-    getVisuals : function() {
-        return this.visuals;
+
+    /**
+     * The following six functions are for
+     * the selectable icons in the interface.
+     */
+    prevBFunction : function() {
+        console.log("Hello from prevB!");
+        console.log(test);
+        test++;
+        // this.orderIdx = (this.orderIdx == -1) ? this.firstIdx : (this.orderIdx + this.orderedVessels.length - 1) % this.orderedVessels.length;
+        // this.order(this.orderIdx);
+    },
+    nextBFunction : function() {
+        this.orderIdx = (this.orderIdx == -1) ? this.firstIdx : (this.orderIdx+1) % this.orderedVessels.length;
+        this.order(this.orderIdx);
+    },
+    selBFunction : function() {
+        if (this.lastVessel !== null) {
+            this.genes.setSelection(this, this.lastVessel.selectedGenes);
+            this.highlightVessel(null);
+        }
+    },
+    minSizeBFunction : function() {
+        this.setMinVesselSizeIdx((this.minRadIdx + 1) % this.minRad.length);
+    },
+    showArrowBFunction : function() {
+        this.setShowArrows(!this.showArrows);
+    },
+    statsBFunction : function() {
+        this.showStats();
+    },
+
+    displayButtons : function(p5) {
+        for (var i = 0; i < this.visuals.length; i++) {
+            var visual = this.visuals[i];
+            visual.drawFunction(p5, visual.params);
+        }
     }
 };
 
-function Visual(model, drawFunction, params, draw) {
+function Visual(model, drawFunction, params, task) {
     this.model = model;
     this.drawFunction = drawFunction;
     this.params = params;
-    this.draw = draw;
+    this.task = task;
 }
 
 module.exports = SunGear;
