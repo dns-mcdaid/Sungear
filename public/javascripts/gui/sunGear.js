@@ -3,9 +3,13 @@ const TreeSet = javascript.util.TreeSet;
 
 const DataReader = require('../data/dataReader');
 
+const GeneEvent = require('../genes/geneEvent');
+const MultiSelectable = require('../genes/multiSelectable');
+
 const AnchorDisplay = require('./sungear/anchorDisplay');
 const Comp = require('./sungear/comp');
 const Icons = require('./sungear/icons');
+const Stats = require('./sungear/stats');
 const VesselDisplay = require('./sungear/vesselDisplay');
 
 /**
@@ -24,6 +28,7 @@ function SunGear(genes, thresh, statsF) {
 
     this.genes = genes;
     this.thresh = thresh;
+    this.stats = new Stats(genes, this);
     this.statsF = statsF;
     this.moon = null;
     this.orderedVessels = [];
@@ -46,20 +51,20 @@ function SunGear(genes, thresh, statsF) {
     // }
     this.vsI = new Icons.VesselMinIcon(SunGear.C_PLAIN, SunGear.C_HIGHLIGHT, SunGear.C_SELECT, this.minRad.length, 2, 0);
     // TODO: Set tooltips for icons.
-    var WIDTH = document.getElementById('sungearGui').offsetWidth;
-    var HEIGHT = document.getElementById('sungearGui').offsetHeight;
+    this.WIDTH = document.getElementById('sungearGui').offsetWidth;
+    this.HEIGHT = document.getElementById('sungearGui').offsetHeight;
 
-    var prevBParams = [ 10, HEIGHT-30 ];
+    var prevBParams = [ 10, this.HEIGHT-30 ];
     this.visuals.push(new Visual(this.prevB, this.prevB.paintIcon.bind(this.prevB), prevBParams, true));
-    var selBParams = [ 35.5, HEIGHT-22 ];
+    var selBParams = [ 35.5, this.HEIGHT-22 ];
     this.visuals.push(new Visual(this.selB, this.selB.paintIcon.bind(this.selB), selBParams, true));
-    var nextBParams = [ 45, HEIGHT-30 ];
+    var nextBParams = [ 45, this.HEIGHT-30 ];
     this.visuals.push(new Visual(this.nextB, this.nextB.paintIcon.bind(this.nextB), nextBParams, true));
-    var statsBParams = [ 13, HEIGHT-108 ];
+    var statsBParams = [ 13, this.HEIGHT-108 ];
     this.visuals.push(new Visual(this.statsB, this.statsB.paintIcon.bind(this.statsB), statsBParams, true));
-    var saIParams = [ 20, HEIGHT-50 ];
+    var saIParams = [ 20, this.HEIGHT-50 ];
     this.visuals.push(new Visual(this.saI, this.saI.paintIcon.bind(this.saI), saIParams, true));
-    var vsIParams = [ 20, HEIGHT-75 ];
+    var vsIParams = [ 20, this.HEIGHT-75 ];
     this.visuals.push(new Visual(this.vsI, this.vsI.paintIcon.bind(this.vsI), vsIParams, true));
 
     this.exterior = {
@@ -76,8 +81,7 @@ function SunGear(genes, thresh, statsF) {
     this.lastVessel = null;
     
     // TODO: @Dennis use p5 for lines 196 - 255
-    
-    // this.setFocusable(true);
+
     this.genes.addGeneListener(this);
     this.genes.addMultiSelect(this);
     this.anchors = [];
@@ -722,6 +726,10 @@ SunGear.prototype = {
             }
         }
     },
+    /**
+     * Updates the selected state of anchors/vessels based on mouse location.
+     * Changes the current selected set if appropriate.
+     */
     handleSelect : function(p5) {
         var p = {
             x : p5.mouseX,
@@ -729,6 +737,8 @@ SunGear.prototype = {
         };
         var a = this.getAnchor(p);
         var i = 0;
+        var j = 0;
+        var sel = null;
         if (a !== null) {
             if (this.multi) {
                 if (p5.keyIsPressed) {
@@ -751,19 +761,337 @@ SunGear.prototype = {
                         for (i = 0; i < a.vessels.length; i++) {
                             var av = a.vessels[i];
                             var activeArray = av.activeGenes.toArray();
-                            for (var j = 0; j < activeArray.length; j++) {
+                            for (j = 0; j < activeArray.length; j++) {
                                 ag.add(activeArray[j]);
                             }
                             add = add && (av.selectedGenes.size() == 0);
                         }
                         a.setSelect(false);
-                        // TODO: Pick up at 816
+                        sel = this.genes.getSelectedSet();
+                        var agArray = ag.toArray();
+                        if (add) {
+                            for (j = 0; j < agArray.length; j++) {
+                                sel.add(agArray[j]);
+                            }
+                        } else {
+                            for (j = 0; j < agArray.length; j++) {
+                                if (sel.contains(agArray[j])) {
+                                    sel.remove(agArray[j]);
+                                }
+                            }
+                        }
+                        this.genes.setSelection(this, sel);
+                    }
+                } else {
+                    sel = new TreeSet();
+                    for (i = 0; i < a.vessels.length; i++) {
+                        var toAdd = a.vessels[i].activeGenes.toArray();
+                        for (j = 0; j < toAdd.length; j++) {
+                            sel.add(toAdd[j]);
+                        }
+                    }
+                    a.setSelect(false);
+                    this.genes.setSelection(this, sel);
+                }
+                this.lastAnchor = null;
+                this.checkHighlight(p);
+            }
+        }
+        if (a === null) {
+            var v = this.getVessel(p);
+            if (this.multi) {
+                if (v !== null) {
+                    if (p5.keyIsPressed) {
+                        if (p5.keyCode == p5.CONTROL) {
+                            v.setSelect(!V.getSelect());
+                        } else {
+                            for (i = 0; i < this.vessels.length; i++) {
+                                this.vessels[i].setSelect(this.vessels[i] == v);
+                            }
+                        }
+                    }
+                }
+            } else {
+                if (p5.keyIsPressed) {
+                    if (p5.keyCode == p5.ALT && v !== null) {
+                        this.genes.startMultiSelect(this);
+                        v.setSelect(true);
+                    } else if (p5.keyCode == p5.CONTROL) {
+                        if (v !== null) {
+                            sel = this.genes.getSelectedSet();
+                            if (v.getSelectedCount() > 0) {
+                                var vSelected = v.selectedGenes.toArray();
+                                for (i = 0; i < vSelected.length; i++) {
+                                    if (sel.contains(vSelected[i])) {
+                                        sel.remove(vSelected[i]);
+                                    }
+                                }
+                            } else {
+                                var vActive = v.activeGenes.toArray();
+                                for (i = 0; i < vActive.length; i++) {
+                                    sel.add(vActive[i]);
+                                }
+                            }
+                            this.genes.setSelection(this, sel);
+                            v.setSelect(false);
+                        }
+                    }
+                } else {
+                    if (v !== null) {
+                        for (i = 0; i < this.vessels.length; i++) {
+                            if (this.vessels[i] != v) {
+                                this.vessels[i].clearSelectedGenes();
+                            }
+                        }
+                        v.selectAllGenes();
+                    }
+                    sel = new TreeSet();
+                    for (i = 0; i < this.vessels.length; i++) {
+                        var selectedArray = this.vessels[i].selectedGenes.toArray();
+                        for (j = 0; j < selectedArray.length; j++) {
+                            sel.add(selectedArray[j]); // selectedarRAY J - Get it??????
+                        }
+                        this.vessels[i].setSelect(false);
+                    }
+                    this.genes.setSelect(this, sel);
+                }
+                this.lastVessel = null;
+                this.checkHighlight(p);
+            }
+        }
+        // TODO: Possibly call repaint?
+    },
+    highlightVessels : function(v) {
+        var i = 0;
+        for (i = 0; i < this.vessels.length; i++) {
+            this.vessels[i].setHighlight(this.vessels[i] == v);
+        }
+        for (i = 0; i < this.anchors.length; i++) {
+            var b = (v !== null && (this.anchors[i].vessels.indexOf(v) > -1));
+            this.anchors[i].setHighlight(b);
+        }
+    },
+    updateCount : function() {
+        var c1 = new TreeSet();
+        for (var i = 0; i < this.vessels.length; i++) {
+            if (this.vessels[i].getHighlight()) {
+                var selGenes = this.vessels[i].selectedGenes.toArray();
+                for (var j = 0; j < selGenes.length; j++) {
+                    c1.add(selGenes[j]);
+                }
+            }
+        }
+        this.highCnt = c1.size();
+    },
+    checkHighlight : function(a, v) {
+        if (typeof v === 'undefined') {
+            var p = a;
+            var anchor = (p === null) ? null : (this.isInGear(p) ? null : this.getAnchor(p));
+            var vessel = (p === null) ? null : (a !== null ? null : this.getVessel(p));
+            this.checkHighlight(anchor, vessel);
+        } else {
+            var chg = false;
+            var i = 0;
+            if (a != this.lastAnchor) {
+                chg = true;
+                for (i = 0; i < this.anchors.length; i++) {
+                    this.anchors[i].setHighlight(this.anchors[i] == a);
+                    this.anchors[i].setShowLongDesc(this.anchors[i] == a);
+                }
+                for (i = 0; i < this.vessels.length; i++) {
+                    var b = (a !== null && (this.vessels[i].anchor.indexOf(a) > -1));
+                    this.vessels[i].setHighlight(b);
+                }
+            }
+            if (a === null && v != this.lastVessel) {
+                chg = true;
+                this.highlightVessel(v);
+            }
+            this.lastAnchor = a;
+            this.lastVessel = v;
+            if (chg) {
+                this.updateCount();
+                // TODO: repaint?
+            }
+        }
+    },
+    paintComponent : function(p5) {
+        var i = 0;
+        p5.push();
+        this.makeTransform(p5, this.WIDTH, this.HEIGHT);
+        p5.fill(SunGear.C_PLAIN);
+        // TODO: Implement a draw exterior function.
+        for (i = 0; i < this.vessels.length; i++) {
+            this.vessels[i].draw(p5);
+        }
+        p5.pop();
+        p5.push();
+        // TODO: Check if the visual translations are correct here.
+        for (i = 0; i < this.anchors.length; i++) {
+            if (this.anchors[i] != this.lastAnchor) {
+                this.anchors[i].draw(p5);
+            }
+        }
+        // draw current mouse-over anchor last, if any?
+        if (this.lastAnchor !== null) {
+            this.lastAnchor.draw(p5);
+        }
+        p5.pop();
+        p5.textSize(18);
+        p5.textFont("Helvetica");
+        // TODO: Check coordinates of these 3.
+        p5.text(this.highCnt+"", this.WIDTH-30, 18);
+        p5.text(this.genes.getSelectedSet().size()+"", this.WIDTH-30, this.HEIGHT-40);
+        p5.text(this.genes.getActiveSet().size()+"", this.WIDTH-30, this.HEIGHT-18);
+
+        // moon label
+        var ml = null;
+        if (this.genes !== null && this.genes.getSource() !== null && this.genes.getSource().getAttributes() !== null) {
+            ml = this.genes.getSource().getAttributes().get("moonLabel");
+        }
+        if (ml !== null && this.moon !== null && this.moon.getActiveCount() > 0) {
+            p5.textSize(14);
+            // TODO: Something here. Unsure.
+        }
+    },
+    makeTransform : function(p5, w, h) {
+        var M = Math.min(w, h);
+        p5.translate(w/2.0, h/2.0);
+        p5.scale((0.5*M/SunGear.R_OUTER), (0.5*M/SunGear.R_OUTER));
+    },
+    updateActive : function() {
+        // update active sets
+        // find max value
+        var max = 0;
+        var i = 0;
+        for (i = 0; i < this.vessels.length; i++) {
+            this.vessels[i].setActiveGenes(this.genes.getActiveSet());
+            max = Math.max(max, this.vessels[i].getActiveCount());
+        }
+        // update max values
+        // reshape
+        for (i = 0; i < this.vessels.length; i++) {
+            this.vessels[i].setMax(max);
+            this.vessels[i].makeShape(this.rad_inner);
+        }
+    },
+    updateHighlight : function() {
+        var a = this.lastAnchor;
+        this.lastAnchor = null;
+        var v = this.lastVessel;
+        this.lastVessel = null;
+        this.checkHighlight(a, v);
+    },
+    updateSelect : function() {
+        var ac = new Comp.VesselACount();
+        var min = null;
+        if (this.vessels !== null) {
+            this.orderedVessels = [];
+            for (var i = 0; i < this.vessels.length; i++) {
+                this.vessels[i].setSelectedGenes(this.genes.getSelectedSet());
+                if (this.vessels[i].getSelectedCount() > 0) {
+                    this.orderedVessels.push(this.vessels[i]);
+                    if (min === null || ac.compareTo(this.vessels[i], min) < 0) {
+                        min = this.vessels[i];
+                    }
+                }
+            }
+            // TODO: Make sure this sort function works.
+            this.orderedVessels.sort(this.vSort.compareTo);
+            this.orderIdx = -1;
+            this.firstIdx = (min === null) ? -1 : this.orderedVessels.indexOf(min);
+        }
+        // TODO: repaint?
+    },
+    getMultiSelection : function(operation) {
+        var s = new TreeSet();
+        var cnt = 0;    // number of selected items in component
+        var i = 0;
+        var j = 0;
+        if (operation == MultiSelectable.INTERSECT) {
+            var activeArray = this.genes.getActiveSet().toArray();
+            for (i = 0; i < activeArray.length; i++) {
+                s.add(activeArray[i]);
+            }
+        }
+        for (i = 0; i < this.vessels.length; i++) {
+            if (this.vessels[i].getSelect()) {
+                cnt++;
+                var selArray = this.vessels[i].selectedGenes.toArray();
+                if (operation == MultiSelectable.UNION) {
+                    for (j = 0; j < selArray.length; j++) {
+                        s.add(selArray[j]);
+                    }
+                } else {
+                    var sArray = s.toArray();
+                    // TODO: Make sure this works.
+                    for (j = 0; j < sArray.length; j++) {
+                        if (!this.vessels[i].selectedGenes.contains(sArray[j])) {
+                            s.remove(sArray[j]);
+                        }
                     }
                 }
             }
         }
+        for (i = 0; i < this.anchors.length; i++) {
+            if (this.anchors[i].getSelect()) {
+                cnt++;
+                // find all of anchor's selected genes
+                var ag = new TreeSet();
+                for (var it = 0; it < this.anchors[i].vessels.length; it++) {
+                    var selGenes = this.anchors[i].vessels[it];
+                    for (j = 0; j < selGenes.length; j++) {
+                        ag.add(selGenes[j]);
+                    }
+                }
+                var agArray = ag.toArray();
+                if (operation == MultiSelectable.UNION) {
+                    for (j = 0; j < agArray.length; j++) {
+                        s.add(agArray[j]);
+                    }
+                } else {
+                    var sArray2 = s.toArray();
+                    for (j = 0; j < sArray2.length; j++) {
+                        if (!ag.contains(sArray2[j])) {
+                            s.remove(sArray2[j]);
+                        }
+                    }
+                }
+            }
+        }
+        return (cnt > 0) ? s : null;
     },
-
+    listUpdated : function(e) {
+        switch(e.getType()) {
+            case GeneEvent.NEW_LIST:
+                this.set(this.genes.getSource());
+                this.updateSelect();
+                this.updateHighlight();
+                this.stats.update(this.genes);
+                // TODO: repaint?
+                break;
+            case GeneEvent.NARROW:
+                break;
+            case GeneEvent.RESTART:
+                this.updateActive();
+                this.updateSelect();
+                this.updateHighlight();
+                this.positionVessels();
+                this.stats.update(this.genes);
+                // TODO: repaint?
+                break;
+            case GeneEvent.SELECT:
+                this.updateSelect();
+                this.updateHighlight();
+                break;
+            case GeneEvent.MULTI_START:
+                this.setMulti(true);
+                break;
+            case GeneEvent.MULTI_FINISH:
+                this.setMulti(false);
+                break;
+        }
+    },
     getVisuals : function() {
         return this.visuals;
     }

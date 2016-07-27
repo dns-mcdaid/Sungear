@@ -32,6 +32,15 @@ var hereWeGo = new p5(function(p5) {
     p5.draw = function() {
         p5.background("#111111");
 
+        p5.textSize(18);
+        p5.textFont("Helvetica");
+        p5.fill("#ffffff");
+        p5.noStroke();
+        // TODO: Check coordinates of these 3.
+        p5.text("0", WIDTH-30, 18);
+        p5.text("107", WIDTH-30, HEIGHT-40);
+        p5.text("107", WIDTH-30, HEIGHT-18);
+
         // TODO: Potentially replace with paint function.
         var visuals = vis.getSunGearVisuals();
         for (var i = 0; i < visuals.length; i++) {

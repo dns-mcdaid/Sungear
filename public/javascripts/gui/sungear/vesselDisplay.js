@@ -210,7 +210,7 @@ VesselDisplay.prototype = {
         return this.select;
     },
     highlightAnchors : function(b) {
-        for (var i = 0; i < this.anchors.length; i++) {
+        for (var i = 0; i < this.anchor.length; i++) {
             this.anchor[i].setHighlight(b);
         }
     },
@@ -218,7 +218,6 @@ VesselDisplay.prototype = {
         if (this.getActiveCount() == 0) {
             return;
         }
-        p5.push();
         p5.strokeWeight(.005);
         var color = (this.select ? SunGear.C_SELECT : (this.highlight ? SunGear.C_HIGHLIGHT : SunGear.C_PLAIN));
         p5.fill(color);
@@ -234,7 +233,6 @@ VesselDisplay.prototype = {
                 this.drawArrow(p5, this.angle[i]);
             }
         }
-        p5.pop();
     },
     drawArrow : function(p5, theta) {
         p5.push();

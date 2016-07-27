@@ -2,7 +2,7 @@ function VesselActSize() {
 
 }
 
-VesselActSize.prototype.compare = function(v1, v2) {
+VesselActSize.prototype.compareTo = function(v1, v2) {
     return v2.getActiveCount() - v1.getActiveCount();
 };
 
@@ -26,7 +26,7 @@ function VesselACount() {
 
 }
 
-VesselACount.prototype.compare = function(v1, v2) {
+VesselACount.prototype.compareTo = function(v1, v2) {
     if (v1.anchor.length < v2.anchor.length) {
         return -1;
     } else if (v1.anchor.length > v2.anchor.length) {
@@ -40,7 +40,7 @@ function VesselSelSize() {
 
 }
 
-VesselSelSize.prototype.compare = function(v1, v2) {
+VesselSelSize.prototype.compareTo = function(v1, v2) {
     return v2.getSelectedCount() - v1.getSelectedCount();
 };
 
