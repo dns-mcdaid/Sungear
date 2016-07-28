@@ -15,8 +15,8 @@
  */
 
 require('javascript.util');
-var SortedSet = javascript.util.SortedSet;
 var TreeSet = javascript.util.TreeSet;
+var SortedSet = require("collections/sorted-set");
 
 var DataSource = require('../data/dataSource');
 var ParseException = require('../data/parseException');
@@ -161,16 +161,20 @@ GeneList.prototype = {
             sendEvent = true;
             addHist = true;
         }
-        this.selectionS = new SortedSet();
-        for (var i = 0; i < sel.length; i++) {
-            if (this.activeS.indexOf(sel[i]) > -1) {
-                this.selectionS.add(sel[i]);
-            }
-        }
+        this.selectionS.clear();
+        // TODO: This might be safer
+        // var selArray = sel.toArray();
+        // for (var i = 0; i < selArray.length; i++) {
+        //     this.selectionS.push(selArray[i]);
+        // }
+        this.selectionS = this.selectionS.union(sel);
+        this.selectionS = this.selectionS.intersection(this.activeS);
+
         if (addHist) {
             this.hist.add(this.selectionS);
         }
         if (sendEvent) {
+            console.log("Send Event time!");
             var e = new GeneEvent(this, src, GeneEvent.SELECT);
             this.notifyGeneListeners(e);
         }
@@ -194,16 +198,21 @@ GeneList.prototype = {
     },
     /**
      * Sets the active gene set
-     * @param src object that generated the change to the active set
-     * @param s the new active set
-     * @param sendEvent true to generate a {@link GeneEvent} on set change, otherwise false
+     * @param src {Object} that generated the change to the active set
+     * @param s {SortedSet<Gene>} the new active set
+     * @param sendEvent {boolean} true to generate a {@link GeneEvent} on set change, otherwise false
      */
     setActive : function(src, s, sendEvent) {
         if (typeof sendEvent === 'undefined') {
             sendEvent = true;
         }
-        this.activeS = new SortedSet();
-        this.activeS.addAll(s);
+        this.activeS.clear();
+        // var sArray = s.toArray();
+        // for (var i = 0; i < sArray.length; i++) {
+        //     this.activeS.push(sArray[i]);
+        // }
+        this.activeS = this.activeS.union(s);
+
         this.hist.clear();
         this.setSelection(this, this.activeS, false, true);
         if (sendEvent) {
@@ -307,6 +316,7 @@ GeneList.prototype = {
      */
     notifyGeneListeners : function(e) {
         for (var i = 0; i < this.listeners.length; i++) {
+            console.log(this.listeners[i]);
             this.listeners[i].listUpdated(e);
         }
     },
@@ -434,7 +444,10 @@ History.prototype = {
         }
 
         var t = new TreeSet();
-        t.addAll(s);
+        var sArray = s.toArray();
+        for (var j = 0; j < sArray.length; j++) {
+            t.add(sArray[j]);
+        }
         this.past.push(t);
         this.curr++;
     }

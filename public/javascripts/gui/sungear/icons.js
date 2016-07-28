@@ -34,7 +34,7 @@ ArrowIcon.prototype = {
         p5.scale(this.scale, this.scale);
         // p5.strokeWeight(.5);
         p5.noStroke();
-        if (p5.dist(p5.mouseX, p5.mouseY, x+4, y+4) < this.scale*2) {
+        if (p5.dist(p5.mouseX, p5.mouseY, x+8, y+8) < this.scale*2) {
             if (p5.mouseIsPressed) {
                 p5.fill(C_SELECT);
                 this.selected = true;
@@ -127,7 +127,7 @@ ShowArrowIcon.prototype = {
         this.selected = false;
         p5.push();
         // Set color and build oval
-        if (p5.dist(p5.mouseX, p5.mouseY, x, y) < 7) {
+        if (p5.dist(p5.mouseX, p5.mouseY, x, y) < 10) {
             if (p5.mouseIsPressed) {
                 p5.stroke(C_SELECT);
                 p5.fill(C_SELECT);

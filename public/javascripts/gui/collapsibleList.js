@@ -6,6 +6,8 @@
 require('javascript.util');
 var TreeSet = javascript.util.TreeSet;
 
+var GeneEvent = require('../genes/geneEvent');
+
 /**
  * @param g {GeneList}
  * @constructor
@@ -15,6 +17,7 @@ function CollapsibleList(g) {
     this.lastRow = -1;
     this.model = new GeneModel(new TreeSet());
     // RIP lines 89 - 99?
+    this.statusF = document.getElementById('statusF');
 
     this.findSelectB = document.getElementById('findSelectB');
     this.collapseT = document.getElementById('collapseT');
@@ -77,6 +80,81 @@ CollapsibleList.prototype = {
         var msg = "Query " /** TODO: + this.genes.getSource().getAttributes().get("itemsLabel", "items")*/;
         this.queryDLabel.innerHTML = msg;
         this.queryA.value = "";
+    },
+    updateList : function() {
+        var t = new TreeSet();
+        if (this.collapsed) {
+            var selArray = this.genes.getSelectedSet().toArray();
+            for (var i = 0; i < selArray.length; i++) {
+                t.add(selArray[i]);
+            }
+        } else {
+            var actArray = this.genes.getActiveSet().toArray();
+            for (var j = 0; j < actArray.length; j++) {
+                t.add(actArray[j]);
+            }
+        }
+        this.model.setGenes(t, this.genes.getSource().getAttributes().get("idLabel", "ID"));
+        this.updateSelect();
+    },
+    updateSelect : function() {
+        // TODO: table.repaint?
+        this.updateStatus();
+    },
+    processSelect : function() {
+        // TODO: Implement me.
+    },
+    updateGUI : function() {
+        var iL = this.genes.getSource().getAttributes().get("itemsLabel", "items");
+        this.findSelectB.title = "Select all " + iL + " matching the search text";
+        this.collapseT.title = "Toggles collapsing list to selected " + iL + " only";
+        this.queryB.title = "Search the active " + iL + " using a query list";
+        this.copyB.title = "Copy the currently selected " + iL + " to the clipboard";
+    },
+    /**
+     * Sets the selected set to all genes matching the string
+     * in the search field.
+     */
+    findSelectGenes : function() {
+        // TODO: Implement me
+    },
+    /**
+     * @param e {GeneEvent}
+     */
+    listUpdated : function(e) {
+        switch (e.getType()) {
+            case GeneEvent.NEW_LIST:
+                this.updateGUI();
+                this.updateList();
+                this.updateSelect();
+                break;
+            case GeneEvent.RESTART:
+                break;
+            case GeneEvent.NARROW:
+                this.updateList();
+                break;
+            case GeneEvent.SELECT:
+                if (this.collapsed) {
+                    this.updateList();
+                } else {
+                    this.updateSelect();
+                }
+                break;
+            case GeneEvent.MULTI_START:
+                this.setMulti(true);
+                break;
+            case GeneEvent.MULTI_FINISH:
+                this.setMulti(false);
+                break;
+            default:
+                break;
+        }
+    },
+    getMultiSelection : function(operation) {
+        // TODO: Implement me
+    },
+    updateStatus : function() {
+        this.statusF.innerHTML = this.genes.getSelectedSet().size() + " / " + this.genes.getActiveSet().size();
     }
 };
 

@@ -56,7 +56,12 @@ Gene.prototype = {
      * @param g {Gene}
      * @returns {number}
      */
-    compareTo : function(g){
+    // compareTo : function(g){
+    //     var str1 = this.name.toLowerCase();
+    //     var str2 = g.getName().toLowerCase();
+    //     return str1.localeCompare(str2);
+    // },
+    compare : function(g){
         var str1 = this.name.toLowerCase();
         var str2 = g.getName().toLowerCase();
         return str1.localeCompare(str2);

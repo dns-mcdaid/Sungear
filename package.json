@@ -10,6 +10,7 @@
     "bootstrap": "~3.3.6",
     "browserify": "~13.0.0",
     "browserify-fs": "~1.0.0",
+    "collections": "^5.0.4",
     "cookie-parser": "~1.4.3",
     "debug": "~2.2.0",
     "express": "~4.13.4",

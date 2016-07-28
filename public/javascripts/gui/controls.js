@@ -14,68 +14,59 @@ var GeneEvent = require('../genes/geneEvent');
 function Controls(gn, el) {
     this.genes = gn;
     this.gear = null;
-    this.export = el;   // TODO: Make sure this works.
+    this.export = el;
     this.coolMethod = 0;
     this.cool = []; /** {Comp.CoolVessel[]} */
 
     this.restartB = document.getElementById('restartB');
     this.restartB.title = "Work with the original active set";
-    this.restartB.addEventListener("click", function() {
-        this.genes.restart(this);
-    });
+    this.restartB.addEventListener("click", this.runRestart.bind(this));
+    this.restartB.className = Controls.ENABLED;
+
     this.allB = document.getElementById('allB');
     this.allB.title = "Select all items";
-    this.allB.addEventListener("click", function() {
-        this.genes.setSelection(this, this.genes.getActiveSet());
-    });
+    this.allB.addEventListener("click", this.runAll.bind(this));
+    this.allB.className = Controls.ENABLED;
+
     this.noneB = document.getElementById('noneB');
     this.noneB.title = "Unselect all items";
-    this.noneB.addEventListener("click", function() {
-        this.genes.setSelection(this, new TreeSet());
-    });
+    this.noneB.addEventListener("click", this.runNone.bind(this));
+    this.noneB.className = Controls.ENABLED;
+
     this.backB = document.getElementById('backB');
     this.backB.title = "Go back to the previous selected set";
-    this.backB.addEventListener("click", function() {
-        this.genes.back(this);
-    });
+    this.backB.addEventListener("click", this.runBack.bind(this));
+    this.backB.className = Controls.DISABLED;
+
     this.forwardB = document.getElementById('forwardB');
     this.forwardB.title = "Go forward to the next selected set";
-    this.forwardB.addEventListener("click", function() {
-        this.genes.forward(this);
-    });
+    this.forwardB.addEventListener("click", this.runForward.bind(this));
+    this.forwardB.className = Controls.DISABLED;
+
     this.narrowB = document.getElementById('narrowB');
     this.narrowB.title = "Restrict the active set to the current selected set";
-    this.narrowB.addEventListener("click", function() {
-        this.genes.narrow(this);
-    });
+    this.narrowB.addEventListener("click", this.runNarrow.bind(this));
+    this.narrowB.className = Controls.ENABLED;
     
     this.unionB = document.getElementById('unionB');
     this.unionB.title = "Set the selected set to the union of all selected items";
-    this.unionB.disabled = true;    // FIXME: Make sure this is visual.
-    this.unionB.addEventListener("click", function() {
-        this.genes.finishMultiSelect(this, MultiSelectable.UNION);
-    });
+    this.unionB.addEventListener("click", this.runUnion.bind(this));
+    this.unionB.className = Controls.DISABLED;
+
     this.intersectB = document.getElementById('intersectB');
     this.intersectB.title = "Set the selected set to the intersect of all selected items";
-    this.intersectB.isDisabled = true;  // FIXME: Make sure this is visual.
-    this.intersectB.addEventListener("click", function() {
-        this.genes.finishMultiSelect(this, MultiSelectable.INTERSECT);
-    });
+    this.intersectB.addEventListener("click", this.runIntersect.bind(this));
+    this.intersectB.className = Controls.DISABLED;
+
     this.coolM = document.getElementById('coolM');
     this.coolB = document.getElementById('coolB');
-    this.coolB.addEventListener("click", function() {
-        if (this.cool === null) {
-            this.updateCool(true);
-            if (this.cool.length == 0) {
-                alert("No cool vessels found - try narrowing or restarting.");
-            }
-        }
-        if (this.cool.length > 0) {
-            // TODO: Set coolM to visible.
-        }
-    });
+    this.coolB.addEventListener("click", this.runCool.bind(this));
+    this.coolB.className = Controls.ENABLED;
     this.genes.addGeneListener(this);
 }
+
+Controls.ENABLED = "btn btn-primary";
+Controls.DISABLED = "btn btn-primary disabled";
 
 Controls.prototype = {
     constructor : Controls,
@@ -88,15 +79,15 @@ Controls.prototype = {
     },
     setCoolState : function() {
         if (this.cool === null) {
-            this.coolB.enabled = true; // FIXME
+            this.coolB.className = Controls.ENABLED;
             this.coolB.innerHTML = "Find Cool";
             this.coolB.title = "Search for highly over-represented vessels";
         } else if (this.cool.length == 0) {
-            this.coolB.enabled = false; // FIXME
+            this.coolB.className = Controls.DISABLED;
             this.coolB.innerHTML = "Nothing Cool";
             this.coolB.title = "No cool vessels";
         } else {
-            this.coolB.enabled = true; // FIXME
+            this.coolB.className = Controls.ENABLED;
             this.coolB.innerHTML = "Show Cool";
             this.coolB.title = "Show the list of highly over-represented vessels";
         }
@@ -159,7 +150,6 @@ Controls.prototype = {
     },
     listUpdated : function(e) {
         switch(e.getType()) {
-            // FIXME on this whole mofo
             case GeneEvent.NEW_LIST:
                 this.updateGUI();
                 break;
@@ -170,17 +160,60 @@ Controls.prototype = {
                 this.updateCool(false);
                 break;
             case GeneEvent.SELECT:
-                this.backB.enabled = this.genes.hasPrev();
-                this.forwardB.enabled = this.genes.hasNext();
+                if (this.genes.hasPrev()) {
+                    this.backB.className = Controls.ENABLED;
+                } else {
+                    this.backB.className = Controls.DISABLED;
+                }
+                if (this.genes.hasNext()) {
+                    this.forwardB.className = Controls.ENABLED;
+                } else {
+                    this.forwardB.className = Controls.DISABLED;
+                }
                 break;
             case GeneEvent.MULTI_START:
-                this.unionB.enabled = true;
-                this.intersectB.enabled = true;
+                this.unionB.className = Controls.ENABLED;
+                this.intersectB.className = Controls.ENABLED;
                 break;
             case GeneEvent.MULTI_FINISH:
-                this.unionB.enabled = false;
-                this.intersectB.enabled = false;
+                this.unionB.className = Controls.DISABLED;
+                this.intersectB.className = Controls.DISABLED;
                 break;
+        }
+    },
+    runRestart : function() {
+        this.genes.restart(this);
+    },
+    runAll : function() {
+        this.genes.setSelection(this, this.genes.getActiveSet());
+    },
+    runNone : function() {
+        this.genes.setSelection(this, new TreeSet());
+    },
+    runBack : function() {
+        this.genes.back(this);
+    },
+    runForward : function() {
+        this.genes.forward(this);
+    },
+    runNarrow : function() {
+        this.genes.narrow(this);
+    },
+    runUnion : function() {
+        this.genes.finishMultiSelect(this, MultiSelectable.UNION);
+    },
+    runIntersect : function() {
+        this.genes.finishMultiSelect(this, MultiSelectable.INTERSECT);
+    },
+    runCool : function() {
+        if (this.cool === null) {
+            this.updateCool(true);
+            if (this.cool.length == 0) {
+                alert("No cool vessels found - try narrowing or restarting.");
+            }
+        }
+        if (this.cool.length > 0) {
+            // TODO: Set coolM to visible.
         }
     }
 };

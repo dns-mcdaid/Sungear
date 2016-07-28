@@ -17,7 +17,6 @@ new p5(function(p5) {
     var WIDTH;
     var HEIGHT;
     var canvas;
-    var fs;
 
     p5.setup = function() {
         WIDTH = document.getElementById('sungearGui').offsetWidth;
@@ -96,3 +95,20 @@ new p5(function(p5) {
     }
 
 }, 'sungearGui');
+
+
+
+// var Gene = require('./genes/gene');
+// var SortedSet = require('collections/sorted-set');
+//
+// var s = new SortedSet();
+// console.log(s);
+// var a = new Gene('abcdefg', 'Fun');
+// var b = new Gene('xyz', 'Not fun');
+// var c = new Gene('lmnop', 'Might be fun');
+// s.push(a);
+// console.log(s);
+// s.push(b);
+// console.log(s);
+// s.push(c);
+// console.log(s);
