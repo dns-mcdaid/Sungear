@@ -62,6 +62,8 @@ function Controls(gn, el) {
     this.coolB = document.getElementById('coolB');
     this.coolB.addEventListener("click", this.runCool.bind(this));
     this.coolB.className = Controls.ENABLED;
+
+    this.setCoolState();
     this.genes.addGeneListener(this);
 }
 
@@ -100,6 +102,17 @@ Controls.prototype = {
         }
         return cc;
     },
+    addCachedCool : function() {
+        var v = this.export.get().getExtra(this);
+        if (v === null) {
+            v = [];
+        }
+        while(v.size() <= this.coolMethod) {
+            v.push(null);
+        }
+        v[this.coolMethod] = this.cool;
+        this.export.get().addExtra(this, v);
+    },
     /**
      * @param m {int}
      */
@@ -126,17 +139,27 @@ Controls.prototype = {
                 this.addCachedCool();
             }
         }
-        while (this.coolM.firstChild) {
+        while (this.coolM.hasChildNodes()) {
             this.coolM.removeChild(this.coolM.firstChild);
         }
         this.setCoolState();
         if (this.cool !== null && this.cool.length > 0) {
-            // TODO: Figure out lines 208 - 219
+            for (var i = 0; i < this.cool.length; i++) {
+                var node = document.createElement('li');
+                var nodeText = (i+1) + ": score " + Math.round(this.cool[i].score);
+                node.innerHTML = nodeText;
+                node.addEventListener('click', this.coolL(nodeText).bind(this));
+                this.coolM.appendChild(node);
+            }
         }
     },
     setGear : function(gear) {
         this.gear = gear;
     },
+    /**
+     * The next two functions are keyboard shortcuts.
+     * @param comp
+     */
     setActions : function(comp) {
         // TODO: Implement this last.
     },
@@ -208,13 +231,16 @@ Controls.prototype = {
     runCool : function() {
         if (this.cool === null) {
             this.updateCool(true);
-            if (this.cool.length == 0) {
-                alert("No cool vessels found - try narrowing or restarting.");
-            }
         }
-        if (this.cool.length > 0) {
-            // TODO: Set coolM to visible.
+        if (this.cool.length <= 0) {
+            var errMsg = document.createElement("li");
+            errMsg.innerHTML = "No cool vessels found - try narrowing or restarting.";
+            this.coolM.appendChild(errMsg);
         }
+    },
+    coolL : function(s) {
+        var idx = Number(s.substr(0, s.indexOf(':'))) - 1;
+        this.genes.setSelection(this, this.cool[idx].vessel.activeGenes);
     }
 };
 

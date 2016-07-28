@@ -81,20 +81,29 @@ block content
             div(id='controlF', class='img-rounded')
                 // Control Dialog
                 h3 Controls
-                ul(id='controlFbuttons')
+                div(id='controlFbuttons')
                     li
                         a(class='btn btn-primary', id='restartB', role='button', data-toggle='tooltip') Restart
+                    li
                         a(class='btn btn-primary', id='allB', role='button', data-toggle='tooltip') All
+                    li
                         a(class='btn btn-primary', id='noneB', role='button', data-toggle='tooltip') None
+                    li
                         a(class='btn btn-primary', id='backB', role='button', data-toggle='tooltip') <<
+                    li
                         a(class='btn btn-primary', id='forwardB', role='button', data-toggle='tooltip') >>
+                    li
                         a(class='btn btn-primary', id='narrowB', role='button', data-toggle='tooltip') Narrow
+                    li
                         a(class='btn btn-primary', id='unionB', role='button', data-toggle='tooltip')
                             span(class='glyphicon glyphicon-plus-sign')
+                    li
                         a(class='btn btn-primary', id='intersectB', role='button', data-toggle='tooltip')
                             span(class='glyphicon glyphicon-adjust')
-                        a(class='btn btn-primary', id='coolB', role='button', data-toggle='tooltip') Find Cool
-                            // TODO: @Dennis add a dropdown menu to this button which is toggle-able.
+                    li(class='dropdown')
+                        a(class='btn btn-primary', id='coolB', role='button', class='dropdown-toggle', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false') Find Cool
+                        ul(class='dropdown-menu', id='coolM')
+
                 table(class='table table-striped img-rounded', id='controlFtable')
                     thead(id='controlFtableHeader')
                         tr
