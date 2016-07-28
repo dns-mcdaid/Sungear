@@ -8,6 +8,8 @@
 const fs = require('browserify-fs');
 const path = require('path');
 
+const Signal = require('./signal');
+
 const DataReader = require('../data/dataReader');
 const DataSource = require('../data/dataSource');
 const ParseException = require('../data/parseException');
@@ -74,13 +76,15 @@ function VisGene(u, w, pn, dataDir) {
     this.dataDir = null;
 
     if (typeof u !== 'undefined') {
-        this.isApp = true;  // TODO: Make sure this doesn't cause any problems.
+        this.isApp = true;
         this.base = u;
         this.context = null;
         this.showWarning = w;
         this.pluginName = pn;
         this.dataDir = dataDir;
     }
+
+    this.signal = null;
 }
 
 VisGene.VERSION = "1.2.0";
@@ -121,9 +125,7 @@ VisGene.prototype = {
                 // Allow the user to pick a set from a table
                 // Then reload the page
         });
-        screenI.addEventListener("click", function() {
-            // TODO: @Dennis implement lines 288 - 310
-        });
+        screenI.addEventListener("click", this.requestScreenshot.bind(this));
 
         this.geneF = document.getElementById("geneF");
         this.l1 = new CollapsibleList(this.geneList);
@@ -153,9 +155,7 @@ VisGene.prototype = {
         this.relaxC = document.getElementById('relax-vessels');
         this.relaxC.addEventListener("click", this.toggleRelax.bind(this));
         var fullC = document.getElementById('full-screen');
-        fullC.addEventListener("click", function() {
-            // TODO: Make full screen function.
-        });
+        fullC.addEventListener("click", this.toggleFullScreen.bind(this));
 
         this.aboutDLabel = document.getElementById('aboutDLabel');
         this.aboutDBody = document.getElementById('aboutDBody');
@@ -217,8 +217,8 @@ VisGene.prototype = {
         console.log("Done.")
     },
     toggleFullScreen : function() {
-        // TODO: Implement this later.
-        console.log("visGene.toggleFullScreen called! Please implement me.")
+        this.fullScreen = !this.fullScreen;
+        this.signal = Signal.FULLSCREEN;
     },
     positionWindows : function() {
         // TODO: Implement this later.
@@ -343,6 +343,10 @@ VisGene.prototype = {
         this.gear.setRelax(val);
         val = !val;
         this.relaxC.title = val.toString();
+    },
+
+    requestScreenshot : function() {
+        this.signal = Signal.SCREENSHOT;
     }
 };
 

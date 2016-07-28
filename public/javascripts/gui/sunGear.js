@@ -20,8 +20,7 @@ function SunGear(genes, thresh, statsF) {
         statsF = thresh;
         thresh = 0.0;
     }
-    this.test = 0;
-    // Custom Rajah object for p5
+    // Container for GUI buttons.
     this.visuals = [];
 
     this.vRadMax = 0.1;
@@ -38,28 +37,28 @@ function SunGear(genes, thresh, statsF) {
     this.showArrows = true;
     this.minRadIdx = 0;
 
-    this.prevB = new Icons.ArrowIcon(2, 4, SunGear.C_PLAIN, SunGear.C_HIGHLIGHT, SunGear.C_SELECT, false);
-    this.selB = new Icons.EllipseIcon(3, SunGear.C_PLAIN, SunGear.C_HIGHLIGHT, SunGear.C_SELECT, false);
-    this.nextB = new Icons.ArrowIcon(0, 4, SunGear.C_PLAIN, SunGear.C_HIGHLIGHT, SunGear.C_SELECT, false);
-    this.statsB = new Icons.StatsIcon(SunGear.C_PLAIN, SunGear.C_HIGHLIGHT, SunGear.C_SELECT);
-    this.showArrowB = new Icons.ShowArrowIcon(SunGear.C_PLAIN, SunGear.C_HIGHLIGHT, SunGear.C_SELECT, true);
-    this.minSizeB = new Icons.VesselMinIcon(SunGear.C_PLAIN, SunGear.C_HIGHLIGHT, SunGear.C_SELECT, this.minRad.length, 2, 0);
-    // TODO: Set tooltips for icons.
+    this.prevB = new Icons.ArrowIcon(2, 4, false);
+    this.selB = new Icons.EllipseIcon(3, false);
+    this.nextB = new Icons.ArrowIcon(0, 4, false);
+    this.statsB = new Icons.StatsIcon();
+    this.showArrowB = new Icons.ShowArrowIcon(true);
+    this.minSizeB = new Icons.VesselMinIcon(this.minRad.length, 2, 0);
+    
     this.WIDTH = document.getElementById('sungearGui').offsetWidth;
     this.HEIGHT = document.getElementById('sungearGui').offsetHeight;
 
     var prevBParams = [ 10, this.HEIGHT-30 ];
-    this.visuals.push(new Visual(this.prevB, this.prevB.paintIcon.bind(this.prevB), prevBParams, this.prevBFunction.bind(this)));
+    this.visuals.push(new Visual(this.prevB, prevBParams, this.prevBFunction.bind(this)));
     var selBParams = [ 35.5, this.HEIGHT-22 ];
-    this.visuals.push(new Visual(this.selB, this.selB.paintIcon.bind(this.selB), selBParams, this.selBFunction.bind(this)));
+    this.visuals.push(new Visual(this.selB, selBParams, this.selBFunction.bind(this)));
     var nextBParams = [ 45, this.HEIGHT-30 ];
-    this.visuals.push(new Visual(this.nextB, this.nextB.paintIcon.bind(this.nextB), nextBParams, this.nextBFunction.bind(this)));
+    this.visuals.push(new Visual(this.nextB, nextBParams, this.nextBFunction.bind(this)));
     var statsBParams = [ 13, this.HEIGHT-108 ];
-    this.visuals.push(new Visual(this.statsB, this.statsB.paintIcon.bind(this.statsB), statsBParams, this.statsBFunction.bind(this)));
+    this.visuals.push(new Visual(this.statsB, statsBParams, this.statsBFunction.bind(this)));
     var showArrowBParams = [ 20, this.HEIGHT-50 ];
-    this.visuals.push(new Visual(this.showArrowB, this.showArrowB.paintIcon.bind(this.showArrowB), showArrowBParams, this.showArrowBFunction.bind(this)));
+    this.visuals.push(new Visual(this.showArrowB, showArrowBParams, this.showArrowBFunction.bind(this)));
     var minSizeBParams = [ 20, this.HEIGHT-75 ];
-    this.visuals.push(new Visual(this.minSizeB, this.minSizeB.paintIcon.bind(this.minSizeB), minSizeBParams, this.minSizeBFunction.bind(this)));
+    this.visuals.push(new Visual(this.minSizeB, minSizeBParams, this.minSizeBFunction.bind(this)));
 
     this.exterior = {
         x : -(SunGear.R_CIRCLE),
@@ -73,8 +72,6 @@ function SunGear(genes, thresh, statsF) {
     this.highCnt = 0;
     this.lastAnchor = null;
     this.lastVessel = null;
-    
-    // TODO: @Dennis use p5 for lines 196 - 255
 
     this.genes.addGeneListener(this);
     this.genes.addMultiSelect(this);
@@ -90,6 +87,7 @@ SunGear.R_CIRCLE = 1.0;
 SunGear.C_PLAIN = "#F3EFE0";
 SunGear.C_HIGHLIGHT = "#3399FF";
 SunGear.C_SELECT = "#9A3334";
+SunGear.C_BACKGROUND = "#111111";
 SunGear.C_SELECT_ALT = "#217C7E";
 
 SunGear.prototype = {
@@ -114,9 +112,7 @@ SunGear.prototype = {
     getVessels : function() {
         return this.vessels;
     },
-    makeButton : function(main, rollover, pressed) {
-        console.log("sunGear.makeButton called! But I don't think it's necessary...");
-    },
+    /** @function makeButton was removed */
     /**
      * @param n {int}
      */
@@ -127,7 +123,6 @@ SunGear.prototype = {
                 this.lastVessel = v;
                 this.highlightVessel(v);
                 this.updateCount();
-                // repaint?
             } catch (e) {
                 console.log(e);
             }
@@ -179,6 +174,7 @@ SunGear.prototype = {
      */
     setMinVesselSizeIdx : function(n) {
         this.minRadIdx = n;
+        this.minSizeB.step = n;
         if (this.vessels !== null) {
             for (var i = 0; i < this.vessels.length; i++) {
                 this.vessels[i].setRadMin(this.minRad[n]);
@@ -192,16 +188,14 @@ SunGear.prototype = {
     setShowArrows : function(b) {
         this.showArrows = b;
         if (this.vessels !== null && typeof this.vessels !== 'undefined') {
-            console.log("Made it here!");
             for (var i = 0; i < this.vessels.length; i++) {
                 this.vessels[i].setShowArrows(b);
                 this.positionVessels();
             }
-            console.log("Made it out!");
         }
     },
     showStats : function() {
-        // TODO: Show Stats Modal
+        $('#statsF').modal('show');
     },
     /**
      * @param g {Gene}
@@ -233,6 +227,12 @@ SunGear.prototype = {
         }
         return t;
     },
+    /**
+     *
+     * @param maxVessels {int}
+     * @param minScore {int}
+     * @param method {int}
+     */
     getCool : function(maxVessels, minScore, method) {
         console.log("method: " + method);
         // intermediate storage for vessel cool term
@@ -442,7 +442,7 @@ SunGear.prototype = {
             var x = [];
             var y = [];
             for (var i = 0; i < this.anchors.length; i++) {
-                var t1 = anchors[i].getAngle();
+                var t1 = this.anchors[i].getAngle();
                 x.push(SunGear.R_CIRCLE*Math.cos(t1));
                 y.push(SunGear.R_CIRCLE*Math.sin(t1));
             }
@@ -465,7 +465,6 @@ SunGear.prototype = {
             this.vessels[i].setAnchors(anchorConv);
             this.vessels[i].setMax(this.vMax);
             this.vessels[i].initActive();
-            // TODO: Maybe add this to visuals stack instead.
             this.vessels[i].makeShape(this.rad_inner);
             if (this.vessels[i].anchor.length == 0) {
                 this.moon = this.vessels[i];
@@ -704,7 +703,6 @@ SunGear.prototype = {
             this.vessels[i].setSelect(this.vessels[i] == v);
         }
         if (chg) {
-            // TODO: Maybe do something here.
             console.log("Hey Dennis, maybe implement a repaint function?");
         }
     },
@@ -853,7 +851,6 @@ SunGear.prototype = {
                 this.checkHighlight(p);
             }
         }
-        // TODO: Possibly call repaint?
     },
     highlightVessel : function(v) {
         var i = 0;
@@ -905,7 +902,6 @@ SunGear.prototype = {
             this.lastVessel = v;
             if (chg) {
                 this.updateCount();
-                // TODO: repaint?
             }
         }
     },
@@ -914,13 +910,11 @@ SunGear.prototype = {
         p5.push();
         this.makeTransform(p5, this.WIDTH, this.HEIGHT);
         p5.fill(SunGear.C_PLAIN);
-        // TODO: Implement a draw exterior function.
         for (i = 0; i < this.vessels.length; i++) {
             this.vessels[i].draw(p5);
         }
         p5.pop();
         p5.push();
-        // TODO: Check if the visual translations are correct here.
         for (i = 0; i < this.anchors.length; i++) {
             if (this.anchors[i] != this.lastAnchor) {
                 this.anchors[i].draw(p5);
@@ -931,12 +925,15 @@ SunGear.prototype = {
             this.lastAnchor.draw(p5);
         }
         p5.pop();
+
+        p5.push();
         p5.textSize(18);
+        p5.textAlign(p5.RIGHT);
         p5.textFont("Helvetica");
-        // TODO: Check coordinates of these 3.
-        p5.text(this.highCnt+"", this.WIDTH-30, 18);
-        p5.text(this.genes.getSelectedSet().size()+"", this.WIDTH-30, this.HEIGHT-40);
-        p5.text(this.genes.getActiveSet().size()+"", this.WIDTH-30, this.HEIGHT-18);
+        p5.text(this.highCnt+"", this.WIDTH-10, 18);
+        p5.text(this.genes.getSelectedSet().size()+"", this.WIDTH-10, this.HEIGHT-40);
+        p5.text(this.genes.getActiveSet().size()+"", this.WIDTH-10, this.HEIGHT-18);
+        p5.pop();
 
         // moon label
         var ml = null;
@@ -995,7 +992,6 @@ SunGear.prototype = {
             this.orderIdx = -1;
             this.firstIdx = (min === null) ? -1 : this.orderedVessels.indexOf(min);
         }
-        // TODO: repaint?
     },
     getMultiSelection : function(operation) {
         var s = new TreeSet();
@@ -1055,6 +1051,10 @@ SunGear.prototype = {
         }
         return (cnt > 0) ? s : null;
     },
+    /**
+     * If a GeneEvent occurs, take appropriate action.
+     * @param e {GeneEvent}
+     */
     listUpdated : function(e) {
         switch(e.getType()) {
             case GeneEvent.NEW_LIST:
@@ -1062,7 +1062,6 @@ SunGear.prototype = {
                 this.updateSelect();
                 this.updateHighlight();
                 this.stats.update(this.genes);
-                // TODO: repaint?
                 break;
             case GeneEvent.NARROW:
                 break;
@@ -1072,7 +1071,6 @@ SunGear.prototype = {
                 this.updateHighlight();
                 this.positionVessels();
                 this.stats.update(this.genes);
-                // TODO: repaint?
                 break;
             case GeneEvent.SELECT:
                 this.updateSelect();
@@ -1092,43 +1090,112 @@ SunGear.prototype = {
      * the selectable icons in the interface.
      */
     prevBFunction : function() {
-        console.log("Hello from prevB!");
-        console.log(test);
-        test++;
-        // this.orderIdx = (this.orderIdx == -1) ? this.firstIdx : (this.orderIdx + this.orderedVessels.length - 1) % this.orderedVessels.length;
-        // this.order(this.orderIdx);
+        this.orderIdx = (this.orderIdx == -1) ? this.firstIdx : (this.orderIdx + this.orderedVessels.length - 1) % this.orderedVessels.length;
+        this.order(this.orderIdx);
     },
     nextBFunction : function() {
         this.orderIdx = (this.orderIdx == -1) ? this.firstIdx : (this.orderIdx+1) % this.orderedVessels.length;
         this.order(this.orderIdx);
     },
+    /**
+     * Triggered by the selB Icon in the SunGear dialog.
+     * Then selects genes.
+     */
     selBFunction : function() {
         if (this.lastVessel !== null) {
             this.genes.setSelection(this, this.lastVessel.selectedGenes);
             this.highlightVessel(null);
         }
     },
+    /**
+     * Triggered by clicking the minSizeB bullseye in the SunGear dialog.
+     * Either increments or resets the minimum vessel size index
+     */
     minSizeBFunction : function() {
         this.setMinVesselSizeIdx((this.minRadIdx + 1) % this.minRad.length);
     },
+    /**
+     * Triggered by clicking the showArrowB Icon in the SunGear dialog.
+     * Toggles whether or not the vessel's arrows should be shown.
+     */
     showArrowBFunction : function() {
         this.setShowArrows(!this.showArrows);
     },
+    /**
+     * Triggered by clicking the statsB Icon in the SunGear dialog.
+     * Calls the showStats function.
+     */
     statsBFunction : function() {
         this.showStats();
     },
-
-    displayButtons : function(p5) {
+    /**
+     * Draws the Icon buttons in the bottom-left corner of the SunGear Dialog
+     * Called with every draw loop.
+     *
+     * @param p5
+     */
+    makeButtons : function(p5) {
         for (var i = 0; i < this.visuals.length; i++) {
-            var visual = this.visuals[i];
-            visual.drawFunction(p5, visual.params);
+            var model = this.visuals[i].model;
+            model.paintIcon(p5, this.visuals[i].params);
         }
+    },
+    /**
+     * Triggered by a p5.mouseReleased event,
+     * this function checks to see if any of the icons have been clicked,
+     * then triggers their corresponding functions.
+     *
+     * @param p5
+     */
+    handleButtons : function(p5) {
+        for (var i = 0; i < this.visuals.length; i++) {
+            var model = this.visuals[i].model;
+            if (model.selected) {
+                this.visuals[i].task();
+            }
+        }
+    },
+    /**
+     * This function uses the existing properties of the exterior shape
+     * to draw a polygon with the number of sides
+     * corresponding to the number of vessels.
+     * It is called with every p5.draw loop.
+     *
+     * @param p5
+     */
+    paintExterior : function(p5) {
+        p5.push();
+        this.makeTransform(p5, this.WIDTH, this.HEIGHT);
+        p5.stroke(SunGear.C_PLAIN);
+        p5.fill(SunGear.C_BACKGROUND);
+        p5.strokeWeight(.025);
+        if (this.exterior.w === null || this.exterior.h === null) {
+            var vertX = this.exterior.x;
+            var vertY = this.exterior.y;
+            p5.beginShape();
+            for (var i = 0; i < vertX.length; i++) {
+                p5.vertex(vertX[i], vertY[i]);
+            }
+            p5.endShape(p5.CLOSE);
+
+        } else {
+            p5.ellipseMode(p5.CORNER);
+            p5.ellipse(this.exterior.x, this.exterior.y, this.exterior.w, this.exterior.h);
+        }
+        p5.pop();
     }
 };
 
-function Visual(model, drawFunction, params, task) {
+/**
+ * A Visual Model which acts as a generic parent for SunGear Icons
+ *
+ * @param model {Icons.Type<T>}
+ * @param params {Array}
+ * @param task {function}
+ * @constructor
+ */
+function Visual(model, params, task) {
     this.model = model;
-    this.drawFunction = drawFunction;
     this.params = params;
     this.task = task;
 }

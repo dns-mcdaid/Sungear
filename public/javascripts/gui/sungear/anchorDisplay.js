@@ -34,7 +34,7 @@ AnchorDisplay.prototype = {
     /** @param s {double} */
     setScale : function(s) {
         this.scale = s;
-        if(this.angle != null) {
+        if(!isNaN(this.angle)) {
             this.setAngle(this.angle);
         }
     },
@@ -91,7 +91,12 @@ AnchorDisplay.prototype = {
         return this.showLongDesc;
     },
     draw : function(p5) {
-
+        // TODO: Implement lines 79 - 82
+        p5.textSize(18);
+        p5.textAlign(p5.CENTER);
+        p5.textFont("Helvetica");
+        var l = this.showLongDesc ? this.longDesc : this.shortDesc;
+        p5.push();
     },
     /**
      * @param p of type Point2D.Double

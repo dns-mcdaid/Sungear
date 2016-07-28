@@ -4,8 +4,13 @@ block content
     nav(class='navbar navbar-default')
         div(class='container-fluid')
             div(class='navbar-header')
+                button(type='button', class='navbar-toggle collapsed', data-toggle='collapse', data-target='#navbar-options', aria-expanded='false')
+                    span(class='sr-only') Toggle navigation
+                    span(class='icon-bar')
+                    span(class='icon-bar')
+                    span(class='icon-bar')
                 a(class='navbar-brand') #{title}
-            div(class='collapse navbar-collapse')
+            div(class='collapse navbar-collapse', id='navbar-options')
                 ul(class='nav navbar-nav')
                     li(class='dropdown')
                         a(href='#', class='dropdown-toggle', data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='false') File
@@ -40,7 +45,7 @@ block content
                             li
                                 a(href='#', id='relax-vessels', title='true') Relax Vessels
                                     //span(class='glyphicon glyphicon-ok')
-                            li(class='disabled')
+                            li
                                 a(href='#', id='full-screen') Full Screen
                                     //span(class='glyphicon glyphicon-ok')
                     li(class='dropdown')
@@ -155,6 +160,37 @@ block content
                 div(class='modal-footer')
                     button(type='button', class='btn btn-default', data-dismiss='modal') Cancel
                     button(type='button', class='btn btn-primary', id='queryDSubmit', data-dismiss='modal') OK
+    // Stats Dialog
+    div(class='modal fade', id='statsF', tabindex='-1', role='dialog', aria-labelledby='statsFLabel')
+        div(class='modal-dialog', role='document')
+            div(class='modal-content')
+                div(class='modal-header')
+                    button(type='button', class='close', data-dismiss='modal', aria-label='Close')
+                        span(aria-hidden='true') &times;
+                    h4(class='modal-title', id='statsFLabel') Stats
+                div(class='modal-body')
+                    table(id='statsTable' class='table-striped')
+                        thead
+                            tr
+                                th Anchors
+                                th Vessels
+                                th Genes
+                        tbody(id='statsBody')
+                            tr
+                                td This
+                                td is
+                                td test
+                            tr
+                                td data
+                                td please
+                                td ignore
+                            tr
+                                td it
+                                td for
+                                td now
+                div(class='modal-footer')
+                    button(type='button', class='btn btn-default', data-dismiss='modal') Cancel
+                    button(type='button', class='btn btn-primary', id='statsFSubmit', data-dismiss='modal') OK
 
     script(src='/javascripts/out.js')
     script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js')

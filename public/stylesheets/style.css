@@ -30,6 +30,7 @@ textarea {
 
 .container {
     padding-top: 20px;
+    background-color: #EEEEEE;
 }
 
 .btn {
@@ -143,4 +144,8 @@ tr {
 #geneSearch {
     /**width: 150px;*/
     width: 65%;
+}
+
+#statsTable {
+    width: 100%;
 }
