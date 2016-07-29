@@ -10,12 +10,14 @@ const path = require('path');
 
 const Signal = require('./signal');
 
+const Attributes = require('../data/attributes');
 const DataReader = require('../data/dataReader');
 const DataSource = require('../data/dataSource');
 const ParseException = require('../data/parseException');
 
 const GeneList = require('../genes/geneList');
 
+const ExperimentList = require('../gui/experimentList');
 const ExportList = require('../gui/exportList');
 const GoTerm = require('../gui/goTerm');
 const SunGear = require('../gui/sunGear');
@@ -119,12 +121,8 @@ VisGene.prototype = {
         // build desktop
         var loadI = document.getElementById('nav-load');
         var screenI = document.getElementById('screenshot');
-        loadI.addEventListener("click", function() {
-            // TODO: @Dennis implement lines 241 - 287
-                // Should open a frame.
-                // Allow the user to pick a set from a table
-                // Then reload the page
-        });
+
+        loadI.addEventListener("click", this.loadExperiments.bind(this));
         screenI.addEventListener("click", this.requestScreenshot.bind(this));
 
         this.geneF = document.getElementById("geneF");
@@ -345,6 +343,32 @@ VisGene.prototype = {
         this.relaxC.title = val.toString();
     },
 
+    loadExperiments : function() {
+        var loadD = document.getElementById('loadD');
+        var loadBody = document.getElementById('loadBody');
+        try {
+            var exp = new ExperimentList(new URL("exper.txt", this.dataU), new URL("species.txt", this.dataU), this.dataU, loadD);
+            var exper = exp.getSelection();
+            if (exper !== null) {
+                var attrib = new Attributes();
+                if (exper.getAttribFile() !== null) {
+                    attrib.parseAttributes(new URL(exper.getAttribFile(), this.dataU));
+                }
+                attrib.put("sungearU", DataReader.makeURL(this.dataU, exper.getFileName()));
+                if (exper.getSpecies() !== null) {
+                    attrib.put("species", exper.getSpecies());
+                }
+                this.src.setAttributes(attrib, this.dataU);
+                this.openFile(attrib);
+                var warning = "";
+                for (var i = 0; i < this.plugin.size(); i++) {
+
+                }
+            }
+        } catch (ex) {
+            console.log(ex);
+        }
+    },
     requestScreenshot : function() {
         this.signal = Signal.SCREENSHOT;
     }

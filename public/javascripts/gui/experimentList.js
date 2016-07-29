@@ -1,15 +1,36 @@
 function ExperimentList(experU, speciesU, base, par) {
     this.parent = par;  /** @type Container */
     this.exp = this.parseExper(experU); /** @type Vector <Experiment> */
-    this.setLayout(document.getElementById('experimentList'));
-    this.files = new ExperModel(exp); // TODO: @Dennis check this against JTable
+    this.model = new ExperModel(exp); // TODO: @Dennis check this against JTable
+    this.files = document.getElementById('loadTable');
+    // TODO: Maybe unnecessary?
     this.adjustColumnSize(0);
     this.adjustColumnSize(2);
-    // TODO: @Dennis finish implementation.
+
+    this.openB = document.getElementById('openB');
+    this.openB.addEventListener("click", this.handleSelect.bind(this));
+    this.selection = null;
 }
 
 ExperimentList.prototype = {
+    constructor : ExperimentList,
 
+    adjustColumnSize : function(c) {
+        // TODO: Implement this later.
+    },
+    handleSelect : function() {
+
+    },
+
+    getSelection : function() {
+
+    },
+    parseExper : function(u) {
+        
+    },
+    fileMouseListener : function() {
+
+    }
 };
 
 function ExperModel(data) {

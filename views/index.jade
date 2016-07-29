@@ -16,7 +16,7 @@ block content
                         a(href='#', class='dropdown-toggle', data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='false') File
                         ul(class='dropdown-menu')
                             li
-                                a(href='#', id='nav-load') Load...
+                                a(href='#', id='nav-load', data-toggle='modal', data-target='#loadD') Load...
                             li
                                 a(href='#', id='screenshot') Screen Shot
                     li(class='dropdown')
@@ -145,6 +145,26 @@ block content
                     option(value='name') Sort by Name
                     option(value='count') Sort by Count
 
+    // Load Dialog
+    div(class='modal fade', id='loadD', tabindex='-1', role='dialog', aria-labelledby='loadDLabel')
+        div(class='modal-dialog', role='document')
+            div(class='modal-content')
+                div(class='modal-header')
+                    button(type='button', class='close', data-dismiss='modal', aria-label='Close')
+                        span(aria-hidden='true') &times;
+                    h4(class='modal-title', id='loadDLabel') Experiments
+                div(class='modal-body')
+                    table(id='loadTable' class='table-striped')
+                        thead
+                            tr
+                                th Name
+                                th Description
+                                th Species
+                        tbody(id='loadBody')
+
+                div(class='modal-footer')
+                    button(type='button', class='btn btn-default', data-dismiss='modal') Cancel
+                    button(type='button', class='btn btn-primary', id='openB', data-dismiss='modal') Open
     // About Dialog
     div(class='modal fade', id='aboutD', tabindex='-1', role='dialog', aria-labelledby='aboutDLabel')
         div(class='modal-dialog', role='document')
