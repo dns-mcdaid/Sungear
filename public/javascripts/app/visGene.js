@@ -118,11 +118,17 @@ VisGene.prototype = {
         this.src = new DataSource(this.dataU);
         this.geneList = new GeneList();
 
-        // build desktop
+        // build GUI
         var loadI = document.getElementById('nav-load');
         var screenI = document.getElementById('screenshot');
 
-        loadI.addEventListener("click", this.loadExperiments.bind(this));
+        // REPLACING OLD SUNGEAR ExperimentList implementation with new js version.
+        // loadI.addEventListener("click", this.loadExperiments.bind(this));
+        var loadBody = document.getElementById('loadBody');
+        this.exp = new ExperimentList(new URL("exper.txt", this.dataU), new URL("species.txt", this.dataU), this.dataU, loadBody);
+        var openB = document.getElementById('openB');
+        openB.addEventListener('click', this.loadExperiment.bind(this));
+
         screenI.addEventListener("click", this.requestScreenshot.bind(this));
 
         this.geneF = document.getElementById("geneF");
@@ -343,12 +349,9 @@ VisGene.prototype = {
         this.relaxC.title = val.toString();
     },
 
-    loadExperiments : function() {
-        var loadD = document.getElementById('loadD');
-        var loadBody = document.getElementById('loadBody');
+    loadExperiment : function() {
         try {
-            var exp = new ExperimentList(new URL("exper.txt", this.dataU), new URL("species.txt", this.dataU), this.dataU, loadD);
-            var exper = exp.getSelection();
+            var exper = this.exp.getSelection();
             if (exper !== null) {
                 var attrib = new Attributes();
                 if (exper.getAttribFile() !== null) {
@@ -360,13 +363,10 @@ VisGene.prototype = {
                 }
                 this.src.setAttributes(attrib, this.dataU);
                 this.openFile(attrib);
-                var warning = "";
-                for (var i = 0; i < this.plugin.size(); i++) {
-
-                }
+                // TODO: Potentially show warning messages based on plugins.
             }
         } catch (ex) {
-            console.log(ex);
+            console.error(ex);
         }
     },
     requestScreenshot : function() {

@@ -90,9 +90,13 @@ tr {
 }
 
 .table-striped tbody tr.highlight td {
-    background-color: #9A3334;
+    background-color: #2288EE;
     /*color: #F3EFE0;*/
-    color: #DDDDDD;
+    color: #FFFFFF;
+}
+
+.table-striped tr {
+    padding-left: 10px;
 }
 
 #controlFbuttons {
