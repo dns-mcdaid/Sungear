@@ -173,9 +173,17 @@ CollapsibleList.prototype = {
         while (this.geneTBody.hasChildNodes()) {
             this.geneTBody.removeChild(this.geneTBody.firstChild);
         }
-        for (var i = 0; i < this.model.data.length; i++) {
-            var g = this.model.data[i];
-            // TODO: Finish me.
+        var genes = this.model.getData();
+        for (var i = 0; i < genes.length; i++) {
+            var g = genes[i];
+            var row = document.createElement('tr');
+            var idCell = row.insertCell(0);
+            var descCell = row.insertCell(1);
+            idCell.innerHTML = g.getName();
+            descCell.innerHTML = g.getDesc();
+            row.id = 'gene-' + i;
+            this.geneTBody.appendChild(row);
+            row.addEventListener('click', /**TODO: ADD FUNCTION HERE */);
         }
     }
 };
@@ -244,7 +252,6 @@ GeneModel.prototype = {
         this.titles[0] = lab;
         this.data.sort(this.comp);
         this.adjustColumnSizes();
-        this.populateTable();
     },
     adjustColumnSizes : function() {
     },
