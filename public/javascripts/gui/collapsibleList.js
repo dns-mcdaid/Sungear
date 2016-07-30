@@ -29,6 +29,7 @@ function CollapsibleList(g) {
     this.queryB.title = "Search the active items using a query list";
     this.genes.addGeneListener(this);
     this.genes.addMultiSelect(this);
+    this.geneTBody = document.getElementById('geneTBody');
 
     // Difference between this and Java SunGear:
         // queryB opens a modal in both,
@@ -38,12 +39,14 @@ function CollapsibleList(g) {
     this.queryDLabel = document.getElementById('queryDLabel');
     this.queryA = document.getElementById('queryA');
 
-    // TODO: Implement a custom EventListener which can be applied to each row of the table individually.
     this.queryB.addEventListener("click", this.updateQueryDLabel.bind(this));
     this.queryDSubmit.addEventListener("click", this.queryGenes.bind(this));
     this.copyB.addEventListener("click", this.copyGenes.bind(this));
-    // this.findSelectB.addEventListener("click", this.findSelectGenes.bind(this));
-    // this.collapseT.addEventListener("click", this.setCollapsed.bind(this)/** TODO: Include Parameters */);
+    this.findF = document.getElementById('findF');
+    this.findF.addEventListener('oninput', this.findSelectGenes.bind(this));
+    this.findSelectB.addEventListener("click", this.findSelectGenes.bind(this));
+    // TODO: Check out this next one:
+    //this.collapseT.addEventListener("click", this.setCollapsed.bind(this)/** TODO: Include Parameters */);
     this.collapsed = false;
 }
 
@@ -81,6 +84,17 @@ CollapsibleList.prototype = {
         this.queryDLabel.innerHTML = msg;
         this.queryA.value = "";
     },
+    setCollapsed : function(b) {
+        this.collapsed = b;
+        this.updateList();
+    },
+    setMulti : function(b) {
+        this.multi = b;
+        // TODO: Allow table to select multiple rows?
+        if (b == false) {
+            // TODO: Clear Selection?
+        }
+    },
     updateList : function() {
         var t = new TreeSet();
         if (this.collapsed) {
@@ -98,7 +112,6 @@ CollapsibleList.prototype = {
         this.updateSelect();
     },
     updateSelect : function() {
-        // TODO: table.repaint?
         this.updateStatus();
     },
     processSelect : function() {
@@ -155,6 +168,15 @@ CollapsibleList.prototype = {
     },
     updateStatus : function() {
         this.statusF.innerHTML = this.genes.getSelectedSet().size() + " / " + this.genes.getActiveSet().size();
+    },
+    populateTable : function() {
+        while (this.geneTBody.hasChildNodes()) {
+            this.geneTBody.removeChild(this.geneTBody.firstChild);
+        }
+        for (var i = 0; i < this.model.data.length; i++) {
+            var g = this.model.data[i];
+            // TODO: Finish me.
+        }
     }
 };
 
@@ -177,25 +199,29 @@ CompareDesc.prototype.compare = function(o1, o2) {
  */
 function GeneModel(data) {
     this.titles = [ "ID", "Description" ];
-    this.colComp = [];
+    this.colComp = [];  /** {Vector<Comparator<Gene>>} */
     this.colComp.push(new CompareName());
     this.colComp.push(new CompareDesc());
     this.setGenes(data, "ID");
-    this.comp = this.colComp[0];
-    this.data.sort(this.comp.compare);
+    this.comp = this.colComp[0].compare;
+
+    console.log("Collapsible List is about to Sort...");
+    this.data.sort(this.comp);
+    console.log("Sort was successful!");
 }
 
 GeneModel.prototype = {
     constructor : GeneModel,
     cleanup : function() {
+        this.data = [];
         this.data = null;
         this.colComp = null;
         this.comp = null;
     },
     setSortColumn : function(col) {
         if (col < this.colComp.length) {
-            if (this.comp != this.colComp[col]) {
-                this.comp = this.colComp[col];
+            if (this.comp != this.colComp[col].compare) {
+                this.comp = this.colComp[col].compare;
                 this.doSort();
             }
         }
@@ -217,14 +243,10 @@ GeneModel.prototype = {
         this.data = sel.toArray();
         this.titles[0] = lab;
         this.data.sort(this.comp);
-        // Two lines here. Necessary? Ehhhhhhhhhhh
         this.adjustColumnSizes();
+        this.populateTable();
     },
-    /**
-     * TODO: Find out a way to get GeneModel to access CollapsibleList's data.
-     */
     adjustColumnSizes : function() {
-
     },
     getColumnName : function(col) {
         return this.titles[col];
@@ -236,9 +258,8 @@ GeneModel.prototype = {
         return 2;
     },
     /**
-     * TODO: Fix this shit so it gets the class, or find out if it's necessary?
      * @param col {int}
-     * @returns {*}
+     * @returns {Gene|String}
      */
     getColumnClass : function(col) {
         return this.getValueAt(0, col);
@@ -253,7 +274,6 @@ GeneModel.prototype = {
                 return null;
         }
     }
-
 };
 
 module.exports = CollapsibleList;

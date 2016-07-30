@@ -121,16 +121,16 @@ VisGene.prototype = {
         // build GUI
         var loadI = document.getElementById('nav-load');
         var screenI = document.getElementById('screenshot');
-
         // REPLACING OLD SUNGEAR ExperimentList implementation with new js version.
         // loadI.addEventListener("click", this.loadExperiments.bind(this));
         var loadBody = document.getElementById('loadBody');
-        this.exp = new ExperimentList(new URL("exper.txt", this.dataU), new URL("species.txt", this.dataU), this.dataU, loadBody);
+
+        // TODO: Uncommment this!!!!
+        // this.exp = new ExperimentList(new URL("exper.txt", this.dataU), new URL("species.txt", this.dataU), this.dataU, loadBody);
         var openB = document.getElementById('openB');
         openB.addEventListener('click', this.loadExperiment.bind(this));
 
         screenI.addEventListener("click", this.requestScreenshot.bind(this));
-
         this.geneF = document.getElementById("geneF");
         this.l1 = new CollapsibleList(this.geneList);
         // TODO: Attach l1 to geneF
@@ -171,7 +171,7 @@ VisGene.prototype = {
                 this.openFile(this.extAttrib);  // TODO: Implement
             }
         } catch (e) {
-            console.log(e);
+            console.error(e);
         }
     },
     /**
@@ -419,7 +419,7 @@ LoadThread.prototype = {
             this.status.updateStatus("Done", 5);
         } catch (oo) {
             if (typeof oo !== ParseException) {
-                console.log("Out of memory?");
+                console.error("Out of memory?");
                 this.status.updateStatus("ERROR: Out of memory", 5);
                 // this.status.setModal(false);
                 parent.src.getReader().clear();
@@ -489,7 +489,7 @@ VisGene.main = function(args) {
         vis.init();
         return vis;
     } catch(mu) {
-        console.log(mu);
+        console.error(mu);
     }
 };
 
