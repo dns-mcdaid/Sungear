@@ -167,7 +167,7 @@ GeneList.prototype = {
         // for (var i = 0; i < selArray.length; i++) {
         //     this.selectionS.push(selArray[i]);
         // }
-        this.selectionS = this.selectionS.union(sel);
+        this.selectionS = this.selectionS.union(sel.toArray());
         this.selectionS = this.selectionS.intersection(this.activeS);
 
         if (addHist) {
@@ -207,10 +207,12 @@ GeneList.prototype = {
             sendEvent = true;
         }
         this.activeS.clear();
+        
         // var sArray = s.toArray();
         // for (var i = 0; i < sArray.length; i++) {
         //     this.activeS.push(sArray[i]);
         // }
+
         this.activeS = this.activeS.union(s);
 
         this.hist.clear();

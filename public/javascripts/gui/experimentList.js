@@ -16,6 +16,9 @@ function ExperimentList(experU, speciesU, base, par) {
     this.files.style.cursor = "default";
     this.populateTable();
 
+    this.loadB = document.getElementById('loadB');
+    this.loadB.addEventListener('click', this.refreshTable.bind(this));
+
     // this.adjustColumnSize(0);
     // this.adjustColumnSize(2);
     // this.openB = document.getElementById('openB');
@@ -84,6 +87,13 @@ ExperimentList.prototype = {
             this.parent.appendChild(row);
             row.addEventListener('click', this.handleSelect.bind(this, row));
         }
+    },
+    // TODO: Ensure this works.
+    /**
+     * This function removes any pre-existing selections when the modal is called.
+     */
+    refreshTable : function() {
+        $('#loadTable tr').removeClass('highlight');
     }
 };
 

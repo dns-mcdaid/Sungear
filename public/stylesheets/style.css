@@ -23,6 +23,10 @@ textarea {
     width: 100%;
 }
 
+table {
+    table-layout: fixed;
+}
+
 #sunGui {
     width: 100%;
     height: 300px;
@@ -82,10 +86,16 @@ textarea {
     width: 100%;
     height: 100px;
     color: #404040;
+    overflow: auto;
+}
+
+.gene-id {
+    font-family: monospace;
 }
 
 tr {
     width: 100%;
+    height: 10px;
 }
 
 .table-striped tbody tr.highlight td {
@@ -160,4 +170,20 @@ tr {
 
 #loadTable {
     width: 100%;
+}
+
+.td-container {
+    position: relative;
+}
+
+.td-content {
+    position: absolute;
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.spacer {
+    height: 0;
+    overflow: hidden;
 }

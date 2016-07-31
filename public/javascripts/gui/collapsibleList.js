@@ -4,9 +4,11 @@
  */
 
 require('javascript.util');
-var TreeSet = javascript.util.TreeSet;
+const TreeSet = javascript.util.TreeSet;
 
-var GeneEvent = require('../genes/geneEvent');
+const GeneEvent = require('../genes/geneEvent');
+
+const Gene = require('../genes/gene');
 
 /**
  * @param g {GeneList}
@@ -16,7 +18,7 @@ function CollapsibleList(g) {
     this.genes = g;
     this.lastRow = -1;
     this.model = new GeneModel(new TreeSet());
-    // RIP lines 89 - 99?
+    // RIP lines 89 - 99
     this.statusF = document.getElementById('statusF');
 
     this.findSelectB = document.getElementById('findSelectB');
@@ -43,11 +45,29 @@ function CollapsibleList(g) {
     this.queryDSubmit.addEventListener("click", this.queryGenes.bind(this));
     this.copyB.addEventListener("click", this.copyGenes.bind(this));
     this.findF = document.getElementById('findF');
-    this.findF.addEventListener('oninput', this.findSelectGenes.bind(this));
+    this.findF.addEventListener('input', this.findSelectGenes.bind(this));
     this.findSelectB.addEventListener("click", this.findSelectGenes.bind(this));
+    this.geneTBody.addEventListener('blur', this.tableChanged.bind(this));
     // TODO: Check out this next one:
     //this.collapseT.addEventListener("click", this.setCollapsed.bind(this)/** TODO: Include Parameters */);
     this.collapsed = false;
+    this.multi = false;
+
+    // TESTING
+    console.log('Building genes...');
+    var myFirstGene = new Gene("AT1G01010", "A really fun gene A less fun gene A less fun gene A less fun gene");
+    var mySecondGene = new Gene("AT1G01020", "A less fun gene");
+    var myThirdGene = new Gene("AT1G66950", "The most fun gene");
+    var myTree = new TreeSet();
+    myTree.add(myThirdGene);
+    myTree.add(mySecondGene);
+    myTree.add(myFirstGene);
+    console.log(myTree);
+    console.log(this.model);
+    this.model.setGenes(myTree);
+    console.log(this.model);
+
+    this.populateTable();
 }
 
 CollapsibleList.prototype = {
@@ -90,7 +110,6 @@ CollapsibleList.prototype = {
     },
     setMulti : function(b) {
         this.multi = b;
-        // TODO: Allow table to select multiple rows?
         if (b == false) {
             // TODO: Clear Selection?
         }
@@ -109,6 +128,7 @@ CollapsibleList.prototype = {
             }
         }
         this.model.setGenes(t, this.genes.getSource().getAttributes().get("idLabel", "ID"));
+        this.populateTable();
         this.updateSelect();
     },
     updateSelect : function() {
@@ -129,7 +149,17 @@ CollapsibleList.prototype = {
      * in the search field.
      */
     findSelectGenes : function() {
-        // TODO: Implement me
+        var found = new TreeSet();
+        var pattern = ".*" + this.findF.value + ".*";
+        var p = new RegExp(pattern, "i");
+        var activeArray = this.genes.getActiveSet().toArray();
+        for (var it = 0; it < activeArray.length; it++) {
+            var g = activeArray[it];
+            if (p.test(g.getName()) || p.test(g.getDesc())) {
+                found.add(g);
+            }
+        }
+        this.genes.setSelection(this, found);
     },
     /**
      * @param e {GeneEvent}
@@ -179,12 +209,64 @@ CollapsibleList.prototype = {
             var row = document.createElement('tr');
             var idCell = row.insertCell(0);
             var descCell = row.insertCell(1);
+            var descDiv = document.createElement('div');
+            var descContent = document.createElement('div');
+            var spaceDiv = document.createElement('div');
+            var dotSpan = document.createElement('span');
+
             idCell.innerHTML = g.getName();
-            descCell.innerHTML = g.getDesc();
+            descContent.innerHTML = g.getDesc();
+            dotSpan.innerHTML = '&nbsp;';
+
+            idCell.className = 'gene-id';
+            descContent.className = 'td-content';
+            spaceDiv.className = 'spacer';
+            descDiv.className = 'td-container';
+
+            descDiv.appendChild(descContent);
+            descDiv.appendChild(spaceDiv);
+            descDiv.appendChild(dotSpan);
+            descCell.appendChild(descDiv);
+
             row.id = 'gene-' + i;
+
             this.geneTBody.appendChild(row);
-            row.addEventListener('click', /**TODO: ADD FUNCTION HERE */);
+            row.addEventListener('click', this.rowSelected.bind(this, row));
         }
+    },
+    rowSelected : function(cell) {
+        var row = cell.rowIndex-1;
+        if (row != -1 && !this.multi) {
+            if (window.event.altKey) {
+                this.genes.startMultiSelect(this);
+                // TODO: Maybe keep track of this gene?
+            } else {
+                var g = this.model.getData()[row];
+                var s = this.genes.getSelectedSet();
+                if (window.event.ctrlKey || window.event.metaKey) {
+                    if (s.contains(g)) {
+                        s.remove(g);
+                    } else {
+                        s.push(g);
+                    }
+                } else if (this.lastRow != -1 && window.event.shiftKey) {
+                    s.clear();
+                    var start = Math.min(this.lastRow, row);
+                    var end = Math.max(this.lastRow, row)+1;
+                    s.union(this.model.getData().slice(start, end));
+                } else {
+                    s.clear();
+                    s.push(g);
+                    if (window.event.shiftKey) {
+                        this.lastRow = row;
+                    }
+                }
+                this.genes.setSelection(this, s);
+            }
+        }
+    },
+    tableChanged : function() {
+        this.lastRow = -1;
     }
 };
 
