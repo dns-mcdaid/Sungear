@@ -56,8 +56,7 @@ Attributes.prototype = {
      * @throws IOException on low-level file errors
      */
     parseAttributes : function(file) {
-        var tempReader = new DataReader();
-        var buf = tempReader.readURL(file);
+        var buf = DataReader.readURL(file);
         var line = buf.toString().split("\\n");
         for (var i = 0; i < line.length; i++) {
             try {
@@ -115,7 +114,7 @@ Attributes.prototype = {
             var o = this.attrib[key];
             return (o === null ? defaultValue : o);
         }
-        return this.attrib[key];
+        return typeof this.attrib[key] !== 'undefined' ? this.attrib[key] : null;
     },
     /**
      * Returns all the attribute keys.

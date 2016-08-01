@@ -7,6 +7,7 @@
 const http = require('http');
 const fs = require('fs');
 const zlib = require('zlib');
+const url = require('url');
 
 require('javascript.util');
 const Iterator = javascript.util.Iterator;
@@ -187,7 +188,26 @@ DataReader.openURL = function(u) {
  * @throws IOException
  */
 DataReader.readURL = function(u) {
+    console.log("reading: " + u);
+    var buf = new Buffer(5242880); // 5 MB - Lord hear our prayer.
+    fs.open(u, 'r', function(err, fd) {
+        if (err) {
+            return console.error(err);
+        }
+        console.log("File opened successfully!");
+        console.log("Going to read the file");
+        fs.read(fd, buf, 0, buf.length, 0, function(err, bytes){
+            if (err){
+                console.log(err);
+            }
+            console.log(bytes + " bytes read");
 
+            // Print only read bytes to avoid junk.
+            if(bytes > 0){
+                return buf.slice(0, bytes);
+            }
+        });
+    });
 };
 
 /**
@@ -200,7 +220,12 @@ DataReader.makeURL = function(base, s) {
     try {
         u = new URL(s);
     } catch(mu) {
-        u = new URL(s, base);
+        try {
+            u = new URL(s, base);
+        } catch (mu2) {
+            // This should be impossible because Mewtwo is hard as fuck to catch in the original games.
+            u = url.resolve(base, s);
+        }
     }
     return u;
 };

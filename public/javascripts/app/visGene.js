@@ -25,6 +25,8 @@ const SunGear = require('../gui/sunGear');
 const Controls = require('../gui/controls');
 const CollapsibleList = require('../gui/collapsibleList');
 
+const Gene = require('../genes/gene');
+
 /**
  * @param u {URL}
  * @param w {boolean}
@@ -35,13 +37,12 @@ const CollapsibleList = require('../gui/collapsibleList');
 function VisGene(u, w, pn, dataDir) {
     console.log(VisGene.notice);
 
-    var btnMargin = document.createElement("div");
-    btnMargin.id = "Button.margin";
-    var toggleBtn = document.createElement("div");
-    toggleBtn.id = "ToggleButton.margin";
+    // TODO: Remove this
+    // testBiddie = JSON.parse(document.getElementById('parsedData').value);
+    // console.log(testBiddie);
 
-    this.base = null;   /** URL of code directory */
-    this.dataU = null;  /** URL of data directory */
+    this.base = null;   /** {URL} of code directory */
+    this.dataU = null;  /** {URL} of data directory */
     this.isApp = true;  /** Generic external connection info */
 
     this.extAttrib = null;  /** {Attributes} */
@@ -90,7 +91,7 @@ function VisGene(u, w, pn, dataDir) {
 }
 
 VisGene.VERSION = "1.2.0";
-VisGene.DEFAULT_DATA_DIR = "../data";
+VisGene.DEFAULT_DATA_DIR = "data/";
 VisGene.notice = "Copyright Chris Poultney, Radhika Mattoo, and Dennis McDaid 2016";
 
 VisGene.prototype = {
@@ -163,6 +164,7 @@ VisGene.prototype = {
 
         this.aboutDLabel = document.getElementById('aboutDLabel');
         this.aboutDBody = document.getElementById('aboutDBody');
+        this.run();
     },
     run : function() {
         try {

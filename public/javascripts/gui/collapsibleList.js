@@ -293,11 +293,7 @@ function GeneModel(data) {
     this.colComp.push(new CompareName());
     this.colComp.push(new CompareDesc());
     this.setGenes(data, "ID");
-    this.comp = this.colComp[0].compare;
-
-    console.log("Collapsible List is about to Sort...");
-    this.data.sort(this.comp);
-    console.log("Sort was successful!");
+    this.comp = this.colComp[0].compare;this.data.sort(this.comp);
 }
 
 GeneModel.prototype = {

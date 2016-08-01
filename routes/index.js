@@ -1,12 +1,14 @@
 var express = require('express');
 var router = express.Router();
 
-// var hyperTest = require('../public/javascripts/test/HyperGeoTest');
+const dataTest = require('../public/javascripts/test/dataTest');
+const VisGene = require('../public/javascripts/backend/visGeneServer');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-    // hyperTest.test();
-    res.render('index', { title: 'Sungear' });
+    var args = [ "--version", "-data_dir", "data/" ];
+    var visApp = VisGene.main(args);
+    res.render('index', { title: 'Sungear'});
 });
 
 module.exports = router;

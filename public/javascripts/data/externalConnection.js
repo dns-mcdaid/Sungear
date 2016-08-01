@@ -11,4 +11,31 @@
  * @throws ParseException if export_url is invalid or missing
  */
 
-// TODO: @Dennis implement.
+const url = require('url');
+
+const Attributes = require('./attributes');
+const DataReader = require('./dataReader');
+const ParseException = require('./parseException');
+
+function makeExportAttributes(doc) {
+    var qs = doc.query;
+    if (qs === null) {
+        throw new ParseException("no query data");
+    }
+    var attrib = new Attributes(qs);
+    try {
+        attrib.put("sungearU", DataReader.makeURL(doc, decodeURIComponent(attrib.get("data_url"))));
+    } catch (e) {
+        console.error("Warning: external data unavailable (data_url not set or not a URL)");
+    }
+    try {
+        attrib.put("export_url", DataReader.makeURL(doc, decodeURIComponent(attrib.get("export_url"))));
+    } catch (e) {
+        console.error("warning: invalid export URL provided, export function unavailable");
+    }
+    return attrib;
+}
+
+module.exports = {
+    makeExportAttributes : makeExportAttributes
+};

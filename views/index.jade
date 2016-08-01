@@ -212,6 +212,7 @@ block content
                     button(type='button', class='btn btn-default', data-dismiss='modal') Cancel
                     button(type='button', class='btn btn-primary', id='statsFSubmit', data-dismiss='modal') OK
 
+    input(type='hidden', id='parsedData' value=JSON.stringify(gene))
     script(src='/javascripts/out.js')
     script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js')
     script(src='http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js')

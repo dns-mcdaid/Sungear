@@ -8,8 +8,11 @@
  * Copyright Chris Poultney 2004.
  */
 
-var ParseException = require('./parseException');
-var DataReader = require('./dataReader');
+const fs = require('fs');
+const path = require('path');
+
+const ParseException = require('./parseException');
+const DataReader = require('./dataReader');
 
 /**
  * Instantiates a new object with unknown file locations.
@@ -28,6 +31,11 @@ function DataSource(dataDir) {
 
     this.reader = null;     /** {DataReader} Reader object that performs actual file parsing */
     this.attrib = null;     /** {Attributes} Holds arbitrary information about the current experiment */
+
+    // TODO: Remove, but this works!!!
+    // var toFind = this.dataDir + "go-hier.txt";
+    //
+    
 }
 
 /** Default name of gene description file if none is given */
