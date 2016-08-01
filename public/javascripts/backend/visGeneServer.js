@@ -69,41 +69,37 @@ function VisGene(u, w, pn, dataDir) {
 VisGene.prototype = {
     constructor : VisGene,
     init : function() {
-        try {
-            // var vpU = null;
-            // try {
-            //     vpU = url.format("file:./index.html");
-            //     this.extAttrib = VPConnection.makeAttributes(vpU);
-            // } catch (e) {
-            //     console.error("old-style VP connection failed, trying generic external connection (exception follows)");
-            //     console.error(e);
-            //     if (vpU !== null) {
-            //         try {
-            //             this.extAttrib = ExternalConnection.makeExportAttributes(vpU);
-            //         } catch (e2) {
-            //             console.error("external connection failed, resorting to load menu (exception follows)");
-            //             console.error(e2);
-            //         }
-            //     }
-            // }
 
-            console.log(this.extAttrib);
-            if (this.dataDir === null) {
-                this.dataDir = VisGene.DEFAULT_DATA_DIR;
-            }
-            if (this.dataDir[this.dataDir.length-1] != "/") {
-                this.dataDir += "/";
-            }
-            this.dataU = DataReader.makeURL(this.base, this.dataDir);
-            console.log(this.dataU);
+        // var vpU = null;
+        // try {
+        //     vpU = url.format("file:./index.html");
+        //     this.extAttrib = VPConnection.makeAttributes(vpU);
+        // } catch (e) {
+        //     console.error("old-style VP connection failed, trying generic external connection (exception follows)");
+        //     console.error(e);
+        //     if (vpU !== null) {
+        //         try {
+        //             this.extAttrib = ExternalConnection.makeExportAttributes(vpU);
+        //         } catch (e2) {
+        //             console.error("external connection failed, resorting to load menu (exception follows)");
+        //             console.error(e2);
+        //         }
+        //     }
+        // }
 
-            // prepare data source
-            this.src = new DataSource(this.dataU);
-            this.exp = new ExperimentList()
-
-        } catch (e) {
-            console.error(e);
+        console.log(this.extAttrib);
+        if (this.dataDir === null) {
+            this.dataDir = VisGene.DEFAULT_DATA_DIR;
         }
+        if (this.dataDir[this.dataDir.length-1] != "/") {
+            this.dataDir += "/";
+        }
+        this.dataU = DataReader.makeURL(this.base, this.dataDir);
+        console.log(this.dataU);
+
+        // prepare data source
+        this.src = new DataSource(this.dataU);
+        this.exp = new ExperimentList(url.resolve(this.dataU, "exper.txt"), url.resolve(this.dataU, "species.txt"), this.dataU, null);
     }
 };
 
@@ -163,8 +159,14 @@ VisGene.main = function(args) {
         var myUrl = url.format("./");
         console.log(myUrl);
         var vis = new VisGene(myUrl, warn, plugin, dataDir);
-        vis.init();
-        return vis;
+        return new Promise(function(resolve, reject) {
+            vis.init();
+            if (vis.exp.exp !== null || typeof vis.exp.exp !== 'undefined') {
+                resolve(vis);
+            } else {
+                reject(Error("Fuck"));
+            }
+        });
     } catch(mu) {
         console.error(mu);
     }

@@ -38,8 +38,8 @@ function VisGene(u, w, pn, dataDir) {
     console.log(VisGene.notice);
 
     // TODO: Remove this
-    // testBiddie = JSON.parse(document.getElementById('parsedData').value);
-    // console.log(testBiddie);
+    var testBiddie = JSON.stringify(document.getElementById('parsedData').value);
+    console.log(testBiddie);
 
     this.base = null;   /** {URL} of code directory */
     this.dataU = null;  /** {URL} of data directory */

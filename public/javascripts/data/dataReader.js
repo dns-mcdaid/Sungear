@@ -184,28 +184,30 @@ DataReader.openURL = function(u) {
 /**
  * Reads the entire text contents of a URL into a StringBuffer.
  * @param u {URL}
- * @return the read text
+ * @return
  * @throws IOException
  */
 DataReader.readURL = function(u) {
     console.log("reading: " + u);
     var buf = new Buffer(5242880); // 5 MB - Lord hear our prayer.
-    fs.open(u, 'r', function(err, fd) {
-        if (err) {
-            return console.error(err);
-        }
-        console.log("File opened successfully!");
-        console.log("Going to read the file");
-        fs.read(fd, buf, 0, buf.length, 0, function(err, bytes){
-            if (err){
-                console.log(err);
+    return new Promise(function(resolve, reject) {
+        fs.open(u, 'r', function(err, fd) {
+            if (err) {
+                reject(Error(err));
             }
-            console.log(bytes + " bytes read");
+            console.log("File opened successfully!");
+            console.log("Going to read the file");
+            fs.read(fd, buf, 0, buf.length, 0, function(err, bytes){
+                if (err){
+                    console.log(err);
+                }
+                console.log(bytes + " bytes read");
 
-            // Print only read bytes to avoid junk.
-            if(bytes > 0){
-                return buf.slice(0, bytes);
-            }
+                // Print only read bytes to avoid junk.
+                if(bytes > 0){
+                     resolve(buf.slice(0, bytes));
+                }
+            });
         });
     });
 };

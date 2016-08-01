@@ -1,17 +1,22 @@
-const DataReader =
+const DataReader = require('../data/dataReader');
 
 function ExperimentList(experU, speciesU, base, par) {
     this.parent = par;
-    this.exp = this.parseExper(experU);
+    this.son = "Potato";
+    this.parseExper(experU);
 }
 
 ExperimentList.prototype = {
     constructor : ExperimentList,
     parseExper : function(u) {
-        var v = [];
-        var buf = DataReader.readURL(u);
-        var line = buf.toString().split("\\n");
-        console.log(line);
+        this.exp = DataReader.readURL(u).then(function(response) {
+            var v = [];
+            var line = response.toString().split(/\|+|\n/);
+            return line;
+            // for (var i = 0; i < line.length; i++) {
+            //     console.log(line[i].trim());
+            // }
+        }.bind(this));
     }
 };
 

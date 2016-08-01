@@ -7,8 +7,9 @@ const VisGene = require('../public/javascripts/backend/visGeneServer');
 /* GET home page. */
 router.get('/', function(req, res, next) {
     var args = [ "--version", "-data_dir", "data/" ];
-    var visApp = VisGene.main(args);
-    res.render('index', { title: 'Sungear'});
+    VisGene.main(args).then(function(result) {
+        res.render('index', { title: 'Sungear', incoming: result.exp });
+    });
 });
 
 module.exports = router;
