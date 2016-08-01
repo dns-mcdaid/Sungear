@@ -157,6 +157,9 @@ block content
                     h4(class='modal-title', id='loadDLabel') Experiments
                 div(class='modal-body')
                     table(id='loadTable' class='table-striped')
+                        col(width="20%")
+                        col(width="45%")
+                        col(width="10%")
                         thead
                             tr
                                 th Name
@@ -212,7 +215,7 @@ block content
                     button(type='button', class='btn btn-default', data-dismiss='modal') Cancel
                     button(type='button', class='btn btn-primary', id='statsFSubmit', data-dismiss='modal') OK
 
-    input(type='hidden', id='parsedData' value=JSON.stringify(incoming))
+    input(type='hidden', id='vis' value=JSON.stringify(data))
     script(src='/javascripts/out.js')
     script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js')
     script(src='http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js')

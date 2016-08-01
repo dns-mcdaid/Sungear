@@ -209,6 +209,7 @@ CollapsibleList.prototype = {
             var row = document.createElement('tr');
             var idCell = row.insertCell(0);
             var descCell = row.insertCell(1);
+            
             var descDiv = document.createElement('div');
             var descContent = document.createElement('div');
             var spaceDiv = document.createElement('div');

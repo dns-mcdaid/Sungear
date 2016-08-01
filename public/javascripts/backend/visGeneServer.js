@@ -68,7 +68,7 @@ function VisGene(u, w, pn, dataDir) {
 
 VisGene.prototype = {
     constructor : VisGene,
-    init : function() {
+    init : function(callback) {
 
         // var vpU = null;
         // try {
@@ -99,7 +99,10 @@ VisGene.prototype = {
 
         // prepare data source
         this.src = new DataSource(this.dataU);
-        this.exp = new ExperimentList(url.resolve(this.dataU, "exper.txt"), url.resolve(this.dataU, "species.txt"), this.dataU, null);
+        var exp = new ExperimentList(url.resolve(this.dataU, "exper.txt"), url.resolve(this.dataU, "species.txt"), this.dataU, function() {
+            this.exp = exp;
+            callback();
+        }.bind(this));
     }
 };
 
@@ -122,7 +125,7 @@ VisGene.usage = function(){
 /**
  * @param args {String[]}
  */
-VisGene.main = function(args) {
+VisGene.main = function(args, callback) {
     try {
         var i = 0;
         var warn = true;
@@ -159,13 +162,9 @@ VisGene.main = function(args) {
         var myUrl = url.format("./");
         console.log(myUrl);
         var vis = new VisGene(myUrl, warn, plugin, dataDir);
-        return new Promise(function(resolve, reject) {
-            vis.init();
-            if (vis.exp.exp !== null || typeof vis.exp.exp !== 'undefined') {
-                resolve(vis);
-            } else {
-                reject(Error("Fuck"));
-            }
+        vis.init(function() {
+            console.log("Made it back to vis init!");
+            callback(vis);
         });
     } catch(mu) {
         console.error(mu);

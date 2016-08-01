@@ -187,27 +187,25 @@ DataReader.openURL = function(u) {
  * @return
  * @throws IOException
  */
-DataReader.readURL = function(u) {
+DataReader.readURL = function(u, callback) {
     console.log("reading: " + u);
     var buf = new Buffer(5242880); // 5 MB - Lord hear our prayer.
-    return new Promise(function(resolve, reject) {
-        fs.open(u, 'r', function(err, fd) {
-            if (err) {
-                reject(Error(err));
+    fs.open(u, 'r', function(err, fd) {
+        if (err) {
+            console.log(err);
+        }
+        console.log("File opened successfully!");
+        console.log("Going to read the file");
+        fs.read(fd, buf, 0, buf.length, 0, function(err, bytes){
+            if (err){
+                console.log(err);
             }
-            console.log("File opened successfully!");
-            console.log("Going to read the file");
-            fs.read(fd, buf, 0, buf.length, 0, function(err, bytes){
-                if (err){
-                    console.log(err);
-                }
-                console.log(bytes + " bytes read");
+            console.log(bytes + " bytes read");
 
-                // Print only read bytes to avoid junk.
-                if(bytes > 0){
-                     resolve(buf.slice(0, bytes));
-                }
-            });
+            // Print only read bytes to avoid junk.
+            if(bytes > 0){
+                 callback(buf.slice(0, bytes));
+            }
         });
     });
 };
@@ -278,7 +276,7 @@ DataReader.setThreshold = function(t, expGenes, anchors, vessels) {
  * Trims all the elements of an array of Strings, and returns the result.
  * The original array's contents are not modified.
  * @param s the array of Strings to trim
- * @return the array of trimmed Strings
+ * @return {Array} of trimmed Strings
  */
 DataReader.trimAll = function(s) {
     var r = []; /** {String[]} */

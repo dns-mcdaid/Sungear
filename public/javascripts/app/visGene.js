@@ -37,10 +37,6 @@ const Gene = require('../genes/gene');
 function VisGene(u, w, pn, dataDir) {
     console.log(VisGene.notice);
 
-    // TODO: Remove this
-    var testBiddie = JSON.stringify(document.getElementById('parsedData').value);
-    console.log(testBiddie);
-
     this.base = null;   /** {URL} of code directory */
     this.dataU = null;  /** {URL} of data directory */
     this.isApp = true;  /** Generic external connection info */
@@ -124,10 +120,11 @@ VisGene.prototype = {
         var screenI = document.getElementById('screenshot');
         // REPLACING OLD SUNGEAR ExperimentList implementation with new js version.
         // loadI.addEventListener("click", this.loadExperiments.bind(this));
-        var loadBody = document.getElementById('loadBody');
+
 
         // TODO: Uncommment this!!!!
         // this.exp = new ExperimentList(new URL("exper.txt", this.dataU), new URL("species.txt", this.dataU), this.dataU, loadBody);
+        this.collectPasssedData();
         var openB = document.getElementById('openB');
         openB.addEventListener('click', this.loadExperiment.bind(this));
 
@@ -373,6 +370,12 @@ VisGene.prototype = {
     },
     requestScreenshot : function() {
         this.signal = Signal.SCREENSHOT;
+    },
+    collectPasssedData : function() {
+        var loadBody = document.getElementById('loadBody');
+        var vis = JSON.parse(document.getElementById('vis').value);
+        var exp = vis.exp.exp;
+        this.exp = new ExperimentList(exp, loadBody);
     }
 };
 

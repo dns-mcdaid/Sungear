@@ -1246,3 +1246,4 @@ avg >= .250 | HR >= 20 | RBI >= 50 | SB >= 10 | playerID
 1 | 1 | 1 | 1 | soriaal01
 1 | 1 | 1 | 1 | wilkebr01
 1 | 1 | 1 | 1 | youngmi02
+

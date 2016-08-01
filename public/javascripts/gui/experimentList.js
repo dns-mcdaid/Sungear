@@ -1,16 +1,16 @@
 const DataReader = require('../data/dataReader');
 
 /**
- * @param experU {URL}
- * @param speciesU {URL}
- * @param base {URL}
+ * @param experU {JSON Object}
  * @param par
  * @constructor
  */
-function ExperimentList(experU, speciesU, base, par) {
+function ExperimentList(experU, par) {
     this.parent = par;  /** @type Container */
-    this.exp = this.parseExper(experU); /** @type Vector <Experiment> */
     this.exp = [];
+    for (var i = 0; i < experU.length; i++) {
+        this.exp.push($.extend(new Experiment(), experU[i]));
+    }
     this.model = new ExperModel(this.exp);
     this.files = document.getElementById('loadTable');
     this.files.style.cursor = "default";
@@ -41,7 +41,6 @@ ExperimentList.prototype = {
         this.selection = null;
         if (rowInt != -1) {
             this.selection = this.model.getValueAt(rowInt, 0);
-            console.log(this.selection);
         }
     },
 
@@ -49,6 +48,7 @@ ExperimentList.prototype = {
         return this.selection;
     },
     /**
+     * This function is rendered useless by experimentListServer's implementation.
      * @param u {URL}
      * @returns {Array} of Experiments
      */
@@ -77,13 +77,32 @@ ExperimentList.prototype = {
         for (var i = 0; i < this.exp.length; i++) {
             var e = this.exp[i];
             var row = document.createElement('tr');
+
             var nameCell = row.insertCell(0);
             var descCell = row.insertCell(1);
             var specCell = row.insertCell(2);
+
+            var specDiv = document.createElement('div');
+            var specContent = document.createElement('div');
+            var spaceDiv = document.createElement('div');
+            var dotSpan = document.createElement('span');
+
             nameCell.innerHTML = e.getFilename();
             descCell.innerHTML = e.getDesc();
-            specCell.innerHTML = e.getSpecies();
+            specContent.innerHTML = e.getSpecies();
+            dotSpan.innerHTML = '&nbsp;';
+
+            specContent.className = 'td-content';
+            spaceDiv.className = 'spacer';
+            specDiv.className = 'td-container';
+
+            specDiv.appendChild(specContent);
+            specDiv.appendChild(spaceDiv);
+            specDiv.appendChild(dotSpan);
+            specCell.appendChild(specDiv);
+
             row.id = 'experiment-' + i;
+
             this.parent.appendChild(row);
             row.addEventListener('click', this.handleSelect.bind(this, row));
         }
