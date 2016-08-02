@@ -15,10 +15,12 @@ const Iterator = javascript.util.Iterator;
 const SortedSet = javascript.util.SortedSet;
 const TreeSet = javascript.util.TreeSet;
 
-var Anchor = require('../genes/anchor');
-var Gene = require('../genes/gene');
-var Term = require('../genes/term');
-var Vessel = require('../genes/vessel');
+const ParseException = require('./parseException');
+
+const Anchor = require('../genes/anchor');
+const Gene = require('../genes/gene');
+const Term = require('../genes/term');
+const Vessel = require('../genes/vessel');
 
 /**
  * Constructs a new master data reader.
@@ -181,8 +183,9 @@ DataReader.prototype = {
 
 DataReader.openURL = function(u, callback) {
     console.log("Opening: " + u);
-    var stream = null;
     try {
+        u.url = u.href;
+        u.encoding = null;
         var req = request.get(u);
         req.on('response', function(res) {
             var chunks = [];
@@ -203,15 +206,16 @@ DataReader.openURL = function(u, callback) {
                     zlib.gunzip(buffer, function(err, decoded) {
                         console.log(decoded);
                         if (err) {
-                            console.log("Error :(");
-                            console.log(err);
                         } else {
-                            console.log(decoded.toString());
+                            raw = decoded.toString();
+                            callback(raw);
                         }
-                        callback();
+
                     });
+                } else {
+                    raw = chunks.toString();
                 }
-            })
+            });
         });
         req.on('error', function(err) {
             console.log("error :(");
@@ -327,6 +331,45 @@ DataReader.trimAll = function(s) {
     return r;
 };
 
+DataReader.parseHeader = function(req, a, commentPrefix, callback) {
+    if (typeof callback === 'undefined') {
+        callback = commentPrefix;
+        commentPrefix = null;
+    }
+    var raw = null;
+
+
+};
+
+DataReader.cleanupHeader = function(raw, a, callback) {
+    var comment = "";
+    var lines = raw.split('\n');
+    for (var i = 0; i < lines.length; i++) {
+        // This next line is probably redundant.
+        if (lines[i] === null) {
+            break;
+        }
+        if (lines[i][0] == "#") {
+            comment += lines[i] + "\n";
+            continue;
+        } else if (lines[i] == "") {
+            continue;
+        } else if (lines[i][0] == "{" && lines[i][lines.length-1] == "}") {
+            var l = lines[i].indexOf(DataReader.NVSEP);
+            if (l == -1) {
+                throw new ParseException("parse error at line " + i + ": invalid name=value pair in header", lines[i]);
+            }
+            var n = lines[i].substr(1, l).trim();
+            var v = line[i].substr(l+1, lines[i].length).trim();
+            console.log(n + " = " + v);
+            a.put(n, v);
+        } else {
+            break;
+        }
+    }
+    if ()
+};
+
 DataReader.testRequest = function(callback) {
     var buffer = [];
     var toGo = url.parse("http://virtualplant.bio.nyu.edu/virtualplant2/biovis2/data/annot_human.txt");
@@ -361,7 +404,7 @@ DataReader.testRequest = function(callback) {
                     callback();
                 });
             } else {
-                console.log(chunks.toString());
+                //console.log(chunks.toString());
             }
         })
     });
