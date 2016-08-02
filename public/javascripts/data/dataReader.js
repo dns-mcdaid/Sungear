@@ -179,7 +179,13 @@ DataReader.prototype = {
 // STATIC AREA:
 
 DataReader.openURL = function(u) {
-
+    console.log("Opening: " + u);
+    var stream = null;
+    try {
+        // TODO: Implement.
+    } catch (e) {
+        // TODO: Pick up here.
+    }
 };
 /**
  * Reads the entire text contents of a URL into a StringBuffer.

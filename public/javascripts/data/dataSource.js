@@ -58,7 +58,7 @@ DataSource.prototype = {
     },
     /**
      * Sets the current attributes object; verifies the object entries first.
-     * @param attrib the new attributes object {Attributes}
+     * @param attrib {Attributes}
      * @param base base URL for relative URLs {URL}
      * @throws IOException on low-level file read and file not found errors
      * @throws ParseException on Sungear-specific file format errors
@@ -82,8 +82,37 @@ DataSource.prototype = {
         if (attrib.get("sungearU") === null) {
             throw new ParseException("sungear file not specified");
         }
-        // parse the sungear file header - may contain species, etc. data
-        
+        // TODO: Finish implementation.
+    },
+
+    /**
+     * Gets the current default data directory.
+     * @return the data directory
+     */
+    getDataDir : function() {
+        return this.dataDir;
+    },
+    set : function(attrib, status) {
+        if (typeof status === 'undefined') {
+            this.set(attrib, null);
+        } else {
+            var geneU = attrib.get("geneU");
+            var listU = attrib.get("listU");
+            var hierU = attrib.get("hierU");
+            var assocU = attrib.get("assocU");
+            var sungearU = attrib.get("sungearU");
+            if (this.reader === null) {
+                this.reader = new DataReader(attrib);
+            } else {
+                this.reader.setAttrib(attrib);
+            }
+            if (status !== null) {
+                status.updateStatus("Reading Categories", 1);
+            }
+            if (this.glSrc === null || !(this.glSrc == listU) || this.ghSrc === null || !(this.ghSrc == hierU)) {
+                this.reader.readTerms(listU);
+            }
+        }
     }
 };
 

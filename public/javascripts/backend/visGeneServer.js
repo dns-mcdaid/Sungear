@@ -69,25 +69,24 @@ function VisGene(u, w, pn, dataDir) {
 VisGene.prototype = {
     constructor : VisGene,
     init : function(callback) {
+        var vpU = null;
+        try {
+            vpU = url.format("./index.html?sungearU=");
+            this.extAttrib = VPConnection.makeAttributes(vpU);
+        } catch (e) {
+            console.error("old-style VP connection failed, trying generic external connection (exception follows)");
+            console.error(e.message);
+            if (vpU !== null) {
+                try {
+                    this.extAttrib = ExternalConnection.makeExportAttributes(vpU);
+                } catch (e2) {
+                    console.error("external connection failed, resorting to load menu (exception follows)");
+                    console.error(e2.message);
+                }
+            }
+        }
 
-        // var vpU = null;
-        // try {
-        //     vpU = url.format("file:./index.html");
-        //     this.extAttrib = VPConnection.makeAttributes(vpU);
-        // } catch (e) {
-        //     console.error("old-style VP connection failed, trying generic external connection (exception follows)");
-        //     console.error(e);
-        //     if (vpU !== null) {
-        //         try {
-        //             this.extAttrib = ExternalConnection.makeExportAttributes(vpU);
-        //         } catch (e2) {
-        //             console.error("external connection failed, resorting to load menu (exception follows)");
-        //             console.error(e2);
-        //         }
-        //     }
-        // }
-
-        console.log(this.extAttrib);
+        console.log("ExtAttributes: " + this.extAttrib);
         if (this.dataDir === null) {
             this.dataDir = VisGene.DEFAULT_DATA_DIR;
         }
@@ -103,6 +102,12 @@ VisGene.prototype = {
             this.exp = exp;
             callback();
         }.bind(this));
+    },
+    run : function() {
+        if (this.extAttrib !== null && this.extAttrib.get("sungearU") !== null) {
+            this.src.setAttributes(this.extAttrib, this.dataU);
+            this.openFile();
+        }
     }
 };
 

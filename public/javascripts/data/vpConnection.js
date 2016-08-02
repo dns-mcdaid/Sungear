@@ -6,7 +6,7 @@ const ParseException = require('./parseException');
 
 function makeAttributes(doc) {
     var queryString = doc.query;
-    if (queryString === null) {
+    if (queryString === null || typeof queryString === 'undefined') {
         throw new ParseException("no query data");
     }
     var attrib = new Attributes(queryString);

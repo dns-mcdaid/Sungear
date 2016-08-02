@@ -19,7 +19,7 @@ const ParseException = require('./parseException');
 
 function makeExportAttributes(doc) {
     var qs = doc.query;
-    if (qs === null) {
+    if (qs === null || typeof qs === 'undefined') {
         throw new ParseException("no query data");
     }
     var attrib = new Attributes(qs);
