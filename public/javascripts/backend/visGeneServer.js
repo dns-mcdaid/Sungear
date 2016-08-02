@@ -96,12 +96,20 @@ VisGene.prototype = {
         this.dataU = DataReader.makeURL(this.base, this.dataDir);
         console.log(this.dataU);
 
+        var potato =  function(callback) {
+            DataReader.testRequest(function() {
+                callback();
+            });
+            callback();
+        };
+
         // prepare data source
-        this.src = new DataSource(this.dataU);
+        //this.src = new DataSource(this.dataU);
         var exp = new ExperimentList(url.resolve(this.dataU, "exper.txt"), url.resolve(this.dataU, "species.txt"), this.dataU, function() {
             this.exp = exp;
-            callback();
+            potato(callback);
         }.bind(this));
+
     },
     run : function() {
         if (this.extAttrib !== null && this.extAttrib.get("sungearU") !== null) {

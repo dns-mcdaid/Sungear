@@ -8,6 +8,7 @@ const http = require('http');
 const fs = require('fs');
 const zlib = require('zlib');
 const url = require('url');
+const request = require('request');
 
 require('javascript.util');
 const Iterator = javascript.util.Iterator;
@@ -178,13 +179,47 @@ DataReader.prototype = {
 
 // STATIC AREA:
 
-DataReader.openURL = function(u) {
+DataReader.openURL = function(u, callback) {
     console.log("Opening: " + u);
     var stream = null;
     try {
-        // TODO: Implement.
+        var req = request.get(u);
+        req.on('response', function(res) {
+            var chunks = [];
+            res.on('data', function(chunk) {
+                console.log("Pushing data");
+                chunks.push(chunk);
+            });
+            res.on('end', function() {
+                console.log("Finished!");
+                var buffer = Buffer.concat(chunks);
+                console.log(res.headers);
+                var encoding = res.headers['content-encoding'];
+                if (typeof encoding === 'undefined') {
+                    encoding = res.headers['content-type'];
+                }
+                if (encoding.indexOf('gzip') > -1) {
+                    console.log("Unzipping...");
+                    zlib.gunzip(buffer, function(err, decoded) {
+                        console.log(decoded);
+                        if (err) {
+                            console.log("Error :(");
+                            console.log(err);
+                        } else {
+                            console.log(decoded.toString());
+                        }
+                        callback();
+                    });
+                }
+            })
+        });
+        req.on('error', function(err) {
+            console.log("error :(");
+            console.log(err);
+            callback();
+        });
     } catch (e) {
-        // TODO: Pick up here.
+        callback(e);
     }
 };
 /**
@@ -229,7 +264,7 @@ DataReader.makeURL = function(base, s) {
         try {
             u = new URL(s, base);
         } catch (mu2) {
-            // This should be impossible because Mewtwo is hard as fuck to catch in the original games.
+            // This should be impossible because Mewtwo is hard as fuck to catch in the original games /s
             u = url.resolve(base, s);
         }
     }
@@ -290,6 +325,51 @@ DataReader.trimAll = function(s) {
         r[i] = s[i].trim();
     }
     return r;
+};
+
+DataReader.testRequest = function(callback) {
+    var buffer = [];
+    var toGo = url.parse("http://virtualplant.bio.nyu.edu/virtualplant2/biovis2/data/annot_human.txt");
+    toGo.encoding = null;
+    toGo.url = "http://virtualplant.bio.nyu.edu/virtualplant2/biovis2/data/annot_human.txt";
+    console.log(toGo);
+    var req = request.get(toGo);
+    req.on('response', function(res) {
+        var chunks = [];
+        res.on('data', function(chunk) {
+            console.log("Pushing data");
+            chunks.push(chunk);
+        });
+        res.on('end', function() {
+            console.log("Finished!");
+            var buffer = Buffer.concat(chunks);
+            console.log(res.headers);
+            var encoding = res.headers['content-encoding'];
+            if (typeof encoding === 'undefined') {
+                encoding = res.headers['content-type'];
+            }
+            if (encoding.indexOf('gzip') > -1) {
+                console.log("Unzipping...");
+                zlib.gunzip(buffer, function(err, decoded) {
+                    console.log(decoded);
+                    if (err) {
+                        console.log("Error :(");
+                        console.log(err);
+                    } else {
+                        console.log(decoded.toString());
+                    }
+                    callback();
+                });
+            } else {
+                console.log(chunks.toString());
+            }
+        })
+    });
+    req.on('error', function(err) {
+        console.log("error :(");
+        console.log(err);
+        callback();
+    });
 };
 
 module.exports = DataReader;
