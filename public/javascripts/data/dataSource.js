@@ -10,9 +10,11 @@
 
 const fs = require('fs');
 const path = require('path');
+const url = require('url');
 
 const ParseException = require('./parseException');
 const DataReader = require('./dataReader');
+const SpeciesList = require('./speciesList');
 
 /**
  * Instantiates a new object with unknown file locations.
@@ -31,11 +33,6 @@ function DataSource(dataDir) {
 
     this.reader = null;     /** {DataReader} Reader object that performs actual file parsing */
     this.attrib = null;     /** {Attributes} Holds arbitrary information about the current experiment */
-
-    // TODO: Remove, but this works!!!
-    // var toFind = this.dataDir + "go-hier.txt";
-    //
-    
 }
 
 /** Default name of gene description file if none is given */
@@ -67,8 +64,12 @@ DataSource.prototype = {
         this.checkAttributes(attrib, base);
         this.attrib = attrib;
     },
+    /**
+     * Get the attributes object.
+     * @return {Attributes}
+     */
     getAttributes : function() {
-        return this.attributes;
+        return this.attrib;
     },
     /**
      * Verifies that a given attributes object contains the necessary basic attributes
@@ -82,7 +83,41 @@ DataSource.prototype = {
         if (attrib.get("sungearU") === null) {
             throw new ParseException("sungear file not specified");
         }
-        // TODO: Finish implementation.
+        // parse the sungear file header - may contain species, etc. data
+        DataReader.readURL(attrib.get("sungearU"), function(response) {
+            DataReader.parseHeader(response, attrib);
+            var sp = null;
+            // first check species file and defs
+            var sn = attrib.get("species");
+            if (sn !== null) {
+                var speciesFile = attrib.get("speciesU");
+                if (speciesFile === null) {
+                    speciesFile = "species.txt";
+                }
+                var list = new SpeciesList(DataReader.makeURL(base, speciesFile), base);
+                sp = list.getSpecies(sn);
+                // if there's a species file, assume we're dealing with gene data
+                if (attrib.get("itemsLabel") === null) {
+                    attrib.put("itemsLabel", "genes");
+                }
+                if (attrib.get("categoriesLabel") === null) {
+                    attrib.put("categoriesLabel", "GO Terms");
+                }
+            }
+            // the check basic attribs
+            if (attrib.get("geneU") == null) {
+                attrib.put("geneU", (sp !== null) ? sp.geneU : new URL(DataSource.GENE_DEFAULT, base));
+            }
+            if (attrib.get("listU") == null) {
+                attrib.put("listU", (sp !== null) ? sp.listU : new URL(DataSource.LIST_DEFAULT, base));
+            }
+            if (attrib.get("hierU") == null) {
+                attrib.put("hierU", (sp !== null) ? sp.hierU : new URL(DataSource.HIER_DEFAULT, base));
+            }
+            if (attrib.get("assocU") == null) {
+                attrib.put("assocU", (sp !== null) ? sp.assocU : new URL(DataSource.ASSOC_DEFAULT, base));
+            }
+        });
     },
 
     /**
@@ -92,6 +127,14 @@ DataSource.prototype = {
     getDataDir : function() {
         return this.dataDir;
     },
+    /**
+     * Loads a new experiment by setting the attribute object and reading the files it specifies.
+     * Read status updates are sent.
+     * @param attrib the attributes object with new experiment information
+     * @param status the object that should receive read status updates
+     * @throws IOException on low-level file errors
+     * @throws ParseException on Sungear-specific file format issues
+     */
     set : function(attrib, status) {
         if (typeof status === 'undefined') {
             this.set(attrib, null);
@@ -107,13 +150,46 @@ DataSource.prototype = {
                 this.reader.setAttrib(attrib);
             }
             if (status !== null) {
+                status.updateStatus("Reading Items List", 0);
+            }
+            if (this.geneSrc === null || this.geneSrc != geneU) {
+                this.reader.readGenes(geneU);
+                this.geneSrc = geneU;
+            }
+            if (status !== null) {
                 status.updateStatus("Reading Categories", 1);
             }
-            if (this.glSrc === null || !(this.glSrc == listU) || this.ghSrc === null || !(this.ghSrc == hierU)) {
+            if (this.glSrc === null || this.glSrc != listU || this.ghSrc === null || this.ghSrc != hierU) {
                 this.reader.readTerms(listU);
+                this.glSrc = listU;
+                this.reader.readHierarchy(hierU);
+                this.ghSrc = hierU;
             }
+            if (status !== null) {
+                var iL = attrib.get("itemsLabel", "items");
+                var cL = attrib.get("categoriesLabel", "categories");
+                status.updateStatus("Reading " + cL + " / " + iL + " Associations", 2);
+            }
+            if (this.ggSrc === null || this.ggSrc != assocU) {
+                this.reader.readGeneToGo(assocU);
+                this.ggSrc = assocU;
+            }
+            if (status !== null) {
+                status.updateStatus("Reading Sungear Data", 3);
+            }
+            this.reader.readSungear(sungearU);
+            this.sunSrc = sungearU;
         }
+    },
+    /**
+     * Returns the current data reader
+     * @return the data reader
+     */
+    getReader : function() {
+        return this.reader;
     }
 };
+
+// TODO: Add StatusDisplay?
 
 module.exports = DataSource;
