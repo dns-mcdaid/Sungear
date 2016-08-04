@@ -143,7 +143,7 @@ DataSource.prototype = {
         if (typeof callback === 'undefined') {
             this.set(attrib, null, status);
         } else {
-            console.log("MADE IT TO SET: " + attrib);
+            var numOfFiles = 0;
             var geneU = attrib.get("geneU");
             var listU = attrib.get("listU");
             var hierU = attrib.get("hierU");
@@ -157,34 +157,51 @@ DataSource.prototype = {
             if (status !== null) {
                 status.updateStatus("Reading Items List", 0);
             }
+
             if (this.geneSrc === null || this.geneSrc != geneU) {
-                this.reader.readGenes(geneU);
-                this.geneSrc = geneU;
+                console.log("Attempting to readGenes:");
+                this.reader.readGenes(geneU, function() {
+                    console.log("Back from readGenes!");
+                    numOfFiles++;
+                    this.geneSrc = geneU;
+                    if (numOfFiles == 5) {
+                        callback();
+                    }
+                }.bind(this));
             }
             if (status !== null) {
                 status.updateStatus("Reading Categories", 1);
             }
             if (this.glSrc === null || this.glSrc != listU || this.ghSrc === null || this.ghSrc != hierU) {
-                this.reader.readTerms(listU);
-                this.glSrc = listU;
-                this.reader.readHierarchy(hierU);
-                this.ghSrc = hierU;
+                this.reader.readTerms(listU, function() {
+                    console.log("back from readTerms!");
+                    this.glSrc = listU;
+                    this.ghSrc = hierU;
+                    numOfFiles++;
+                    this.reader.readHierarchy(hierU, function() {
+                        console.log("back from readHierarchy!");
+                        numOfFiles++;
+                        if (numOfFiles == 5) {
+                            callback();
+                        }
+                    });
+                }.bind(this));
             }
-            if (status !== null) {
-                var iL = attrib.get("itemsLabel", "items");
-                var cL = attrib.get("categoriesLabel", "categories");
-                status.updateStatus("Reading " + cL + " / " + iL + " Associations", 2);
-            }
-            if (this.ggSrc === null || this.ggSrc != assocU) {
-                this.reader.readGeneToGo(assocU);
-                this.ggSrc = assocU;
-            }
-            if (status !== null) {
-                status.updateStatus("Reading Sungear Data", 3);
-            }
-            this.reader.readSungear(sungearU);
-            this.sunSrc = sungearU;
-            callback();
+            // if (status !== null) {
+            //     var iL = attrib.get("itemsLabel", "items");
+            //     var cL = attrib.get("categoriesLabel", "categories");
+            //     status.updateStatus("Reading " + cL + " / " + iL + " Associations", 2);
+            // }
+            // if (this.ggSrc === null || this.ggSrc != assocU) {
+            //     this.reader.readGeneToGo(assocU);
+            //     this.ggSrc = assocU;
+            // }
+            // if (status !== null) {
+            //     status.updateStatus("Reading Sungear Data", 3);
+            // }
+            // this.reader.readSungear(sungearU);
+            // this.sunSrc = sungearU;
+            // callback();
         }
     },
     /**
@@ -193,6 +210,7 @@ DataSource.prototype = {
      */
     getReader : function() {
         return this.reader;
+
     }
 };
 

@@ -9,10 +9,9 @@ const fs = require('fs');
 const zlib = require('zlib');
 const url = require('url');
 const request = require('request');
+const SortedSet = require("collections/sorted-set");
 
 require('javascript.util');
-const Iterator = javascript.util.Iterator;
-const SortedSet = javascript.util.SortedSet;
 const TreeSet = javascript.util.TreeSet;
 
 const ParseException = require('./parseException');
@@ -32,8 +31,8 @@ function DataReader(attrib) {
     this.clear();
 }
 
-DataReader.SEP = "\t|\\|";
-DataReader.FSEP = ",| ";
+DataReader.SEP = "|";
+DataReader.FSEP = " ";
 DataReader.NVSEP = "=";
 
 DataReader.prototype = {
@@ -61,37 +60,53 @@ DataReader.prototype = {
      * @param sungearU {URL}
      */
     readAll : function(geneU, listU, hierU, assocU, sungearU) {
-        this.readGenes(geneU);
-        this.readTerms(listU);
-        this.readHierarchy(hierU);
-        this.readGeneToGo(assocU);
-        this.readSungear(sungearU);
+        this.readGenes(geneU, function() {
+            console.log("read genes.");
+        });
+        this.readTerms(listU, function() {
+            console.log("read terms.");
+        });
+        this.readHierarchy(hierU, function() {
+            console.log("read hierarchies.");
+        });
+        this.readGeneToGo(assocU, function() {
+            console.log("read genes to go");
+        });
+        this.readSungear(sungearU, function() {
+            console.log("read sungear.");
+        });
     },
     /**
      * @param geneU {URL}
      * @param genes {Hashtable<String, Gene>}
      * @param a {Attributes}
      */
-    readGenes : function(geneU, genes, a) {
-        if (typeof genes == 'undefined') {
+    readGenes : function(geneU, callback, genes, a) {
+        if (typeof a == 'undefined') {
             this.allGenes = {};
-            this.readGenes(geneU, this.allGenes, this.attrib);
+            this.readGenes(geneU, callback, this.allGenes, this.attrib);
         } else {
+            console.log("In readGenes!");
             DataReader.openURL(geneU, function(response) {
                 DataReader.parseHeader(response, a, "items");
-                for (var i = 0; i < response.length; i++) {
-                    var line = response[i];
+                var lines = response.split("\n");
+                for (var i = 0; i < lines.length; i++) {
+                    var line = lines[i];
                     try {
                         var s = DataReader.trimAll(line.split(DataReader.SEP));
                         var pub = s[0];
                         var desc = s[1];
                         var g = new Gene(pub, desc);
+                        // if (i < 10) {
+                        //     console.log(g);
+                        // }
                         genes[pub.toLowerCase()] = g;
                     } catch (e) {
                         console.log("Offending line: " + line);
                         throw new ParseException("parse error at line: " + i + " of " + geneU, line, e);
                     }
                 }
+                callback();
             });
         }
     },
@@ -100,23 +115,33 @@ DataReader.prototype = {
      * @param terms {Hashtable<String, Term>}
      * @param a {Attributes}
      */
-    readTerms : function(listU, terms, a) {
-        if (typeof terms == 'undefined') {
+    readTerms : function(listU, callback, terms, a) {
+        if (typeof a == 'undefined') {
             this.terms = {};
-            this.readTerms(listU, this.terms, this.attrib);
+            this.readTerms(listU, callback, this.terms, this.attrib);
         } else {
             DataReader.openURL(listU, function(response) {
                 DataReader.parseHeader(response, a, "categories");
-                for (var i = 0; i < response.length; i++) {
-                    var line = response[i];
+                var lines = response.split("\n");
+                for (var i = 0; i < lines.length; i++) {
+                    var line = lines[i];
                     try {
                         var f = DataReader.trimAll(line.split(DataReader.SEP));
-                        terms[f[0]] = new Term(f[0], f[1]);
+                        if (f.length > 1) {
+                            terms[f[0]] = new Term(f[0], f[1]);
+                        }
+                        if (i == lines.length-1) {
+                            callback();
+                        }
+                        // if (i < 10) {
+                        //     console.log(terms[f[0]]);
+                        // }
                     } catch (e) {
                         console.log("Offending line: " + line);
                         throw new ParseException("parse error at line " + i + " of " + listU, line, e);
                     }
                 }
+
             });
         }
     },
@@ -126,24 +151,29 @@ DataReader.prototype = {
      * @param rootsV {Vector<Term>}
      * @param a {Attributes}
      */
-    readHierarchy : function(hierU, terms, rootsV, a) {
+    readHierarchy : function(hierU, callback, terms, rootsV, a) {
         if (typeof terms == 'undefined') {
             this.roots = [];
-            this.readHierarchy(hierU, this.terms, this.roots, this.attrib);
+            this.readHierarchy(hierU, callback, this.terms, this.roots, this.attrib);
         } else {
-            var rootsT = new TreeSet();
+            console.log("In the second part!");
+            var rootsT = new SortedSet();
             // parse term parent/child relationships
             for (var key in terms) {
-                rootsT.add(terms[key]);
+                rootsT.push(terms[key]);
             }
             DataReader.openURL(hierU, function(response) {
                 DataReader.parseHeader(response, a, "hierarchy");
-                for (var i = 0; i < response.length; i++) {
-                    var line = response[i];
+                var lines = response.split("\n");
+                for (var i = 0; i < lines.length; i++) {
+                    var line = lines[i];
+                    if (line.length < 6) {
+                        continue;
+                    }
                     try {
                         var f = DataReader.trimAll(line.split(DataReader.SEP));
                         var s = DataReader.trimAll(f[1].split(DataReader.FSEP));
-                        var t = terms[s[i]];
+                        var t = terms[f[0]];
                         for (var j = 0; j < s.length; j++) {
                             var c = terms[s[j]];
                             if (c !== null && typeof c != 'undefined') {
@@ -157,9 +187,11 @@ DataReader.prototype = {
                     }
                 }
                 var rootsTArray = rootsT.toArray();
+                console.log(rootsTArray);
                 for (var k = 0; k < rootsTArray.length; k++) {
-                    rootsV.push(rootsTArray[i]);
+                    rootsV.push(rootsTArray[k]);
                 }
+                callback();
             });
         }
     },
@@ -170,10 +202,10 @@ DataReader.prototype = {
      * @param geneToGo {Hashtable<Gene, Vector<Term>>}
      * @param a {Attributes}
      */
-    readGeneToGo : function(assocU, genes, terms, geneToGo, a) {
+    readGeneToGo : function(assocU, callback, genes, terms, geneToGo, a) {
         if (typeof genes == 'undefined') {
             this.geneToGo = {};
-            this.readGeneToGo(assocU, this.allGenes, this.terms, this.geneToGo, this.attrib);
+            this.readGeneToGo(assocU, callback, this.allGenes, this.terms, this.geneToGo, this.attrib);
         } else {
             DataReader.openURL(assocU, function(response) {
                 // parse GO / gene correspondence
@@ -182,6 +214,7 @@ DataReader.prototype = {
                 DataReader.parseHeader(response, a, "correspondence");
                 for (var i = 0; i < response.length; i++) {
                     var line = response[i];
+                    console.log(line);
                     try {
                         var f = line.split(DataReader.SEP);
                         var s = f.length < 3 ? [] : f[2].trim().split(DataReader.FSEP);
@@ -225,13 +258,13 @@ DataReader.prototype = {
      * @param dupGenes {SortedSet<Gene>}
      * @param a {Attributes}
      */
-    readSungear : function(sungearU, genes, anchors, expGenes, missingGenes, dupGenes, a) {
+    readSungear : function(sungearU, callback, genes, anchors, expGenes, missingGenes, dupGenes, a) {
         if (typeof genes == 'undefined') {
             this.anchors = [];
             this.expGenes = new TreeSet();
             this.missingGenes = new TreeSet();
             this.dupGenes = new TreeSet();
-            this.readSungear(sungearU, this.allGenes, this.anchors, this.expGenes, this.missingGenes, this.dupGenes, this.attrib);
+            this.readSungear(sungearU, callback, this.allGenes, this.anchors, this.expGenes, this.missingGenes, this.dupGenes, this.attrib);
         } else {
             DataReader.openURL(sungearU, function(response) {
                 DataReader.parseHeader(response, a, "sungear");
@@ -245,6 +278,7 @@ DataReader.prototype = {
                 var exp = [];
                 for (i = 1; i < response.length; i++) {
                     line = response[i];
+                    console.log(line);
                     try {
                         if (line == "") {
                             continue;
@@ -357,7 +391,7 @@ DataReader.chop = function(b) {
 };
 
 DataReader.openURL = function(u, callback) {
-    if (u.indexOf('http') < 0) {
+    if (u.indexOf('http') < 0 || u.indexOf('txt.gz') < 0) {
         DataReader.readURL(u, function(response) {
             callback(response);
         });
@@ -369,7 +403,7 @@ DataReader.openURL = function(u, callback) {
         req.on('response', function(res) {
             var chunks = [];
             res.on('data', function(chunk) {
-                // console.log("Pushing data");
+                console.log("Pushing data");
                 chunks.push(chunk);
             });
             res.on('end', function() {
@@ -382,16 +416,11 @@ DataReader.openURL = function(u, callback) {
                 }
                 if (encoding.indexOf('gzip') > -1) {
                     console.log("Unzipping...");
-                    zlib.gunzip(buffer, function(err, decoded) {
-                        console.log(decoded);
-                        if (err) {
-                        } else {
-                            raw = decoded.toString();
-                            callback(raw);
-                        }
-                    });
+                    DataReader.openGz(buffer, function(response) {
+                        callback(response);
+                    })
                 } else {
-                    raw = chunks.toString();
+                    callback(chunks.toString());
                 }
             });
         });
@@ -415,27 +444,51 @@ DataReader.readURL = function(u, callback) {
             callback(response);
         });
     } else {
-        console.log("reading: " + u);
-        var buf = new Buffer(5242880); // 5 MB - Lord hear our prayer.
-        fs.open(u, 'r', function (err, fd) {
+        DataReader.openLocal(u, function(response) {
+            callback(response);
+        });
+    }
+};
+
+DataReader.openLocal = function(u, callback) {
+    console.log("reading: " + u + " in openLocal");
+
+    var buf = new Buffer(5242880); // 5 MB - Lord hear our prayer.
+    fs.open(u, 'r', function (err, fd) {
+        if (err) {
+            console.log(err);
+        }
+        console.log("File opened successfully!");
+        console.log("Going to read the file");
+        fs.read(fd, buf, 0, buf.length, 0, function (err, bytes) {
             if (err) {
                 console.log(err);
             }
-            console.log("File opened successfully!");
-            console.log("Going to read the file");
-            fs.read(fd, buf, 0, buf.length, 0, function (err, bytes) {
-                if (err) {
-                    console.log(err);
-                }
-                console.log(bytes + " bytes read");
+            console.log(bytes + " bytes read");
 
-                // Print only read bytes to avoid junk.
-                if (bytes > 0) {
+            // Print only read bytes to avoid junk.
+            if (bytes > 0) {
+                if (u.indexOf('.gz') > -1) {
+                    DataReader.openGz(buf.slice(0,bytes), function(response){
+                        callback(response);
+                    });
+                } else {
                     callback(buf.slice(0, bytes).toString());
                 }
-            });
+            }
         });
-    }
+    });
+};
+
+DataReader.openGz = function(buffer, callback) {
+    console.log("In openGz!");
+    zlib.gunzip(buffer, function(err, decoded) {
+        if (err) {
+        } else {
+            raw = decoded.toString();
+            callback(raw);
+        }
+    });
 };
 
 /**

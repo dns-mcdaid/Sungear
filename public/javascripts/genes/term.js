@@ -60,18 +60,182 @@ function Term(id, name) {
     this.stdev = 0.0;       /** @type double z-score calculation term */
     this.zScore = 0.0;      /** @type double z-score calculation term */
     this.active = false;    /** Denotes whether any genes are associated with this term in the current experiment set */
-    this.selectedState = this.STATE_UNKNOWN;    /** @type int */
+    this.selectedState = Term.STATE_UNKNOWN;    /** @type int */
 }
+
+/** Selected state flag: state undetermined */
+Term.STATE_UNKNOWN = 0;
+/** Selected state flag: term selected (term or descendent has intersection with current selected set) */
+Term.STATE_SELECTED = 1;
+/** Selected state flag: term not selected */
+Term.STATE_UNSELECTED = 2;
 
 // TODO: @Radhika implement with Hypergeo.
 Term.prototype = {
     constructor : Term,
-    /** Selected state flag: state undetermined */
-    STATE_UNKNOWN : 0,
-    /** Selected state flag: term selected (term or descendent has intersection with current selected set) */
-    STATE_SELECTED : 1,
-    /** Selected state flag: term not selected */
-    STATE_UNSELECTED : 2
+    cleanup : function() {
+        for (var it = this.children.iterator(); it.hasNext(); ) {
+            it.next().cleanup();
+        }
+        this.children = new TreeSet();
+        this.parents = new TreeSet();
+        this.allGenes = new TreeSet();
+        this.localGenes = new TreeSet();
+    },
+    setRatio : function(p_t) {
+        this.p_t = p_t;
+        this.stdev = Math.sqrt(p_t * (1-p_t));
+    },
+    addChild : function(c) {
+        this.children.add(c);
+    },
+    getChildren : function() {
+        return this.children;
+    },
+    addParent : function(p) {
+        this.parents.add(p);
+    },
+    getParents : function() {
+        return this.parents;
+    },
+    addGene : function(g) {
+        this.localGenes.add(g);
+    },
+    isRoot : function() {
+        return this.parents.size() == 0;
+    },
+    setActive : function() {
+        this.active = b;
+    },
+    isActive : function() {
+        return this.active;
+    },
+    getAllGenes : function() {
+        return this.allGenes;
+    },
+    getId : function() {
+        return this.id;
+    },
+    getName : function() {
+        return this.name;
+    },
+    getIntersectCount : function(iSet) {
+        if (this.allGenes === null) {
+            return 0;
+        } else {
+            var s = new TreeSet();
+            var setArray = iSet.toArray();
+            for (var i = 0; i < setArray.length; i++) {
+                if (this.allGenes.contains(setArray[i])) {
+                    s.add(setArray[i]);
+                }
+            }
+            return s.size();
+        }
+    },
+    compare : function(t) {
+        return this.name.localeCompare(t.name);
+    },
+    compareTo : function(t) {
+        return this.name.localeCompare(t.name);
+    },
+    toString : function() {
+        var v = this.zScore;
+        return "(" + v + ";" + this.getStoredCount() + ")" + this.name;
+    },
+    getScore : function() {
+        return this.zScore;
+    },
+    getStoredCount : function() {
+        return this.storedCount;
+    },
+    resetStoredCount : function() {
+        this.storedCount = -1;
+    },
+    updateStoredCount : function(aSet) {
+        if (this.storedCount == -1) {
+            var it = this.children.iterator();
+            while (it.hasNext()) {
+                it.next().updateStoredCount(aSet);
+            }
+            var s = new TreeSet();
+            var aSetArr = aSet.toArray();
+            for (var i = 0; i < aSetArr.length; i++) {
+                if (this.allGenes.contains(aSetArr[i])) {
+                    s.add(aSetArr[i]);
+                }
+            }
+            this.storedCount = s.size();
+            this.updateScore(aSet.size());
+        }
+    },
+    initUnion : function() {
+        this.allGenes = null;
+    },
+    findUnion : function(global) {
+        if (this.allGenes == null) {
+            this.allGenes = new TreeSet();
+            var locArray = this.localGenes.toArray();
+            for (var i = 0; i < locArray.length; i++) {
+                this.allGenes.add(locArray[i]);
+            }
+            var it = this.children.iterator();
+            while (it.hasNext()) {
+                var ch = it.next();
+                ch.findUnion(global);
+                var chAll = ch.allGenes.toArray();
+                for (var j = 0; j < chAll.length; j++) {
+                    this.allGenes.add(chAll[j]);
+                }
+            }
+            var allArray = this.allGenes.toArray();
+            var s = new TreeSet();
+            for (var k = 0; k < allArray.length; k++) {
+                if (global.contains(allArray[k])) {
+                    s.add(allArray[k])
+                }
+            }
+            this.allGenes = s;
+        }
+    },
+    updateScore : function(total) {
+        this.zScore = this.calcScore(this.getStoredCount(), total);
+    },
+    calcScore : function(count, total) {
+        var f_t = count / total;
+        return (f_t-this.p_t && this.stdev == 0) ? 0 : (f_t - this.p_t) * Math.sqrt(total) / this.stdev;
+    },
+    initSelectedState : function() {
+        this.selectedState = Term.STATE_UNKNOWN;
+    },
+    updateSelectedState : function(s) {
+        if (!this.active) {
+            this.selectedState = Term.STATE_UNSELECTED;
+        } else {
+            for (var it = this.children.iterator(); it.hasNext(); ) {
+                var t = it.next();
+                if (t.selectedState == Term.STATE_UNKNOWN && t.active) {
+                    t.updateSelectedState(s);
+                }
+                if (t.selectedState == Term.STATE_SELECTED) {
+                    this.selectedState = Term.STATE_SELECTED;
+                }
+            }
+            if (this.selectedState = Term.STATE_UNKNOWN) {
+                var x = new TreeSet();
+                var allArr = this.allGenes.toArray();
+                for (var i = 0; i < allArr.length; i++) {
+                    if (s.contains(allArr[i])) {
+                        x.add(allArr[i]);
+                    }
+                }
+                this.selectedState = x.size() == 0 ? Term.STATE_UNSELECTED : Term.STATE_SELECTED;
+            }
+        }
+    },
+    getSelectedState : function() {
+        return this.selectedState;
+    }
 };
 
 module.exports = Term;
