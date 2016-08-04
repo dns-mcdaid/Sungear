@@ -97,9 +97,6 @@ DataReader.prototype = {
                         var pub = s[0];
                         var desc = s[1];
                         var g = new Gene(pub, desc);
-                        // if (i < 10) {
-                        //     console.log(g);
-                        // }
                         genes[pub.toLowerCase()] = g;
                     } catch (e) {
                         console.log("Offending line: " + line);
@@ -133,9 +130,6 @@ DataReader.prototype = {
                         if (i == lines.length-1) {
                             callback();
                         }
-                        // if (i < 10) {
-                        //     console.log(terms[f[0]]);
-                        // }
                     } catch (e) {
                         console.log("Offending line: " + line);
                         throw new ParseException("parse error at line " + i + " of " + listU, line, e);
@@ -187,7 +181,6 @@ DataReader.prototype = {
                     }
                 }
                 var rootsTArray = rootsT.toArray();
-                console.log(rootsTArray);
                 for (var k = 0; k < rootsTArray.length; k++) {
                     rootsV.push(rootsTArray[k]);
                 }
@@ -209,43 +202,58 @@ DataReader.prototype = {
         } else {
             DataReader.openURL(assocU, function(response) {
                 // parse GO / gene correspondence
-                var missingGene = new TreeSet();
-                var missingTerm = new TreeSet();
+                var missingGene = new SortedSet();
+                var missingTerm = new SortedSet();
+                var lines = response.split("\n");
                 DataReader.parseHeader(response, a, "correspondence");
-                for (var i = 0; i < response.length; i++) {
-                    var line = response[i];
-                    console.log(line);
-                    try {
+                for (var i = 0; i < lines.length; i++) {
+                    var line = lines[i];
+                    console.log(i + "/" + lines.length);
+                    if (line.length < 1) {
+                        continue;
+                    }
+                    // try {
                         var f = line.split(DataReader.SEP);
                         var s = f.length < 3 ? [] : f[2].trim().split(DataReader.FSEP);
                         var tn = f[0].trim();
                         var t = terms[tn];
+
                         if (t == null || typeof t == 'undefined') {
-                            missingTerm.add(tn);
+                            missingTerm.push(tn);
                             continue;
                         }
                         var p_t = Number(f[1].trim());
+                        // if ( i == 246 ) {
+                        //     // console.log("F: " + f);
+                        //     // console.log("S: " + s);
+                        //     console.log("TN: " + tn);
+                        //     console.log("T: " + t);
+                        //     console.log("p_t: " + p_t);
+                        // }
                         t.setRatio(p_t);
                         for (var k = 0; k < s.length; k++) {
                             var gn = s[k].trim();
                             var g = genes[gn.toLowerCase()];
                             if (g === null || typeof g === 'undefined') {
-                                missingGene.add(gn);
+                                missingGene.push(gn);
                             } else {
                                 var genev = geneToGo[g];
                                 if (genev === null || typeof genev === 'undefined') {
                                     genev = [];
                                 }
+                                // console.log("Genev: " + i + ": " + k + "/" + s.length + ": " + genev);
                                 genev.push(t);
                                 t.addGene(g);
                                 geneToGo[g] = genev;
                             }
                         }
-                    } catch (e) {
-                        console.log("Offending line: " + line);
-                        throw new ParseException("parse error at line" + i + " of " + assocU, line, e);
-                    }
+                    // } catch (e) {
+                    //     console.log("Offending line: " + line);
+                    //     console.log(e);
+                    //     throw new ParseException("parse error at line" + i + " of " + assocU, line, e);
+                    // }
                 }
+                callback();
             });
         }
     },
@@ -269,16 +277,16 @@ DataReader.prototype = {
             DataReader.openURL(sungearU, function(response) {
                 DataReader.parseHeader(response, a, "sungear");
                 // title line
-                var line = response[0];
+                var lines = response.split('\n');
+                var line = lines[0];
                 var f = DataReader.trimAll(line.split(DataReader.SEP));
                 var i = 0;
                 for (i = 0; i < f.length-1; i++) {
                     anchors.push(new Anchor(f[i]));
                 }
                 var exp = [];
-                for (i = 1; i < response.length; i++) {
-                    line = response[i];
-                    console.log(line);
+                for (i = 1; i < lines.length; i++) {
+                    line = lines[i];
                     try {
                         if (line == "") {
                             continue;
@@ -304,6 +312,7 @@ DataReader.prototype = {
                         throw new ParseException("parse error at line " + i + " of " + sungearU, line, e);
                     }
                 }
+                callback();
             });
         }
     },

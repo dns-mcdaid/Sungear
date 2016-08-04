@@ -143,7 +143,6 @@ DataSource.prototype = {
         if (typeof callback === 'undefined') {
             this.set(attrib, null, status);
         } else {
-            var numOfFiles = 0;
             var geneU = attrib.get("geneU");
             var listU = attrib.get("listU");
             var hierU = attrib.get("hierU");
@@ -157,52 +156,69 @@ DataSource.prototype = {
             if (status !== null) {
                 status.updateStatus("Reading Items List", 0);
             }
-
             if (this.geneSrc === null || this.geneSrc != geneU) {
                 console.log("Attempting to readGenes:");
                 this.reader.readGenes(geneU, function() {
                     console.log("Back from readGenes!");
-                    numOfFiles++;
                     this.geneSrc = geneU;
-                    if (numOfFiles == 5) {
-                        callback();
-                    }
+                    this.readTerms(listU, hierU, assocU, sungearU, function() {
+                        console.log("Back!");
+                    }.bind(this));
                 }.bind(this));
             }
             if (status !== null) {
                 status.updateStatus("Reading Categories", 1);
             }
-            if (this.glSrc === null || this.glSrc != listU || this.ghSrc === null || this.ghSrc != hierU) {
-                this.reader.readTerms(listU, function() {
-                    console.log("back from readTerms!");
-                    this.glSrc = listU;
-                    this.ghSrc = hierU;
-                    numOfFiles++;
-                    this.reader.readHierarchy(hierU, function() {
-                        console.log("back from readHierarchy!");
-                        numOfFiles++;
-                        if (numOfFiles == 5) {
-                            callback();
-                        }
-                    });
-                }.bind(this));
+
+            if (status !== null) {
+                var iL = attrib.get("itemsLabel", "items");
+                var cL = attrib.get("categoriesLabel", "categories");
+                status.updateStatus("Reading " + cL + " / " + iL + " Associations", 2);
             }
-            // if (status !== null) {
-            //     var iL = attrib.get("itemsLabel", "items");
-            //     var cL = attrib.get("categoriesLabel", "categories");
-            //     status.updateStatus("Reading " + cL + " / " + iL + " Associations", 2);
-            // }
-            // if (this.ggSrc === null || this.ggSrc != assocU) {
-            //     this.reader.readGeneToGo(assocU);
-            //     this.ggSrc = assocU;
-            // }
-            // if (status !== null) {
-            //     status.updateStatus("Reading Sungear Data", 3);
-            // }
-            // this.reader.readSungear(sungearU);
-            // this.sunSrc = sungearU;
-            // callback();
+
+            if (status !== null) {
+                status.updateStatus("Reading Sungear Data", 3);
+            }
         }
+    },
+    readTerms : function(listU, hierU, assocU, sungearU, callback) {
+        console.log("Mmmmkay");
+        console.log(this.glSrc);
+        console.log(listU);
+        if (this.glSrc === null || this.glSrc != listU || this.ghSrc === null || this.ghSrc != hierU) {
+            this.reader.readTerms(listU, function() {
+                console.log("back from readTerms!");
+                this.glSrc = listU;
+                this.readHierarchy(hierU, assocU, sungearU, function() {
+                    callback();
+                });
+            }.bind(this));
+        }
+    },
+    readHierarchy : function(hierU, assocU, sungearU, callback) {
+        this.reader.readHierarchy(hierU, function() {
+            console.log("back from readHierarchy!");
+            this.ghSrc = hierU;
+            this.readGeneToGo(assocU, sungearU, function() {
+                callback();
+            });
+        }.bind(this));
+    },
+    readGeneToGo : function(assocU, sungearU, callback) {
+        this.reader.readGeneToGo(assocU, function() {
+            console.log("Back from Gene to Go!");
+            this.ggSrc = assocU;
+            this.readSungear(sungearU, function() {
+                callback();
+            });
+        }.bind(this));
+    },
+    readSungear : function(sungearU, callback) {
+        this.reader.readSungear(sungearU, function() {
+            console.log("Back from SunGear");
+            this.sunSrc = sungearU;
+            callback();
+        }.bind(this));
     },
     /**
      * Returns the current data reader
@@ -210,7 +226,6 @@ DataSource.prototype = {
      */
     getReader : function() {
         return this.reader;
-
     }
 };
 
