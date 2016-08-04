@@ -431,7 +431,7 @@ DataReader.readURL = function(u, callback) {
 
                 // Print only read bytes to avoid junk.
                 if (bytes > 0) {
-                    callback(buf.slice(0, bytes));
+                    callback(buf.slice(0, bytes).toString());
                 }
             });
         });

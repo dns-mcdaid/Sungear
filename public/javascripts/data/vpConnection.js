@@ -6,11 +6,12 @@ const ParseException = require('./parseException');
 
 function makeAttributes(doc) {
     var queryString = doc.query;
+    console.log(queryString);
     if (queryString === null || typeof queryString === 'undefined') {
         throw new ParseException("no query data");
     }
     var attrib = new Attributes(queryString);
-    if (attrib.get("session_id") === null) {
+    if (attrib.get("session_id") === null || typeof attrib.get("session_id") === 'undefined') {
         throw new ParseException("missing required attribute: session_id");
     }
     attrib.put("export_session_id", attrib.get("session_id"));

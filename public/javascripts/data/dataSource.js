@@ -60,9 +60,11 @@ DataSource.prototype = {
      * @throws IOException on low-level file read and file not found errors
      * @throws ParseException on Sungear-specific file format errors
      */
-    setAttributes : function(attrib, base) {
-        this.checkAttributes(attrib, base);
-        this.attrib = attrib;
+    setAttributes : function(attrib, base, callback) {
+        this.checkAttributes(attrib, base, function (response) {
+            this.attrib = response;
+            callback();
+        });
     },
     /**
      * Get the attributes object.
@@ -79,7 +81,7 @@ DataSource.prototype = {
      * @throws IOException if a file cannot be read, or a file with no default location cannot be read
      * @throws ParseException if a file format issue is encountered
      */
-    checkAttributes : function(attrib, base) {
+    checkAttributes : function(attrib, base, callback) {
         if (attrib.get("sungearU") === null) {
             throw new ParseException("sungear file not specified");
         }
@@ -95,6 +97,7 @@ DataSource.prototype = {
                     speciesFile = "species.txt";
                 }
                 var list = new SpeciesList(DataReader.makeURL(base, speciesFile), base);
+                console.log("List: " + list);
                 sp = list.getSpecies(sn);
                 // if there's a species file, assume we're dealing with gene data
                 if (attrib.get("itemsLabel") === null) {
@@ -106,17 +109,18 @@ DataSource.prototype = {
             }
             // the check basic attribs
             if (attrib.get("geneU") == null) {
-                attrib.put("geneU", (sp !== null) ? sp.geneU : new URL(DataSource.GENE_DEFAULT, base));
+                attrib.put("geneU", (sp !== null) ? sp.geneU : DataReader.makeURL(base, DataSource.GENE_DEFAULT));
             }
             if (attrib.get("listU") == null) {
-                attrib.put("listU", (sp !== null) ? sp.listU : new URL(DataSource.LIST_DEFAULT, base));
+                attrib.put("listU", (sp !== null) ? sp.listU : DataReader.makeURL(base, DataSource.LIST_DEFAULT));
             }
             if (attrib.get("hierU") == null) {
-                attrib.put("hierU", (sp !== null) ? sp.hierU : new URL(DataSource.HIER_DEFAULT, base));
+                attrib.put("hierU", (sp !== null) ? sp.hierU : DataReader.makeURL(base, DataSource.HIER_DEFAULT));
             }
             if (attrib.get("assocU") == null) {
-                attrib.put("assocU", (sp !== null) ? sp.assocU : new URL(DataSource.ASSOC_DEFAULT, base));
+                attrib.put("assocU", (sp !== null) ? sp.assocU : DataReader.makeURL(base, DataSource.ASSOC_DEFAULT));
             }
+            callback(attrib);
         });
     },
 
@@ -135,10 +139,11 @@ DataSource.prototype = {
      * @throws IOException on low-level file errors
      * @throws ParseException on Sungear-specific file format issues
      */
-    set : function(attrib, status) {
-        if (typeof status === 'undefined') {
-            this.set(attrib, null);
+    set : function(attrib, status, callback) {
+        if (typeof callback === 'undefined') {
+            this.set(attrib, null, status);
         } else {
+            console.log("MADE IT TO SET: " + attrib);
             var geneU = attrib.get("geneU");
             var listU = attrib.get("listU");
             var hierU = attrib.get("hierU");
@@ -179,6 +184,7 @@ DataSource.prototype = {
             }
             this.reader.readSungear(sungearU);
             this.sunSrc = sungearU;
+            callback();
         }
     },
     /**

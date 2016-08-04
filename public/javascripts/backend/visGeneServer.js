@@ -7,6 +7,7 @@ const DataReader = require('../data/dataReader');
 const DataSource = require('../data/dataSource');
 const ExternalConnection = require('../data/externalConnection');
 const VPConnection = require('../data/vpConnection');
+const ParseException = require('../data/parseException');
 
 /**
  * @param u {URL}
@@ -71,17 +72,18 @@ VisGene.prototype = {
     init : function(callback) {
         var vpU = null;
         try {
-            vpU = url.format("./index.html?sungearU=");
+            // TODO: Don't hardcode in production
+            vpU = url.parse("./index.html?data_url=test_data/test_data_01.txt");
             this.extAttrib = VPConnection.makeAttributes(vpU);
         } catch (e) {
-            console.error("old-style VP connection failed, trying generic external connection (exception follows)");
-            console.error(e.message);
+            console.log("old-style VP connection failed, trying generic external connection (exception follows)");
+            console.log(e.message);
             if (vpU !== null) {
                 try {
                     this.extAttrib = ExternalConnection.makeExportAttributes(vpU);
                 } catch (e2) {
-                    console.error("external connection failed, resorting to load menu (exception follows)");
-                    console.error(e2.message);
+                    console.log("external connection failed, resorting to load menu (exception follows)");
+                    console.log(e2.message);
                 }
             }
         }
@@ -94,28 +96,97 @@ VisGene.prototype = {
             this.dataDir += "/";
         }
         this.dataU = DataReader.makeURL(this.base, this.dataDir);
-        console.log(this.dataU);
-
-        var potato =  function(callback) {
-            DataReader.testRequest(function() {
-                callback();
-            });
-            callback();
-        };
 
         // prepare data source
-        //this.src = new DataSource(this.dataU);
+        this.src = new DataSource(this.dataU);
         var exp = new ExperimentList(url.resolve(this.dataU, "exper.txt"), url.resolve(this.dataU, "species.txt"), this.dataU, function() {
             this.exp = exp;
-            potato(callback);
+            this.run(callback);
         }.bind(this));
 
     },
-    run : function() {
+    run : function(callback) {
         if (this.extAttrib !== null && this.extAttrib.get("sungearU") !== null) {
-            this.src.setAttributes(this.extAttrib, this.dataU);
-            this.openFile();
+            this.src.setAttributes(this.extAttrib, this.dataU, function() {
+                this.openFile(this.extAttrib, function() {
+                    callback();
+                });
+            }.bind(this));
+
         }
+    },
+
+    openFile : function(attrib, callback) {
+        console.log("data file: " + attrib.get("sungearU"));
+        // var status = new StatusDialog(f, this);
+        var t = new LoadThread(attrib);
+        t.run(this, function() {
+            if (t.getException() !== null) {
+                console.log(t.getException());
+            } else {
+                var iL = attrib.get("itemsLabel", "items");
+                var cL = attrib.get("categoriesLabel", "categories");
+                // Set titles for geneF, geneM, goF, and goM
+                var r = this.src.getReader();
+                if (this.showWarning && r.missingGenes.size() + r.dupGenes.size() > 0) {
+                    var msg = "There are inconsistencies in this data file:";
+                    if (r.missingGenes.size() > 0) {
+                        msg += "\n" + r.missingGenes.size() + " input " + iL + " unkown to Sungear have been ignored.";
+                    }
+                    if (r.dupGenes.size() > 0) {
+                        msg += "\n" + r.dupGenes.size() + " " + iL + " duplicated in the input file; only the first occurence of each has been used.";
+                    }
+                    msg += "\nThis will not prevent Sungear from running, but you may want to resolve these issues.";
+                    msg += "\nSee Help | File Info for details about the " + iL + " involved.";
+                    console.log(msg);
+                }
+            }
+            callback();
+        }.bind(this));
+    }
+};
+
+/**
+ * Experiment and master data load thread to separate the load
+ * operation from the main GUI thread.
+ * @author RajahBimmy
+ */
+/**
+ * Loads an experiment and, if necessary, master data, giving
+ * load status updates.
+ * @param u URL of the experiment file to load
+ * @param status dialog for status updates
+ */
+function LoadThread(attrib) {
+    this.attrib = attrib;
+    this.ex = null;
+    this.status = null;
+}
+
+LoadThread.prototype = {
+    constructor : LoadThread,
+    run : function(parent, callback) {
+        try {
+            console.log("Preparing Sungear Display");
+            parent.src.set(this.attrib, this.status, function() {
+                console.log("done!");
+            });
+        } catch (oo) {
+            if (typeof oo !== 'ParseException') {
+                console.log("Out of memory?");
+                // this.status.setModal(false);
+                //parent.src.getReader().clear();
+                this.ex = new ParseException("Out of memory");
+            } else {
+                this.ex = oo;
+            }
+        }
+        // this.status.setVisible(false);
+        // this.status.dispose();
+        return;
+    },
+    getException : function() {
+        return this.ex;
     }
 };
 
@@ -137,6 +208,7 @@ VisGene.usage = function(){
 };
 /**
  * @param args {String[]}
+ * @callback {function}
  */
 VisGene.main = function(args, callback) {
     try {
@@ -172,9 +244,8 @@ VisGene.main = function(args, callback) {
         for (var j = i; j < args.length; j++) {
             plugin.push(args[j]);
         }
-        var myUrl = url.format("./");
-        console.log(myUrl);
-        var vis = new VisGene(myUrl, warn, plugin, dataDir);
+        var localUrl = url.format("./");
+        var vis = new VisGene(localUrl, warn, plugin, dataDir);
         vis.init(function() {
             console.log("Made it back to vis init!");
             callback(vis);
