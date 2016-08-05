@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 const dataTest = require('../public/javascripts/test/dataTest');
-const VisGene = require('../public/javascripts/backend/visGeneServer');
+const VisGene = require('../lib/visGene');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {

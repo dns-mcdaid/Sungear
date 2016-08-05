@@ -1,0 +1,6247 @@
+[
+    {
+        "id": "aardsda01",
+        "description": "David Aardsma",
+        "species": "MLB"
+    },
+    {
+        "id": "abbotpa01",
+        "description": "Paul Abbott",
+        "species": "MLB"
+    },
+    {
+        "id": "abreubo01",
+        "description": "Bobby Abreu",
+        "species": "MLB"
+    },
+    {
+        "id": "acevejo01",
+        "description": "Jose Acevedo",
+        "species": "MLB"
+    },
+    {
+        "id": "adamsmi03",
+        "description": "Mike Adams",
+        "species": "MLB"
+    },
+    {
+        "id": "adamsru01",
+        "description": "Russ Adams",
+        "species": "MLB"
+    },
+    {
+        "id": "adamste01",
+        "description": "Terry Adams",
+        "species": "MLB"
+    },
+    {
+        "id": "adkinjo01",
+        "description": "Jon Adkins",
+        "species": "MLB"
+    },
+    {
+        "id": "affelje01",
+        "description": "Jeremy Affeldt",
+        "species": "MLB"
+    },
+    {
+        "id": "aguilch01",
+        "description": "Chris Aguila",
+        "species": "MLB"
+    },
+    {
+        "id": "ainswku01",
+        "description": "Kurt Ainsworth",
+        "species": "MLB"
+    },
+    {
+        "id": "alexama02",
+        "description": "Manny Alexander",
+        "species": "MLB"
+    },
+    {
+        "id": "alfarja01",
+        "description": "Jason Alfaro",
+        "species": "MLB"
+    },
+    {
+        "id": "alfonan01",
+        "description": "Antonio Alfonseca",
+        "species": "MLB"
+    },
+    {
+        "id": "alfoned01",
+        "description": "Edgardo Alfonzo",
+        "species": "MLB"
+    },
+    {
+        "id": "allench01",
+        "description": "Chad Allen",
+        "species": "MLB"
+    },
+    {
+        "id": "almanar01",
+        "description": "Armando Almanza",
+        "species": "MLB"
+    },
+    {
+        "id": "almanca01",
+        "description": "Carlos Almanzar",
+        "species": "MLB"
+    },
+    {
+        "id": "alomaro01",
+        "description": "Roberto Alomar",
+        "species": "MLB"
+    },
+    {
+        "id": "alomasa02",
+        "description": "Sandy Alomar Jr.",
+        "species": "MLB"
+    },
+    {
+        "id": "aloumo01",
+        "description": "Moises Alou",
+        "species": "MLB"
+    },
+    {
+        "id": "alvarab01",
+        "description": "Abe Alvarez",
+        "species": "MLB"
+    },
+    {
+        "id": "alvarto01",
+        "description": "Tony Alvarez",
+        "species": "MLB"
+    },
+    {
+        "id": "alvarwi01",
+        "description": "Wilson Alvarez",
+        "species": "MLB"
+    },
+    {
+        "id": "amezaal01",
+        "description": "Alfredo Amezaga",
+        "species": "MLB"
+    },
+    {
+        "id": "anderbr02",
+        "description": "Brian Anderson",
+        "species": "MLB"
+    },
+    {
+        "id": "anderga01",
+        "description": "Garret Anderson",
+        "species": "MLB"
+    },
+    {
+        "id": "anderja01",
+        "description": "Jason Anderson",
+        "species": "MLB"
+    },
+    {
+        "id": "anderji02",
+        "description": "Jimmy Anderson",
+        "species": "MLB"
+    },
+    {
+        "id": "anderma02",
+        "description": "Marlon Anderson",
+        "species": "MLB"
+    },
+    {
+        "id": "ankieri01",
+        "description": "Rick Ankiel",
+        "species": "MLB"
+    },
+    {
+        "id": "appieke01",
+        "description": "Kevin Appier",
+        "species": "MLB"
+    },
+    {
+        "id": "aquingr01",
+        "description": "Greg Aquino",
+        "species": "MLB"
+    },
+    {
+        "id": "ardoida01",
+        "description": "Danny Ardoin",
+        "species": "MLB"
+    },
+    {
+        "id": "armasto02",
+        "description": "Tony Armas Jr.",
+        "species": "MLB"
+    },
+    {
+        "id": "arroybr01",
+        "description": "Bronson Arroyo",
+        "species": "MLB"
+    },
+    {
+        "id": "ashbyan01",
+        "description": "Andy Ashby",
+        "species": "MLB"
+    },
+    {
+        "id": "astacpe01",
+        "description": "Pedro Astacio",
+        "species": "MLB"
+    },
+    {
+        "id": "atchisc01",
+        "description": "Scott Atchison",
+        "species": "MLB"
+    },
+    {
+        "id": "atkinga01",
+        "description": "Garrett Atkins",
+        "species": "MLB"
+    },
+    {
+        "id": "aurilri01",
+        "description": "Rich Aurilia",
+        "species": "MLB"
+    },
+    {
+        "id": "ausmubr01",
+        "description": "Brad Ausmus",
+        "species": "MLB"
+    },
+    {
+        "id": "ayalalu01",
+        "description": "Luis Ayala",
+        "species": "MLB"
+    },
+    {
+        "id": "backebr01",
+        "description": "Brandon Backe",
+        "species": "MLB"
+    },
+    {
+        "id": "bacsimi02",
+        "description": "Mike Bacsik",
+        "species": "MLB"
+    },
+    {
+        "id": "baekch01",
+        "description": "Cha Seung Baek",
+        "species": "MLB"
+    },
+    {
+        "id": "baergca01",
+        "description": "Carlos Baerga",
+        "species": "MLB"
+    },
+    {
+        "id": "baezda01",
+        "description": "Danys Baez",
+        "species": "MLB"
+    },
+    {
+        "id": "bagweje01",
+        "description": "Jeff Bagwell",
+        "species": "MLB"
+    },
+    {
+        "id": "bajenje01",
+        "description": "Jeff Bajenaru",
+        "species": "MLB"
+    },
+    {
+        "id": "bakopa01",
+        "description": "Paul Bako",
+        "species": "MLB"
+    },
+    {
+        "id": "baldero01",
+        "description": "Rocco Baldelli",
+        "species": "MLB"
+    },
+    {
+        "id": "baldwja01",
+        "description": "James Baldwin",
+        "species": "MLB"
+    },
+    {
+        "id": "balfogr01",
+        "description": "Grant Balfour",
+        "species": "MLB"
+    },
+    {
+        "id": "barajro01",
+        "description": "Rod Barajas",
+        "species": "MLB"
+    },
+    {
+        "id": "bardjo01",
+        "description": "Josh Bard",
+        "species": "MLB"
+    },
+    {
+        "id": "barmecl01",
+        "description": "Clint Barmes",
+        "species": "MLB"
+    },
+    {
+        "id": "barremi01",
+        "description": "Michael Barrett",
+        "species": "MLB"
+    },
+    {
+        "id": "bartlja01",
+        "description": "Jason Bartlett",
+        "species": "MLB"
+    },
+    {
+        "id": "bartocl01",
+        "description": "Cliff Bartosh",
+        "species": "MLB"
+    },
+    {
+        "id": "batismi01",
+        "description": "Miguel Batista",
+        "species": "MLB"
+    },
+    {
+        "id": "batisto01",
+        "description": "Tony Batista",
+        "species": "MLB"
+    },
+    {
+        "id": "bauerri01",
+        "description": "Rick Bauer",
+        "species": "MLB"
+    },
+    {
+        "id": "bautida01",
+        "description": "Danny Bautista",
+        "species": "MLB"
+    },
+    {
+        "id": "bautide01",
+        "description": "Denny Bautista",
+        "species": "MLB"
+    },
+    {
+        "id": "bautijo02",
+        "description": "Jose Bautista",
+        "species": "MLB"
+    },
+    {
+        "id": "bayja01",
+        "description": "Jason Bay",
+        "species": "MLB"
+    },
+    {
+        "id": "beckejo02",
+        "description": "Josh Beckett",
+        "species": "MLB"
+    },
+    {
+        "id": "beckro01",
+        "description": "Rod Beck",
+        "species": "MLB"
+    },
+    {
+        "id": "bedarer01",
+        "description": "Erik Bedard",
+        "species": "MLB"
+    },
+    {
+        "id": "beimejo01",
+        "description": "Joe Beimel",
+        "species": "MLB"
+    },
+    {
+        "id": "bellda01",
+        "description": "David Bell",
+        "species": "MLB"
+    },
+    {
+        "id": "bellhe01",
+        "description": "Heath Bell",
+        "species": "MLB"
+    },
+    {
+        "id": "bellhma01",
+        "description": "Mark Bellhorn",
+        "species": "MLB"
+    },
+    {
+        "id": "belliro01",
+        "description": "Ron Belliard",
+        "species": "MLB"
+    },
+    {
+        "id": "bellro01",
+        "description": "Rob Bell",
+        "species": "MLB"
+    },
+    {
+        "id": "beltrad01",
+        "description": "Adrian Beltre",
+        "species": "MLB"
+    },
+    {
+        "id": "beltrca01",
+        "description": "Carlos Beltran",
+        "species": "MLB"
+    },
+    {
+        "id": "beltrfr01",
+        "description": "Francis Beltran",
+        "species": "MLB"
+    },
+    {
+        "id": "beltrri01",
+        "description": "Rigo Beltran",
+        "species": "MLB"
+    },
+    {
+        "id": "benitar01",
+        "description": "Armando Benitez",
+        "species": "MLB"
+    },
+    {
+        "id": "bennega01",
+        "description": "Gary Bennett",
+        "species": "MLB"
+    },
+    {
+        "id": "benneje01",
+        "description": "Jeff Bennett",
+        "species": "MLB"
+    },
+    {
+        "id": "benoijo01",
+        "description": "Joaquin Benoit",
+        "species": "MLB"
+    },
+    {
+        "id": "bensokr01",
+        "description": "Kris Benson",
+        "species": "MLB"
+    },
+    {
+        "id": "bentzch01",
+        "description": "Chad Bentz",
+        "species": "MLB"
+    },
+    {
+        "id": "bergda01",
+        "description": "Dave Berg",
+        "species": "MLB"
+    },
+    {
+        "id": "bergebr01",
+        "description": "Brandon Berger",
+        "species": "MLB"
+    },
+    {
+        "id": "bergepe01",
+        "description": "Peter Bergeron",
+        "species": "MLB"
+    },
+    {
+        "id": "bergmdu01",
+        "description": "Dusty Bergman",
+        "species": "MLB"
+    },
+    {
+        "id": "berkmla01",
+        "description": "Lance Berkman",
+        "species": "MLB"
+    },
+    {
+        "id": "bernead01",
+        "description": "Adam Bernero",
+        "species": "MLB"
+    },
+    {
+        "id": "berroan01",
+        "description": "Angel Berroa",
+        "species": "MLB"
+    },
+    {
+        "id": "betanra01",
+        "description": "Rafael Betancourt",
+        "species": "MLB"
+    },
+    {
+        "id": "betemwi01",
+        "description": "Wilson Betemit",
+        "species": "MLB"
+    },
+    {
+        "id": "biddlro01",
+        "description": "Rocky Biddle",
+        "species": "MLB"
+    },
+    {
+        "id": "bierbni01",
+        "description": "Nick Bierbrodt",
+        "species": "MLB"
+    },
+    {
+        "id": "bigbila01",
+        "description": "Larry Bigbie",
+        "species": "MLB"
+    },
+    {
+        "id": "biggicr01",
+        "description": "Craig Biggio",
+        "species": "MLB"
+    },
+    {
+        "id": "blacktr01",
+        "description": "Travis Blackley",
+        "species": "MLB"
+    },
+    {
+        "id": "blakeca01",
+        "description": "Casey Blake",
+        "species": "MLB"
+    },
+    {
+        "id": "blaloha01",
+        "description": "Hank Blalock",
+        "species": "MLB"
+    },
+    {
+        "id": "blancan01",
+        "description": "Andres Blanco",
+        "species": "MLB"
+    },
+    {
+        "id": "blanche01",
+        "description": "Henry Blanco",
+        "species": "MLB"
+    },
+    {
+        "id": "blantjo01",
+        "description": "Joe Blanton",
+        "species": "MLB"
+    },
+    {
+        "id": "bloomwi01",
+        "description": "Willie Bloomquist",
+        "species": "MLB"
+    },
+    {
+        "id": "blumge01",
+        "description": "Geoff Blum",
+        "species": "MLB"
+    },
+    {
+        "id": "bocachi01",
+        "description": "Hiram Bocachica",
+        "species": "MLB"
+    },
+    {
+        "id": "boehrbr01",
+        "description": "Brian Boehringer",
+        "species": "MLB"
+    },
+    {
+        "id": "bondeje01",
+        "description": "Jeremy Bonderman",
+        "species": "MLB"
+    },
+    {
+        "id": "bondsba01",
+        "description": "Barry Bonds",
+        "species": "MLB"
+    },
+    {
+        "id": "bongju01",
+        "description": "Jung Bong",
+        "species": "MLB"
+    },
+    {
+        "id": "boonebr01",
+        "description": "Bret Boone",
+        "species": "MLB"
+    },
+    {
+        "id": "borchjo01",
+        "description": "Joe Borchard",
+        "species": "MLB"
+    },
+    {
+        "id": "bordepa01",
+        "description": "Pat Borders",
+        "species": "MLB"
+    },
+    {
+        "id": "borkoda01",
+        "description": "Dave Borkowski",
+        "species": "MLB"
+    },
+    {
+        "id": "borlato02",
+        "description": "Toby Borland",
+        "species": "MLB"
+    },
+    {
+        "id": "borowjo01",
+        "description": "Joe Borowski",
+        "species": "MLB"
+    },
+    {
+        "id": "bottari01",
+        "description": "Ricky Bottalico",
+        "species": "MLB"
+    },
+    {
+        "id": "bowenro01",
+        "description": "Rob Bowen",
+        "species": "MLB"
+    },
+    {
+        "id": "boydja02",
+        "description": "Jason Boyd",
+        "species": "MLB"
+    },
+    {
+        "id": "bradfch01",
+        "description": "Chad Bradford",
+        "species": "MLB"
+    },
+    {
+        "id": "bradlmi01",
+        "description": "Milton Bradley",
+        "species": "MLB"
+    },
+    {
+        "id": "braggda01",
+        "description": "Darren Bragg",
+        "species": "MLB"
+    },
+    {
+        "id": "branyru01",
+        "description": "Russ Branyan",
+        "species": "MLB"
+    },
+    {
+        "id": "brazecr01",
+        "description": "Craig Brazell",
+        "species": "MLB"
+    },
+    {
+        "id": "brazede01",
+        "description": "Dewon Brazelton",
+        "species": "MLB"
+    },
+    {
+        "id": "brazoyh01",
+        "description": "Yhency Brazoban",
+        "species": "MLB"
+    },
+    {
+        "id": "britoju01",
+        "description": "Juan Brito",
+        "species": "MLB"
+    },
+    {
+        "id": "brocado01",
+        "description": "Doug Brocail",
+        "species": "MLB"
+    },
+    {
+        "id": "brookfr01",
+        "description": "Frank Brooks",
+        "species": "MLB"
+    },
+    {
+        "id": "brousbe01",
+        "description": "Ben Broussard",
+        "species": "MLB"
+    },
+    {
+        "id": "broweji01",
+        "description": "Jim Brower",
+        "species": "MLB"
+    },
+    {
+        "id": "brownad01",
+        "description": "Adrian Brown",
+        "species": "MLB"
+    },
+    {
+        "id": "brownde02",
+        "description": "Dee Brown",
+        "species": "MLB"
+    },
+    {
+        "id": "brownja04",
+        "description": "Jamie Brown",
+        "species": "MLB"
+    },
+    {
+        "id": "brownke01",
+        "description": "Kevin Brown",
+        "species": "MLB"
+    },
+    {
+        "id": "brunebr01",
+        "description": "Brian Bruney",
+        "species": "MLB"
+    },
+    {
+        "id": "brunter01",
+        "description": "Eric Bruntlett",
+        "species": "MLB"
+    },
+    {
+        "id": "buchabr01",
+        "description": "Brian Buchanan",
+        "species": "MLB"
+    },
+    {
+        "id": "buckjo01",
+        "description": "John Buck",
+        "species": "MLB"
+    },
+    {
+        "id": "buehrma01",
+        "description": "Mark Buehrle",
+        "species": "MLB"
+    },
+    {
+        "id": "bukviry01",
+        "description": "Ryan Bukvich",
+        "species": "MLB"
+    },
+    {
+        "id": "bulliki01",
+        "description": "Kirk Bullinger",
+        "species": "MLB"
+    },
+    {
+        "id": "bumpna01",
+        "description": "Nate Bump",
+        "species": "MLB"
+    },
+    {
+        "id": "burbada01",
+        "description": "Dave Burba",
+        "species": "MLB"
+    },
+    {
+        "id": "burkech01",
+        "description": "Chris Burke",
+        "species": "MLB"
+    },
+    {
+        "id": "burkeja02",
+        "description": "Jamie Burke",
+        "species": "MLB"
+    },
+    {
+        "id": "burksel01",
+        "description": "Ellis Burks",
+        "species": "MLB"
+    },
+    {
+        "id": "burneaj01",
+        "description": "A.J. Burnett",
+        "species": "MLB"
+    },
+    {
+        "id": "burnese01",
+        "description": "Sean Burnett",
+        "species": "MLB"
+    },
+    {
+        "id": "burnije01",
+        "description": "Jeromy Burnitz",
+        "species": "MLB"
+    },
+    {
+        "id": "burrepa01",
+        "description": "Pat Burrell",
+        "species": "MLB"
+    },
+    {
+        "id": "burrose01",
+        "description": "Sean Burroughs",
+        "species": "MLB"
+    },
+    {
+        "id": "bushda01",
+        "description": "David Bush",
+        "species": "MLB"
+    },
+    {
+        "id": "bushho01",
+        "description": "Homer Bush",
+        "species": "MLB"
+    },
+    {
+        "id": "bynummi01",
+        "description": "Mike Bynum",
+        "species": "MLB"
+    },
+    {
+        "id": "byrdma01",
+        "description": "Marlon Byrd",
+        "species": "MLB"
+    },
+    {
+        "id": "byrdpa01",
+        "description": "Paul Byrd",
+        "species": "MLB"
+    },
+    {
+        "id": "byrneer01",
+        "description": "Eric Byrnes",
+        "species": "MLB"
+    },
+    {
+        "id": "cabreda01",
+        "description": "Daniel Cabrera",
+        "species": "MLB"
+    },
+    {
+        "id": "cabrefe01",
+        "description": "Fernando Cabrera",
+        "species": "MLB"
+    },
+    {
+        "id": "cabrejo02",
+        "description": "Jolbert Cabrera",
+        "species": "MLB"
+    },
+    {
+        "id": "cabremi01",
+        "description": "Miguel Cabrera",
+        "species": "MLB"
+    },
+    {
+        "id": "cabreor01",
+        "description": "Orlando Cabrera",
+        "species": "MLB"
+    },
+    {
+        "id": "cairomi01",
+        "description": "Miguel Cairo",
+        "species": "MLB"
+    },
+    {
+        "id": "calerki01",
+        "description": "Kiko Calero",
+        "species": "MLB"
+    },
+    {
+        "id": "calica01",
+        "description": "Carmen Cali",
+        "species": "MLB"
+    },
+    {
+        "id": "callami01",
+        "description": "Mickey Callaway",
+        "species": "MLB"
+    },
+    {
+        "id": "calloro01",
+        "description": "Ron Calloway",
+        "species": "MLB"
+    },
+    {
+        "id": "camermi01",
+        "description": "Mike Cameron",
+        "species": "MLB"
+    },
+    {
+        "id": "campsh01",
+        "description": "Shawn Camp",
+        "species": "MLB"
+    },
+    {
+        "id": "cantujo01",
+        "description": "Jorge Cantu",
+        "species": "MLB"
+    },
+    {
+        "id": "capeljo01",
+        "description": "Jose Capellan",
+        "species": "MLB"
+    },
+    {
+        "id": "capuach01",
+        "description": "Chris Capuano",
+        "species": "MLB"
+    },
+    {
+        "id": "carpech01",
+        "description": "Chris Carpenter",
+        "species": "MLB"
+    },
+    {
+        "id": "carradj01",
+        "description": "D.J. Carrasco",
+        "species": "MLB"
+    },
+    {
+        "id": "carragi01",
+        "description": "Giovanni Carrara",
+        "species": "MLB"
+    },
+    {
+        "id": "carroja01",
+        "description": "Jamey Carroll",
+        "species": "MLB"
+    },
+    {
+        "id": "cartela02",
+        "description": "Lance Carter",
+        "species": "MLB"
+    },
+    {
+        "id": "caseyse01",
+        "description": "Sean Casey",
+        "species": "MLB"
+    },
+    {
+        "id": "cashke01",
+        "description": "Kevin Cash",
+        "species": "MLB"
+    },
+    {
+        "id": "castial01",
+        "description": "Alberto Castillo",
+        "species": "MLB"
+    },
+    {
+        "id": "castifr01",
+        "description": "Frank Castillo",
+        "species": "MLB"
+    },
+    {
+        "id": "castijo02",
+        "description": "Jose Castillo",
+        "species": "MLB"
+    },
+    {
+        "id": "castilu01",
+        "description": "Luis Castillo",
+        "species": "MLB"
+    },
+    {
+        "id": "castivi02",
+        "description": "Vinny Castilla",
+        "species": "MLB"
+    },
+    {
+        "id": "castrju01",
+        "description": "Juan Castro",
+        "species": "MLB"
+    },
+    {
+        "id": "castrra01",
+        "description": "Ramon Castro",
+        "species": "MLB"
+    },
+    {
+        "id": "castrra02",
+        "description": "Ramon A. Castro",
+        "species": "MLB"
+    },
+    {
+        "id": "catalfr01",
+        "description": "Frank Catalanotto",
+        "species": "MLB"
+    },
+    {
+        "id": "cedenro01",
+        "description": "Roger Cedeno",
+        "species": "MLB"
+    },
+    {
+        "id": "cepicma01",
+        "description": "Matt Cepicky",
+        "species": "MLB"
+    },
+    {
+        "id": "cerdaja01",
+        "description": "Jaime Cerda",
+        "species": "MLB"
+    },
+    {
+        "id": "chacigu01",
+        "description": "Gustavo Chacin",
+        "species": "MLB"
+    },
+    {
+        "id": "chacosh01",
+        "description": "Shawn Chacon",
+        "species": "MLB"
+    },
+    {
+        "id": "chaveen01",
+        "description": "Endy Chavez",
+        "species": "MLB"
+    },
+    {
+        "id": "chaveer01",
+        "description": "Eric Chavez",
+        "species": "MLB"
+    },
+    {
+        "id": "chavera01",
+        "description": "Raul Chavez",
+        "species": "MLB"
+    },
+    {
+        "id": "chenbr01",
+        "description": "Bruce Chen",
+        "species": "MLB"
+    },
+    {
+        "id": "chench01",
+        "description": "Chin-Feng Chen",
+        "species": "MLB"
+    },
+    {
+        "id": "choatra01",
+        "description": "Randy Choate",
+        "species": "MLB"
+    },
+    {
+        "id": "choihe01",
+        "description": "Hee Seop Choi",
+        "species": "MLB"
+    },
+    {
+        "id": "chrisja01",
+        "description": "Jason Christiansen",
+        "species": "MLB"
+    },
+    {
+        "id": "chulkvi01",
+        "description": "Vinnie Chulk",
+        "species": "MLB"
+    },
+    {
+        "id": "churcry01",
+        "description": "Ryan Church",
+        "species": "MLB"
+    },
+    {
+        "id": "cintral01",
+        "description": "Alex Cintron",
+        "species": "MLB"
+    },
+    {
+        "id": "cirilje01",
+        "description": "Jeff Cirillo",
+        "species": "MLB"
+    },
+    {
+        "id": "clarkbr02",
+        "description": "Brady Clark",
+        "species": "MLB"
+    },
+    {
+        "id": "clarkho02",
+        "description": "Howie Clark",
+        "species": "MLB"
+    },
+    {
+        "id": "clarkje02",
+        "description": "Jermaine Clark",
+        "species": "MLB"
+    },
+    {
+        "id": "clarkto02",
+        "description": "Tony Clark",
+        "species": "MLB"
+    },
+    {
+        "id": "clausbr01",
+        "description": "Brandon Claussen",
+        "species": "MLB"
+    },
+    {
+        "id": "claytro01",
+        "description": "Royce Clayton",
+        "species": "MLB"
+    },
+    {
+        "id": "clemema01",
+        "description": "Matt Clement",
+        "species": "MLB"
+    },
+    {
+        "id": "clemero02",
+        "description": "Roger Clemens",
+        "species": "MLB"
+    },
+    {
+        "id": "clossjd01",
+        "description": "J.D. Closser",
+        "species": "MLB"
+    },
+    {
+        "id": "colbrgr01",
+        "description": "Greg Colbrunn",
+        "species": "MLB"
+    },
+    {
+        "id": "collilo01",
+        "description": "Lou Collier",
+        "species": "MLB"
+    },
+    {
+        "id": "colomje01",
+        "description": "Jesus Colome",
+        "species": "MLB"
+    },
+    {
+        "id": "colonba01",
+        "description": "Bartolo Colon",
+        "species": "MLB"
+    },
+    {
+        "id": "colonro01",
+        "description": "Roman Colon",
+        "species": "MLB"
+    },
+    {
+        "id": "colyest01",
+        "description": "Steve Colyer",
+        "species": "MLB"
+    },
+    {
+        "id": "coninje01",
+        "description": "Jeff Conine",
+        "species": "MLB"
+    },
+    {
+        "id": "contija01",
+        "description": "Jason Conti",
+        "species": "MLB"
+    },
+    {
+        "id": "contrjo01",
+        "description": "Jose Contreras",
+        "species": "MLB"
+    },
+    {
+        "id": "cookaa01",
+        "description": "Aaron Cook",
+        "species": "MLB"
+    },
+    {
+        "id": "coopebr01",
+        "description": "Brian Cooper",
+        "species": "MLB"
+    },
+    {
+        "id": "coraal01",
+        "description": "Alex Cora",
+        "species": "MLB"
+    },
+    {
+        "id": "corcoro01",
+        "description": "Roy Corcoran",
+        "species": "MLB"
+    },
+    {
+        "id": "cordech01",
+        "description": "Chad Cordero",
+        "species": "MLB"
+    },
+    {
+        "id": "cordefr01",
+        "description": "Francisco Cordero",
+        "species": "MLB"
+    },
+    {
+        "id": "cordewi01",
+        "description": "Wil Cordero",
+        "species": "MLB"
+    },
+    {
+        "id": "coreyma02",
+        "description": "Mark Corey",
+        "species": "MLB"
+    },
+    {
+        "id": "cormila01",
+        "description": "Lance Cormier",
+        "species": "MLB"
+    },
+    {
+        "id": "cormirh01",
+        "description": "Rheal Cormier",
+        "species": "MLB"
+    },
+    {
+        "id": "cornena01",
+        "description": "Nate Cornejo",
+        "species": "MLB"
+    },
+    {
+        "id": "correke01",
+        "description": "Kevin Correia",
+        "species": "MLB"
+    },
+    {
+        "id": "cotahu01",
+        "description": "Humberto Cota",
+        "species": "MLB"
+    },
+    {
+        "id": "cottsne01",
+        "description": "Neal Cotts",
+        "species": "MLB"
+    },
+    {
+        "id": "counscr01",
+        "description": "Craig Counsell",
+        "species": "MLB"
+    },
+    {
+        "id": "crainje01",
+        "description": "Jesse Crain",
+        "species": "MLB"
+    },
+    {
+        "id": "crawfca02",
+        "description": "Carl Crawford",
+        "species": "MLB"
+    },
+    {
+        "id": "credejo01",
+        "description": "Joe Crede",
+        "species": "MLB"
+    },
+    {
+        "id": "crespce01",
+        "description": "Cesar Crespo",
+        "species": "MLB"
+    },
+    {
+        "id": "cressja01",
+        "description": "Jack Cressend",
+        "species": "MLB"
+    },
+    {
+        "id": "crispco01",
+        "description": "Coco Crisp",
+        "species": "MLB"
+    },
+    {
+        "id": "crosbbo01",
+        "description": "Bobby Crosby",
+        "species": "MLB"
+    },
+    {
+        "id": "crosbbu01",
+        "description": "Bubba Crosby",
+        "species": "MLB"
+    },
+    {
+        "id": "croweji01",
+        "description": "Jim Crowell",
+        "species": "MLB"
+    },
+    {
+        "id": "crozier01",
+        "description": "Eric Crozier",
+        "species": "MLB"
+    },
+    {
+        "id": "crucefr01",
+        "description": "Francisco Cruceta",
+        "species": "MLB"
+    },
+    {
+        "id": "cruzde01",
+        "description": "Deivi Cruz",
+        "species": "MLB"
+    },
+    {
+        "id": "cruzja01",
+        "description": "Jacob Cruz",
+        "species": "MLB"
+    },
+    {
+        "id": "cruzjo02",
+        "description": "Jose Cruz Jr.",
+        "species": "MLB"
+    },
+    {
+        "id": "cruzju02",
+        "description": "Juan Cruz",
+        "species": "MLB"
+    },
+    {
+        "id": "cubilda01",
+        "description": "Darwin Cubillan",
+        "species": "MLB"
+    },
+    {
+        "id": "cuddymi01",
+        "description": "Mike Cuddyer",
+        "species": "MLB"
+    },
+    {
+        "id": "cummimi01",
+        "description": "Midre Cummings",
+        "species": "MLB"
+    },
+    {
+        "id": "cunnawi01",
+        "description": "Will Cunnane",
+        "species": "MLB"
+    },
+    {
+        "id": "custja01",
+        "description": "Jack Cust",
+        "species": "MLB"
+    },
+    {
+        "id": "daiglca01",
+        "description": "Casey Daigle",
+        "species": "MLB"
+    },
+    {
+        "id": "dallibr01",
+        "description": "Brian Dallimore",
+        "species": "MLB"
+    },
+    {
+        "id": "damicje01",
+        "description": "Jeff D'Amico",
+        "species": "MLB"
+    },
+    {
+        "id": "damonjo01",
+        "description": "Johnny Damon",
+        "species": "MLB"
+    },
+    {
+        "id": "darenvi01",
+        "description": "Vic Darensbourg",
+        "species": "MLB"
+    },
+    {
+        "id": "daubabr01",
+        "description": "Brian Daubach",
+        "species": "MLB"
+    },
+    {
+        "id": "davanje02",
+        "description": "Jeff Davanon",
+        "species": "MLB"
+    },
+    {
+        "id": "davisbe01",
+        "description": "Ben Davis",
+        "species": "MLB"
+    },
+    {
+        "id": "davisdo02",
+        "description": "Doug Davis",
+        "species": "MLB"
+    },
+    {
+        "id": "davisja02",
+        "description": "Jason Davis",
+        "species": "MLB"
+    },
+    {
+        "id": "davisjj01",
+        "description": "J.J. Davis",
+        "species": "MLB"
+    },
+    {
+        "id": "dawlejo01",
+        "description": "Joey Dawley",
+        "species": "MLB"
+    },
+    {
+        "id": "dayza01",
+        "description": "Zach Day",
+        "species": "MLB"
+    },
+    {
+        "id": "dejeami01",
+        "description": "Mike DeJean",
+        "species": "MLB"
+    },
+    {
+        "id": "dejesda01",
+        "description": "David DeJesus",
+        "species": "MLB"
+    },
+    {
+        "id": "delarjo01",
+        "description": "Jorge de la Rosa",
+        "species": "MLB"
+    },
+    {
+        "id": "delgaca01",
+        "description": "Carlos Delgado",
+        "species": "MLB"
+    },
+    {
+        "id": "delgawi01",
+        "description": "Wilson Delgado",
+        "species": "MLB"
+    },
+    {
+        "id": "delluda01",
+        "description": "David Dellucci",
+        "species": "MLB"
+    },
+    {
+        "id": "delosva01",
+        "description": "Valerio de los Santos",
+        "species": "MLB"
+    },
+    {
+        "id": "dempsry01",
+        "description": "Ryan Dempster",
+        "species": "MLB"
+    },
+    {
+        "id": "denneky01",
+        "description": "Kyle Denney",
+        "species": "MLB"
+    },
+    {
+        "id": "depaujo01",
+        "description": "Jorge DePaula",
+        "species": "MLB"
+    },
+    {
+        "id": "derosma01",
+        "description": "Mark DeRosa",
+        "species": "MLB"
+    },
+    {
+        "id": "desseel01",
+        "description": "Elmer Dessens",
+        "species": "MLB"
+    },
+    {
+        "id": "devordo01",
+        "description": "Doug DeVore",
+        "species": "MLB"
+    },
+    {
+        "id": "diazei01",
+        "description": "Einar Diaz",
+        "species": "MLB"
+    },
+    {
+        "id": "diazfe01",
+        "description": "Felix Diaz",
+        "species": "MLB"
+    },
+    {
+        "id": "diazma02",
+        "description": "Matt Diaz",
+        "species": "MLB"
+    },
+    {
+        "id": "diazvi01",
+        "description": "Victor Diaz",
+        "species": "MLB"
+    },
+    {
+        "id": "dickera01",
+        "description": "R.A. Dickey",
+        "species": "MLB"
+    },
+    {
+        "id": "difelmi01",
+        "description": "Mike Difelice",
+        "species": "MLB"
+    },
+    {
+        "id": "dinarle01",
+        "description": "Lenny DiNardo",
+        "species": "MLB"
+    },
+    {
+        "id": "dingmcr01",
+        "description": "Craig Dingman",
+        "species": "MLB"
+    },
+    {
+        "id": "dobbsgr01",
+        "description": "Greg Dobbs",
+        "species": "MLB"
+    },
+    {
+        "id": "dohmasc01",
+        "description": "Scott Dohmann",
+        "species": "MLB"
+    },
+    {
+        "id": "dominan01",
+        "description": "Andy Dominique",
+        "species": "MLB"
+    },
+    {
+        "id": "dominju01",
+        "description": "Juan Dominguez",
+        "species": "MLB"
+    },
+    {
+        "id": "donnebr01",
+        "description": "Brendan Donnelly",
+        "species": "MLB"
+    },
+    {
+        "id": "doteloc01",
+        "description": "Octavio Dotel",
+        "species": "MLB"
+    },
+    {
+        "id": "douglse01",
+        "description": "Sean Douglass",
+        "species": "MLB"
+    },
+    {
+        "id": "downssc01",
+        "description": "Scott Downs",
+        "species": "MLB"
+    },
+    {
+        "id": "dranske01",
+        "description": "Kelly Dransfeldt",
+        "species": "MLB"
+    },
+    {
+        "id": "dreifda01",
+        "description": "Darren Dreifort",
+        "species": "MLB"
+    },
+    {
+        "id": "dresery01",
+        "description": "Ryan Drese",
+        "species": "MLB"
+    },
+    {
+        "id": "drewjd01",
+        "description": "J.D. Drew",
+        "species": "MLB"
+    },
+    {
+        "id": "drewti01",
+        "description": "Tim Drew",
+        "species": "MLB"
+    },
+    {
+        "id": "drisktr01",
+        "description": "Travis Driskill",
+        "species": "MLB"
+    },
+    {
+        "id": "duboija01",
+        "description": "Jason Dubois",
+        "species": "MLB"
+    },
+    {
+        "id": "duboser01",
+        "description": "Eric DuBose",
+        "species": "MLB"
+    },
+    {
+        "id": "duchsju01",
+        "description": "Justin Duchscherer",
+        "species": "MLB"
+    },
+    {
+        "id": "duckwbr01",
+        "description": "Brandon Duckworth",
+        "species": "MLB"
+    },
+    {
+        "id": "duncaje01",
+        "description": "Jeff Duncan",
+        "species": "MLB"
+    },
+    {
+        "id": "dunnad01",
+        "description": "Adam Dunn",
+        "species": "MLB"
+    },
+    {
+        "id": "dunnsc01",
+        "description": "Scott Dunn",
+        "species": "MLB"
+    },
+    {
+        "id": "durazer01",
+        "description": "Erubiel Durazo",
+        "species": "MLB"
+    },
+    {
+        "id": "durbich01",
+        "description": "Chad Durbin",
+        "species": "MLB"
+    },
+    {
+        "id": "durbijd01",
+        "description": "J.D. Durbin",
+        "species": "MLB"
+    },
+    {
+        "id": "durhara01",
+        "description": "Ray Durham",
+        "species": "MLB"
+    },
+    {
+        "id": "durritr01",
+        "description": "Trent Durrington",
+        "species": "MLB"
+    },
+    {
+        "id": "dyeje01",
+        "description": "Jermaine Dye",
+        "species": "MLB"
+    },
+    {
+        "id": "easleda01",
+        "description": "Damion Easley",
+        "species": "MLB"
+    },
+    {
+        "id": "eatonad01",
+        "description": "Adam Eaton",
+        "species": "MLB"
+    },
+    {
+        "id": "eckstda01",
+        "description": "David Eckstein",
+        "species": "MLB"
+    },
+    {
+        "id": "edmonji01",
+        "description": "Jim Edmonds",
+        "species": "MLB"
+    },
+    {
+        "id": "eischjo01",
+        "description": "Joey Eischen",
+        "species": "MLB"
+    },
+    {
+        "id": "elartsc01",
+        "description": "Scott Elarton",
+        "species": "MLB"
+    },
+    {
+        "id": "eldreca01",
+        "description": "Cal Eldred",
+        "species": "MLB"
+    },
+    {
+        "id": "ellisja01",
+        "description": "Jason Ellison",
+        "species": "MLB"
+    },
+    {
+        "id": "embreal01",
+        "description": "Alan Embree",
+        "species": "MLB"
+    },
+    {
+        "id": "encarju01",
+        "description": "Juan Encarnacion",
+        "species": "MLB"
+    },
+    {
+        "id": "ennisjo01",
+        "description": "John Ennis",
+        "species": "MLB"
+    },
+    {
+        "id": "ensbemo01",
+        "description": "Morgan Ensberg",
+        "species": "MLB"
+    },
+    {
+        "id": "erickma01",
+        "description": "Matt Erickson",
+        "species": "MLB"
+    },
+    {
+        "id": "ericksc01",
+        "description": "Scott Erickson",
+        "species": "MLB"
+    },
+    {
+        "id": "erstada01",
+        "description": "Darin Erstad",
+        "species": "MLB"
+    },
+    {
+        "id": "escalfe01",
+        "description": "Felix Escalona",
+        "species": "MLB"
+    },
+    {
+        "id": "escobal01",
+        "description": "Alex Escobar",
+        "species": "MLB"
+    },
+    {
+        "id": "escobke01",
+        "description": "Kelvim Escobar",
+        "species": "MLB"
+    },
+    {
+        "id": "estalbo02",
+        "description": "Bobby Estalella",
+        "species": "MLB"
+    },
+    {
+        "id": "estessh01",
+        "description": "Shawn Estes",
+        "species": "MLB"
+    },
+    {
+        "id": "estrajo01",
+        "description": "Johnny Estrada",
+        "species": "MLB"
+    },
+    {
+        "id": "estrele01",
+        "description": "Leo Estrella",
+        "species": "MLB"
+    },
+    {
+        "id": "everead01",
+        "description": "Adam Everett",
+        "species": "MLB"
+    },
+    {
+        "id": "evereca01",
+        "description": "Carl Everett",
+        "species": "MLB"
+    },
+    {
+        "id": "eyresc01",
+        "description": "Scott Eyre",
+        "species": "MLB"
+    },
+    {
+        "id": "falkebr01",
+        "description": "Brian Falkenborg",
+        "species": "MLB"
+    },
+    {
+        "id": "farnsky01",
+        "description": "Kyle Farnsworth",
+        "species": "MLB"
+    },
+    {
+        "id": "fasseje01",
+        "description": "Jeff Fassero",
+        "species": "MLB"
+    },
+    {
+        "id": "felicpe01",
+        "description": "Pedro Feliciano",
+        "species": "MLB"
+    },
+    {
+        "id": "felizpe01",
+        "description": "Pedro Feliz",
+        "species": "MLB"
+    },
+    {
+        "id": "fernaja01",
+        "description": "Jared Fernandez",
+        "species": "MLB"
+    },
+    {
+        "id": "fettemi01",
+        "description": "Mike Fetters",
+        "species": "MLB"
+    },
+    {
+        "id": "fickro01",
+        "description": "Robert Fick",
+        "species": "MLB"
+    },
+    {
+        "id": "fieldna01",
+        "description": "Nate Field",
+        "species": "MLB"
+    },
+    {
+        "id": "figgich01",
+        "description": "Chone Figgins",
+        "species": "MLB"
+    },
+    {
+        "id": "figuene01",
+        "description": "Nelson Figueroa",
+        "species": "MLB"
+    },
+    {
+        "id": "fikacje01",
+        "description": "Jeremy Fikac",
+        "species": "MLB"
+    },
+    {
+        "id": "filebo01",
+        "description": "Bob File",
+        "species": "MLB"
+    },
+    {
+        "id": "finlest01",
+        "description": "Steve Finley",
+        "species": "MLB"
+    },
+    {
+        "id": "flahejo01",
+        "description": "John Flaherty",
+        "species": "MLB"
+    },
+    {
+        "id": "florejo01",
+        "description": "Jose Flores",
+        "species": "MLB"
+    },
+    {
+        "id": "florera01",
+        "description": "Randy Flores",
+        "species": "MLB"
+    },
+    {
+        "id": "floydcl01",
+        "description": "Cliff Floyd",
+        "species": "MLB"
+    },
+    {
+        "id": "floydga01",
+        "description": "Gavin Floyd",
+        "species": "MLB"
+    },
+    {
+        "id": "foggjo01",
+        "description": "Josh Fogg",
+        "species": "MLB"
+    },
+    {
+        "id": "foppeje01",
+        "description": "Jesse Foppert",
+        "species": "MLB"
+    },
+    {
+        "id": "fordbe01",
+        "description": "Ben Ford",
+        "species": "MLB"
+    },
+    {
+        "id": "fordle01",
+        "description": "Lew Ford",
+        "species": "MLB"
+    },
+    {
+        "id": "fordybr01",
+        "description": "Brook Fordyce",
+        "species": "MLB"
+    },
+    {
+        "id": "fortuba01",
+        "description": "Bartolome Fortunato",
+        "species": "MLB"
+    },
+    {
+        "id": "fossuca01",
+        "description": "Casey Fossum",
+        "species": "MLB"
+    },
+    {
+        "id": "foulkke01",
+        "description": "Keith Foulke",
+        "species": "MLB"
+    },
+    {
+        "id": "foxan01",
+        "description": "Andy Fox",
+        "species": "MLB"
+    },
+    {
+        "id": "foxch02",
+        "description": "Chad Fox",
+        "species": "MLB"
+    },
+    {
+        "id": "francfr01",
+        "description": "Frank Francisco",
+        "species": "MLB"
+    },
+    {
+        "id": "francje01",
+        "description": "Jeff Francis",
+        "species": "MLB"
+    },
+    {
+        "id": "francjo01",
+        "description": "John Franco",
+        "species": "MLB"
+    },
+    {
+        "id": "francju01",
+        "description": "Julio Franco",
+        "species": "MLB"
+    },
+    {
+        "id": "frankry01",
+        "description": "Ryan Franklin",
+        "species": "MLB"
+    },
+    {
+        "id": "frankwa01",
+        "description": "Wayne Franklin",
+        "species": "MLB"
+    },
+    {
+        "id": "frasoja01",
+        "description": "Jason Frasor",
+        "species": "MLB"
+    },
+    {
+        "id": "fredeke01",
+        "description": "Kevin Frederick",
+        "species": "MLB"
+    },
+    {
+        "id": "freelry01",
+        "description": "Ryan Freel",
+        "species": "MLB"
+    },
+    {
+        "id": "freemch01",
+        "description": "Choo Freeman",
+        "species": "MLB"
+    },
+    {
+        "id": "fuentbr01",
+        "description": "Brian Fuentes",
+        "species": "MLB"
+    },
+    {
+        "id": "fullmbr01",
+        "description": "Brad Fullmer",
+        "species": "MLB"
+    },
+    {
+        "id": "fultzaa01",
+        "description": "Aaron Fultz",
+        "species": "MLB"
+    },
+    {
+        "id": "furcara01",
+        "description": "Rafael Furcal",
+        "species": "MLB"
+    },
+    {
+        "id": "gagneer01",
+        "description": "Eric Gagne",
+        "species": "MLB"
+    },
+    {
+        "id": "galaran01",
+        "description": "Andres Galarraga",
+        "species": "MLB"
+    },
+    {
+        "id": "gallomi01",
+        "description": "Mike Gallo",
+        "species": "MLB"
+    },
+    {
+        "id": "garcida03",
+        "description": "Danny Garcia",
+        "species": "MLB"
+    },
+    {
+        "id": "garcifr02",
+        "description": "Freddy Garcia",
+        "species": "MLB"
+    },
+    {
+        "id": "garcija01",
+        "description": "Jairo Garcia",
+        "species": "MLB"
+    },
+    {
+        "id": "garcije01",
+        "description": "Jesse Garcia",
+        "species": "MLB"
+    },
+    {
+        "id": "garcika01",
+        "description": "Karim Garcia",
+        "species": "MLB"
+    },
+    {
+        "id": "garcino01",
+        "description": "Nomar Garciaparra",
+        "species": "MLB"
+    },
+    {
+        "id": "garciro01",
+        "description": "Rosman Garcia",
+        "species": "MLB"
+    },
+    {
+        "id": "garlajo01",
+        "description": "Jon Garland",
+        "species": "MLB"
+    },
+    {
+        "id": "gathrjo01",
+        "description": "Joey Gathright",
+        "species": "MLB"
+    },
+    {
+        "id": "gaudich01",
+        "description": "Chad Gaudin",
+        "species": "MLB"
+    },
+    {
+        "id": "gearyge01",
+        "description": "Geoff Geary",
+        "species": "MLB"
+    },
+    {
+        "id": "georgch02",
+        "description": "Chris George",
+        "species": "MLB"
+    },
+    {
+        "id": "germaes01",
+        "description": "Esteban German",
+        "species": "MLB"
+    },
+    {
+        "id": "germafr01",
+        "description": "Franklyn German",
+        "species": "MLB"
+    },
+    {
+        "id": "germaju01",
+        "description": "Justin Germano",
+        "species": "MLB"
+    },
+    {
+        "id": "gerutjo01",
+        "description": "Jody Gerut",
+        "species": "MLB"
+    },
+    {
+        "id": "gettiby01",
+        "description": "Byron Gettis",
+        "species": "MLB"
+    },
+    {
+        "id": "giambja01",
+        "description": "Jason Giambi",
+        "species": "MLB"
+    },
+    {
+        "id": "gibboja01",
+        "description": "Jay Gibbons",
+        "species": "MLB"
+    },
+    {
+        "id": "gilesbr02",
+        "description": "Brian Giles",
+        "species": "MLB"
+    },
+    {
+        "id": "gilesma01",
+        "description": "Marcus Giles",
+        "species": "MLB"
+    },
+    {
+        "id": "gilge01",
+        "description": "Geronimo Gil",
+        "species": "MLB"
+    },
+    {
+        "id": "gilje01",
+        "description": "Jerry Gil",
+        "species": "MLB"
+    },
+    {
+        "id": "ginteke01",
+        "description": "Keith Ginter",
+        "species": "MLB"
+    },
+    {
+        "id": "gintema01",
+        "description": "Matt Ginter",
+        "species": "MLB"
+    },
+    {
+        "id": "gipsoch01",
+        "description": "Charles Gipson",
+        "species": "MLB"
+    },
+    {
+        "id": "gissech01",
+        "description": "Chris Gissell",
+        "species": "MLB"
+    },
+    {
+        "id": "glanvdo01",
+        "description": "Doug Glanville",
+        "species": "MLB"
+    },
+    {
+        "id": "glaustr01",
+        "description": "Troy Glaus",
+        "species": "MLB"
+    },
+    {
+        "id": "glavito02",
+        "description": "Tom Glavine",
+        "species": "MLB"
+    },
+    {
+        "id": "gloadro01",
+        "description": "Ross Gload",
+        "species": "MLB"
+    },
+    {
+        "id": "glovega01",
+        "description": "Gary Glover",
+        "species": "MLB"
+    },
+    {
+        "id": "glynnry01",
+        "description": "Ryan Glynn",
+        "species": "MLB"
+    },
+    {
+        "id": "gobblji01",
+        "description": "Jimmy Gobble",
+        "species": "MLB"
+    },
+    {
+        "id": "gomesjo01",
+        "description": "Jonny Gomes",
+        "species": "MLB"
+    },
+    {
+        "id": "gomezal01",
+        "description": "Alexis Gomez",
+        "species": "MLB"
+    },
+    {
+        "id": "gomezch02",
+        "description": "Chris Gomez",
+        "species": "MLB"
+    },
+    {
+        "id": "gonzaad01",
+        "description": "Adrian Gonzalez",
+        "species": "MLB"
+    },
+    {
+        "id": "gonzaal01",
+        "description": "Alex Gonzalez",
+        "species": "MLB"
+    },
+    {
+        "id": "gonzaal02",
+        "description": "Alex Gonzalez",
+        "species": "MLB"
+    },
+    {
+        "id": "gonzadi01",
+        "description": "Dicky Gonzalez",
+        "species": "MLB"
+    },
+    {
+        "id": "gonzaed01",
+        "description": "Edgar Gonzalez",
+        "species": "MLB"
+    },
+    {
+        "id": "gonzaje01",
+        "description": "Jeremi Gonzalez",
+        "species": "MLB"
+    },
+    {
+        "id": "gonzaju03",
+        "description": "Juan Gonzalez",
+        "species": "MLB"
+    },
+    {
+        "id": "gonzalu01",
+        "description": "Luis Gonzalez",
+        "species": "MLB"
+    },
+    {
+        "id": "gonzalu02",
+        "description": "Luis A. Gonzalez",
+        "species": "MLB"
+    },
+    {
+        "id": "gonzami02",
+        "description": "Mike Gonzalez",
+        "species": "MLB"
+    },
+    {
+        "id": "gonzara01",
+        "description": "Raul Gonzalez",
+        "species": "MLB"
+    },
+    {
+        "id": "goodan01",
+        "description": "Andrew Good",
+        "species": "MLB"
+    },
+    {
+        "id": "goodwto01",
+        "description": "Tom Goodwin",
+        "species": "MLB"
+    },
+    {
+        "id": "gordoto01",
+        "description": "Tom Gordon",
+        "species": "MLB"
+    },
+    {
+        "id": "goslimi01",
+        "description": "Mike Gosling",
+        "species": "MLB"
+    },
+    {
+        "id": "gotayru01",
+        "description": "Ruben Gotay",
+        "species": "MLB"
+    },
+    {
+        "id": "graboja01",
+        "description": "Jason Grabowski",
+        "species": "MLB"
+    },
+    {
+        "id": "grabojo02",
+        "description": "John Grabow",
+        "species": "MLB"
+    },
+    {
+        "id": "gracefr01",
+        "description": "Franklyn Gracesqui",
+        "species": "MLB"
+    },
+    {
+        "id": "graffto01",
+        "description": "Tony Graffanino",
+        "species": "MLB"
+    },
+    {
+        "id": "gramaal01",
+        "description": "Alex Graman",
+        "species": "MLB"
+    },
+    {
+        "id": "grandcu01",
+        "description": "Curtis Granderson",
+        "species": "MLB"
+    },
+    {
+        "id": "graveda01",
+        "description": "Danny Graves",
+        "species": "MLB"
+    },
+    {
+        "id": "greenan01",
+        "description": "Andy Green",
+        "species": "MLB"
+    },
+    {
+        "id": "greenkh01",
+        "description": "Khalil Greene",
+        "species": "MLB"
+    },
+    {
+        "id": "greenni01",
+        "description": "Nick Green",
+        "species": "MLB"
+    },
+    {
+        "id": "greensh01",
+        "description": "Shawn Green",
+        "species": "MLB"
+    },
+    {
+        "id": "greento02",
+        "description": "Todd Greene",
+        "species": "MLB"
+    },
+    {
+        "id": "greggke01",
+        "description": "Kevin Gregg",
+        "species": "MLB"
+    },
+    {
+        "id": "greinza01",
+        "description": "Zack Greinke",
+        "species": "MLB"
+    },
+    {
+        "id": "greisse01",
+        "description": "Seth Greisinger",
+        "species": "MLB"
+    },
+    {
+        "id": "grievbe01",
+        "description": "Ben Grieve",
+        "species": "MLB"
+    },
+    {
+        "id": "griffje01",
+        "description": "Jeremy Griffiths",
+        "species": "MLB"
+    },
+    {
+        "id": "griffke02",
+        "description": "Ken Griffey Jr.",
+        "species": "MLB"
+    },
+    {
+        "id": "grillja01",
+        "description": "Jason Grilli",
+        "species": "MLB"
+    },
+    {
+        "id": "grimsja01",
+        "description": "Jason Grimsley",
+        "species": "MLB"
+    },
+    {
+        "id": "grissma02",
+        "description": "Marquis Grissom",
+        "species": "MLB"
+    },
+    {
+        "id": "groombu01",
+        "description": "Buddy Groom",
+        "species": "MLB"
+    },
+    {
+        "id": "grossga01",
+        "description": "Gabe Gross",
+        "species": "MLB"
+    },
+    {
+        "id": "grudzma01",
+        "description": "Mark Grudzielanek",
+        "species": "MLB"
+    },
+    {
+        "id": "gryboke01",
+        "description": "Kevin Gryboski",
+        "species": "MLB"
+    },
+    {
+        "id": "guarded01",
+        "description": "Eddie Guardado",
+        "species": "MLB"
+    },
+    {
+        "id": "guerrma02",
+        "description": "Matt Guerrier",
+        "species": "MLB"
+    },
+    {
+        "id": "guerrvl01",
+        "description": "Vladimir Guerrero",
+        "species": "MLB"
+    },
+    {
+        "id": "guerrwi01",
+        "description": "Wilton Guerrero",
+        "species": "MLB"
+    },
+    {
+        "id": "guielaa01",
+        "description": "Aaron Guiel",
+        "species": "MLB"
+    },
+    {
+        "id": "guillca01",
+        "description": "Carlos Guillen",
+        "species": "MLB"
+    },
+    {
+        "id": "guilljo01",
+        "description": "Jose Guillen",
+        "species": "MLB"
+    },
+    {
+        "id": "guthrje01",
+        "description": "Jeremy Guthrie",
+        "species": "MLB"
+    },
+    {
+        "id": "gutieri01",
+        "description": "Ricky Gutierrez",
+        "species": "MLB"
+    },
+    {
+        "id": "guzmacr01",
+        "description": "Cristian Guzman",
+        "species": "MLB"
+    },
+    {
+        "id": "guzmafr01",
+        "description": "Freddy Guzman",
+        "species": "MLB"
+    },
+    {
+        "id": "hafnetr01",
+        "description": "Travis Hafner",
+        "species": "MLB"
+    },
+    {
+        "id": "hairsje02",
+        "description": "Jerry Hairston",
+        "species": "MLB"
+    },
+    {
+        "id": "hairssc01",
+        "description": "Scott Hairston",
+        "species": "MLB"
+    },
+    {
+        "id": "halamjo01",
+        "description": "John Halama",
+        "species": "MLB"
+    },
+    {
+        "id": "hallaro01",
+        "description": "Roy Halladay",
+        "species": "MLB"
+    },
+    {
+        "id": "hallbi03",
+        "description": "Bill Hall",
+        "species": "MLB"
+    },
+    {
+        "id": "hallto02",
+        "description": "Toby Hall",
+        "species": "MLB"
+    },
+    {
+        "id": "halsebr01",
+        "description": "Brad Halsey",
+        "species": "MLB"
+    },
+    {
+        "id": "haltesh01",
+        "description": "Shane Halter",
+        "species": "MLB"
+    },
+    {
+        "id": "hammoch01",
+        "description": "Chris Hammond",
+        "species": "MLB"
+    },
+    {
+        "id": "hammoje01",
+        "description": "Jeffrey Hammonds",
+        "species": "MLB"
+    },
+    {
+        "id": "hammoro01",
+        "description": "Robby Hammock",
+        "species": "MLB"
+    },
+    {
+        "id": "hamptmi01",
+        "description": "Mike Hampton",
+        "species": "MLB"
+    },
+    {
+        "id": "hancojo01",
+        "description": "Josh Hancock",
+        "species": "MLB"
+    },
+    {
+        "id": "hanseda01",
+        "description": "Dave Hansen",
+        "species": "MLB"
+    },
+    {
+        "id": "haranaa01",
+        "description": "Aaron Harang",
+        "species": "MLB"
+    },
+    {
+        "id": "harderi01",
+        "description": "Rich Harden",
+        "species": "MLB"
+    },
+    {
+        "id": "harenda01",
+        "description": "Danny Haren",
+        "species": "MLB"
+    },
+    {
+        "id": "harikti01",
+        "description": "Tim Harikkala",
+        "species": "MLB"
+    },
+    {
+        "id": "harpetr01",
+        "description": "Travis Harper",
+        "species": "MLB"
+    },
+    {
+        "id": "harribr01",
+        "description": "Brendan Harris",
+        "species": "MLB"
+    },
+    {
+        "id": "harrile01",
+        "description": "Lenny Harris",
+        "species": "MLB"
+    },
+    {
+        "id": "harriwi01",
+        "description": "Willie Harris",
+        "species": "MLB"
+    },
+    {
+        "id": "hartbo01",
+        "description": "Bo Hart",
+        "species": "MLB"
+    },
+    {
+        "id": "hartco01",
+        "description": "Corey Hart",
+        "species": "MLB"
+    },
+    {
+        "id": "harveke01",
+        "description": "Ken Harvey",
+        "species": "MLB"
+    },
+    {
+        "id": "harvich01",
+        "description": "Chad Harville",
+        "species": "MLB"
+    },
+    {
+        "id": "hasegsh01",
+        "description": "Shigetoshi Hasegawa",
+        "species": "MLB"
+    },
+    {
+        "id": "hattesc01",
+        "description": "Scott Hatteberg",
+        "species": "MLB"
+    },
+    {
+        "id": "hawkila01",
+        "description": "La Troy Hawkins",
+        "species": "MLB"
+    },
+    {
+        "id": "hawpebr01",
+        "description": "Brad Hawpe",
+        "species": "MLB"
+    },
+    {
+        "id": "hayneji01",
+        "description": "Jimmy Haynes",
+        "species": "MLB"
+    },
+    {
+        "id": "heilmaa01",
+        "description": "Aaron Heilman",
+        "species": "MLB"
+    },
+    {
+        "id": "helmswe01",
+        "description": "Wes Helms",
+        "species": "MLB"
+    },
+    {
+        "id": "heltoto01",
+        "description": "Todd Helton",
+        "species": "MLB"
+    },
+    {
+        "id": "hendrbe01",
+        "description": "Ben Hendrickson",
+        "species": "MLB"
+    },
+    {
+        "id": "hendrma01",
+        "description": "Mark Hendrickson",
+        "species": "MLB"
+    },
+    {
+        "id": "hennebr01",
+        "description": "Brad Hennessey",
+        "species": "MLB"
+    },
+    {
+        "id": "henslma01",
+        "description": "Matt Hensley",
+        "species": "MLB"
+    },
+    {
+        "id": "hentgpa01",
+        "description": "Pat Hentgen",
+        "species": "MLB"
+    },
+    {
+        "id": "heredfe01",
+        "description": "Felix Heredia",
+        "species": "MLB"
+    },
+    {
+        "id": "hergema01",
+        "description": "Matt Herges",
+        "species": "MLB"
+    },
+    {
+        "id": "hermach01",
+        "description": "Chad Hermansen",
+        "species": "MLB"
+    },
+    {
+        "id": "hermadu01",
+        "description": "Dustin Hermanson",
+        "species": "MLB"
+    },
+    {
+        "id": "hernaad01",
+        "description": "Adrian Hernandez",
+        "species": "MLB"
+    },
+    {
+        "id": "hernaca03",
+        "description": "Carlos Hernandez",
+        "species": "MLB"
+    },
+    {
+        "id": "hernajo01",
+        "description": "Jose Hernandez",
+        "species": "MLB"
+    },
+    {
+        "id": "hernali01",
+        "description": "Livan Hernandez",
+        "species": "MLB"
+    },
+    {
+        "id": "hernaor01",
+        "description": "Orlando Hernandez",
+        "species": "MLB"
+    },
+    {
+        "id": "hernara02",
+        "description": "Ramon Hernandez",
+        "species": "MLB"
+    },
+    {
+        "id": "hernaro01",
+        "description": "Roberto Hernandez",
+        "species": "MLB"
+    },
+    {
+        "id": "hessmmi01",
+        "description": "Mike Hessman",
+        "species": "MLB"
+    },
+    {
+        "id": "hidalri01",
+        "description": "Richard Hidalgo",
+        "species": "MLB"
+    },
+    {
+        "id": "hietpjo01",
+        "description": "Joe Hietpas",
+        "species": "MLB"
+    },
+    {
+        "id": "higgibo02",
+        "description": "Bobby Higginson",
+        "species": "MLB"
+    },
+    {
+        "id": "hillbo01",
+        "description": "Bobby Hill",
+        "species": "MLB"
+    },
+    {
+        "id": "hillesh02",
+        "description": "Shea Hillenbrand",
+        "species": "MLB"
+    },
+    {
+        "id": "hillko01",
+        "description": "Koyie Hill",
+        "species": "MLB"
+    },
+    {
+        "id": "hillsh01",
+        "description": "Shawn Hill",
+        "species": "MLB"
+    },
+    {
+        "id": "hinchaj01",
+        "description": "A.J. Hinch",
+        "species": "MLB"
+    },
+    {
+        "id": "hinsker01",
+        "description": "Eric Hinske",
+        "species": "MLB"
+    },
+    {
+        "id": "hitchst01",
+        "description": "Sterling Hitchcock",
+        "species": "MLB"
+    },
+    {
+        "id": "hockide01",
+        "description": "Dennis Hocking",
+        "species": "MLB"
+    },
+    {
+        "id": "hoffmtr01",
+        "description": "Trevor Hoffman",
+        "species": "MLB"
+    },
+    {
+        "id": "hollato01",
+        "description": "Todd Hollandsworth",
+        "species": "MLB"
+    },
+    {
+        "id": "hollida02",
+        "description": "Damon Hollins",
+        "species": "MLB"
+    },
+    {
+        "id": "hollima01",
+        "description": "Matt Holliday",
+        "species": "MLB"
+    },
+    {
+        "id": "horgajo01",
+        "description": "Joe Horgan",
+        "species": "MLB"
+    },
+    {
+        "id": "housejr01",
+        "description": "J.R. House",
+        "species": "MLB"
+    },
+    {
+        "id": "howarbe01",
+        "description": "Ben Howard",
+        "species": "MLB"
+    },
+    {
+        "id": "howarry01",
+        "description": "Ryan Howard",
+        "species": "MLB"
+    },
+    {
+        "id": "howrybo01",
+        "description": "Bobby Howry",
+        "species": "MLB"
+    },
+    {
+        "id": "huckake01",
+        "description": "Ken Huckaby",
+        "species": "MLB"
+    },
+    {
+        "id": "hudsolu01",
+        "description": "Luke Hudson",
+        "species": "MLB"
+    },
+    {
+        "id": "hudsoor01",
+        "description": "Orlando Hudson",
+        "species": "MLB"
+    },
+    {
+        "id": "hudsoti01",
+        "description": "Tim Hudson",
+        "species": "MLB"
+    },
+    {
+        "id": "huffau01",
+        "description": "Aubrey Huff",
+        "species": "MLB"
+    },
+    {
+        "id": "hughetr01",
+        "description": "Travis Hughes",
+        "species": "MLB"
+    },
+    {
+        "id": "huismju01",
+        "description": "Justin Huisman",
+        "species": "MLB"
+    },
+    {
+        "id": "hummeti01",
+        "description": "Tim Hummel",
+        "species": "MLB"
+    },
+    {
+        "id": "hunteto01",
+        "description": "Torii Hunter",
+        "species": "MLB"
+    },
+    {
+        "id": "hyzduad01",
+        "description": "Adam Hyzdu",
+        "species": "MLB"
+    },
+    {
+        "id": "ibanera01",
+        "description": "Raul Ibanez",
+        "species": "MLB"
+    },
+    {
+        "id": "infanom01",
+        "description": "Omar Infante",
+        "species": "MLB"
+    },
+    {
+        "id": "ingebr01",
+        "description": "Brandon Inge",
+        "species": "MLB"
+    },
+    {
+        "id": "ishiika01",
+        "description": "Kazuhisa Ishii",
+        "species": "MLB"
+    },
+    {
+        "id": "isrinja01",
+        "description": "Jason Isringhausen",
+        "species": "MLB"
+    },
+    {
+        "id": "izturce01",
+        "description": "Cesar Izturis",
+        "species": "MLB"
+    },
+    {
+        "id": "izturma01",
+        "description": "Maicer Izturis",
+        "species": "MLB"
+    },
+    {
+        "id": "jacksda04",
+        "description": "Damian Jackson",
+        "species": "MLB"
+    },
+    {
+        "id": "jacksed01",
+        "description": "Edwin Jackson",
+        "species": "MLB"
+    },
+    {
+        "id": "jacksmi02",
+        "description": "Mike Jackson",
+        "species": "MLB"
+    },
+    {
+        "id": "jacobbu02",
+        "description": "Bucky Jacobsen",
+        "species": "MLB"
+    },
+    {
+        "id": "jarvike01",
+        "description": "Kevin Jarvis",
+        "species": "MLB"
+    },
+    {
+        "id": "jenkige01",
+        "description": "Geoff Jenkins",
+        "species": "MLB"
+    },
+    {
+        "id": "jennija01",
+        "description": "Jason Jennings",
+        "species": "MLB"
+    },
+    {
+        "id": "jeterde01",
+        "description": "Derek Jeter",
+        "species": "MLB"
+    },
+    {
+        "id": "jimenda01",
+        "description": "D'Angelo Jimenez",
+        "species": "MLB"
+    },
+    {
+        "id": "jimenjo01",
+        "description": "Jose Jimenez",
+        "species": "MLB"
+    },
+    {
+        "id": "johnsch04",
+        "description": "Charles Johnson",
+        "species": "MLB"
+    },
+    {
+        "id": "johnsja02",
+        "description": "Jason Johnson",
+        "species": "MLB"
+    },
+    {
+        "id": "johnsma02",
+        "description": "Mark L. Johnson",
+        "species": "MLB"
+    },
+    {
+        "id": "johnsmi03",
+        "description": "Mike Johnston",
+        "species": "MLB"
+    },
+    {
+        "id": "johnsni01",
+        "description": "Nick Johnson",
+        "species": "MLB"
+    },
+    {
+        "id": "johnsra05",
+        "description": "Randy Johnson",
+        "species": "MLB"
+    },
+    {
+        "id": "johnsre02",
+        "description": "Reed Johnson",
+        "species": "MLB"
+    },
+    {
+        "id": "jonesan01",
+        "description": "Andruw Jones",
+        "species": "MLB"
+    },
+    {
+        "id": "jonesbo04",
+        "description": "Bobby Jones",
+        "species": "MLB"
+    },
+    {
+        "id": "jonesch06",
+        "description": "Chipper Jones",
+        "species": "MLB"
+    },
+    {
+        "id": "jonesja04",
+        "description": "Jacque Jones",
+        "species": "MLB"
+    },
+    {
+        "id": "jonesja05",
+        "description": "Jason Jones",
+        "species": "MLB"
+    },
+    {
+        "id": "jonesto02",
+        "description": "Todd Jones",
+        "species": "MLB"
+    },
+    {
+        "id": "jordabr01",
+        "description": "Brian Jordan",
+        "species": "MLB"
+    },
+    {
+        "id": "juliojo01",
+        "description": "Jorge Julio",
+        "species": "MLB"
+    },
+    {
+        "id": "kaplega01",
+        "description": "Gabe Kapler",
+        "species": "MLB"
+    },
+    {
+        "id": "karroer01",
+        "description": "Eric Karros",
+        "species": "MLB"
+    },
+    {
+        "id": "karsast01",
+        "description": "Steve Karsay",
+        "species": "MLB"
+    },
+    {
+        "id": "katama01",
+        "description": "Matt Kata",
+        "species": "MLB"
+    },
+    {
+        "id": "kazmisc01",
+        "description": "Scott Kazmir",
+        "species": "MLB"
+    },
+    {
+        "id": "kearnau01",
+        "description": "Austin Kearns",
+        "species": "MLB"
+    },
+    {
+        "id": "keltoda01",
+        "description": "David Kelton",
+        "species": "MLB"
+    },
+    {
+        "id": "kendaja01",
+        "description": "Jason Kendall",
+        "species": "MLB"
+    },
+    {
+        "id": "kennead01",
+        "description": "Adam Kennedy",
+        "species": "MLB"
+    },
+    {
+        "id": "kennejo04",
+        "description": "Joe Kennedy",
+        "species": "MLB"
+    },
+    {
+        "id": "kensilo01",
+        "description": "Logan Kensing",
+        "species": "MLB"
+    },
+    {
+        "id": "kentje01",
+        "description": "Jeff Kent",
+        "species": "MLB"
+    },
+    {
+        "id": "keppije01",
+        "description": "Jeff Keppinger",
+        "species": "MLB"
+    },
+    {
+        "id": "kershja01",
+        "description": "Jason Kershner",
+        "species": "MLB"
+    },
+    {
+        "id": "kidama01",
+        "description": "Masao Kida",
+        "species": "MLB"
+    },
+    {
+        "id": "kieltbo01",
+        "description": "Bobby Kielty",
+        "species": "MLB"
+    },
+    {
+        "id": "kiescbr01",
+        "description": "Brooks Kieschnick",
+        "species": "MLB"
+    },
+    {
+        "id": "kimby01",
+        "description": "Byung-Hyun Kim",
+        "species": "MLB"
+    },
+    {
+        "id": "kimsu01",
+        "description": "Sun-Woo Kim",
+        "species": "MLB"
+    },
+    {
+        "id": "kingra01",
+        "description": "Ray King",
+        "species": "MLB"
+    },
+    {
+        "id": "kinnema01",
+        "description": "Matt Kinney",
+        "species": "MLB"
+    },
+    {
+        "id": "kleskry01",
+        "description": "Ryan Klesko",
+        "species": "MLB"
+    },
+    {
+        "id": "klinest02",
+        "description": "Steve Kline",
+        "species": "MLB"
+    },
+    {
+        "id": "knoedju01",
+        "description": "Justin Knoedler",
+        "species": "MLB"
+    },
+    {
+        "id": "knottga01",
+        "description": "Gary Knotts",
+        "species": "MLB"
+    },
+    {
+        "id": "knottjo02",
+        "description": "Jon Knott",
+        "species": "MLB"
+    },
+    {
+        "id": "kochbi01",
+        "description": "Billy Koch",
+        "species": "MLB"
+    },
+    {
+        "id": "kolbda01",
+        "description": "Danny Kolb",
+        "species": "MLB"
+    },
+    {
+        "id": "konerpa01",
+        "description": "Paul Konerko",
+        "species": "MLB"
+    },
+    {
+        "id": "koplomi01",
+        "description": "Mike Koplove",
+        "species": "MLB"
+    },
+    {
+        "id": "koskico01",
+        "description": "Corey Koskie",
+        "species": "MLB"
+    },
+    {
+        "id": "kotchca01",
+        "description": "Casey Kotchman",
+        "species": "MLB"
+    },
+    {
+        "id": "kotsama01",
+        "description": "Mark Kotsay",
+        "species": "MLB"
+    },
+    {
+        "id": "kroegjo01",
+        "description": "Josh Kroeger",
+        "species": "MLB"
+    },
+    {
+        "id": "kroonma01",
+        "description": "Marc Kroon",
+        "species": "MLB"
+    },
+    {
+        "id": "krynzda01",
+        "description": "Dave Krynzel",
+        "species": "MLB"
+    },
+    {
+        "id": "kubelja01",
+        "description": "Jason Kubel",
+        "species": "MLB"
+    },
+    {
+        "id": "labanjo01",
+        "description": "Josh Labandeira",
+        "species": "MLB"
+    },
+    {
+        "id": "lackejo01",
+        "description": "John Lackey",
+        "species": "MLB"
+    },
+    {
+        "id": "lairdge01",
+        "description": "Gerald Laird",
+        "species": "MLB"
+    },
+    {
+        "id": "lakerti01",
+        "description": "Tim Laker",
+        "species": "MLB"
+    },
+    {
+        "id": "lambmi01",
+        "description": "Mike Lamb",
+        "species": "MLB"
+    },
+    {
+        "id": "laneja01",
+        "description": "Jason Lane",
+        "species": "MLB"
+    },
+    {
+        "id": "lankfra01",
+        "description": "Ray Lankford",
+        "species": "MLB"
+    },
+    {
+        "id": "larkiba01",
+        "description": "Barry Larkin",
+        "species": "MLB"
+    },
+    {
+        "id": "larocad01",
+        "description": "Adam LaRoche",
+        "species": "MLB"
+    },
+    {
+        "id": "larsobr01",
+        "description": "Brandon Larson",
+        "species": "MLB"
+    },
+    {
+        "id": "larueja01",
+        "description": "Jason LaRue",
+        "species": "MLB"
+    },
+    {
+        "id": "lawrebr02",
+        "description": "Brian Lawrence",
+        "species": "MLB"
+    },
+    {
+        "id": "lawtoma02",
+        "description": "Matt Lawton",
+        "species": "MLB"
+    },
+    {
+        "id": "leagubr01",
+        "description": "Brandon League",
+        "species": "MLB"
+    },
+    {
+        "id": "lecroma01",
+        "description": "Matt LeCroy",
+        "species": "MLB"
+    },
+    {
+        "id": "ledeeri01",
+        "description": "Ricky Ledee",
+        "species": "MLB"
+    },
+    {
+        "id": "ledezwi01",
+        "description": "Wilfredo Ledezma",
+        "species": "MLB"
+    },
+    {
+        "id": "leeca01",
+        "description": "Carlos Lee",
+        "species": "MLB"
+    },
+    {
+        "id": "leecl02",
+        "description": "Cliff Lee",
+        "species": "MLB"
+    },
+    {
+        "id": "leeda01",
+        "description": "David Lee",
+        "species": "MLB"
+    },
+    {
+        "id": "leede02",
+        "description": "Derrek Lee",
+        "species": "MLB"
+    },
+    {
+        "id": "leetr01",
+        "description": "Travis Lee",
+        "species": "MLB"
+    },
+    {
+        "id": "lehrju01",
+        "description": "Justin Lehr",
+        "species": "MLB"
+    },
+    {
+        "id": "leicejo01",
+        "description": "Jon Leicester",
+        "species": "MLB"
+    },
+    {
+        "id": "leiteal01",
+        "description": "Al Leiter",
+        "species": "MLB"
+    },
+    {
+        "id": "leoneju01",
+        "description": "Justin Leone",
+        "species": "MLB"
+    },
+    {
+        "id": "leonjo01",
+        "description": "Jose Leon",
+        "species": "MLB"
+    },
+    {
+        "id": "leskacu01",
+        "description": "Curt Leskanic",
+        "species": "MLB"
+    },
+    {
+        "id": "levinal01",
+        "description": "Alan Levine",
+        "species": "MLB"
+    },
+    {
+        "id": "lewisco01",
+        "description": "Colby Lewis",
+        "species": "MLB"
+    },
+    {
+        "id": "lidgebr01",
+        "description": "Brad Lidge",
+        "species": "MLB"
+    },
+    {
+        "id": "lidleco01",
+        "description": "Cory Lidle",
+        "species": "MLB"
+    },
+    {
+        "id": "liebejo01",
+        "description": "Jon Lieber",
+        "species": "MLB"
+    },
+    {
+        "id": "liebemi01",
+        "description": "Mike Lieberthal",
+        "species": "MLB"
+    },
+    {
+        "id": "liefeje01",
+        "description": "Jeff Liefer",
+        "species": "MLB"
+    },
+    {
+        "id": "ligteke01",
+        "description": "Kerry Ligtenberg",
+        "species": "MLB"
+    },
+    {
+        "id": "lillyte01",
+        "description": "Ted Lilly",
+        "species": "MLB"
+    },
+    {
+        "id": "limajo01",
+        "description": "Jose Lima",
+        "species": "MLB"
+    },
+    {
+        "id": "lincomi01",
+        "description": "Mike Lincoln",
+        "species": "MLB"
+    },
+    {
+        "id": "lindeto01",
+        "description": "Todd Linden",
+        "species": "MLB"
+    },
+    {
+        "id": "linebsc01",
+        "description": "Scott Linebrink",
+        "species": "MLB"
+    },
+    {
+        "id": "liriape01",
+        "description": "Pedro Liriano",
+        "species": "MLB"
+    },
+    {
+        "id": "littlma01",
+        "description": "Mark Little",
+        "species": "MLB"
+    },
+    {
+        "id": "loaizes01",
+        "description": "Esteban Loaiza",
+        "species": "MLB"
+    },
+    {
+        "id": "loducpa01",
+        "description": "Paul Lo Duca",
+        "species": "MLB"
+    },
+    {
+        "id": "loeka01",
+        "description": "Kameron Loe",
+        "species": "MLB"
+    },
+    {
+        "id": "loftoke01",
+        "description": "Kenny Lofton",
+        "species": "MLB"
+    },
+    {
+        "id": "loganno01",
+        "description": "Nook Logan",
+        "species": "MLB"
+    },
+    {
+        "id": "lohseky01",
+        "description": "Kyle Lohse",
+        "species": "MLB"
+    },
+    {
+        "id": "longte01",
+        "description": "Terrence Long",
+        "species": "MLB"
+    },
+    {
+        "id": "loopebr01",
+        "description": "Braden Looper",
+        "species": "MLB"
+    },
+    {
+        "id": "lopezaq01",
+        "description": "Aquilino Lopez",
+        "species": "MLB"
+    },
+    {
+        "id": "lopezfe01",
+        "description": "Felipe Lopez",
+        "species": "MLB"
+    },
+    {
+        "id": "lopezja01",
+        "description": "Javy Lopez",
+        "species": "MLB"
+    },
+    {
+        "id": "lopezja02",
+        "description": "Javier Lopez",
+        "species": "MLB"
+    },
+    {
+        "id": "lopezjo01",
+        "description": "Jose Lopez",
+        "species": "MLB"
+    },
+    {
+        "id": "lopezlu02",
+        "description": "Luis Lopez",
+        "species": "MLB"
+    },
+    {
+        "id": "lopezlu03",
+        "description": "Luis Lopez",
+        "species": "MLB"
+    },
+    {
+        "id": "lopezme01",
+        "description": "Mendy Lopez",
+        "species": "MLB"
+    },
+    {
+        "id": "lopezmi01",
+        "description": "Mickey Lopez",
+        "species": "MLB"
+    },
+    {
+        "id": "lopezro01",
+        "description": "Rodrigo Lopez",
+        "species": "MLB"
+    },
+    {
+        "id": "loretma01",
+        "description": "Mark Loretta",
+        "species": "MLB"
+    },
+    {
+        "id": "lowede01",
+        "description": "Derek Lowe",
+        "species": "MLB"
+    },
+    {
+        "id": "lowelmi01",
+        "description": "Mike Lowell",
+        "species": "MLB"
+    },
+    {
+        "id": "lowryno01",
+        "description": "Noah Lowry",
+        "species": "MLB"
+    },
+    {
+        "id": "ludwiry01",
+        "description": "Ryan Ludwick",
+        "species": "MLB"
+    },
+    {
+        "id": "lugoju01",
+        "description": "Julio Lugo",
+        "species": "MLB"
+    },
+    {
+        "id": "lunahe01",
+        "description": "Hector Luna",
+        "species": "MLB"
+    },
+    {
+        "id": "mabryjo01",
+        "description": "John Mabry",
+        "species": "MLB"
+    },
+    {
+        "id": "macdomi01",
+        "description": "Mike MacDougal",
+        "species": "MLB"
+    },
+    {
+        "id": "machaan01",
+        "description": "Andy Machado",
+        "species": "MLB"
+    },
+    {
+        "id": "macharo01",
+        "description": "Robert Machado",
+        "species": "MLB"
+    },
+    {
+        "id": "maciajo01",
+        "description": "Jose Macias",
+        "species": "MLB"
+    },
+    {
+        "id": "mackoro01",
+        "description": "Rob Mackowiak",
+        "species": "MLB"
+    },
+    {
+        "id": "maddugr01",
+        "description": "Greg Maddux",
+        "species": "MLB"
+    },
+    {
+        "id": "madribo01",
+        "description": "Bobby Madritsch",
+        "species": "MLB"
+    },
+    {
+        "id": "madsory01",
+        "description": "Ryan Madson",
+        "species": "MLB"
+    },
+    {
+        "id": "magruch01",
+        "description": "Chris Magruder",
+        "species": "MLB"
+    },
+    {
+        "id": "mahayro01",
+        "description": "Ron Mahay",
+        "species": "MLB"
+    },
+    {
+        "id": "mainejo01",
+        "description": "John Maine",
+        "species": "MLB"
+    },
+    {
+        "id": "majewga01",
+        "description": "Gary Majewski",
+        "species": "MLB"
+    },
+    {
+        "id": "majewva01",
+        "description": "Val Majewski",
+        "species": "MLB"
+    },
+    {
+        "id": "malasma01",
+        "description": "Mark Malaska",
+        "species": "MLB"
+    },
+    {
+        "id": "mantema01",
+        "description": "Matt Mantei",
+        "species": "MLB"
+    },
+    {
+        "id": "manzajo01",
+        "description": "Josias Manzanillo",
+        "species": "MLB"
+    },
+    {
+        "id": "marotmi01",
+        "description": "Mike Maroth",
+        "species": "MLB"
+    },
+    {
+        "id": "marquja01",
+        "description": "Jason Marquis",
+        "species": "MLB"
+    },
+    {
+        "id": "marreel01",
+        "description": "Eli Marrero",
+        "species": "MLB"
+    },
+    {
+        "id": "marsosa01",
+        "description": "Sam Marsonek",
+        "species": "MLB"
+    },
+    {
+        "id": "marteda01",
+        "description": "Damaso Marte",
+        "species": "MLB"
+    },
+    {
+        "id": "martian01",
+        "description": "Anastacio Martinez",
+        "species": "MLB"
+    },
+    {
+        "id": "martied01",
+        "description": "Edgar Martinez",
+        "species": "MLB"
+    },
+    {
+        "id": "martipe02",
+        "description": "Pedro Martinez",
+        "species": "MLB"
+    },
+    {
+        "id": "martira03",
+        "description": "Ramon Martinez",
+        "species": "MLB"
+    },
+    {
+        "id": "martisa01",
+        "description": "Sandy Martinez",
+        "species": "MLB"
+    },
+    {
+        "id": "martiti02",
+        "description": "Tino Martinez",
+        "species": "MLB"
+    },
+    {
+        "id": "martito02",
+        "description": "Tom Martin",
+        "species": "MLB"
+    },
+    {
+        "id": "martivi01",
+        "description": "Victor Martinez",
+        "species": "MLB"
+    },
+    {
+        "id": "mateohe01",
+        "description": "Henry Mateo",
+        "species": "MLB"
+    },
+    {
+        "id": "mateoju01",
+        "description": "Julio Mateo",
+        "species": "MLB"
+    },
+    {
+        "id": "mateoru01",
+        "description": "Ruben Mateo",
+        "species": "MLB"
+    },
+    {
+        "id": "mathemi01",
+        "description": "Mike Matheny",
+        "species": "MLB"
+    },
+    {
+        "id": "matoslu01",
+        "description": "Luis Matos",
+        "species": "MLB"
+    },
+    {
+        "id": "matsuhi01",
+        "description": "Hideki Matsui",
+        "species": "MLB"
+    },
+    {
+        "id": "matsuka01",
+        "description": "Kazuo Matsui",
+        "species": "MLB"
+    },
+    {
+        "id": "matthga02",
+        "description": "Gary Matthews",
+        "species": "MLB"
+    },
+    {
+        "id": "matthmi01",
+        "description": "Mike Matthews",
+        "species": "MLB"
+    },
+    {
+        "id": "mauerjo01",
+        "description": "Joe Mauer",
+        "species": "MLB"
+    },
+    {
+        "id": "maureda01",
+        "description": "Dave Maurer",
+        "species": "MLB"
+    },
+    {
+        "id": "mayda02",
+        "description": "Darrell May",
+        "species": "MLB"
+    },
+    {
+        "id": "maynebr01",
+        "description": "Brent Mayne",
+        "species": "MLB"
+    },
+    {
+        "id": "mccarda01",
+        "description": "David McCarty",
+        "species": "MLB"
+    },
+    {
+        "id": "mcconsa02",
+        "description": "Sam McConnell",
+        "species": "MLB"
+    },
+    {
+        "id": "mccraqu01",
+        "description": "Quinton McCracken",
+        "species": "MLB"
+    },
+    {
+        "id": "mcdonda02",
+        "description": "Darnell McDonald",
+        "species": "MLB"
+    },
+    {
+        "id": "mcdonjo03",
+        "description": "John McDonald",
+        "species": "MLB"
+    },
+    {
+        "id": "mcewijo01",
+        "description": "Joe McEwing",
+        "species": "MLB"
+    },
+    {
+        "id": "mcgrifr01",
+        "description": "Fred McGriff",
+        "species": "MLB"
+    },
+    {
+        "id": "mckayco01",
+        "description": "Cody McKay",
+        "species": "MLB"
+    },
+    {
+        "id": "mcleama01",
+        "description": "Marty McLeary",
+        "species": "MLB"
+    },
+    {
+        "id": "mclemma01",
+        "description": "Mark McLemore",
+        "species": "MLB"
+    },
+    {
+        "id": "mcmilbi01",
+        "description": "Billy McMillon",
+        "species": "MLB"
+    },
+    {
+        "id": "mcpheda01",
+        "description": "Dallas McPherson",
+        "species": "MLB"
+    },
+    {
+        "id": "meadobr01",
+        "description": "Brian Meadows",
+        "species": "MLB"
+    },
+    {
+        "id": "mechegi01",
+        "description": "Gil Meche",
+        "species": "MLB"
+    },
+    {
+        "id": "mecirji01",
+        "description": "Jim Mecir",
+        "species": "MLB"
+    },
+    {
+        "id": "melhuad01",
+        "description": "Adam Melhuse",
+        "species": "MLB"
+    },
+    {
+        "id": "menchke01",
+        "description": "Kevin Mench",
+        "species": "MLB"
+    },
+    {
+        "id": "mendora01",
+        "description": "Ramiro Mendoza",
+        "species": "MLB"
+    },
+    {
+        "id": "menecfr01",
+        "description": "Frank Menechino",
+        "species": "MLB"
+    },
+    {
+        "id": "merckke01",
+        "description": "Kent Mercker",
+        "species": "MLB"
+    },
+    {
+        "id": "merlolo01",
+        "description": "Lou Merloni",
+        "species": "MLB"
+    },
+    {
+        "id": "mesajo01",
+        "description": "Jose Mesa",
+        "species": "MLB"
+    },
+    {
+        "id": "meyerda02",
+        "description": "Dan Meyer",
+        "species": "MLB"
+    },
+    {
+        "id": "micelda01",
+        "description": "Dan Miceli",
+        "species": "MLB"
+    },
+    {
+        "id": "michaja01",
+        "description": "Jason Michaels",
+        "species": "MLB"
+    },
+    {
+        "id": "mientdo01",
+        "description": "Doug Mientkiewicz",
+        "species": "MLB"
+    },
+    {
+        "id": "milesaa01",
+        "description": "Aaron Miles",
+        "species": "MLB"
+    },
+    {
+        "id": "millake01",
+        "description": "Kevin Millar",
+        "species": "MLB"
+    },
+    {
+        "id": "milleco01",
+        "description": "Corky Miller",
+        "species": "MLB"
+    },
+    {
+        "id": "milleda02",
+        "description": "Damian Miller",
+        "species": "MLB"
+    },
+    {
+        "id": "milleju01",
+        "description": "Justin Miller",
+        "species": "MLB"
+    },
+    {
+        "id": "millema02",
+        "description": "Matt Miller",
+        "species": "MLB"
+    },
+    {
+        "id": "milletr02",
+        "description": "Trever Miller",
+        "species": "MLB"
+    },
+    {
+        "id": "millewa04",
+        "description": "Wade Miller",
+        "species": "MLB"
+    },
+    {
+        "id": "millwke01",
+        "description": "Kevin Millwood",
+        "species": "MLB"
+    },
+    {
+        "id": "miltoer01",
+        "description": "Eric Milton",
+        "species": "MLB"
+    },
+    {
+        "id": "minorda01",
+        "description": "Damon Minor",
+        "species": "MLB"
+    },
+    {
+        "id": "mirabdo01",
+        "description": "Doug Mirabelli",
+        "species": "MLB"
+    },
+    {
+        "id": "mitrese01",
+        "description": "Sergio Mitre",
+        "species": "MLB"
+    },
+    {
+        "id": "moellch01",
+        "description": "Chad Moeller",
+        "species": "MLB"
+    },
+    {
+        "id": "mohrdu01",
+        "description": "Dustan Mohr",
+        "species": "MLB"
+    },
+    {
+        "id": "molinbe01",
+        "description": "Ben Molina",
+        "species": "MLB"
+    },
+    {
+        "id": "molinjo01",
+        "description": "Jose Molina",
+        "species": "MLB"
+    },
+    {
+        "id": "molinya01",
+        "description": "Yadier Molina",
+        "species": "MLB"
+    },
+    {
+        "id": "mondera01",
+        "description": "Raul Mondesi",
+        "species": "MLB"
+    },
+    {
+        "id": "monrocr01",
+        "description": "Craig Monroe",
+        "species": "MLB"
+    },
+    {
+        "id": "morame01",
+        "description": "Melvin Mora",
+        "species": "MLB"
+    },
+    {
+        "id": "mordemi01",
+        "description": "Mike Mordecai",
+        "species": "MLB"
+    },
+    {
+        "id": "morenor01",
+        "description": "Orber Moreno",
+        "species": "MLB"
+    },
+    {
+        "id": "morneju01",
+        "description": "Justin Morneau",
+        "species": "MLB"
+    },
+    {
+        "id": "morrima01",
+        "description": "Matt Morris",
+        "species": "MLB"
+    },
+    {
+        "id": "mossda01",
+        "description": "Damian Moss",
+        "species": "MLB"
+    },
+    {
+        "id": "motagu01",
+        "description": "Guillermo Mota",
+        "species": "MLB"
+    },
+    {
+        "id": "mottoch01",
+        "description": "Chad Mottola",
+        "species": "MLB"
+    },
+    {
+        "id": "moyerja01",
+        "description": "Jamie Moyer",
+        "species": "MLB"
+    },
+    {
+        "id": "muellbi02",
+        "description": "Bill Mueller",
+        "species": "MLB"
+    },
+    {
+        "id": "muldema01",
+        "description": "Mark Mulder",
+        "species": "MLB"
+    },
+    {
+        "id": "mulhote01",
+        "description": "Terry Mulholland",
+        "species": "MLB"
+    },
+    {
+        "id": "munozar01",
+        "description": "Arnie Munoz",
+        "species": "MLB"
+    },
+    {
+        "id": "munrope01",
+        "description": "Peter Munro",
+        "species": "MLB"
+    },
+    {
+        "id": "munsoer01",
+        "description": "Eric Munson",
+        "species": "MLB"
+    },
+    {
+        "id": "murphdo01",
+        "description": "Donnie Murphy",
+        "species": "MLB"
+    },
+    {
+        "id": "murraca01",
+        "description": "Calvin Murray",
+        "species": "MLB"
+    },
+    {
+        "id": "mussimi01",
+        "description": "Mike Mussina",
+        "species": "MLB"
+    },
+    {
+        "id": "myersbr01",
+        "description": "Brett Myers",
+        "species": "MLB"
+    },
+    {
+        "id": "myersgr01",
+        "description": "Greg Myers",
+        "species": "MLB"
+    },
+    {
+        "id": "myersmi01",
+        "description": "Mike Myers",
+        "species": "MLB"
+    },
+    {
+        "id": "myersro01",
+        "description": "Rodney Myers",
+        "species": "MLB"
+    },
+    {
+        "id": "myettaa01",
+        "description": "Aaron Myette",
+        "species": "MLB"
+    },
+    {
+        "id": "nadyxa01",
+        "description": "Xavier Nady",
+        "species": "MLB"
+    },
+    {
+        "id": "nageocl01",
+        "description": "Clint Nageotte",
+        "species": "MLB"
+    },
+    {
+        "id": "nakammi01",
+        "description": "Mike Nakamura",
+        "species": "MLB"
+    },
+    {
+        "id": "nancesh01",
+        "description": "Shane Nance",
+        "species": "MLB"
+    },
+    {
+        "id": "narrosa02",
+        "description": "Sam Narron",
+        "species": "MLB"
+    },
+    {
+        "id": "nathajo01",
+        "description": "Joe Nathan",
+        "species": "MLB"
+    },
+    {
+        "id": "navardi01",
+        "description": "Dioner Navarro",
+        "species": "MLB"
+    },
+    {
+        "id": "nealbl01",
+        "description": "Blaine Neal",
+        "species": "MLB"
+    },
+    {
+        "id": "nelsoje01",
+        "description": "Jeff Nelson",
+        "species": "MLB"
+    },
+    {
+        "id": "nelsojo01",
+        "description": "Joe Nelson",
+        "species": "MLB"
+    },
+    {
+        "id": "neumi01",
+        "description": "Mike Neu",
+        "species": "MLB"
+    },
+    {
+        "id": "nevinph01",
+        "description": "Phil Nevin",
+        "species": "MLB"
+    },
+    {
+        "id": "newhada01",
+        "description": "David Newhan",
+        "species": "MLB"
+    },
+    {
+        "id": "nitkocj01",
+        "description": "C.J. Nitkowski",
+        "species": "MLB"
+    },
+    {
+        "id": "nivarra01",
+        "description": "Ramon Nivar",
+        "species": "MLB"
+    },
+    {
+        "id": "nixla01",
+        "description": "Laynce Nix",
+        "species": "MLB"
+    },
+    {
+        "id": "nixontr01",
+        "description": "Trot Nixon",
+        "species": "MLB"
+    },
+    {
+        "id": "nomohi01",
+        "description": "Hideo Nomo",
+        "species": "MLB"
+    },
+    {
+        "id": "nortogr01",
+        "description": "Greg Norton",
+        "species": "MLB"
+    },
+    {
+        "id": "nortoph01",
+        "description": "Phil Norton",
+        "species": "MLB"
+    },
+    {
+        "id": "novoaro01",
+        "description": "Roberto Novoa",
+        "species": "MLB"
+    },
+    {
+        "id": "nunezab01",
+        "description": "Abraham Nunez",
+        "species": "MLB"
+    },
+    {
+        "id": "nunezab02",
+        "description": "Abraham Nunez",
+        "species": "MLB"
+    },
+    {
+        "id": "nunezfr01",
+        "description": "Franklin Nunez",
+        "species": "MLB"
+    },
+    {
+        "id": "nunezvl01",
+        "description": "Vladimir Nunez",
+        "species": "MLB"
+    },
+    {
+        "id": "obermwe01",
+        "description": "Wes Obermueller",
+        "species": "MLB"
+    },
+    {
+        "id": "offerjo01",
+        "description": "Jose Offerman",
+        "species": "MLB"
+    },
+    {
+        "id": "ohkato01",
+        "description": "Tomokazu Ohka",
+        "species": "MLB"
+    },
+    {
+        "id": "ojedaau01",
+        "description": "Augie Ojeda",
+        "species": "MLB"
+    },
+    {
+        "id": "ojedami01",
+        "description": "Miguel Ojeda",
+        "species": "MLB"
+    },
+    {
+        "id": "olerujo01",
+        "description": "John Olerud",
+        "species": "MLB"
+    },
+    {
+        "id": "oliveda02",
+        "description": "Darren Oliver",
+        "species": "MLB"
+    },
+    {
+        "id": "olivomi01",
+        "description": "Miguel Olivo",
+        "species": "MLB"
+    },
+    {
+        "id": "olmedra01",
+        "description": "Ray Olmedo",
+        "species": "MLB"
+    },
+    {
+        "id": "olsonti01",
+        "description": "Tim Olson",
+        "species": "MLB"
+    },
+    {
+        "id": "ordonma01",
+        "description": "Magglio Ordonez",
+        "species": "MLB"
+    },
+    {
+        "id": "ordonre01",
+        "description": "Rey Ordonez",
+        "species": "MLB"
+    },
+    {
+        "id": "oropeed01",
+        "description": "Eddie Oropesa",
+        "species": "MLB"
+    },
+    {
+        "id": "ortizda01",
+        "description": "David Ortiz",
+        "species": "MLB"
+    },
+    {
+        "id": "ortizra01",
+        "description": "Ramon Ortiz",
+        "species": "MLB"
+    },
+    {
+        "id": "ortizru01",
+        "description": "Russ Ortiz",
+        "species": "MLB"
+    },
+    {
+        "id": "osbordo01",
+        "description": "Donovan Osborne",
+        "species": "MLB"
+    },
+    {
+        "id": "osikke01",
+        "description": "Keith Osik",
+        "species": "MLB"
+    },
+    {
+        "id": "osunaan01",
+        "description": "Antonio Osuna",
+        "species": "MLB"
+    },
+    {
+        "id": "oswalro01",
+        "description": "Roy Oswalt",
+        "species": "MLB"
+    },
+    {
+        "id": "otsukak01",
+        "description": "Akinori Otsuka",
+        "species": "MLB"
+    },
+    {
+        "id": "overbly01",
+        "description": "Lyle Overbay",
+        "species": "MLB"
+    },
+    {
+        "id": "padilju01",
+        "description": "Juan Padilla",
+        "species": "MLB"
+    },
+    {
+        "id": "padilvi01",
+        "description": "Vicente Padilla",
+        "species": "MLB"
+    },
+    {
+        "id": "palmeor01",
+        "description": "Orlando Palmeiro",
+        "species": "MLB"
+    },
+    {
+        "id": "palmera01",
+        "description": "Rafael Palmeiro",
+        "species": "MLB"
+    },
+    {
+        "id": "parkch01",
+        "description": "Chan Ho Park",
+        "species": "MLB"
+    },
+    {
+        "id": "parrajo01",
+        "description": "Jose Parra",
+        "species": "MLB"
+    },
+    {
+        "id": "parrijo01",
+        "description": "John Parrish",
+        "species": "MLB"
+    },
+    {
+        "id": "pascuva01",
+        "description": "Val Pascucci",
+        "species": "MLB"
+    },
+    {
+        "id": "patteco01",
+        "description": "Corey Patterson",
+        "species": "MLB"
+    },
+    {
+        "id": "patteda04",
+        "description": "Danny Patterson",
+        "species": "MLB"
+    },
+    {
+        "id": "pattejo02",
+        "description": "John Patterson",
+        "species": "MLB"
+    },
+    {
+        "id": "pauljo01",
+        "description": "Josh Paul",
+        "species": "MLB"
+    },
+    {
+        "id": "pavanca01",
+        "description": "Carl Pavano",
+        "species": "MLB"
+    },
+    {
+        "id": "paytoja01",
+        "description": "Jay Payton",
+        "species": "MLB"
+    },
+    {
+        "id": "pearcjo01",
+        "description": "Josh Pearce",
+        "species": "MLB"
+    },
+    {
+        "id": "peavyja01",
+        "description": "Jake Peavy",
+        "species": "MLB"
+    },
+    {
+        "id": "pelloki01",
+        "description": "Kit Pellow",
+        "species": "MLB"
+    },
+    {
+        "id": "penaca01",
+        "description": "Carlos Pena",
+        "species": "MLB"
+    },
+    {
+        "id": "penawi01",
+        "description": "Wily Mo Pena",
+        "species": "MLB"
+    },
+    {
+        "id": "pennybr01",
+        "description": "Brad Penny",
+        "species": "MLB"
+    },
+    {
+        "id": "peraljh01",
+        "description": "Jhonny Peralta",
+        "species": "MLB"
+    },
+    {
+        "id": "percitr01",
+        "description": "Troy Percival",
+        "species": "MLB"
+    },
+    {
+        "id": "perezan01",
+        "description": "Antonio Perez",
+        "species": "MLB"
+    },
+    {
+        "id": "perezed01",
+        "description": "Eduardo Perez",
+        "species": "MLB"
+    },
+    {
+        "id": "perezed02",
+        "description": "Eddie Perez",
+        "species": "MLB"
+    },
+    {
+        "id": "perezne01",
+        "description": "Neifi Perez",
+        "species": "MLB"
+    },
+    {
+        "id": "perezod01",
+        "description": "Odalis Perez",
+        "species": "MLB"
+    },
+    {
+        "id": "perezol01",
+        "description": "Oliver Perez",
+        "species": "MLB"
+    },
+    {
+        "id": "perezti01",
+        "description": "Timo Perez",
+        "species": "MLB"
+    },
+    {
+        "id": "perezto03",
+        "description": "Tomas Perez",
+        "species": "MLB"
+    },
+    {
+        "id": "perisma01",
+        "description": "Matt Perisho",
+        "species": "MLB"
+    },
+    {
+        "id": "perryhe01",
+        "description": "Herb Perry",
+        "species": "MLB"
+    },
+    {
+        "id": "peterad02",
+        "description": "Adam Peterson",
+        "species": "MLB"
+    },
+    {
+        "id": "pettian01",
+        "description": "Andy Pettitte",
+        "species": "MLB"
+    },
+    {
+        "id": "phelpjo01",
+        "description": "Josh Phelps",
+        "species": "MLB"
+    },
+    {
+        "id": "phelpto01",
+        "description": "Tommy Phelps",
+        "species": "MLB"
+    },
+    {
+        "id": "phelptr01",
+        "description": "Travis Phelps",
+        "species": "MLB"
+    },
+    {
+        "id": "phillan01",
+        "description": "Andy Phillips",
+        "species": "MLB"
+    },
+    {
+        "id": "phillbr01",
+        "description": "Brandon Phillips",
+        "species": "MLB"
+    },
+    {
+        "id": "phillja04",
+        "description": "Jason Phillips",
+        "species": "MLB"
+    },
+    {
+        "id": "phillpa01",
+        "description": "Paul Phillips",
+        "species": "MLB"
+    },
+    {
+        "id": "piazzmi01",
+        "description": "Mike Piazza",
+        "species": "MLB"
+    },
+    {
+        "id": "pickeca01",
+        "description": "Calvin Pickering",
+        "species": "MLB"
+    },
+    {
+        "id": "piedrjo01",
+        "description": "Jorge Piedra",
+        "species": "MLB"
+    },
+    {
+        "id": "pierrju01",
+        "description": "Juan Pierre",
+        "species": "MLB"
+    },
+    {
+        "id": "pierzaj01",
+        "description": "A.J. Pierzynski",
+        "species": "MLB"
+    },
+    {
+        "id": "pineijo01",
+        "description": "Joel Pineiro",
+        "species": "MLB"
+    },
+    {
+        "id": "podsesc01",
+        "description": "Scott Podsednik",
+        "species": "MLB"
+    },
+    {
+        "id": "polanpl01",
+        "description": "Placido Polanco",
+        "species": "MLB"
+    },
+    {
+        "id": "politcl01",
+        "description": "Cliff Politte",
+        "species": "MLB"
+    },
+    {
+        "id": "pondsi01",
+        "description": "Simon Pond",
+        "species": "MLB"
+    },
+    {
+        "id": "ponsosi01",
+        "description": "Sidney Ponson",
+        "species": "MLB"
+    },
+    {
+        "id": "porteco01",
+        "description": "Colin Porter",
+        "species": "MLB"
+    },
+    {
+        "id": "posadjo01",
+        "description": "Jorge Posada",
+        "species": "MLB"
+    },
+    {
+        "id": "potelo01",
+        "description": "Lou Pote",
+        "species": "MLB"
+    },
+    {
+        "id": "powelbr01",
+        "description": "Brian Powell",
+        "species": "MLB"
+    },
+    {
+        "id": "powelja04",
+        "description": "Jay Powell",
+        "species": "MLB"
+    },
+    {
+        "id": "prattan01",
+        "description": "Andy Pratt",
+        "species": "MLB"
+    },
+    {
+        "id": "prattto02",
+        "description": "Todd Pratt",
+        "species": "MLB"
+    },
+    {
+        "id": "pridecu01",
+        "description": "Curtis Pride",
+        "species": "MLB"
+    },
+    {
+        "id": "prietal01",
+        "description": "Alex Prieto",
+        "species": "MLB"
+    },
+    {
+        "id": "prinzbr01",
+        "description": "Bret Prinz",
+        "species": "MLB"
+    },
+    {
+        "id": "priorma01",
+        "description": "Mark Prior",
+        "species": "MLB"
+    },
+    {
+        "id": "proctsc01",
+        "description": "Scott Proctor",
+        "species": "MLB"
+    },
+    {
+        "id": "puffebr01",
+        "description": "Brandon Puffer",
+        "species": "MLB"
+    },
+    {
+        "id": "pujolal01",
+        "description": "Albert Pujols",
+        "species": "MLB"
+    },
+    {
+        "id": "pulidca01",
+        "description": "Carlos Pulido",
+        "species": "MLB"
+    },
+    {
+        "id": "puntoni01",
+        "description": "Nick Punto",
+        "species": "MLB"
+    },
+    {
+        "id": "putzjj01",
+        "description": "J.J. Putz",
+        "species": "MLB"
+    },
+    {
+        "id": "quallch01",
+        "description": "Chad Qualls",
+        "species": "MLB"
+    },
+    {
+        "id": "quantpa01",
+        "description": "Paul Quantrill",
+        "species": "MLB"
+    },
+    {
+        "id": "quinlro01",
+        "description": "Robb Quinlan",
+        "species": "MLB"
+    },
+    {
+        "id": "quinthu01",
+        "description": "Humberto Quintero",
+        "species": "MLB"
+    },
+    {
+        "id": "quirogu01",
+        "description": "Guillermo Quiroz",
+        "species": "MLB"
+    },
+    {
+        "id": "raburry01",
+        "description": "Ryan Raburn",
+        "species": "MLB"
+    },
+    {
+        "id": "radkebr01",
+        "description": "Brad Radke",
+        "species": "MLB"
+    },
+    {
+        "id": "raineti02",
+        "description": "Tim Raines",
+        "species": "MLB"
+    },
+    {
+        "id": "rakeraa01",
+        "description": "Aaron Rakers",
+        "species": "MLB"
+    },
+    {
+        "id": "ramirar01",
+        "description": "Aramis Ramirez",
+        "species": "MLB"
+    },
+    {
+        "id": "ramirel01",
+        "description": "Elizardo Ramirez",
+        "species": "MLB"
+    },
+    {
+        "id": "ramirer01",
+        "description": "Erasmo Ramirez",
+        "species": "MLB"
+    },
+    {
+        "id": "ramirho01",
+        "description": "Horacio Ramirez",
+        "species": "MLB"
+    },
+    {
+        "id": "ramirma02",
+        "description": "Manny Ramirez",
+        "species": "MLB"
+    },
+    {
+        "id": "randajo01",
+        "description": "Joe Randa",
+        "species": "MLB"
+    },
+    {
+        "id": "randost01",
+        "description": "Stephen Randolph",
+        "species": "MLB"
+    },
+    {
+        "id": "ransoco01",
+        "description": "Cody Ransom",
+        "species": "MLB"
+    },
+    {
+        "id": "rauchjo01",
+        "description": "Jon Rauch",
+        "species": "MLB"
+    },
+    {
+        "id": "redditi01",
+        "description": "Tim Redding",
+        "species": "MLB"
+    },
+    {
+        "id": "redmama01",
+        "description": "Mark Redman",
+        "species": "MLB"
+    },
+    {
+        "id": "redmati01",
+        "description": "Tike Redman",
+        "species": "MLB"
+    },
+    {
+        "id": "redmomi01",
+        "description": "Mike Redmond",
+        "species": "MLB"
+    },
+    {
+        "id": "reedje03",
+        "description": "Jeremy Reed",
+        "species": "MLB"
+    },
+    {
+        "id": "reedst01",
+        "description": "Steve Reed",
+        "species": "MLB"
+    },
+    {
+        "id": "reesepo01",
+        "description": "Pokey Reese",
+        "species": "MLB"
+    },
+    {
+        "id": "regilni01",
+        "description": "Nick Regilio",
+        "species": "MLB"
+    },
+    {
+        "id": "reithbr01",
+        "description": "Brian Reith",
+        "species": "MLB"
+    },
+    {
+        "id": "reitsch01",
+        "description": "Chris Reitsma",
+        "species": "MLB"
+    },
+    {
+        "id": "relafde01",
+        "description": "Desi Relaford",
+        "species": "MLB"
+    },
+    {
+        "id": "remlimi01",
+        "description": "Mike Remlinger",
+        "species": "MLB"
+    },
+    {
+        "id": "renteed01",
+        "description": "Edgar Renteria",
+        "species": "MLB"
+    },
+    {
+        "id": "restomi01",
+        "description": "Michael Restovich",
+        "species": "MLB"
+    },
+    {
+        "id": "reyesal01",
+        "description": "Al Reyes",
+        "species": "MLB"
+    },
+    {
+        "id": "reyesde01",
+        "description": "Dennys Reyes",
+        "species": "MLB"
+    },
+    {
+        "id": "reyesjo01",
+        "description": "Jose Reyes",
+        "species": "MLB"
+    },
+    {
+        "id": "reyesre01",
+        "description": "Rene Reyes",
+        "species": "MLB"
+    },
+    {
+        "id": "reynosh01",
+        "description": "Shane Reynolds",
+        "species": "MLB"
+    },
+    {
+        "id": "rhodear01",
+        "description": "Arthur Rhodes",
+        "species": "MLB"
+    },
+    {
+        "id": "riedljo01",
+        "description": "John Riedling",
+        "species": "MLB"
+    },
+    {
+        "id": "riggsad01",
+        "description": "Adam Riggs",
+        "species": "MLB"
+    },
+    {
+        "id": "rileyma01",
+        "description": "Matt Riley",
+        "species": "MLB"
+    },
+    {
+        "id": "rincoju01",
+        "description": "Juan Rincon",
+        "species": "MLB"
+    },
+    {
+        "id": "rincori01",
+        "description": "Ricardo Rincon",
+        "species": "MLB"
+    },
+    {
+        "id": "riosal01",
+        "description": "Alexis Rios",
+        "species": "MLB"
+    },
+    {
+        "id": "riskeda01",
+        "description": "David Riske",
+        "species": "MLB"
+    },
+    {
+        "id": "ritchto01",
+        "description": "Todd Ritchie",
+        "species": "MLB"
+    },
+    {
+        "id": "rivaslu01",
+        "description": "Luis Rivas",
+        "species": "MLB"
+    },
+    {
+        "id": "riverca01",
+        "description": "Carlos Rivera",
+        "species": "MLB"
+    },
+    {
+        "id": "riverju01",
+        "description": "Juan Rivera",
+        "species": "MLB"
+    },
+    {
+        "id": "riverma01",
+        "description": "Mariano Rivera",
+        "species": "MLB"
+    },
+    {
+        "id": "riverre01",
+        "description": "Rene Rivera",
+        "species": "MLB"
+    },
+    {
+        "id": "roajo01",
+        "description": "Joe Roa",
+        "species": "MLB"
+    },
+    {
+        "id": "robbija01",
+        "description": "Jake Robbins",
+        "species": "MLB"
+    },
+    {
+        "id": "roberbr01",
+        "description": "Brian Roberts",
+        "species": "MLB"
+    },
+    {
+        "id": "roberda07",
+        "description": "Dave Roberts",
+        "species": "MLB"
+    },
+    {
+        "id": "robergr01",
+        "description": "Grant Roberts",
+        "species": "MLB"
+    },
+    {
+        "id": "roberje02",
+        "description": "Jeriome Robertson",
+        "species": "MLB"
+    },
+    {
+        "id": "roberna01",
+        "description": "Nate Robertson",
+        "species": "MLB"
+    },
+    {
+        "id": "roberwi01",
+        "description": "Willis Roberts",
+        "species": "MLB"
+    },
+    {
+        "id": "robinke02",
+        "description": "Kerry Robinson",
+        "species": "MLB"
+    },
+    {
+        "id": "rodrial01",
+        "description": "Alex Rodriguez",
+        "species": "MLB"
+    },
+    {
+        "id": "rodried03",
+        "description": "Eddy Rodriguez",
+        "species": "MLB"
+    },
+    {
+        "id": "rodrife01",
+        "description": "Felix Rodriguez",
+        "species": "MLB"
+    },
+    {
+        "id": "rodrifr03",
+        "description": "Francisco Rodriguez",
+        "species": "MLB"
+    },
+    {
+        "id": "rodriiv01",
+        "description": "Ivan Rodriguez",
+        "species": "MLB"
+    },
+    {
+        "id": "rodriri03",
+        "description": "Ricardo Rodriguez",
+        "species": "MLB"
+    },
+    {
+        "id": "rogerke01",
+        "description": "Kenny Rogers",
+        "species": "MLB"
+    },
+    {
+        "id": "rolensc01",
+        "description": "Scott Rolen",
+        "species": "MLB"
+    },
+    {
+        "id": "rolliji01",
+        "description": "Jimmy Rollins",
+        "species": "MLB"
+    },
+    {
+        "id": "rollsda01",
+        "description": "Damian Rolls",
+        "species": "MLB"
+    },
+    {
+        "id": "romanja01",
+        "description": "Jason Romano",
+        "species": "MLB"
+    },
+    {
+        "id": "romerjc01",
+        "description": "J.C. Romero",
+        "species": "MLB"
+    },
+    {
+        "id": "rosemi01",
+        "description": "Mike Rose",
+        "species": "MLB"
+    },
+    {
+        "id": "rossda01",
+        "description": "Dave Ross",
+        "species": "MLB"
+    },
+    {
+        "id": "rowanaa01",
+        "description": "Aaron Rowand",
+        "species": "MLB"
+    },
+    {
+        "id": "rueteki01",
+        "description": "Kirk Rueter",
+        "species": "MLB"
+    },
+    {
+        "id": "ruschgl01",
+        "description": "Glendon Rusch",
+        "species": "MLB"
+    },
+    {
+        "id": "ryanbj01",
+        "description": "B.J. Ryan",
+        "species": "MLB"
+    },
+    {
+        "id": "ryanmi03",
+        "description": "Michael Ryan",
+        "species": "MLB"
+    },
+    {
+        "id": "saarlki01",
+        "description": "Kirk Saarloos",
+        "species": "MLB"
+    },
+    {
+        "id": "sabatcc01",
+        "description": "C.C. Sabathia",
+        "species": "MLB"
+    },
+    {
+        "id": "sadledo01",
+        "description": "Donnie Sadler",
+        "species": "MLB"
+    },
+    {
+        "id": "saenzch01",
+        "description": "Chris Saenz",
+        "species": "MLB"
+    },
+    {
+        "id": "saenzol01",
+        "description": "Olmedo Saenz",
+        "species": "MLB"
+    },
+    {
+        "id": "salmoti01",
+        "description": "Tim Salmon",
+        "species": "MLB"
+    },
+    {
+        "id": "sanchal03",
+        "description": "Alex Sanchez",
+        "species": "MLB"
+    },
+    {
+        "id": "sanchdu01",
+        "description": "Duaner Sanchez",
+        "species": "MLB"
+    },
+    {
+        "id": "sanchfr01",
+        "description": "Freddy Sanchez",
+        "species": "MLB"
+    },
+    {
+        "id": "sanchje01",
+        "description": "Jesus Sanchez",
+        "species": "MLB"
+    },
+    {
+        "id": "sanchre01",
+        "description": "Rey Sanchez",
+        "species": "MLB"
+    },
+    {
+        "id": "sandere02",
+        "description": "Reggie Sanders",
+        "species": "MLB"
+    },
+    {
+        "id": "santajo01",
+        "description": "Johan Santana",
+        "species": "MLB"
+    },
+    {
+        "id": "santibe01",
+        "description": "Benito Santiago",
+        "species": "MLB"
+    },
+    {
+        "id": "santira01",
+        "description": "Ramon Santiago",
+        "species": "MLB"
+    },
+    {
+        "id": "santovi01",
+        "description": "Victor Santos",
+        "species": "MLB"
+    },
+    {
+        "id": "schilcu01",
+        "description": "Curt Schilling",
+        "species": "MLB"
+    },
+    {
+        "id": "schmija01",
+        "description": "Jason Schmidt",
+        "species": "MLB"
+    },
+    {
+        "id": "schnebr01",
+        "description": "Brian Schneider",
+        "species": "MLB"
+    },
+    {
+        "id": "schoesc01",
+        "description": "Scott Schoeneweis",
+        "species": "MLB"
+    },
+    {
+        "id": "scutama01",
+        "description": "Marco Scutaro",
+        "species": "MLB"
+    },
+    {
+        "id": "seaneru01",
+        "description": "Rudy Seanez",
+        "species": "MLB"
+    },
+    {
+        "id": "seaybo01",
+        "description": "Bobby Seay",
+        "species": "MLB"
+    },
+    {
+        "id": "seguida01",
+        "description": "David Segui",
+        "species": "MLB"
+    },
+    {
+        "id": "seibeph01",
+        "description": "Phil Seibel",
+        "species": "MLB"
+    },
+    {
+        "id": "seleaa01",
+        "description": "Aaron Sele",
+        "species": "MLB"
+    },
+    {
+        "id": "seoja01",
+        "description": "Jae Weong Seo",
+        "species": "MLB"
+    },
+    {
+        "id": "serraji01",
+        "description": "Jimmy Serrano",
+        "species": "MLB"
+    },
+    {
+        "id": "servisc01",
+        "description": "Scott Service",
+        "species": "MLB"
+    },
+    {
+        "id": "sexsori01",
+        "description": "Richie Sexson",
+        "species": "MLB"
+    },
+    {
+        "id": "sheetbe01",
+        "description": "Ben Sheets",
+        "species": "MLB"
+    },
+    {
+        "id": "sheffga01",
+        "description": "Gary Sheffield",
+        "species": "MLB"
+    },
+    {
+        "id": "sheltch01",
+        "description": "Chris Shelton",
+        "species": "MLB"
+    },
+    {
+        "id": "sherrge01",
+        "description": "George Sherrill",
+        "species": "MLB"
+    },
+    {
+        "id": "shielsc01",
+        "description": "Scot Shields",
+        "species": "MLB"
+    },
+    {
+        "id": "shousbr01",
+        "description": "Brian Shouse",
+        "species": "MLB"
+    },
+    {
+        "id": "sierrru01",
+        "description": "Ruben Sierra",
+        "species": "MLB"
+    },
+    {
+        "id": "silvaca01",
+        "description": "Carlos Silva",
+        "species": "MLB"
+    },
+    {
+        "id": "simonja01",
+        "description": "Jason Simontacchi",
+        "species": "MLB"
+    },
+    {
+        "id": "simonra01",
+        "description": "Randall Simon",
+        "species": "MLB"
+    },
+    {
+        "id": "simpsal01",
+        "description": "Allan Simpson",
+        "species": "MLB"
+    },
+    {
+        "id": "sizemgr01",
+        "description": "Grady Sizemore",
+        "species": "MLB"
+    },
+    {
+        "id": "sledgte01",
+        "description": "Terrmel Sledge",
+        "species": "MLB"
+    },
+    {
+        "id": "smallaa01",
+        "description": "Aaron Small",
+        "species": "MLB"
+    },
+    {
+        "id": "smithja05",
+        "description": "Jason Smith",
+        "species": "MLB"
+    },
+    {
+        "id": "smithtr01",
+        "description": "Travis Smith",
+        "species": "MLB"
+    },
+    {
+        "id": "smoltjo01",
+        "description": "John Smoltz",
+        "species": "MLB"
+    },
+    {
+        "id": "snarery01",
+        "description": "Ryan Snare",
+        "species": "MLB"
+    },
+    {
+        "id": "sneades01",
+        "description": "Esix Snead",
+        "species": "MLB"
+    },
+    {
+        "id": "snellia01",
+        "description": "Ian Snell",
+        "species": "MLB"
+    },
+    {
+        "id": "snowjt01",
+        "description": "J.T. Snow",
+        "species": "MLB"
+    },
+    {
+        "id": "snydech02",
+        "description": "Chris Snyder",
+        "species": "MLB"
+    },
+    {
+        "id": "snydeea01",
+        "description": "Earl Snyder",
+        "species": "MLB"
+    },
+    {
+        "id": "soriaal01",
+        "description": "Alfonso Soriano",
+        "species": "MLB"
+    },
+    {
+        "id": "soriara01",
+        "description": "Rafael Soriano",
+        "species": "MLB"
+    },
+    {
+        "id": "sosajo02",
+        "description": "Jorge Sosa",
+        "species": "MLB"
+    },
+    {
+        "id": "sosasa01",
+        "description": "Sammy Sosa",
+        "species": "MLB"
+    },
+    {
+        "id": "sparkst01",
+        "description": "Steve Sparks",
+        "species": "MLB"
+    },
+    {
+        "id": "speieju01",
+        "description": "Justin Speier",
+        "species": "MLB"
+    },
+    {
+        "id": "spencsh01",
+        "description": "Shane Spencer",
+        "species": "MLB"
+    },
+    {
+        "id": "spiezsc01",
+        "description": "Scott Spiezio",
+        "species": "MLB"
+    },
+    {
+        "id": "spiveju01",
+        "description": "Junior Spivey",
+        "species": "MLB"
+    },
+    {
+        "id": "sprinru01",
+        "description": "Russ Springer",
+        "species": "MLB"
+    },
+    {
+        "id": "stairma01",
+        "description": "Matt Stairs",
+        "species": "MLB"
+    },
+    {
+        "id": "standja01",
+        "description": "Jason Standridge",
+        "species": "MLB"
+    },
+    {
+        "id": "stanfja01",
+        "description": "Jason Stanford",
+        "species": "MLB"
+    },
+    {
+        "id": "stantmi02",
+        "description": "Mike Stanton",
+        "species": "MLB"
+    },
+    {
+        "id": "starkde01",
+        "description": "Dennis Stark",
+        "species": "MLB"
+    },
+    {
+        "id": "stewajo02",
+        "description": "Josh Stewart",
+        "species": "MLB"
+    },
+    {
+        "id": "stewasc01",
+        "description": "Scott Stewart",
+        "species": "MLB"
+    },
+    {
+        "id": "stewash01",
+        "description": "Shannon Stewart",
+        "species": "MLB"
+    },
+    {
+        "id": "stinnke01",
+        "description": "Kelly Stinnett",
+        "species": "MLB"
+    },
+    {
+        "id": "stoneri01",
+        "description": "Ricky Stone",
+        "species": "MLB"
+    },
+    {
+        "id": "sturtta01",
+        "description": "Tanyon Sturtze",
+        "species": "MLB"
+    },
+    {
+        "id": "stynech01",
+        "description": "Chris Stynes",
+        "species": "MLB"
+    },
+    {
+        "id": "sullisc01",
+        "description": "Scott Sullivan",
+        "species": "MLB"
+    },
+    {
+        "id": "suppaje01",
+        "description": "Jeff Suppan",
+        "species": "MLB"
+    },
+    {
+        "id": "surhobj01",
+        "description": "B.J. Surhoff",
+        "species": "MLB"
+    },
+    {
+        "id": "suttola01",
+        "description": "Larry Sutton",
+        "species": "MLB"
+    },
+    {
+        "id": "suzukic01",
+        "description": "Ichiro Suzuki",
+        "species": "MLB"
+    },
+    {
+        "id": "sweenbr01",
+        "description": "Brian Sweeney",
+        "species": "MLB"
+    },
+    {
+        "id": "sweenma01",
+        "description": "Mark Sweeney",
+        "species": "MLB"
+    },
+    {
+        "id": "sweenmi01",
+        "description": "Mike Sweeney",
+        "species": "MLB"
+    },
+    {
+        "id": "swishni01",
+        "description": "Nick Swisher",
+        "species": "MLB"
+    },
+    {
+        "id": "szumija01",
+        "description": "Jason Szuminski",
+        "species": "MLB"
+    },
+    {
+        "id": "tadanka01",
+        "description": "Kazuhito Tadano",
+        "species": "MLB"
+    },
+    {
+        "id": "tagucso01",
+        "description": "So Taguchi",
+        "species": "MLB"
+    },
+    {
+        "id": "takatsh01",
+        "description": "Shingo Takatsu",
+        "species": "MLB"
+    },
+    {
+        "id": "tankede01",
+        "description": "Dennis Tankersley",
+        "species": "MLB"
+    },
+    {
+        "id": "tavarju01",
+        "description": "Julian Tavarez",
+        "species": "MLB"
+    },
+    {
+        "id": "taverwi01",
+        "description": "Willy Taveras",
+        "species": "MLB"
+    },
+    {
+        "id": "tayloaa01",
+        "description": "Aaron Taylor",
+        "species": "MLB"
+    },
+    {
+        "id": "teixema01",
+        "description": "Mark Teixeira",
+        "species": "MLB"
+    },
+    {
+        "id": "tejadmi01",
+        "description": "Miguel Tejada",
+        "species": "MLB"
+    },
+    {
+        "id": "tejermi01",
+        "description": "Michael Tejera",
+        "species": "MLB"
+    },
+    {
+        "id": "telemam01",
+        "description": "Amaury Telemaco",
+        "species": "MLB"
+    },
+    {
+        "id": "terrelu01",
+        "description": "Luis Terrero",
+        "species": "MLB"
+    },
+    {
+        "id": "thamema01",
+        "description": "Marcus Thames",
+        "species": "MLB"
+    },
+    {
+        "id": "thomabr01",
+        "description": "Brad Thomas",
+        "species": "MLB"
+    },
+    {
+        "id": "thomach01",
+        "description": "Charles Thomas",
+        "species": "MLB"
+    },
+    {
+        "id": "thomafr04",
+        "description": "Frank Thomas",
+        "species": "MLB"
+    },
+    {
+        "id": "thomeji01",
+        "description": "Jim Thome",
+        "species": "MLB"
+    },
+    {
+        "id": "thompri02",
+        "description": "Rich Thompson",
+        "species": "MLB"
+    },
+    {
+        "id": "thomsjo01",
+        "description": "John Thomson",
+        "species": "MLB"
+    },
+    {
+        "id": "thornma01",
+        "description": "Matt Thornton",
+        "species": "MLB"
+    },
+    {
+        "id": "thursjo01",
+        "description": "Joe Thurston",
+        "species": "MLB"
+    },
+    {
+        "id": "tiffete01",
+        "description": "Terry Tiffee",
+        "species": "MLB"
+    },
+    {
+        "id": "timlimi01",
+        "description": "Mike Timlin",
+        "species": "MLB"
+    },
+    {
+        "id": "tomkobr01",
+        "description": "Brett Tomko",
+        "species": "MLB"
+    },
+    {
+        "id": "tonismi01",
+        "description": "Mike Tonis",
+        "species": "MLB"
+    },
+    {
+        "id": "torcato01",
+        "description": "Tony Torcato",
+        "species": "MLB"
+    },
+    {
+        "id": "torrean02",
+        "description": "Andres Torres",
+        "species": "MLB"
+    },
+    {
+        "id": "torresa01",
+        "description": "Salomon Torres",
+        "species": "MLB"
+    },
+    {
+        "id": "torreyo01",
+        "description": "Yorvit Torrealba",
+        "species": "MLB"
+    },
+    {
+        "id": "towerjo01",
+        "description": "Josh Towers",
+        "species": "MLB"
+    },
+    {
+        "id": "trachst01",
+        "description": "Steve Trachsel",
+        "species": "MLB"
+    },
+    {
+        "id": "tracyan01",
+        "description": "Andy Tracy",
+        "species": "MLB"
+    },
+    {
+        "id": "tracych01",
+        "description": "Chad Tracy",
+        "species": "MLB"
+    },
+    {
+        "id": "treanma01",
+        "description": "Matt Treanor",
+        "species": "MLB"
+    },
+    {
+        "id": "tremich01",
+        "description": "Chris Tremie",
+        "species": "MLB"
+    },
+    {
+        "id": "tsaoch01",
+        "description": "Chin-hui Tsao",
+        "species": "MLB"
+    },
+    {
+        "id": "tuckemi01",
+        "description": "Michael Tucker",
+        "species": "MLB"
+    },
+    {
+        "id": "tucketj01",
+        "description": "T.J. Tucker",
+        "species": "MLB"
+    },
+    {
+        "id": "turnbde01",
+        "description": "Derrick Turnbow",
+        "species": "MLB"
+    },
+    {
+        "id": "uptonbj01",
+        "description": "B.J. Upton",
+        "species": "MLB"
+    },
+    {
+        "id": "urbinug01",
+        "description": "Ugueth Urbina",
+        "species": "MLB"
+    },
+    {
+        "id": "urdanli01",
+        "description": "Lino Urdaneta",
+        "species": "MLB"
+    },
+    {
+        "id": "uribeju01",
+        "description": "Juan Uribe",
+        "species": "MLB"
+    },
+    {
+        "id": "utleych01",
+        "description": "Chase Utley",
+        "species": "MLB"
+    },
+    {
+        "id": "valdeis01",
+        "description": "Ismael Valdes",
+        "species": "MLB"
+    },
+    {
+        "id": "valdeme01",
+        "description": "Merkin Valdez",
+        "species": "MLB"
+    },
+    {
+        "id": "valdewi01",
+        "description": "Wilson Valdez",
+        "species": "MLB"
+    },
+    {
+        "id": "valener01",
+        "description": "Eric Valent",
+        "species": "MLB"
+    },
+    {
+        "id": "valenja01",
+        "description": "Javier Valentin",
+        "species": "MLB"
+    },
+    {
+        "id": "valenjo03",
+        "description": "Jose Valentin",
+        "species": "MLB"
+    },
+    {
+        "id": "valenjo04",
+        "description": "Joe Valentine",
+        "species": "MLB"
+    },
+    {
+        "id": "valvejo01",
+        "description": "Jose Valverde",
+        "species": "MLB"
+    },
+    {
+        "id": "vanbejo01",
+        "description": "John Van Benschoten",
+        "species": "MLB"
+    },
+    {
+        "id": "vandejo02",
+        "description": "John Vander Wal",
+        "species": "MLB"
+    },
+    {
+        "id": "vanpoto01",
+        "description": "Todd Van Poppel",
+        "species": "MLB"
+    },
+    {
+        "id": "vargacl01",
+        "description": "Claudio Vargas",
+        "species": "MLB"
+    },
+    {
+        "id": "varitja01",
+        "description": "Jason Varitek",
+        "species": "MLB"
+    },
+    {
+        "id": "vasqujo01",
+        "description": "Jorge Vasquez",
+        "species": "MLB"
+    },
+    {
+        "id": "vazquja01",
+        "description": "Javier Vazquez",
+        "species": "MLB"
+    },
+    {
+        "id": "vazqura01",
+        "description": "Ramon Vazquez",
+        "species": "MLB"
+    },
+    {
+        "id": "venafmi01",
+        "description": "Mike Venafro",
+        "species": "MLB"
+    },
+    {
+        "id": "venturo01",
+        "description": "Robin Ventura",
+        "species": "MLB"
+    },
+    {
+        "id": "vidrojo01",
+        "description": "Jose Vidro",
+        "species": "MLB"
+    },
+    {
+        "id": "villabr01",
+        "description": "Brandon Villafuerte",
+        "species": "MLB"
+    },
+    {
+        "id": "villaed01",
+        "description": "Eduardo Villacis",
+        "species": "MLB"
+    },
+    {
+        "id": "villaos01",
+        "description": "Oscar Villarreal",
+        "species": "MLB"
+    },
+    {
+        "id": "villoro01",
+        "description": "Ron Villone",
+        "species": "MLB"
+    },
+    {
+        "id": "vinafe01",
+        "description": "Fernando Vina",
+        "species": "MLB"
+    },
+    {
+        "id": "vizcajo01",
+        "description": "Jose Vizcaino",
+        "species": "MLB"
+    },
+    {
+        "id": "vizcalu01",
+        "description": "Luis Vizcaino",
+        "species": "MLB"
+    },
+    {
+        "id": "vizquom01",
+        "description": "Omar Vizquel",
+        "species": "MLB"
+    },
+    {
+        "id": "vogelry01",
+        "description": "Ryan Vogelsong",
+        "species": "MLB"
+    },
+    {
+        "id": "waechdo01",
+        "description": "Doug Waechter",
+        "species": "MLB"
+    },
+    {
+        "id": "wagnebi02",
+        "description": "Billy Wagner",
+        "species": "MLB"
+    },
+    {
+        "id": "wagnery01",
+        "description": "Ryan Wagner",
+        "species": "MLB"
+    },
+    {
+        "id": "wakefti01",
+        "description": "Tim Wakefield",
+        "species": "MLB"
+    },
+    {
+        "id": "walkeja01",
+        "description": "Jamie Walker",
+        "species": "MLB"
+    },
+    {
+        "id": "walkeke01",
+        "description": "Kevin Walker",
+        "species": "MLB"
+    },
+    {
+        "id": "walkela01",
+        "description": "Larry Walker",
+        "species": "MLB"
+    },
+    {
+        "id": "walketo04",
+        "description": "Todd Walker",
+        "species": "MLB"
+    },
+    {
+        "id": "walkety01",
+        "description": "Tyler Walker",
+        "species": "MLB"
+    },
+    {
+        "id": "wardda01",
+        "description": "Daryle Ward",
+        "species": "MLB"
+    },
+    {
+        "id": "wasdijo01",
+        "description": "John Wasdin",
+        "species": "MLB"
+    },
+    {
+        "id": "washbja01",
+        "description": "Jarrod Washburn",
+        "species": "MLB"
+    },
+    {
+        "id": "watkist01",
+        "description": "Steve Watkins",
+        "species": "MLB"
+    },
+    {
+        "id": "wayneju01",
+        "description": "Justin Wayne",
+        "species": "MLB"
+    },
+    {
+        "id": "weathda01",
+        "description": "Dave Weathers",
+        "species": "MLB"
+    },
+    {
+        "id": "weaveje01",
+        "description": "Jeff Weaver",
+        "species": "MLB"
+    },
+    {
+        "id": "webbbr01",
+        "description": "Brandon Webb",
+        "species": "MLB"
+    },
+    {
+        "id": "webbjo01",
+        "description": "John Webb",
+        "species": "MLB"
+    },
+    {
+        "id": "weberbe01",
+        "description": "Ben Weber",
+        "species": "MLB"
+    },
+    {
+        "id": "welleto01",
+        "description": "Todd Wellemeyer",
+        "species": "MLB"
+    },
+    {
+        "id": "wellsda01",
+        "description": "David Wells",
+        "species": "MLB"
+    },
+    {
+        "id": "wellski01",
+        "description": "Kip Wells",
+        "species": "MLB"
+    },
+    {
+        "id": "wellsve01",
+        "description": "Vernon Wells",
+        "species": "MLB"
+    },
+    {
+        "id": "wendetu01",
+        "description": "Turk Wendell",
+        "species": "MLB"
+    },
+    {
+        "id": "werthja01",
+        "description": "Jayson Werth",
+        "species": "MLB"
+    },
+    {
+        "id": "westbja01",
+        "description": "Jake Westbrook",
+        "species": "MLB"
+    },
+    {
+        "id": "wheelda01",
+        "description": "Daniel Wheeler",
+        "species": "MLB"
+    },
+    {
+        "id": "whitega01",
+        "description": "Gabe White",
+        "species": "MLB"
+    },
+    {
+        "id": "whiteri01",
+        "description": "Rick White",
+        "species": "MLB"
+    },
+    {
+        "id": "whitero02",
+        "description": "Rondell White",
+        "species": "MLB"
+    },
+    {
+        "id": "wickmbo01",
+        "description": "Bob Wickman",
+        "species": "MLB"
+    },
+    {
+        "id": "wiggity01",
+        "description": "Ty Wigginton",
+        "species": "MLB"
+    },
+    {
+        "id": "wilkebr01",
+        "description": "Brad Wilkerson",
+        "species": "MLB"
+    },
+    {
+        "id": "willibe02",
+        "description": "Bernie Williams",
+        "species": "MLB"
+    },
+    {
+        "id": "willida07",
+        "description": "Dave Williams",
+        "species": "MLB"
+    },
+    {
+        "id": "willido03",
+        "description": "Dontrelle Willis",
+        "species": "MLB"
+    },
+    {
+        "id": "willige02",
+        "description": "Gerald Williams",
+        "species": "MLB"
+    },
+    {
+        "id": "willije01",
+        "description": "Jeff Williams",
+        "species": "MLB"
+    },
+    {
+        "id": "willije02",
+        "description": "Jerome Williams",
+        "species": "MLB"
+    },
+    {
+        "id": "willijo03",
+        "description": "Josh Willingham",
+        "species": "MLB"
+    },
+    {
+        "id": "willira01",
+        "description": "Randy Williams",
+        "species": "MLB"
+    },
+    {
+        "id": "willisc01",
+        "description": "Scott Williamson",
+        "species": "MLB"
+    },
+    {
+        "id": "willito02",
+        "description": "Todd Williams",
+        "species": "MLB"
+    },
+    {
+        "id": "williwo02",
+        "description": "Woody Williams",
+        "species": "MLB"
+    },
+    {
+        "id": "wilsocr03",
+        "description": "Craig Wilson",
+        "species": "MLB"
+    },
+    {
+        "id": "wilsoda01",
+        "description": "Dan Wilson",
+        "species": "MLB"
+    },
+    {
+        "id": "wilsoen01",
+        "description": "Enrique Wilson",
+        "species": "MLB"
+    },
+    {
+        "id": "wilsoja02",
+        "description": "Jack Wilson",
+        "species": "MLB"
+    },
+    {
+        "id": "wilsopa02",
+        "description": "Paul Wilson",
+        "species": "MLB"
+    },
+    {
+        "id": "wilsopr01",
+        "description": "Preston Wilson",
+        "species": "MLB"
+    },
+    {
+        "id": "wilsoto02",
+        "description": "Tom Wilson",
+        "species": "MLB"
+    },
+    {
+        "id": "wilsova01",
+        "description": "Vance Wilson",
+        "species": "MLB"
+    },
+    {
+        "id": "winnra01",
+        "description": "Randy Winn",
+        "species": "MLB"
+    },
+    {
+        "id": "wisede01",
+        "description": "Dewayne Wise",
+        "species": "MLB"
+    },
+    {
+        "id": "wisema01",
+        "description": "Matt Wise",
+        "species": "MLB"
+    },
+    {
+        "id": "witasja01",
+        "description": "Jay Witasick",
+        "species": "MLB"
+    },
+    {
+        "id": "wolfra02",
+        "description": "Randy Wolf",
+        "species": "MLB"
+    },
+    {
+        "id": "womacto01",
+        "description": "Tony Womack",
+        "species": "MLB"
+    },
+    {
+        "id": "woodke02",
+        "description": "Kerry Wood",
+        "species": "MLB"
+    },
+    {
+        "id": "woodmi01",
+        "description": "Mike Wood",
+        "species": "MLB"
+    },
+    {
+        "id": "woodwch01",
+        "description": "Chris Woodward",
+        "species": "MLB"
+    },
+    {
+        "id": "wootesh01",
+        "description": "Shawn Wooten",
+        "species": "MLB"
+    },
+    {
+        "id": "worreti01",
+        "description": "Tim Worrell",
+        "species": "MLB"
+    },
+    {
+        "id": "wrighda02",
+        "description": "Dan Wright",
+        "species": "MLB"
+    },
+    {
+        "id": "wrighda03",
+        "description": "David Wright",
+        "species": "MLB"
+    },
+    {
+        "id": "wrighja01",
+        "description": "Jamey Wright",
+        "species": "MLB"
+    },
+    {
+        "id": "wrighja02",
+        "description": "Jaret Wright",
+        "species": "MLB"
+    },
+    {
+        "id": "wuertmi01",
+        "description": "Michael Wuertz",
+        "species": "MLB"
+    },
+    {
+        "id": "wunscke01",
+        "description": "Kelly Wunsch",
+        "species": "MLB"
+    },
+    {
+        "id": "yanes01",
+        "description": "Esteban Yan",
+        "species": "MLB"
+    },
+    {
+        "id": "yatesty01",
+        "description": "Tyler Yates",
+        "species": "MLB"
+    },
+    {
+        "id": "youkike01",
+        "description": "Kevin Youkilis",
+        "species": "MLB"
+    },
+    {
+        "id": "youngch03",
+        "description": "Chris Young",
+        "species": "MLB"
+    },
+    {
+        "id": "youngdm01",
+        "description": "Dmitri Young",
+        "species": "MLB"
+    },
+    {
+        "id": "younger01",
+        "description": "Eric Young",
+        "species": "MLB"
+    },
+    {
+        "id": "younger02",
+        "description": "Ernie Young",
+        "species": "MLB"
+    },
+    {
+        "id": "youngja01",
+        "description": "Jason Young",
+        "species": "MLB"
+    },
+    {
+        "id": "youngmi02",
+        "description": "Mike Young",
+        "species": "MLB"
+    },
+    {
+        "id": "zambrca01",
+        "description": "Carlos Zambrano",
+        "species": "MLB"
+    },
+    {
+        "id": "zambrvi01",
+        "description": "Victor Zambrano",
+        "species": "MLB"
+    },
+    {
+        "id": "zaungr01",
+        "description": "Gregg Zaun",
+        "species": "MLB"
+    },
+    {
+        "id": "zeileto01",
+        "description": "Todd Zeile",
+        "species": "MLB"
+    },
+    {
+        "id": "zinteal01",
+        "description": "Alan Zinter",
+        "species": "MLB"
+    },
+    {
+        "id": "zitoba01",
+        "description": "Barry Zito",
+        "species": "MLB"
+    }
+]

@@ -564,49 +564,4 @@ DataReader.parseHeader = function(raw, a, commentPrefix) {
     }
 };
 
-// DataReader.testRequest = function(callback) {
-//     var buffer = [];
-//     var toGo = url.parse("http://virtualplant.bio.nyu.edu/virtualplant2/biovis2/data/annot_human.txt");
-//     toGo.encoding = null;
-//     toGo.url = "http://virtualplant.bio.nyu.edu/virtualplant2/biovis2/data/annot_human.txt";
-//     console.log(toGo);
-//     var req = request.get(toGo);
-//     req.on('response', function(res) {
-//         var chunks = [];
-//         res.on('data', function(chunk) {
-//             console.log("Pushing data");
-//             chunks.push(chunk);
-//         });
-//         res.on('end', function() {
-//             console.log("Finished!");
-//             var buffer = Buffer.concat(chunks);
-//             console.log(res.headers);
-//             var encoding = res.headers['content-encoding'];
-//             if (typeof encoding === 'undefined') {
-//                 encoding = res.headers['content-type'];
-//             }
-//             if (encoding.indexOf('gzip') > -1) {
-//                 console.log("Unzipping...");
-//                 zlib.gunzip(buffer, function(err, decoded) {
-//                     console.log(decoded);
-//                     if (err) {
-//                         console.log("Error :(");
-//                         console.log(err);
-//                     } else {
-//                         console.log(decoded.toString());
-//                     }
-//                     callback();
-//                 });
-//             } else {
-//                 //console.log(chunks.toString());
-//             }
-//         })
-//     });
-//     req.on('error', function(err) {
-//         console.log("error :(");
-//         console.log(err);
-//         callback();
-//     });
-// };
-
 module.exports = DataReader;
