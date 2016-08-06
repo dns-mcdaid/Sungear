@@ -1,0 +1,9 @@
+extends layout
+
+block content
+    h3.
+        Items
+    ul
+        each item, i in itemsList
+            li#item_list_item
+                a(href='#') #{item.id} : #{item.description}
