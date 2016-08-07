@@ -4,9 +4,11 @@
  * I will laugh if this works.
  */
 
+const assert = require('assert');
 const http = require('http');
 const fs = require('fs');
 const zlib = require('zlib');
+const mongo = require('mongodb');
 const url = require('url');
 const request = require('request');
 const SortedSet = require("collections/sorted-set");
@@ -317,19 +319,66 @@ DataReader.prototype = {
         }
     },
 
-    // NOTE: setThreshold has moved to the static area.
-
-    // NOTE: trimALl has moved to the static area.
-    // NOTE: chop has moved to the static area.
-
-    // NOTE: openURL has moved to the static area.
-    // NOTE: readURL has moved to the static area.
-
-
     getResource : function(s) {
         // TODO: @Dennis Implement
+    },
+    getMongoData : function(species, experiment) {
+        var MongoClient = mongodb.MongoClient;
+        var url = 'mongodb://localhost:27017/sungear';
+
+        this.allGenes = {};
+        this.roots = [];
+        this.terms = {};
+        this.geneToGo = {};
+        this.anchors = [];
+        this.expGenes = new SortedSet();
+        this.missingGenes = new SortedSet();
+        this.dupGenes = new SortedSet();
+
+        MongoClient.connect(url, function(err, db) {
+            if (err) {
+                console.log("Unable to connect.");
+                console.log(err);
+            } else {
+                console.log("Connection established.");
+
+                var experimentsCol = db.collection('experiments');
+                var itemsCol = db.collection('items');
+                var categoriesCol = db.collection('categories');
+                var speciesCol = db.collection('species');
+
+                speciesCol.find({'name': species}).toArray(function(err, result) {
+                    if (result.length > 0) {
+                        var thisSpecies = species[0].name;
+                        experimentsCol.find({
+                            'species': thisSpecies,
+                            'name': experiment
+                        }).toArray(function (err, result) {
+                            if (result.length > 0) {
+
+                            }
+                        });
+                    } else if (err) {
+                        console.log(err);
+                    } else {
+                        console.log("Something's wrong here...");
+                    }
+                });
+
+                // collection.find({}).toArray(function(err, result) {
+                //     if (err) {
+                //         res.send("we messed up.");
+                //     } else if (result.length) {
+                //         res.render('itemsList', { 'itemsList' : result });
+                //     } else {
+                //         res.send("No documents found.");
+                //     }
+                //
+                //     db.close();
+                // });
+            }
+        });
     }
-    // NOTE: parseHeader has moved to the static area.
 };
 
 // STATIC AREA:
