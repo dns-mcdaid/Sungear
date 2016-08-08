@@ -339,6 +339,7 @@ DataReader.prototype = {
         var roots = this.roots;
         var terms = this.terms;
         var geneToGo = this.geneToGo;
+
         var anchors = this.anchors;
         var expGenes = this.expGenes;
         var missingGenes = this.missingGenes;
@@ -375,46 +376,82 @@ DataReader.prototype = {
                         assert.notEqual(0, result.length);
 
                         console.log("Got the categories!");
+                        var missingGene = new SortedSet();
+                        var missingTerm = new SortedSet();
                         for (var i = 0; i < result.length; i++) {
                             var term = result[i];
-                            var termObject = new Term(term.id, term.description);
-                            termObject
-                            if (term.description != null && term.parents.length == 0) {
-                                roots.push(termObject);
+                            if (term.description == null) {
+                                missingTerm.push(term.id);
+                            } else {
+                                var termObject = new Term(term.id, term.description);
+                                termObject.addChildren(term.children);
+                                termObject.addParents(term.parents);
+                                if (term.zScore !== null) {
+                                    termObject.setRatio(term.zScore);
+                                }
+                                for (var j = 0; j < term.items.length; j++) {
+                                    var gn = term.items[j];
+                                    var g = allGenes[gn];
+                                    if (g === null || typeof g === 'undefined') {
+                                        missingGene.push(gn);
+                                    } else {
+                                        var genev = geneToGo[g];
+                                        if (genev === null) {
+                                            genev = [];
+                                        }
+                                        genev.push(termObject);
+                                        termObject.addGene(g);
+                                        geneToGo[g] = termObject;
+                                    }
+                                }
+                                terms[term.id] = termObject;
+                                if (term.description != null && term.parents.length == 0) {
+                                    roots.push(termObject);
+                                }
                             }
                         }
+                        experimentsCol.find({
+                            'name': experiment,
+                            'species': thisSpecies
+                        }).toArray(function(err, result) {
+                            assert.equal(err, null);
+                            assert.notEqual(0, result.length);
+                            console.log("Got the experiment!");
+
+                            var thisExperiment = result[0];
+                            var lists = thisExperiment.data;
+                            var setNames = Object.keys(thisExperiment.data);
+                            var exp = [];
+                            for (var i = 0; i < setNames.length; i++) {
+                                var setName = setNames[i];
+                                anchors.push(new Anchor(setName));
+                                var thisList = lists[setName];
+                                for (var j = 0; j < thisList.length; j++) {
+                                    var gn = thisList[j].toLowerCase();
+                                    var g = allGenes[gn];
+                                    if (g === null || typeof g === 'undefined') {
+                                        missingGenes.push(gn);
+                                    } else if (expGenes.contains(g)) {
+                                        dupGenes.push(g);
+                                    } else {
+                                        for (var k = 0; k < setNames.length; k++) {
+                                            var contains = lists[setName].indexOf(thisList[j]);
+                                            if (contains > -1) {
+                                                exp[k] = 1;
+                                            } else {
+                                                exp[k] = 0;
+                                            }
+                                        }
+                                        g.setExp(exp);
+                                        expGenes.push(g);
+                                    }
+                                }
+                            }
+                            db.close();
+                        });
                     });
                 });
-                // experimentsCol.find({
-                //     'species': thisSpecies,
-                //     'name': experiment
-                // }).toArray(function (err, result) {
-                //     assert.notEqual(0, result.length);
-                //
-                //     console.log("Got the experiment!");
-                //     var thisExperiment = result[0];
-                //     var lists = thisExperiment.data;
-                //     for (var key in lists) {
-                //         anchors.push(new Anchor(key));
-                //         var thisList = lists[key];
-                //         for (var i = 0; i < thisList.length; i++) {
-                //
-                //         }
-                //     }
-                // });
             });
-
-            // collection.find({}).toArray(function(err, result) {
-            //     if (err) {
-            //         res.send("we messed up.");
-            //     } else if (result.length) {
-            //         res.render('itemsList', { 'itemsList' : result });
-            //     } else {
-            //         res.send("No documents found.");
-            //     }
-            //
-            //     db.close();
-            // });
         });
     }
 };
