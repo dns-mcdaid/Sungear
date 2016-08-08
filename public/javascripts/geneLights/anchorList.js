@@ -2,9 +2,6 @@
  * @author Dennis McDaid
  */
 
-require('javascript.util');
-var ArrayList = javascript.util.ArrayList;
-
 var Gene = require('./gene');
 
 /**
@@ -14,8 +11,8 @@ var Gene = require('./gene');
  */
 function AnchorList(anchorName) {
     this.name = anchorName;                 /** @type String */
-    this.oriGenes = new ArrayList();        /** @type ArrayList<Gene> */
-    this.effectiveGenes = new ArrayList();  /** @type ArrayList<Gene> */
+    this.oriGenes = [];        /** @type ArrayList<Gene> */
+    this.effectiveGenes = [];  /** @type ArrayList<Gene> */
     this.sortedGenes = [];                  /** @type Gene[] */
     this.selectedGenes = 0;                 /** @type int */    // Is this ever used?
 }
@@ -31,15 +28,15 @@ AnchorList.prototype = {
      */
     contains : function(geneID) {
         var toFind = new Gene(geneID, -99.0);
-        return this.oriGenes.contains(toFind);
+        return (this.oriGenes.indexOf(toFind) > -1);
     },
     /**
      * ensure same gene will not be added twice
      * @param g of type Gene
      */
     addGene : function(g) {
-        if (!this.oriGenes.contains(g)) {
-            this.oriGenes.add(g);
+        if (this.oriGenes.indexOf(g) < 0) {
+            this.oriGenes.push(g);
         }
     },
     /**
@@ -47,7 +44,7 @@ AnchorList.prototype = {
      * @param g of type Gene
      */
     addEffectiveGene : function(g) {
-        this.effectiveGenes.add(g);
+        this.effectiveGenes.push(g);
     },
     /**
      * @param al of type ArrayList<Gene>
@@ -63,7 +60,7 @@ AnchorList.prototype = {
      * and the ones from geneLights input
      */
     sizeOfEffectiveGenes : function() {
-        return this.effectiveGenes.size();
+        return this.effectiveGenes.length;
     },
     /**
      * Sort the effective genes by their expression value ascendingly
@@ -72,7 +69,7 @@ AnchorList.prototype = {
      */
     sortEffectiveGenes : function() {
         if (this.sizeOfEffectiveGenes() != 0) {
-            this.sortedGenes = this.effectiveGenes.toArray(); // TODO: @Dennis make sure this works.
+            this.sortedGenes = this.effectiveGenes.slice();
             this.sortedGenes.sort();    // TODO: @Dennis this should work, just ensure.
             return this.sortedGenes;
         } else {
@@ -109,7 +106,7 @@ AnchorList.prototype = {
      *  get the number of genes in this anchor
      */
     size : function() {
-        return this.oriGenes.size();
+        return this.oriGenes.length;
     },
     getSelectedGenes : function() {
         return this.selectedGenes;

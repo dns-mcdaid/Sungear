@@ -226,6 +226,11 @@ DataSource.prototype = {
      */
     getReader : function() {
         return this.reader;
+    },
+    accessMongo : function(callback) {
+        this.reader.getMongoData('default', 'test_data_01', function() {
+            callback();
+        });
     }
 };
 

@@ -4,8 +4,6 @@
  *
  * @author RajahBimmy
  */
-
-const fs = require('browserify-fs');
 const path = require('path');
 
 const Signal = require('./signal');
@@ -161,18 +159,17 @@ VisGene.prototype = {
 
         this.aboutDLabel = document.getElementById('aboutDLabel');
         this.aboutDBody = document.getElementById('aboutDBody');
-        this.run();
     },
-    run : function() {
-        try {
-            if (this.extAttrib !== null && this.extAttrib.get("sungearU") !== null) {
-                this.src.setAttributes(this.extAttrib, this.dataU);
-                this.openFile(this.extAttrib);  // TODO: Implement
-            }
-        } catch (e) {
-            console.error(e);
-        }
-    },
+    // run : function() {
+    //     try {
+    //         if (this.extAttrib !== null && this.extAttrib.get("sungearU") !== null) {
+    //             this.src.setAttributes(this.extAttrib, this.dataU);
+    //             this.openFile(this.extAttrib);  // TODO: Implement
+    //         }
+    //     } catch (e) {
+    //         console.error(e);
+    //     }
+    // },
     /**
      * TODO: Ensure this works. It probably doesn't.
      * @param p {Container}
@@ -374,6 +371,7 @@ VisGene.prototype = {
     collectPasssedData : function() {
         var loadBody = document.getElementById('loadBody');
         var vis = JSON.parse(document.getElementById('vis').value);
+        console.log(vis);
         var exp = vis.exp.exp;
         this.exp = new ExperimentList(exp, loadBody);
     }

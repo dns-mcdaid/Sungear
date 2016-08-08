@@ -8,9 +8,9 @@ const VisGene = require('../lib/visGene');
 /* GET home page. */
 router.get('/', function(req, res, next) {
     var args = [ "--version", "-data_dir", "data/" ];
-    // VisGene.main(args, function(response){
-        res.render('index', { title: 'Sungear' });
-    // });
+    VisGene.main(args, function(response){
+        res.render('index', { title: 'Sungear', data: response});
+    });
 });
 
 router.get('/items', function(req, res) {

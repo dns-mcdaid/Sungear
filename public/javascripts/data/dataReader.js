@@ -322,7 +322,7 @@ DataReader.prototype = {
     getResource : function(s) {
         // TODO: @Dennis Implement
     },
-    getMongoData : function(species, experiment) {
+    getMongoData : function(species, experiment, callback) {
         var MongoClient = mongodb.MongoClient;
         var url = 'mongodb://localhost:27017/sungear';
 
@@ -448,6 +448,7 @@ DataReader.prototype = {
                                 }
                             }
                             db.close();
+                            callback();
                         });
                     });
                 });
