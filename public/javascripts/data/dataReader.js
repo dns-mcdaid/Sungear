@@ -335,48 +335,86 @@ DataReader.prototype = {
         this.missingGenes = new SortedSet();
         this.dupGenes = new SortedSet();
 
+        var allGenes = this.allGenes;
+        var roots = this.roots;
+        var terms = this.terms;
+        var geneToGo = this.geneToGo;
+        var anchors = this.anchors;
+        var expGenes = this.expGenes;
+        var missingGenes = this.missingGenes;
+        var dupGenes = this.dupGenes;
+
         MongoClient.connect(url, function(err, db) {
-            if (err) {
-                console.log("Unable to connect.");
-                console.log(err);
-            } else {
-                console.log("Connection established.");
+            assert.equal(err, null);
 
-                var experimentsCol = db.collection('experiments');
-                var itemsCol = db.collection('items');
-                var categoriesCol = db.collection('categories');
-                var speciesCol = db.collection('species');
+            console.log("Connection established.");
+            var experimentsCol = db.collection('experiments');
+            var itemsCol = db.collection('items');
+            var categoriesCol = db.collection('categories');
+            var speciesCol = db.collection('species');
 
-                speciesCol.find({'name': species}).toArray(function(err, result) {
-                    if (result.length > 0) {
-                        var thisSpecies = species[0].name;
-                        experimentsCol.find({
-                            'species': thisSpecies,
-                            'name': experiment
-                        }).toArray(function (err, result) {
-                            if (result.length > 0) {
+            speciesCol.find({'name': species}).toArray(function(err, result) {
+                assert.equal(err, null);
+                assert.notEqual(0, result.length);
 
-                            }
-                        });
-                    } else if (err) {
-                        console.log(err);
-                    } else {
-                        console.log("Something's wrong here...");
+                console.log("Got the species!");
+                var thisSpecies = result[0].name;
+
+                itemsCol.find({'species': thisSpecies}).toArray(function(err, result) {
+                    assert.equal(err, null);
+                    assert.notEqual(0, result.length);
+
+                    console.log("Got the genes!");
+                    for (var i = 0; i < result.length; i++) {
+                        var pub = result[i].id;
+                        var desc = result[i].description;
+                        allGenes[pub.toLowerCase()] = new Gene(pub, desc);
                     }
-                });
+                    categoriesCol.find({'species': thisSpecies}).toArray(function(err, result) {
+                        assert.equal(err, null);
+                        assert.notEqual(0, result.length);
 
-                // collection.find({}).toArray(function(err, result) {
-                //     if (err) {
-                //         res.send("we messed up.");
-                //     } else if (result.length) {
-                //         res.render('itemsList', { 'itemsList' : result });
-                //     } else {
-                //         res.send("No documents found.");
-                //     }
+                        console.log("Got the categories!");
+                        for (var i = 0; i < result.length; i++) {
+                            var term = result[i];
+                            var termObject = new Term(term.id, term.description);
+                            termObject
+                            if (term.description != null && term.parents.length == 0) {
+                                roots.push(termObject);
+                            }
+                        }
+                    });
+                });
+                // experimentsCol.find({
+                //     'species': thisSpecies,
+                //     'name': experiment
+                // }).toArray(function (err, result) {
+                //     assert.notEqual(0, result.length);
                 //
-                //     db.close();
+                //     console.log("Got the experiment!");
+                //     var thisExperiment = result[0];
+                //     var lists = thisExperiment.data;
+                //     for (var key in lists) {
+                //         anchors.push(new Anchor(key));
+                //         var thisList = lists[key];
+                //         for (var i = 0; i < thisList.length; i++) {
+                //
+                //         }
+                //     }
                 // });
-            }
+            });
+
+            // collection.find({}).toArray(function(err, result) {
+            //     if (err) {
+            //         res.send("we messed up.");
+            //     } else if (result.length) {
+            //         res.render('itemsList', { 'itemsList' : result });
+            //     } else {
+            //         res.send("No documents found.");
+            //     }
+            //
+            //     db.close();
+            // });
         });
     }
 };

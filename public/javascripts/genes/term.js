@@ -51,10 +51,10 @@ var TreeSet = javascript.util.TreeSet;
 function Term(id, name) {
     this.id = id;           /** @type String GO term ID */
     this.name = name;       /** @type String GO term name */
-    this.parents = new TreeSet();       /** This term's parent nodes */
-    this.children = new TreeSet();      /** This term's child nodes */
-    this.allGenes = new TreeSet();      /** All genes associated with this node and its descendents */
-    this.localGenes = new TreeSet();    /** The genes associated strictly with this node */
+    this.parents = new SortedSet();       /** This term's parent nodes */
+    this.children = new SortedSet();      /** This term's child nodes */
+    this.allGenes = new SortedSet();      /** All genes associated with this node and its descendents */
+    this.localGenes = new SortedSet();    /** The genes associated strictly with this node */
     this.storedCount = -1;  /** @type int The number of genes in {@link #allGenes} represented in some set, usually the active set */
     this.p_t = 0;           /** @type double z-score calculation term */
     this.stdev = 0.0;       /** @type double z-score calculation term */
@@ -87,19 +87,19 @@ Term.prototype = {
         this.stdev = Math.sqrt(p_t * (1-p_t));
     },
     addChild : function(c) {
-        this.children.add(c);
+        this.children.push(c);
     },
     getChildren : function() {
         return this.children;
     },
     addParent : function(p) {
-        this.parents.add(p);
+        this.parents.push(p);
     },
     getParents : function() {
         return this.parents;
     },
     addGene : function(g) {
-        this.localGenes.add(g);
+        this.localGenes.push(g);
     },
     isRoot : function() {
         return this.parents.size() == 0;
@@ -123,11 +123,11 @@ Term.prototype = {
         if (this.allGenes === null) {
             return 0;
         } else {
-            var s = new TreeSet();
+            var s = new SortedSet();
             var setArray = iSet.toArray();
             for (var i = 0; i < setArray.length; i++) {
                 if (this.allGenes.contains(setArray[i])) {
-                    s.add(setArray[i]);
+                    s.push(setArray[i]);
                 }
             }
             return s.size();
@@ -158,11 +158,11 @@ Term.prototype = {
             while (it.hasNext()) {
                 it.next().updateStoredCount(aSet);
             }
-            var s = new TreeSet();
+            var s = new SortedSet();
             var aSetArr = aSet.toArray();
             for (var i = 0; i < aSetArr.length; i++) {
                 if (this.allGenes.contains(aSetArr[i])) {
-                    s.add(aSetArr[i]);
+                    s.push(aSetArr[i]);
                 }
             }
             this.storedCount = s.size();
@@ -174,10 +174,10 @@ Term.prototype = {
     },
     findUnion : function(global) {
         if (this.allGenes == null) {
-            this.allGenes = new TreeSet();
+            this.allGenes = new SortedSet();
             var locArray = this.localGenes.toArray();
             for (var i = 0; i < locArray.length; i++) {
-                this.allGenes.add(locArray[i]);
+                this.allGenes.push(locArray[i]);
             }
             var it = this.children.iterator();
             while (it.hasNext()) {
@@ -185,14 +185,14 @@ Term.prototype = {
                 ch.findUnion(global);
                 var chAll = ch.allGenes.toArray();
                 for (var j = 0; j < chAll.length; j++) {
-                    this.allGenes.add(chAll[j]);
+                    this.allGenes.push(chAll[j]);
                 }
             }
             var allArray = this.allGenes.toArray();
             var s = new TreeSet();
             for (var k = 0; k < allArray.length; k++) {
                 if (global.contains(allArray[k])) {
-                    s.add(allArray[k])
+                    s.push(allArray[k])
                 }
             }
             this.allGenes = s;
@@ -222,11 +222,11 @@ Term.prototype = {
                 }
             }
             if (this.selectedState = Term.STATE_UNKNOWN) {
-                var x = new TreeSet();
+                var x = new SortedSet();
                 var allArr = this.allGenes.toArray();
                 for (var i = 0; i < allArr.length; i++) {
                     if (s.contains(allArr[i])) {
-                        x.add(allArr[i]);
+                        x.push(allArr[i]);
                     }
                 }
                 this.selectedState = x.size() == 0 ? Term.STATE_UNSELECTED : Term.STATE_SELECTED;
@@ -235,6 +235,15 @@ Term.prototype = {
     },
     getSelectedState : function() {
         return this.selectedState;
+    },
+    addChildren : function(c) {
+        this.children.addEach(c);
+    },
+    addParents : function(p) {
+        this.parents.addEach(p);
+    },
+    addGenes : function(g) {
+        this.localGenes.addEach(g);
     }
 };
 
