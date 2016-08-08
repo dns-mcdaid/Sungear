@@ -38,10 +38,7 @@
  * Copyright Chris Poultney 2004.
  */
 
-require('javascript.util');
-var Iterator = javascript.util.Iterator;
-var SortedSet = javascript.util.SortedSet;
-var TreeSet = javascript.util.TreeSet;
+const SortedSet = require("collections/sorted-set");
 
 /**
  * Constructs a new GO term.

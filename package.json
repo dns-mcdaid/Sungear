@@ -14,7 +14,7 @@
     "express": "~4.13.4",
     "jade": "~1.11.0",
     "javascript.util": "~0.12.12",
-    "kerberos": "~0.0.17",
+    "kerberos": "~0.0.0",
     "mongodb": "~2.0.33",
     "morgan": "~1.7.0",
     "nodemon": "^1.9.2",
