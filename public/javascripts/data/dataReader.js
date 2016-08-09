@@ -320,6 +320,15 @@ DataReader.prototype = {
 
     getResource : function(s) {
         // TODO: @Dennis Implement
+    },
+
+    addPassedData : function(reader) {
+        var i = 0;
+        var anchors = reader.anchors;
+        var allGenes = reader.allGenes;
+        var dupGenes = reader.dupGenes;
+        var expgenes = reader.expGenes;
+        var geneToGo = reader.geneToGo;
     }
 };
 

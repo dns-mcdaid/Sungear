@@ -226,6 +226,9 @@ DataSource.prototype = {
      */
     getReader : function() {
         return this.reader;
+    },
+    setReader : function(reader) {
+        this.reader = reader;
     }
 };
 

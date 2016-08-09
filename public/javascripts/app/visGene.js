@@ -372,8 +372,16 @@ VisGene.prototype = {
         var loadBody = document.getElementById('loadBody');
         var vis = JSON.parse(document.getElementById('vis').value);
         console.log(vis);
+
+        this.dataDir = vis.dataDir;
+
         var exp = vis.exp.exp;
         this.exp = new ExperimentList(exp, loadBody);
+
+        this.reader = new DataReader(vis.src.attrib);
+        this.reader.addPassedData(vis.src.reader);
+
+        this.src = new DataSource(this.dataDir);
     }
 };
 
@@ -433,7 +441,6 @@ LoadThread.prototype = {
         }
         // this.status.setVisible(false);
         // this.status.dispose();
-        return;
     },
     getException : function() {
         return this.ex;
@@ -487,7 +494,6 @@ VisGene.main = function(args) {
         for (var j = i; j < args.length; j++) {
             plugin.push(args[j]);
         }
-        // FIXME: Potentially replace first arg with new URL()
         var vis = new VisGene(new URL("file:./"), warn, plugin, dataDir);
         vis.init();
         return vis;
