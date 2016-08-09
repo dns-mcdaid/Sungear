@@ -1,0 +1,37 @@
+{ categoriesLabel = Teams }
+EC | Eastern Conference
+AD | Atlantic Division
+MD | Metropolitan Division
+WC | Western Conference
+PD | Pacific Division
+CD | Central Division
+ANA | Anaheim Ducks
+ARI | Arizona Coyotes
+BOS | Boston Bruins
+BUF | Buffalo Sabres
+CAR | Carolina Hurricanes
+CBJ | Columbus Blue Jackets
+CGY | Calgary Flames
+CHI | Chicago Blackhawks
+COL | Colorado Avalanche
+DAL | Dallas Stars
+DET | Detroit Red Wings
+EDM | Edmonton Oilers
+FLA | Florida Panthers
+LAK | Los Angeles Kings
+MIN | Minnesota Wild
+MTL | Montreal Canadiens
+NSH | Nashville Predators
+NJD | New Jersey Devils
+NYI | New York Islanders
+NYR | New York Rangers
+OTT | Ottawa Senators
+PHI | Philadelphia Flyers
+PIT | Pittsburgh Pirates
+SJS | San Jose Sharks
+STL | St. Lous Blues
+TBL | Tampa Bay Lightning
+TOR | Toronto Maple Leafs
+VAN | Vancouver Canucks
+WSH | Washington Capitals
+WPG | Winnipeg Jets

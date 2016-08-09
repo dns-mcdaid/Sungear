@@ -1,0 +1,15 @@
+extends layout
+
+block content
+    h3= title
+    form#add_item(name='addItem', method='post', action='/addExperiment')
+        span ID
+        span &nbsp;
+        input#input_id(type='text', placeholder='id', name='id')
+        br
+        br
+        span Description
+        input#input_desc(type='text', placeholder='Description', name='description')
+        br
+        br
+        butt#submit_item(type='submit') Submit

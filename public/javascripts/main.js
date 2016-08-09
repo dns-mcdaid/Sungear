@@ -8,83 +8,90 @@
 
 const p5 = require('p5');
 const VisGene = require('./app/visGene');
+const Signal = require('./app/signal');
 
 var args = [ "" ];
+var vis;
 
-var hereWeGo = new p5(function(p5) {
+new p5(function(p5) {
     var WIDTH;
     var HEIGHT;
     var canvas;
+
     p5.setup = function() {
         WIDTH = document.getElementById('sungearGui').offsetWidth;
         HEIGHT = document.getElementById('sungearGui').offsetHeight;
         canvas = p5.createCanvas(WIDTH,HEIGHT);
+        p5.frameRate(30);
+        p5.textSize(30);
+        p5.textAlign(p5.CENTER);
+        vis = VisGene.main(args);
     };
     p5.draw = function() {
         p5.background("#111111");
-        if (p5.mouseIsPressed) {
-            p5.fill(125);
-        } else {
-            p5.fill(255);
-        }
-        p5.ellipse(p5.mouseX, p5.mouseY, 80, 80);
+        vis.gear.paintExterior(p5);
+        //vis.gear.paintComponent(p5);
+        vis.gear.makeButtons(p5);
     };
-    VisGene.main(args);
+
+    p5.mouseMoved = function() {
+        // vis.gear.checkHighlight(p5);
+    };
+
+    p5.mouseDragged = function() {
+        // vis.gear.checkHighlight(p5);
+        // if (!vis.gear.multi) {
+        //     vis.gear.checkSelect(p5);
+        // }
+    };
+
+    p5.mousePressed = function() {
+        // if (!vis.gear.multi) {
+        //     vis.gear.checkSelect(p5);
+        // }
+    };
+
+    p5.mouseReleased = function() {
+        // vis.gear.handleSelect(p5);
+        vis.gear.handleButtons(p5);
+    };
+
+    p5.mouseClicked = function() {
+        setTimeout(receiveSignal, 100);
+    };
+
+    var receiveSignal = function() {
+        if (vis.signal !== null) {
+            switch(vis.signal) {
+                case Signal.SCREENSHOT:
+                    var fName = 'SunGear Session ';
+
+                    var today = new Date();
+                    var minute = today.getMinutes();
+                    var hour = today.getHours();
+                    var day = today.getDate();
+                    var month = today.getMonth()+1;
+                    var year = today.getFullYear();
+
+                    if (month < 10) {   month = '0' + month;    }
+                    if (day < 10) { day = '0' + day;    }
+                    if (hour < 10) {    hour = '0' + hour;  }
+                    if (minute < 10) {  minute = '0' + minute;  }
+                    fName += year+'/'+month+'/'+day+' '+hour+'.'+minute+'.jpg';
+
+                    p5.save(fName);
+                    vis.signal = null;
+                    break;
+                case Signal.FULLSCREEN:
+                    var fs = p5.fullscreen();
+                    p5.fullscreen(!fs);
+                    vis.signal = null;
+                    break;
+                default:
+                    vis.signal = null;
+                    break;
+            }
+        }
+    }
+
 }, 'sungearGui');
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//
-//
-// function main(args) {
-//     try {
-//         var i = 0;
-//         var warn = true;
-//         var plugin = [];
-//         var dataDir = null;
-//         while (i < args.length && args[i][0] == "-" || args[i] == "demo") {
-//             if (args[i].localeCompare("--version")) {
-//                 console.log(VisGene.VERSION);
-//             } else if (args[i] == "--usage" || args[i] == "--help") {
-//                 VisGene.usage();
-//             } else if (args[i] == "demo" || args[i] == "-nowarn") {
-//                 warn = false;
-//                 i++;
-//             } else if (args[i] == "-plugin") {
-//                 var f = args[i+1].split(",");
-//                 for (var s = 0; s < f.length; s++) {
-//                     plugin.push(f[s]);
-//                 }
-//                 i += 2;
-//             } else if (args[i] == "-data_dir") {
-//                 dataDir = args[i+1];
-//                 i += 2;
-//             } else {
-//                 console.log("ERROR: Unkown argument " + args[i]);
-//                 VisGene.usage();
-//             }
-//         }
-//         for (var j = i; j < args.length; j++) {
-//             plugin.push(args[j]);
-//         }
-//         var vis = new VisGene(new URL("./app/"), warn, plugin, dataDir);
-//         vis.init();
-//     } catch(mu) {
-//         alert(mu);
-//     }
-// }

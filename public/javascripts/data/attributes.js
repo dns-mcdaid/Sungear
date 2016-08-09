@@ -31,17 +31,14 @@ var ParseException = require('./parseException');
 function Attributes(queryString) {
     this.attrib = {}; /** {Hashtable<String, Object>} Master hash table that stores all attributes */
     if (typeof queryString !== "undefined") {
-        var nvp = queryString.split("\\&");
-        var tempReader = new DataReader();
+        var nvp = queryString.split("&");
         for (var i = 0; i < nvp.length; i++) {
-            var s = tempReader.trimAll(nvp[i].split("="));
+            var s = DataReader.trimAll(nvp[i].split("="));
             var v = (s.length > 1) ? s[1] : "";
             try {
-                // TODO: Figure out which solution is better.
                 this.attrib[s[0]] = decodeURIComponent(v);
-                // this.attrib[s[0]] = decodeURI(v);
             } catch(e) {
-                console.log("warning: unable to parse query string NVP, ignoring (error follows): " + s[0] + "=" + v);
+                console.error("warning: unable to parse query string NVP, ignoring (error follows): " + s[0] + "=" + v);
                 console.log(e);
             }
         }
@@ -56,8 +53,7 @@ Attributes.prototype = {
      * @throws IOException on low-level file errors
      */
     parseAttributes : function(file) {
-        var tempReader = new DataReader();
-        var buf = tempReader.readURL(file);
+        var buf = DataReader.readURL(file);
         var line = buf.toString().split("\\n");
         for (var i = 0; i < line.length; i++) {
             try {
@@ -115,7 +111,7 @@ Attributes.prototype = {
             var o = this.attrib[key];
             return (o === null ? defaultValue : o);
         }
-        return this.attrib[key];
+        return typeof this.attrib[key] !== 'undefined' ? this.attrib[key] : null;
     },
     /**
      * Returns all the attribute keys.

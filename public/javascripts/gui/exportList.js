@@ -323,6 +323,9 @@ ExportModel.prototype = {
     },
     getList : function() {
         return this.exportList;
+    },
+    listUpdated : function(e) {
+        // TODO: Implement me.
     }
 };
 

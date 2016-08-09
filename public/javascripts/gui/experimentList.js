@@ -1,19 +1,123 @@
-function ExperimentList(experU, speciesU, base, par) {
+const DataReader = require('../data/dataReader');
+
+/**
+ * @param experU {JSON Object}
+ * @param par
+ * @constructor
+ */
+function ExperimentList(experU, par) {
     this.parent = par;  /** @type Container */
-    this.exp = this.parseExper(experU); /** @type Vector <Experiment> */
-    this.setLayout(document.getElementById('experimentList'));
-    this.files = new ExperModel(exp); // TODO: @Dennis check this against JTable
-    this.adjustColumnSize(0);
-    this.adjustColumnSize(2);
-    // TODO: @Dennis finish implementation.
+    this.exp = [];
+    for (var i = 0; i < experU.length; i++) {
+        this.exp.push($.extend(new Experiment(), experU[i]));
+    }
+    this.model = new ExperModel(this.exp);
+    this.files = document.getElementById('loadTable');
+    this.files.style.cursor = "default";
+    this.populateTable();
+
+    this.loadB = document.getElementById('loadB');
+    this.loadB.addEventListener('click', this.refreshTable.bind(this));
+
+    // this.adjustColumnSize(0);
+    // this.adjustColumnSize(2);
+    // this.openB = document.getElementById('openB');
+    // this.openB.addEventListener("click", this.handleSelect.bind(this));
+
+    this.selection = null;
+    $('#loadTable').on('click', 'tbody tr', function(event) {
+        $(this).addClass('highlight').siblings().removeClass('highlight');
+    });
 }
 
 ExperimentList.prototype = {
+    constructor : ExperimentList,
 
+    // Unnecessary function.
+    // adjustColumnSize : function(c) { },
+
+    handleSelect : function(row) {
+        var rowInt = row.rowIndex-1;
+        this.selection = null;
+        if (rowInt != -1) {
+            this.selection = this.model.getValueAt(rowInt, 0);
+        }
+    },
+
+    getSelection : function() {
+        return this.selection;
+    },
+    /**
+     * This function is rendered useless by experimentListServer's implementation.
+     * @param u {URL}
+     * @returns {Array} of Experiments
+     */
+    parseExper : function(u) {
+        var v = [];
+        var buf = DataReader.readURL(u);
+        var line = buf.toString().split("\\n");
+        for (var i = 0; i < line.length; i++) {
+            try {
+                if (line[i][0] == "#") {
+                    continue;
+                }
+                var f = DataReader.trimAll(line[i].split("\\|"));
+                var sn = f.length > 3 ? f[3] : "arabidopsis";
+                var at = f.length > 4 ? f[4] : null;
+                v.push(new Experiment(f[0], f[1], f[2], sn, at));
+            } catch (e) {
+                console.error("error parsing experiment file at line: " + (i+1));
+                console.error("file: " + u);
+                console.error(e);
+            }
+        }
+        return v;
+    },
+    populateTable : function() {
+        for (var i = 0; i < this.exp.length; i++) {
+            var e = this.exp[i];
+            var row = document.createElement('tr');
+
+            var nameCell = row.insertCell(0);
+            var descCell = row.insertCell(1);
+            var specCell = row.insertCell(2);
+
+            var specDiv = document.createElement('div');
+            var specContent = document.createElement('div');
+            var spaceDiv = document.createElement('div');
+            var dotSpan = document.createElement('span');
+
+            nameCell.innerHTML = e.getFilename();
+            descCell.innerHTML = e.getDesc();
+            specContent.innerHTML = e.getSpecies();
+            dotSpan.innerHTML = '&nbsp;';
+
+            specContent.className = 'td-content';
+            spaceDiv.className = 'spacer';
+            specDiv.className = 'td-container';
+
+            specDiv.appendChild(specContent);
+            specDiv.appendChild(spaceDiv);
+            specDiv.appendChild(dotSpan);
+            specCell.appendChild(specDiv);
+
+            row.id = 'experiment-' + i;
+
+            this.parent.appendChild(row);
+            row.addEventListener('click', this.handleSelect.bind(this, row));
+        }
+    },
+    // TODO: Ensure this works.
+    /**
+     * This function removes any pre-existing selections when the modal is called.
+     */
+    refreshTable : function() {
+        $('#loadTable tr').removeClass('highlight');
+    }
 };
 
 function ExperModel(data) {
-    this.data = data.slice();   /** @type Vector<Experiment> data */
+    this.data = data.slice();   /** {Vector<Experiment>} */
     this.titles = ["Name", "Description", "Species"];
 }
 
@@ -29,8 +133,8 @@ ExperModel.prototype = {
         return this.titles.length;
     },
     /**
-     * @param row of type int
-     * @param column of type int
+     * @param row {int}
+     * @param column {int}
      */
     getValueAt : function(row, column) {
         switch(column) {
@@ -47,11 +151,11 @@ ExperModel.prototype = {
 };
 
 /**
- * @param id of type String
- * @param filename of type String
- * @param desc of type String
- * @param species of type String
- * @param attrib of type String
+ * @param id {String}
+ * @param filename {String}
+ * @param desc {String}
+ * @param species {String}
+ * @param attrib {String}
  * @constructor
  */
 function Experiment(id, filename, desc, species, attrib) {

@@ -4,19 +4,26 @@
  *
  * @author RajahBimmy
  */
+const path = require('path');
 
-var DataReader = require('../data/dataReader');
-var DataSource = require('../data/dataSource');
-var ParseException = require('../data/parseException');
+const Signal = require('./signal');
 
-var GeneList = require('../genes/geneList');
+const Attributes = require('../data/attributes');
+const DataReader = require('../data/dataReader');
+const DataSource = require('../data/dataSource');
+const ParseException = require('../data/parseException');
 
-var ExportList = require('../gui/exportList');
-var GoTerm = require('../gui/goTerm');
-var SunGear = require('../gui/sunGear');
+const GeneList = require('../genes/geneList');
 
-var Controls = require('../gui/controls');
-var CollapsibleList = require('../gui/collapsibleList');
+const ExperimentList = require('../gui/experimentList');
+const ExportList = require('../gui/exportList');
+const GoTerm = require('../gui/goTerm');
+const SunGear = require('../gui/sunGear');
+
+const Controls = require('../gui/controls');
+const CollapsibleList = require('../gui/collapsibleList');
+
+const Gene = require('../genes/gene');
 
 /**
  * @param u {URL}
@@ -28,13 +35,8 @@ var CollapsibleList = require('../gui/collapsibleList');
 function VisGene(u, w, pn, dataDir) {
     console.log(VisGene.notice);
 
-    var btnMargin = document.createElement("div");
-    btnMargin.id = "Button.margin";
-    var toggleBtn = document.createElement("div");
-    toggleBtn.id = "ToggleButton.margin";
-
-    this.base = null;   /** URL of code directory */
-    this.dataU = null;  /** URL of data directory */
+    this.base = null;   /** {URL} of code directory */
+    this.dataU = null;  /** {URL} of data directory */
     this.isApp = true;  /** Generic external connection info */
 
     this.extAttrib = null;  /** {Attributes} */
@@ -71,17 +73,19 @@ function VisGene(u, w, pn, dataDir) {
     this.dataDir = null;
 
     if (typeof u !== 'undefined') {
-        this.isApp = true;  // TODO: Make sure this doesn't cause any problems.
+        this.isApp = true;
         this.base = u;
         this.context = null;
         this.showWarning = w;
         this.pluginName = pn;
         this.dataDir = dataDir;
     }
+
+    this.signal = null;
 }
 
-VisGene.VERSION = "0.2.0";
-VisGene.DEFAULT_DATA_DIR = "../data";
+VisGene.VERSION = "1.2.0";
+VisGene.DEFAULT_DATA_DIR = "data/";
 VisGene.notice = "Copyright Chris Poultney, Radhika Mattoo, and Dennis McDaid 2016";
 
 VisGene.prototype = {
@@ -109,19 +113,20 @@ VisGene.prototype = {
         this.src = new DataSource(this.dataU);
         this.geneList = new GeneList();
 
-        // build desktop
+        // build GUI
         var loadI = document.getElementById('nav-load');
         var screenI = document.getElementById('screenshot');
-        loadI.addEventListener("click", function() {
-            // TODO: @Dennis implement lines 241 - 287
-                // Should open a frame.
-                // Allow the user to pick a set from a table
-                // Then reload the page
-        });
-        screenI.addEventListener("click", function() {
-            // TODO: @Dennis implement lines 288 - 310
-        });
+        // REPLACING OLD SUNGEAR ExperimentList implementation with new js version.
+        // loadI.addEventListener("click", this.loadExperiments.bind(this));
 
+
+        // TODO: Uncommment this!!!!
+        // this.exp = new ExperimentList(new URL("exper.txt", this.dataU), new URL("species.txt", this.dataU), this.dataU, loadBody);
+        this.collectPasssedData();
+        var openB = document.getElementById('openB');
+        openB.addEventListener('click', this.loadExperiment.bind(this));
+
+        screenI.addEventListener("click", this.requestScreenshot.bind(this));
         this.geneF = document.getElementById("geneF");
         this.l1 = new CollapsibleList(this.geneList);
         // TODO: Attach l1 to geneF
@@ -140,42 +145,31 @@ VisGene.prototype = {
         // Picking up from 388
         var helpI = document.getElementById('helpI');
         var infoI = document.getElementById('infoI');
-        var temp = this;
-        helpI.addEventListener("click", function() {
-            temp.showAbout();
-        });
-        infoI.addEventListener("click", function() {
-            temp.showInfo();
-        });
+        helpI.addEventListener("click", this.showAbout.bind(this));
+        infoI.addEventListener("click", this.showInfo.bind(this));
 
         // init component sizes
         // this.positionWindows();
         // TODO: lines 404 - 445
-        document.getElementById('reposition').addEventListener("click", function() {
-            this.positionWindows();
-        });
-        var relaxC = document.getElementById('relax-vessels');
-        relaxC.addEventListener("click", function() {
-            var val = (relaxC.title === 'true');
-            this.gear.setRelax(val);
-            val = !val;
-            relaxC.title = val.toString();
-        });
+        document.getElementById('reposition').addEventListener("click", this.positionWindows.bind(this));
+        this.relaxC = document.getElementById('relax-vessels');
+        this.relaxC.addEventListener("click", this.toggleRelax.bind(this));
         var fullC = document.getElementById('full-screen');
-        fullC.addEventListener("click", function() {
-            // TODO: Make full screen function.
-        });
+        fullC.addEventListener("click", this.toggleFullScreen.bind(this));
+
+        this.aboutDLabel = document.getElementById('aboutDLabel');
+        this.aboutDBody = document.getElementById('aboutDBody');
     },
-    run : function() {
-        try {
-            if (this.extAttrib !== null && this.extAttrib.get("sungearU") !== null) {
-                this.src.setAttributes(this.extAttrib, this.dataU);
-                this.openFile(this.extAttrib);  // TODO: Implement
-            }
-        } catch (e) {
-            console.log(e);
-        }
-    },
+    // run : function() {
+    //     try {
+    //         if (this.extAttrib !== null && this.extAttrib.get("sungearU") !== null) {
+    //             this.src.setAttributes(this.extAttrib, this.dataU);
+    //             this.openFile(this.extAttrib);  // TODO: Implement
+    //         }
+    //     } catch (e) {
+    //         console.error(e);
+    //     }
+    // },
     /**
      * TODO: Ensure this works. It probably doesn't.
      * @param p {Container}
@@ -223,16 +217,19 @@ VisGene.prototype = {
         console.log("Done.")
     },
     toggleFullScreen : function() {
-        // TODO: Implement this later.
+        this.fullScreen = !this.fullScreen;
+        this.signal = Signal.FULLSCREEN;
     },
-    poisitionWindows : function() {
+    positionWindows : function() {
         // TODO: Implement this later.
+        console.log("visGene.positionWindows called! Please implement me.");
     },
     /**
      * Sets all desktop window sizes and positions to their defaults.
      */
     makeFrame : function() {
         // TODO: Implement this later.
+        console.log("visGene.makeFrame called! Please implement me.")
     },
     /**
      * Makes a check box menu item with JInternalFrame iconify control.
@@ -241,6 +238,7 @@ VisGene.prototype = {
      */
     makeItem : function(f) {
         // TODO: Implement this later.
+        console.log("visGene.makeItem called! Please implement me.");
     },
     /**
      * Opens an experiment file.
@@ -290,19 +288,18 @@ VisGene.prototype = {
         }
     },
     showAbout : function() {
-        var msg = "";
-        msg += "Sungear Version " + VisGene.VERSION + "\n\n";
-        msg += "Sungear is a collaboration between the Biology Department and the Courant Institute of Mathematical Sciences, New York University.\n\n";
-        msg += "Primary Developer:\nChris Poultney\n\n";
-        msg += "Seconday Developers:\nRadhika Mattoo\nDennis McDaid\n\n";
-        msg += "GeneLights Developers:\nDelin Yang\nEric Leung\n\n";
-        msg += "NYU-Biology:\nGloria Coruzzi\nRodrigo A. Gutierrez\nManpreet Katari\n\n";
-        msg += "NYU-Courant:\nDennis Shasha\n\n";
-        msg += "Additional Collaborators:\nBradford Paley (Didi, Inc.)\n\n";
-        msg += "This work has been partly supported by the U.S. National Science Foundation under grants NSF IIS-9988345, N2010-0115586, and MCB-0209754. This support is greatly appreciated.\n\n";
-        msg += "For more information visit: http://virtualplant.bio.nyu.edu/\n\n";
-        msg += "Copyright 2016, New York University";
-        alert(msg);
+        this.aboutDLabel.innerHTML = "Sungear Version " + VisGene.VERSION;
+        var msg = "<p>Sungear is a collaboration between the Biology Department and the Courant Institute of Mathematical Sciences, New York University.</p><br />";
+        msg += "<p>Primary Developer:</p><p>Chris Poultney</p><br />";
+        msg += "<p>Javascript Developers:</p><p><a href='https://github.com/radhikamattoo'>Radhika Mattoo</a></p><p><a href='https://github.com/RajahBimmy'>Dennis McDaid</a></p><br />";
+        msg += "<p>GeneLights Developers:</p><p>Delin Yang</p><p>Eric Leung</p><br />";
+        msg += "<p>NYU-Biology:</p><p>Gloria Coruzzi</p><p>Rodrigo A. Gutierrez</p><p>Manpreet Katari</p><br />";
+        msg += "<p>NYU-Courant:</p><p>Dennis Shasha</p><br />";
+        msg += "<p>Additional Collaborators:</p><p>Bradford Paley (<a href='http://www.didi.com/'>Didi, Inc.</a>)</p><br />";
+        msg += "<p>This work has been partly supported by the U.S. National Science Foundation under grants NSF IIS-9988345, N2010-0115586, and MCB-0209754. This support is greatly appreciated.</p><br />";
+        msg += "<p>For more information visit: <a href='http://virtualplant.bio.nyu.edu/'>http://virtualplant.bio.nyu.edu/</a></p><br />";
+        msg += "<p>Copyright 2005-2016, New York University</p>";
+        this.aboutDBody.innerHTML = msg;
     },
     formatComment : function(a, commentName) {
         var comment = a.get(commentName, "(none)\n");
@@ -340,6 +337,51 @@ VisGene.prototype = {
             // TODO: Include plugin information? Maybe? Maybe not?
         }
         alert(msg);
+    },
+    toggleRelax : function() {
+        var val = (this.relaxC.title === 'true');
+        this.gear.setRelax(val);
+        val = !val;
+        this.relaxC.title = val.toString();
+    },
+
+    loadExperiment : function() {
+        try {
+            var exper = this.exp.getSelection();
+            if (exper !== null) {
+                var attrib = new Attributes();
+                if (exper.getAttribFile() !== null) {
+                    attrib.parseAttributes(new URL(exper.getAttribFile(), this.dataU));
+                }
+                attrib.put("sungearU", DataReader.makeURL(this.dataU, exper.getFileName()));
+                if (exper.getSpecies() !== null) {
+                    attrib.put("species", exper.getSpecies());
+                }
+                this.src.setAttributes(attrib, this.dataU);
+                this.openFile(attrib);
+                // TODO: Potentially show warning messages based on plugins.
+            }
+        } catch (ex) {
+            console.error(ex);
+        }
+    },
+    requestScreenshot : function() {
+        this.signal = Signal.SCREENSHOT;
+    },
+    collectPasssedData : function() {
+        var loadBody = document.getElementById('loadBody');
+        var vis = JSON.parse(document.getElementById('vis').value);
+        console.log(vis);
+
+        this.dataDir = vis.dataDir;
+
+        var exp = vis.exp.exp;
+        this.exp = new ExperimentList(exp, loadBody);
+
+        this.reader = new DataReader(vis.src.attrib);
+        this.reader.addPassedData(vis.src.reader);
+
+        this.src = new DataSource(this.dataDir);
     }
 };
 
@@ -388,7 +430,7 @@ LoadThread.prototype = {
             this.status.updateStatus("Done", 5);
         } catch (oo) {
             if (typeof oo !== ParseException) {
-                console.log("Out of memory?");
+                console.error("Out of memory?");
                 this.status.updateStatus("ERROR: Out of memory", 5);
                 // this.status.setModal(false);
                 parent.src.getReader().clear();
@@ -399,7 +441,6 @@ LoadThread.prototype = {
         }
         // this.status.setVisible(false);
         // this.status.dispose();
-        return;
     },
     getException : function() {
         return this.ex;
@@ -453,11 +494,11 @@ VisGene.main = function(args) {
         for (var j = i; j < args.length; j++) {
             plugin.push(args[j]);
         }
-        // FIXME: Potentially replace first arg with new URL()
         var vis = new VisGene(new URL("file:./"), warn, plugin, dataDir);
         vis.init();
+        return vis;
     } catch(mu) {
-        console.log(mu);
+        console.error(mu);
     }
 };
 

@@ -9,15 +9,13 @@
  * @constructor
  */
 function ParseException(message, line, t) {
-    if (typeof line !== "undefined") {
-        this.line = line;
-    } else {
-        this.line = "";
-    }
+    this.message = message;
+    this.line = line;
+    this.t = t;
 }
 
 ParseException.prototype.getLine = function() {
     return this.line;
-}
+};
 
 module.exports = ParseException;

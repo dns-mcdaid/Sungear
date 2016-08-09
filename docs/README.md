@@ -155,7 +155,7 @@ This file contains two parts, the header and the data. The header contains a lis
 #### Examples
 
 * [Gene Example](examples/example.sun.txt)
-* [Baseball Example](examples/batting2004.txt)
+* [Baseball Example](../data/batting2004.txt)
 
 ### Gene/Case Definition File
 
@@ -168,7 +168,7 @@ This file contains element identification and any other information you wished t
 #### Examples
 
 * [Gene Example](examples/example.annotation.txt)
-* [Baseball Example](examples/players.txt)
+* [Baseball Example](../data/players.txt)
 
 ### Group Definition File
 
@@ -181,7 +181,7 @@ This file contains group names and any other information you wish displayed abou
 #### Examples
 
 * [Gene Example](examples/example.groups.txt)
-* [Baseball Example](examples/teams-annot.txt)
+* [Baseball Example](../data/teams-annot.txt)
 
 ### Group Hierarchy File
 
@@ -194,7 +194,7 @@ This file contains how the groups are organized in a hierarchy. This is done by 
 #### Examples
 
 * [Gene Example](examples/example.hier.txt)
-* [Baseball Example](examples/teams-hier.txt)
+* [Baseball Example](../data/teams-hier.txt)
 
 ### Group to Element
 
@@ -207,7 +207,7 @@ This puts all elements into the appropriate group. Elements may be put into sepa
 #### Examples
 
 * [Gene Example](examples/example.2group.txt)
-* [Baseball Example](examples/team2player.txt)
+* [Baseball Example](../data/team2player.txt)
 
 ### GeneLights
 

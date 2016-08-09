@@ -1,5 +1,6 @@
 body {
     /*background-color: #F3EFE0;*/
+    background-color: #EEEEEE;
     color: #404040;
     font-family: 'Noto Sans', sans-serif;
 }
@@ -9,7 +10,8 @@ h1 {
 }
 
 h3 {
-    color: #F3EFE0;
+    /*color: #F3EFE0;*/
+    color: #DDDDDD;
     padding-left: 10px;
 }
 
@@ -21,13 +23,17 @@ textarea {
     width: 100%;
 }
 
+table {
+    table-layout: fixed;
+}
+
 #sunGui {
     width: 100%;
     height: 300px;
 }
 
 .container {
-    padding-top: 20px;
+    background-color: #EEEEEE;
 }
 
 .btn {
@@ -57,7 +63,8 @@ textarea {
     background-color: #111;
     height: 400px;
     padding: 5px;
-    color: #F3EFE0;
+    /*color: #F3EFE0;*/
+    color: #DDDDDD;
     margin-top: 10px;
     margin-bottom: 10px;
 }
@@ -79,15 +86,26 @@ textarea {
     width: 100%;
     height: 100px;
     color: #404040;
+    overflow: auto;
+}
+
+.gene-id {
+    font-family: monospace;
 }
 
 tr {
     width: 100%;
+    height: 10px;
 }
 
 .table-striped tbody tr.highlight td {
-    background-color: #9A3334;
-    color: #F3EFE0;
+    background-color: #2288EE;
+    /*color: #F3EFE0;*/
+    color: #FFFFFF;
+}
+
+.table-striped tr {
+    padding-left: 10px;
 }
 
 #controlFbuttons {
@@ -101,6 +119,11 @@ tr {
     display: inline-block;
     padding-left: 1px;
     padding-right: 1px;
+    padding-bottom: 5px;
+}
+
+#coolM li {
+    display: block;
 }
 
 #controlFbottom, #goTop {
@@ -131,11 +154,36 @@ tr {
 
 #goCount, #geneCount {
     padding-top: 10px;
-    color: #F3EFE0;
+    /*color: #F3EFE0;*/
+    color: #DDDDDD;
 }
 
 
-#geneSearch {
+#findF {
     /**width: 150px;*/
     width: 65%;
+}
+
+#statsTable {
+    width: 100%;
+}
+
+#loadTable {
+    width: 100%;
+}
+
+.td-container {
+    position: relative;
+}
+
+.td-content {
+    position: absolute;
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.spacer {
+    height: 0;
+    overflow: hidden;
 }

@@ -1,0 +1,15 @@
+# species file list format:
+# species name | gene annotation file | GO term annotation file | GO term hierarchy file | GO term / gene correspondence file [ | species description ]
+Arabidopsis thaliana columbia tair8 | Ath2008/Ath-20080501.txt.gz | Ath2008/go-20080618-annot.txt.gz | Ath2008/go-20080618-hier.txt.gz | Ath2008/go2gene-20080811.txt.gz | arabidopsis (TAIR 8, GO)
+Arabidopsis thaliana columbia tair9 | AthT9/Ath-t9.txt.gz | AthT9/go-t9-annot.txt.gz | AthT9/go-t9-hier.txt.gz | AthT9/go2gene.txt.gz | arabidopsis (TAIR 9, GO)
+Arabidopsis thaliana columbia tair10 | AthT10/Ath-t10.txt.gz | AthT10/go-t10-annot.txt.gz | AthT10/go-t10-hier.txt.gz | AthT10/go2gene.txt.gz | arabidopsis (TAIR 10, GO)
+Oryza sativa japonica msu6_1| Os2009/Os-20090901.txt.gz | Os2009/go-20080618-annot.txt.gz | Os2009/go-20080618-hier.txt.gz | Os2009/go2gene-20090901.txt.gz | Oryza sativa
+Zea mays mays B73 | ZEAMAYS_DB/geneannot.txt.gz | ZEAMAYS_DB/goannot.txt.gz | ZEAMAYS_DB/gohier.txt.gz | ZEAMAYS_DB/go2genes.txt.gz | Zea mays
+Glycine max williams82 v1_1 | GLMA_DB/geneannot.txt.gz | GLMA_DB/goannot.txt.gz | GLMA_DB/gohier.txt.gz | GLMA_DB/go2genes.txt.gz | Glycine max
+Manihot esculenta AM560 v4_1 | MESCULENTA_DB/geneannot.txt.gz | MESCULENTA_DB/goannot.txt.gz | MESCULENTA_DB/gohier.txt.gz | MESCULENTA_DB/go2genes.txt.gz | Manihot esculenta
+arabidopsisPO | annotation.txt.gz | po-araba-annot.txt | po-araba-hier.txt | term2geneZ.txt | arabidopsis (TAIR, PO)
+human | annot_human.txt | go-annot.txt.gz | go-hier.txt.gz | go_gene_human.txt | human (UniProt)
+MLB | players.txt | teams-annot.txt | teams-hier.txt | team2player.txt
+fly | flyGENE.annotation | go-annot.txt.gz | go-hier.txt.gz | flyGENE.go.z | fly (flybase)
+rice | rice-annot.txt | go-annot.txt.gz | go-hier.txt.gz | go2rice.txt | rice (Gramene)
+eVOC | eVOCGenedefs.txt | eVOCGroupDefs.txt | eVOCGroupHier.txt | eVOCToGenes.txt

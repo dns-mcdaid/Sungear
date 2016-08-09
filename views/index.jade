@@ -4,14 +4,19 @@ block content
     nav(class='navbar navbar-default')
         div(class='container-fluid')
             div(class='navbar-header')
+                button(type='button', class='navbar-toggle collapsed', data-toggle='collapse', data-target='#navbar-options', aria-expanded='false')
+                    span(class='sr-only') Toggle navigation
+                    span(class='icon-bar')
+                    span(class='icon-bar')
+                    span(class='icon-bar')
                 a(class='navbar-brand') #{title}
-            div(class='collapse navbar-collapse')
+            div(class='collapse navbar-collapse', id='navbar-options')
                 ul(class='nav navbar-nav')
                     li(class='dropdown')
                         a(href='#', class='dropdown-toggle', data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='false') File
                         ul(class='dropdown-menu')
                             li
-                                a(href='#', id='nav-load') Load...
+                                a(href='#', id='loadB', data-toggle='modal', data-target='#loadD') Load...
                             li
                                 a(href='#', id='screenshot') Screen Shot
                     li(class='dropdown')
@@ -40,14 +45,14 @@ block content
                             li
                                 a(href='#', id='relax-vessels', title='true') Relax Vessels
                                     //span(class='glyphicon glyphicon-ok')
-                            li(class='disabled')
+                            li
                                 a(href='#', id='full-screen') Full Screen
                                     //span(class='glyphicon glyphicon-ok')
                     li(class='dropdown')
                         a(href='#', class='dropdown-toggle', data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='false', id='helpM') Help
                         ul(class='dropdown-menu')
                             li
-                                a(href='#', id='helpI') About...
+                                a(href='#', id='helpI', data-toggle='modal', data-target='#aboutD') About...
                             li
                                 a(href='#', id='infoI') File Info...
 
@@ -57,17 +62,19 @@ block content
             div(id='geneF', class='img-rounded')
                 h3 Genes
                 table(class='table table-striped img-rounded', id='geneFtable')
+                    col(width='80px')
+                    col
                     thead
                         tr
                             th ID
                             th Description
-                    tbody(id='geneTableBody')
+                    tbody(id='geneTBody')
 
-                input(type='text', name='geneSearch', id='geneSearch')
+                input(type='text', name='findF', id='findF')
                 a(class='btn btn-primary', id='findSelectB', role='button', data-toggle='tooltip') Find
                 a(class='btn btn-primary', id='collapseT', role='button', data-toggle='tooltip')
                     span(class='glyphicon glyphicon-align-justify')
-                p(id='geneCount') TBD
+                p(id='statusF') TBD
                 span(data-toggle='modal', data-target='#queryD')
                     a(class='btn btn-primary', id='queryB', role='button', data-toggle="tooltip") Query
                 a(class='btn btn-primary', id='copyB', role='button', data-toggle="tooltip") Copy
@@ -76,20 +83,29 @@ block content
             div(id='controlF', class='img-rounded')
                 // Control Dialog
                 h3 Controls
-                ul(id='controlFbuttons')
+                div(id='controlFbuttons')
                     li
                         a(class='btn btn-primary', id='restartB', role='button', data-toggle='tooltip') Restart
+                    li
                         a(class='btn btn-primary', id='allB', role='button', data-toggle='tooltip') All
+                    li
                         a(class='btn btn-primary', id='noneB', role='button', data-toggle='tooltip') None
+                    li
                         a(class='btn btn-primary', id='backB', role='button', data-toggle='tooltip') <<
+                    li
                         a(class='btn btn-primary', id='forwardB', role='button', data-toggle='tooltip') >>
+                    li
                         a(class='btn btn-primary', id='narrowB', role='button', data-toggle='tooltip') Narrow
+                    li
                         a(class='btn btn-primary', id='unionB', role='button', data-toggle='tooltip')
                             span(class='glyphicon glyphicon-plus-sign')
+                    li
                         a(class='btn btn-primary', id='intersectB', role='button', data-toggle='tooltip')
                             span(class='glyphicon glyphicon-adjust')
-                        a(class='btn btn-primary', id='coolB', role='button', data-toggle='tooltip') Find Cool
-                            // TODO: @Dennis add a dropdown menu to this button which is toggle-able.
+                    li(class='dropdown')
+                        a(class='btn btn-primary', id='coolB', role='button', class='dropdown-toggle', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false') Find Cool
+                        ul(class='dropdown-menu', id='coolM')
+
                 table(class='table table-striped img-rounded', id='controlFtable')
                     thead(id='controlFtableHeader')
                         tr
@@ -104,7 +120,7 @@ block content
                     a(class='btn btn-primary', id='exportB', role='button') Export
 
             div(id='sungearF', class='img-rounded')
-                h3 Sungear Dialog
+                h3 Sungear
                 div(id='sungearGui')
 
         div(class='col-md-3')
@@ -131,6 +147,40 @@ block content
                     option(value='name') Sort by Name
                     option(value='count') Sort by Count
 
+    // Load Dialog
+    div(class='modal fade', id='loadD', tabindex='-1', role='dialog', aria-labelledby='loadDLabel')
+        div(class='modal-dialog', role='document')
+            div(class='modal-content')
+                div(class='modal-header')
+                    button(type='button', class='close', data-dismiss='modal', aria-label='Close')
+                        span(aria-hidden='true') &times;
+                    h4(class='modal-title', id='loadDLabel') Experiments
+                div(class='modal-body')
+                    table(id='loadTable' class='table-striped')
+                        col(width="20%")
+                        col(width="45%")
+                        col(width="10%")
+                        thead
+                            tr
+                                th Name
+                                th Description
+                                th Species
+                        tbody(id='loadBody')
+
+                div(class='modal-footer')
+                    button(type='button', class='btn btn-default', data-dismiss='modal') Cancel
+                    button(type='button', class='btn btn-primary', id='openB', data-dismiss='modal') Open
+    // About Dialog
+    div(class='modal fade', id='aboutD', tabindex='-1', role='dialog', aria-labelledby='aboutDLabel')
+        div(class='modal-dialog', role='document')
+            div(class='modal-content')
+                div(class='modal-header')
+                    button(type='button', class='close', data-dismiss='modal', aria-label='Close')
+                        span(aria-hidden='true') &times;
+                    h4(class='modal-title', id='aboutDLabel') TBA
+                div(class='modal-body', id='aboutDBody')
+                div(class='modal-footer')
+                    button(type='button', class='btn btn-default', data-dismiss='modal') Close
     // Query Dialog
     div(class='modal fade', id='queryD', tabindex='-1', role='dialog', aria-labelledby='queryDLabel')
         div(class='modal-dialog', role='document')
@@ -144,7 +194,28 @@ block content
                 div(class='modal-footer')
                     button(type='button', class='btn btn-default', data-dismiss='modal') Cancel
                     button(type='button', class='btn btn-primary', id='queryDSubmit', data-dismiss='modal') OK
+    // Stats Dialog
+    div(class='modal fade', id='statsF', tabindex='-1', role='dialog', aria-labelledby='statsFLabel')
+        div(class='modal-dialog', role='document')
+            div(class='modal-content')
+                div(class='modal-header')
+                    button(type='button', class='close', data-dismiss='modal', aria-label='Close')
+                        span(aria-hidden='true') &times;
+                    h4(class='modal-title', id='statsFLabel') Stats
+                div(class='modal-body')
+                    table(id='statsTable' class='table-striped')
+                        thead
+                            tr
+                                th Anchors
+                                th Vessels
+                                th Genes
+                        tbody(id='statsBody')
 
+                div(class='modal-footer')
+                    button(type='button', class='btn btn-default', data-dismiss='modal') Cancel
+                    button(type='button', class='btn btn-primary', id='statsFSubmit', data-dismiss='modal') OK
+
+    input(type='hidden', id='vis' value=JSON.stringify(data))
     script(src='/javascripts/out.js')
     script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js')
     script(src='http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js')

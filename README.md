@@ -1,8 +1,11 @@
-# Sungear Demo Page
-
-## Welcome to Sungear
+# Sungear
 
 Sungear enables rapid, visually interactive exploration of large sets of genomic data. It allows browsing of gene sets by experiment membership, gene annotation, and ontological term. The purpose of Sungear is to make otherwise complicated queries quick and visually intuitive.
+
+## Authors
+
+* [Radhika Mattoo](https://github.com/radhikamattoo)
+* [Dennis McDaid](https://github.com/RajahBimmy)
 
 ## Guide and FAQ
 If you have questions about how to use Sungear, or if it isn't loading properly, check out the sungear [documentation](docs/).
@@ -78,11 +81,14 @@ List1 | List2 | gene
 
 ## Dependencies
 
-In order to run on a modern web browser, Sungear requires the following dependencies, which are loaded at runtime:
+In order to run on a modern web browser, Sungear requires the following dependencies:
 
 * [Node.js](https://nodejs.org/en/): Runtime environment for entire program.
+* [Express](https://expressjs.com/): The jelly to Node's peanut butter. Holds together and keeps track of our dependencies.
 * [p5](http://p5js.org/): Data visualizer for Sungear GUI and GeneLights description.
 * [Browserify](http://browserify.org/): A magical gift from the Gods which brings all of the fun Node has to offer to the client side.
-* [javascript.util](https://www.npmjs.com/package/javascript.util): Data Structure resource.
-* [jQuery](https://jquery.com/): Necessary for Bootstrap and fluid controllers.
-* [Bootstrap](http://getbootstrap.com/): Grid System allowing clean formatting of Sungear Interface.
+* [javascript.util](https://www.npmjs.com/package/javascript.util): Tree Set resource.
+* [collections.js](http://www.collectionsjs.com/): SortedSet resource.
+* [Jade](http://jade-lang.com/): Template engine used for Node apps.
+* [jQuery](https://jquery.com/): Necessary for Bootstrap and manipulating Javascript Objects.
+* [Bootstrap](http://getbootstrap.com/): Grid System responsible for our entire UI looking somewhat easy on the eyes.
