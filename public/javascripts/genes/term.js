@@ -39,6 +39,7 @@
  */
 
 const SortedSet = require("collections/sorted-set");
+const HypergeometricDistribution = require("../hyperGeo/distribution/HypergeometricDistribution");
 
 /**
  * Constructs a new GO term.
@@ -54,8 +55,6 @@ function Term(id, name) {
     this.localGenes = new SortedSet();    /** The genes associated strictly with this node */
     this.storedCount = -1;  /** @type int The number of genes in {@link #allGenes} represented in some set, usually the active set */
     this.p_t = 0;           /** @type double z-score calculation term */
-    this.stdev = 0.0;       /** @type double z-score calculation term */
-    this.zScore = 0.0;      /** @type double z-score calculation term */
     this.active = false;    /** Denotes whether any genes are associated with this term in the current experiment set */
     this.selectedState = Term.STATE_UNKNOWN;    /** @type int */
 }
@@ -66,6 +65,10 @@ Term.STATE_UNKNOWN = 0;
 Term.STATE_SELECTED = 1;
 /** Selected state flag: term not selected */
 Term.STATE_UNSELECTED = 2;
+
+Term.H;
+Term.Hyp;
+Term.Total;
 
 // TODO: @Radhika implement with Hypergeo.
 Term.prototype = {
@@ -81,7 +84,6 @@ Term.prototype = {
     },
     setRatio : function(p_t) {
         this.p_t = p_t;
-        this.stdev = Math.sqrt(p_t * (1-p_t));
     },
     addChild : function(c) {
         this.children.push(c);
@@ -137,11 +139,13 @@ Term.prototype = {
         return this.name.localeCompare(t.name);
     },
     toString : function() {
-        var v = this.zScore;
-        return "(" + v + ";" + this.getStoredCount() + ")" + this.name;
+       var Dig = 100000;
+        Term.Hyp = (Term.Hyp * Dig)/Dig;
+        var v = (!Number.isFinite(Term.Hyp) || Number.isNaN(Term.Hyp)) ? Number.toString(Term.Hyp) : Term.Hyp + "";
+        return "(" + v + " ; " + this.getStoredCount() + " ) " + this.name;
     },
-    getScore : function() {
-        return this.zScore;
+    getHyp: function(){
+        return Term.Hyp;
     },
     getStoredCount : function() {
         return this.storedCount;
@@ -163,7 +167,7 @@ Term.prototype = {
                 }
             }
             this.storedCount = s.size();
-            this.updateScore(aSet.size());
+            this.updateHyp(aSet.size());
         }
     },
     initUnion : function() {
@@ -195,12 +199,21 @@ Term.prototype = {
             this.allGenes = s;
         }
     },
-    updateScore : function(total) {
-        this.zScore = this.calcScore(this.getStoredCount(), total);
+    updateHyp: function(Q){
+      Term.Hyp = calcHyp(this.getStoredCount(), Q);
     },
-    calcScore : function(count, total) {
-        var f_t = count / total;
-        return (f_t-this.p_t && this.stdev == 0) ? 0 : (f_t - this.p_t) * Math.sqrt(total) / this.stdev;
+    setTotal: function(t){
+      Term.Total = t;
+    },
+    getTotal: function(){
+      return Term.Total;
+    },
+    calcHyp: function(Q_t, Q){
+      var A = this.getTotal();
+        var A_t = this.p_t * A;
+        Term.H = new HypergeometricDistribution(A, A_t, Q);
+        return H.upperCumulativeProbability(Q_t);
+
     },
     initSelectedState : function() {
         this.selectedState = Term.STATE_UNKNOWN;

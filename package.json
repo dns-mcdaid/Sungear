@@ -15,10 +15,12 @@
     "jade": "~1.11.0",
     "javascript.util": "~0.12.12",
     "kerberos": "~0.0.0",
+    "mongo-db": "^1.0.1",
     "mongodb": "~2.0.33",
     "morgan": "~1.7.0",
     "nodemon": "^1.9.2",
     "p5": "~0.5.2",
+    "request": "^2.74.0",
     "seedrandom": "^2.4.2",
     "serve-favicon": "~2.3.0"
   }
