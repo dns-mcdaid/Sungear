@@ -19,6 +19,7 @@ function Gene(name, desc) {
     this.name = name; /** {String} Gene PUB name */
     this.desc = desc; /** {String} Gene description. */
     this.exp = [];    /** {float[]} Gene expression values */
+    this.terms = [];
 }
 
 Gene.prototype = {
@@ -68,6 +69,12 @@ Gene.prototype = {
     },
     toString : function(){
         return this.name;
+    },
+    addTerm : function(term) {
+        this.terms.push(term);
+    },
+    getTerms : function() {
+        return this.terms;
     }
 };
 
