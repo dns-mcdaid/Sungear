@@ -1,9 +1,9 @@
 var express = require('express');
 var router = express.Router();
-var mongodb = require('mongo-db');
+var mongodb = require('mongodb');
 
 const dataTest = require('../public/javascripts/test/dataTest');
-require('../public/javascripts/test/HyperGeoTest').test();
+// require('../public/javascripts/test/HyperGeoTest').test();
 const VisGene = require('../lib/visGene');
 
 /* GET home page. */

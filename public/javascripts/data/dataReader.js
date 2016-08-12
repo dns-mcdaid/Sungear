@@ -40,12 +40,12 @@ DataReader.prototype = {
     constructor : DataReader,
 
     clear : function() {
-        this.allGenes = null;
-        this.terms = null;
-        this.roots = null;
-        this.geneToGo = null;
-        this.anchors = null;
-        this.expGenes = null;
+        this.allGenes = {};
+        this.terms = {};
+        this.roots = [];
+        this.geneToGo = {};
+        this.anchors = [];
+        this.expGenes = [];
     },
     /**
      * @param attrib {Attributes}
@@ -324,11 +324,22 @@ DataReader.prototype = {
 
     addPassedData : function(reader) {
         var i = 0;
-        var anchors = reader.anchors;
-        var allGenes = reader.allGenes;
-        var dupGenes = reader.dupGenes;
-        var expgenes = reader.expGenes;
-        var geneToGo = reader.geneToGo;
+        var passedAnchors = reader.anchors;
+        var passedAllGenes = reader.allGenes;
+        var passedDupGenes = reader.dupGenes;
+        var passedExpgenes = reader.expGenes;
+        var passedGeneToGo = reader.geneToGo;
+
+        for (i = 0; i < passedAnchors.length; i++) {
+            var anchor = passedAnchors[i];
+            this.anchors.push(new Anchor(anchor.name));
+        }
+        for (i = 0 ; i < passedExpgenes.length; i++) {
+            var expGene = passedExpgenes[i];
+            var expToAdd = new Gene(expGene.name, expGene.desc);
+            expToAdd.setExp(expGene.exp);
+            this.expGenes.push(expToAdd);
+        }
     }
 };
 

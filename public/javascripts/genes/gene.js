@@ -12,8 +12,8 @@
 
 /**
  * Constructs a new Gene.
- * @param name - the gene name.
- * @param desc - the gene description.
+ * @param name {String} the gene name.
+ * @param desc {String} the gene description.
  */
 function Gene(name, desc) {
     this.name = name; /** {String} Gene PUB name */

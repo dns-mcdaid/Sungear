@@ -240,44 +240,6 @@ VisGene.prototype = {
         // TODO: Implement this later.
         console.log("visGene.makeItem called! Please implement me.");
     },
-    /**
-     * Opens an experiment file.
-     * @throws IOException
-     * @throws ParseException
-     */
-    openFile : function(attrib) {
-        console.log("data file: " + attrib.get("sungearU"));
-        var f = null; // FIXME: Should be JOptionPane.getFrameForComponent(this)
-        var status = new StatusDialog(f, this);
-        var t = new LoadThread(attrib, status);
-        t.start();
-        // TODO: Make status visible.
-        if (t.getException() !== null) {
-            console.log(t.getException());
-            if (typeof t.getException() === 'ParseException') {
-                console.log("line: " + t.getException().getLine());
-                alert("Error reading Data: " + t.getException().getMessage());
-            }
-        } else {
-            var iL = attrib.get("itemsLabel", "items");
-            var cL = attrib.get("categoriesLabel", "categories");
-            // TODO: Change the geneF, geneM, goF, and goM titles
-            var r = this.src.getReader();
-            if (this.showWarning && r.missingGenes.size() + r.dupGenes.size() > 0) {
-                var msg = "There are inconsistencies in this data file:";
-                if (r.missingGenes.size() > 0) {
-                    msg += "\n" + r.missingGenes.size() + " input " + iL + " unknown to Sungear have been ignored.";
-                }
-                if (r.dupGenes.size() > 0) {
-                    msg += "\n" + r.dupGenes.size() + " " + iL + " duplicated in the input file; only the first occurence of each has been used.";
-                }
-                msg += "\nThis will not prevent Sungear from running, but you may want to resolve these issues.";
-                msg += "\nSee Help | File Info for details about the " + iL + " involved.";
-                alert(msg);
-            }
-        }
-        // TODO: Finish
-    },
     capFirst : function(s) {
         if (s.length > 1) {
             return s[0].toUpperCase();
@@ -372,7 +334,6 @@ VisGene.prototype = {
         var loadBody = document.getElementById('loadBody');
         var vis = JSON.parse(document.getElementById('vis').value);
         console.log(vis);
-
         this.dataDir = vis.dataDir;
 
         var exp = vis.exp.exp;
@@ -381,7 +342,12 @@ VisGene.prototype = {
         this.reader = new DataReader(vis.src.attrib);
         this.reader.addPassedData(vis.src.reader);
 
+
+
         this.src = new DataSource(this.dataDir);
+        this.src.reader = this.reader;
+        console.log("READER RESULTS:");
+        console.log(this.src);
     }
 };
 
