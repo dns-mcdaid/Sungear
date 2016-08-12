@@ -325,19 +325,26 @@ DataReader.prototype = {
     addPassedData : function(reader) {
         var i = 0;
         var passedAnchors = reader.anchors;
-        var passedAllGenes = reader.allGenes;
-        var passedDupGenes = reader.dupGenes;
-        var passedExpgenes = reader.expGenes;
-        var passedGeneToGo = reader.geneToGo;
+        var passedItems = reader.items;
+        var passedCategories = reader.categories;
+        var passedSets = reader.expSets;
 
         for (i = 0; i < passedAnchors.length; i++) {
             var anchor = passedAnchors[i];
             this.anchors.push(new Anchor(anchor.name));
         }
-        for (i = 0 ; i < passedExpgenes.length; i++) {
-            var expGene = passedExpgenes[i];
-            var expToAdd = new Gene(expGene.name, expGene.desc);
-            expToAdd.setExp(expGene.exp);
+        for (i = 0 ; i < passedItems.length; i++) {
+            var expGene = passedItems[i];
+            var expToAdd = new Gene(expGene.id, expGene.description);
+            var exp = [];
+            for (var j = 0; j < this.anchors.length; j++) {
+                if (passedSets[this.anchors[j].name].indexOf(expGene.id) > -1) {
+                    exp[j] = 1;
+                } else {
+                    exp[j] = 0;
+                }
+            }
+            expToAdd.setExp(exp);
             this.expGenes.push(expToAdd);
         }
     }
