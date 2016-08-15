@@ -29,8 +29,7 @@ new p5(function(p5) {
     };
     p5.draw = function() {
         p5.background("#111111");
-        vis.gear.paintExterior(p5);
-        //vis.gear.paintComponent(p5);
+        vis.gear.paintComponent(p5);
         vis.gear.makeButtons(p5);
     };
 

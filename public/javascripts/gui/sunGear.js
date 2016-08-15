@@ -421,39 +421,39 @@ SunGear.prototype = {
         var anchorConv = {};
         var t = 3.0 * Math.PI / 2.0;
         var dt = 2.0 * Math.PI / anch.length;
-        for (i = 0; i < this.anchors.length; i++) {
+        for (i = 0; i < anch.length; i++) {
             var a = anch[i];
             this.anchors[i] = new AnchorDisplay(a);
             anchorConv[a] = this.anchors[i];
-            this.anchors[i].setScale(Math.min(1, 8.0/this.anchors.length));
+            this.anchors[i].setScale(Math.min(1, 8.0/anch.length));
             this.anchors[i].setAngle(t);
             t = (t+dt) % (2.0 * Math.PI);
         }
+        // init outer gear shape and inner radius size
+        if (this.anchors.length < 3) {
+            this.rad_inner = 1 - this.vRadMax;
+            this.exterior = {
+                x : -(SunGear.R_CIRCLE),
+                y : -(SunGear.R_CIRCLE),
+                w : 2*SunGear.R_CIRCLE,
+                h : 2*SunGear.R_CIRCLE
+            };
+        } else {
+            var x = [];
+            var y = [];
+            for (i = 0; i < this.anchors.length; i++) {
+                var t1 = this.anchors[i].getAngle();
+                x.push(SunGear.R_CIRCLE*Math.cos(t1));
+                y.push(SunGear.R_CIRCLE*Math.sin(t1));
+            }
+            this.exterior = {
+                x : x,
+                y : y,
+                w : null,
+                h : null
+            };
+        }
         // TODO: Uncomment this.
-        // // init outer gear shape and inner radius size
-        // if (this.anchors.length < 3) {
-        //     this.rad_inner = 1 - this.vRadMax;
-        //     this.exterior = {
-        //         x : -(SunGear.R_CIRCLE),
-        //         y : -(SunGear.R_CIRCLE),
-        //         w : 2*SunGear.R_CIRCLE,
-        //         h : 2*SunGear.R_CIRCLE
-        //     };
-        // } else {
-        //     var x = [];
-        //     var y = [];
-        //     for (i = 0; i < this.anchors.length; i++) {
-        //         var t1 = this.anchors[i].getAngle();
-        //         x.push(SunGear.R_CIRCLE*Math.cos(t1));
-        //         y.push(SunGear.R_CIRCLE*Math.sin(t1));
-        //     }
-        //     this.exterior = {
-        //         x : x,
-        //         y : y,
-        //         w : null,
-        //         h : null
-        //     };
-        // }
         // // init vessel display components
         // this.vessels = [];
         // var vesselConv = {};
@@ -910,15 +910,17 @@ SunGear.prototype = {
         var i = 0;
         p5.push();
         this.makeTransform(p5, this.WIDTH, this.HEIGHT);
+        this.paintExterior(p5);
         p5.fill(SunGear.C_PLAIN);
-        for (i = 0; i < this.vessels.length; i++) {
-            this.vessels[i].draw(p5);
-        }
+        // for (i = 0; i < this.vessels.length; i++) {
+        //     this.vessels[i].draw(p5);
+        // }
         p5.pop();
         p5.push();
+        var drawT = { x : this.WIDTH/2.0, y : this.HEIGHT/2.0 };
         for (i = 0; i < this.anchors.length; i++) {
             if (this.anchors[i] != this.lastAnchor) {
-                this.anchors[i].draw(p5);
+                this.anchors[i].draw(p5, drawT);
             }
         }
         // draw current mouse-over anchor last, if any?
@@ -927,24 +929,24 @@ SunGear.prototype = {
         }
         p5.pop();
 
-        p5.push();
-        p5.textSize(18);
-        p5.textAlign(p5.RIGHT);
-        p5.textFont("Helvetica");
-        p5.text(this.highCnt+"", this.WIDTH-10, 18);
-        p5.text(this.genes.getSelectedSet().size()+"", this.WIDTH-10, this.HEIGHT-40);
-        p5.text(this.genes.getActiveSet().size()+"", this.WIDTH-10, this.HEIGHT-18);
-        p5.pop();
-
-        // moon label
-        var ml = null;
-        if (this.genes !== null && this.genes.getSource() !== null && this.genes.getSource().getAttributes() !== null) {
-            ml = this.genes.getSource().getAttributes().get("moonLabel");
-        }
-        if (ml !== null && this.moon !== null && this.moon.getActiveCount() > 0) {
-            p5.textSize(14);
-            // TODO: Something here. Unsure.
-        }
+        // p5.push();
+        // p5.textSize(18);
+        // p5.textAlign(p5.RIGHT);
+        // p5.textFont("Helvetica");
+        // p5.text(this.highCnt+"", this.WIDTH-10, 18);
+        // p5.text(this.genes.getSelectedSet().size()+"", this.WIDTH-10, this.HEIGHT-40);
+        // p5.text(this.genes.getActiveSet().size()+"", this.WIDTH-10, this.HEIGHT-18);
+        // p5.pop();
+        //
+        // // moon label
+        // var ml = null;
+        // if (this.genes !== null && this.genes.getSource() !== null && this.genes.getSource().getAttributes() !== null) {
+        //     ml = this.genes.getSource().getAttributes().get("moonLabel");
+        // }
+        // if (ml !== null && this.moon !== null && this.moon.getActiveCount() > 0) {
+        //     p5.textSize(14);
+        //     // TODO: Something here. Unsure.
+        // }
     },
     makeTransform : function(p5, w, h) {
         var M = Math.min(w, h);
@@ -1165,8 +1167,6 @@ SunGear.prototype = {
      * @param p5
      */
     paintExterior : function(p5) {
-        p5.push();
-        this.makeTransform(p5, this.WIDTH, this.HEIGHT);
         p5.stroke(SunGear.C_PLAIN);
         p5.fill(SunGear.C_BACKGROUND);
         p5.strokeWeight(.025);
@@ -1183,7 +1183,6 @@ SunGear.prototype = {
             p5.ellipseMode(p5.CORNER);
             p5.ellipse(this.exterior.x, this.exterior.y, this.exterior.w, this.exterior.h);
         }
-        p5.pop();
     }
 };
 

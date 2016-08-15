@@ -335,7 +335,6 @@ VisGene.prototype = {
     collectPasssedData : function() {
         var loadBody = document.getElementById('loadBody');
         var vis = JSON.parse(document.getElementById('vis').value);
-        console.log(vis);
         this.dataDir = vis.dataDir;
 
         var exp = vis.exp.exp;

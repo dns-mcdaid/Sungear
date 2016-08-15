@@ -31,7 +31,7 @@ AnchorDisplay.prototype = {
     cleanup : function() {
         this.anchor.cleanup();
     },
-    /** @param s {double} */
+    /** @param s {Number} */
     setScale : function(s) {
         this.scale = s;
         if(!isNaN(this.angle)) {
@@ -43,7 +43,7 @@ AnchorDisplay.prototype = {
         this.textScale = s;
     },
     /**
-     * @param theta {double}
+     * @param theta {Number}
      */
     setAngle : function(theta) {
         this.angle = theta;
@@ -90,13 +90,27 @@ AnchorDisplay.prototype = {
     isShowLongDesc : function() {
         return this.showLongDesc;
     },
-    draw : function(p5) {
-        // TODO: Implement lines 79 - 82
+    draw : function(p5, drawT) {
+        var tx = drawT.x;
+        var ty = drawT.y;
+        var tm = Math.min(tx, ty);
+        var scale = (0.5*tm/SunGear.R_OUTER) / 192.91666666666669;
+        var off = 34*scale;
+        p5.push();
         p5.textSize(18);
         p5.textAlign(p5.CENTER);
         p5.textFont("Helvetica");
         var l = this.showLongDesc ? this.longDesc : this.shortDesc;
-        p5.push();
+        p5.translate(tx, ty);
+        p5.rotate(this.angle);
+        p5.translate(off + tm/1.3, 0);
+        p5.rotate(this.angle < Math.PI ? -Math.PI/2.0 : Math.PI/2.0);
+        // // TODO: Fix this.
+        p5.translate(-0.5, 7*scale);
+        p5.fill(this.select ? SunGear.C_SELECT : (this.highlight ? SunGear.C_HIGHLIGHT : SunGear.C_PLAIN));
+        p5.text(l, 0, 0);
+        p5.pop();
+        // TODO: Continue implementation.
     },
     /**
      * @param p of type Point2D.Double
@@ -120,3 +134,5 @@ AnchorDisplay.prototype = {
         return this.anchor.compareTo(a.anchor);
     }
 };
+
+module.exports = AnchorDisplay;
