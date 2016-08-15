@@ -411,16 +411,16 @@ SunGear.prototype = {
         this.vMax = 0;
         this.vMin = Number.MAX_VALUE;
         var i = 0;
-        for (i = 0; i < ves.size(); i++) {
-            var v = ves[i];
-            this.vMax = Math.max(this.vMax, v.getFullCount());
-            this.vMin = Math.max(this.vMin, v.getFullCount());
-        }
+        // for (i = 0; i < ves.length; i++) {
+        //     var v = ves[i];
+        //     this.vMax = Math.max(this.vMax, v.getFullCount());
+        //     this.vMin = Math.max(this.vMin, v.getFullCount());
+        // }
         // init anchor display components
         this.anchors = [];
         var anchorConv = {};
         var t = 3.0 * Math.PI / 2.0;
-        var dt = 2.0 * Math.PI / this.anchors.length;
+        var dt = 2.0 * Math.PI / anch.length;
         for (i = 0; i < this.anchors.length; i++) {
             var a = anch[i];
             this.anchors[i] = new AnchorDisplay(a);
@@ -429,49 +429,50 @@ SunGear.prototype = {
             this.anchors[i].setAngle(t);
             t = (t+dt) % (2.0 * Math.PI);
         }
-        // init outer gear shape and inner radius size
-        if (this.anchors.length < 3) {
-            this.rad_inner = 1 - this.vRadMax;
-            this.exterior = {
-                x : -(SunGear.R_CIRCLE),
-                y : -(SunGear.R_CIRCLE),
-                w : 2*SunGear.R_CIRCLE,
-                h : 2*SunGear.R_CIRCLE
-            };
-        } else {
-            var x = [];
-            var y = [];
-            for (var i = 0; i < this.anchors.length; i++) {
-                var t1 = this.anchors[i].getAngle();
-                x.push(SunGear.R_CIRCLE*Math.cos(t1));
-                y.push(SunGear.R_CIRCLE*Math.sin(t1));
-            }
-            this.exterior = {
-                x : x,
-                y : y,
-                w : null,
-                h : null
-            };
-        }
-        // init vessel display components
-        this.vessels = [];
-        var vesselConv = {};
-        for (var i = 0; i < this.vessels.length; i++) {
-            var v = ves[i];
-            this.vessels[i] = new VesselDisplay(v);
-            vesselConv[v] = this.vessels[i];
-            this.vessels[i].setRadMin(this.minRad[this.minRadIdx]);
-            this.vessels[i].setShowArrows(this.showArrows);
-            this.vessels[i].setAnchors(anchorConv);
-            this.vessels[i].setMax(this.vMax);
-            this.vessels[i].initActive();
-            this.vessels[i].makeShape(this.rad_inner);
-            if (this.vessels[i].anchor.length == 0) {
-                this.moon = this.vessels[i];
-            }
-        }
-        // offset centers of overlapping vessels
-        this.positionVessels();
+        // TODO: Uncomment this.
+        // // init outer gear shape and inner radius size
+        // if (this.anchors.length < 3) {
+        //     this.rad_inner = 1 - this.vRadMax;
+        //     this.exterior = {
+        //         x : -(SunGear.R_CIRCLE),
+        //         y : -(SunGear.R_CIRCLE),
+        //         w : 2*SunGear.R_CIRCLE,
+        //         h : 2*SunGear.R_CIRCLE
+        //     };
+        // } else {
+        //     var x = [];
+        //     var y = [];
+        //     for (i = 0; i < this.anchors.length; i++) {
+        //         var t1 = this.anchors[i].getAngle();
+        //         x.push(SunGear.R_CIRCLE*Math.cos(t1));
+        //         y.push(SunGear.R_CIRCLE*Math.sin(t1));
+        //     }
+        //     this.exterior = {
+        //         x : x,
+        //         y : y,
+        //         w : null,
+        //         h : null
+        //     };
+        // }
+        // // init vessel display components
+        // this.vessels = [];
+        // var vesselConv = {};
+        // for (var i = 0; i < this.vessels.length; i++) {
+        //     var v = ves[i];
+        //     this.vessels[i] = new VesselDisplay(v);
+        //     vesselConv[v] = this.vessels[i];
+        //     this.vessels[i].setRadMin(this.minRad[this.minRadIdx]);
+        //     this.vessels[i].setShowArrows(this.showArrows);
+        //     this.vessels[i].setAnchors(anchorConv);
+        //     this.vessels[i].setMax(this.vMax);
+        //     this.vessels[i].initActive();
+        //     this.vessels[i].makeShape(this.rad_inner);
+        //     if (this.vessels[i].anchor.length == 0) {
+        //         this.moon = this.vessels[i];
+        //     }
+        // }
+        // // offset centers of overlapping vessels
+        // this.positionVessels();
     },
     positionVessels : function() {
         if (this.polarPlot) {

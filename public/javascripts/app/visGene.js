@@ -159,6 +159,8 @@ VisGene.prototype = {
 
         this.aboutDLabel = document.getElementById('aboutDLabel');
         this.aboutDBody = document.getElementById('aboutDBody');
+
+        this.gear.makeDisplay(this.src.getReader().anchors, null);
     },
     // run : function() {
     //     try {
