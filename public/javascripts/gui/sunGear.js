@@ -917,7 +917,11 @@ SunGear.prototype = {
         // }
         p5.pop();
         p5.push();
-        var drawT = { x : this.WIDTH/2.0, y : this.HEIGHT/2.0 };
+        var drawT = {
+            x : this.WIDTH/2.0,
+            y : this.HEIGHT/2.0,
+            scale : 0.5*Math.min(this.WIDTH/2.0, this.HEIGHT/2.0)/SunGear.R_OUTER
+        };
         for (i = 0; i < this.anchors.length; i++) {
             if (this.anchors[i] != this.lastAnchor) {
                 this.anchors[i].draw(p5, drawT);

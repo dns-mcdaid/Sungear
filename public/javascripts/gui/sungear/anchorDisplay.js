@@ -94,20 +94,44 @@ AnchorDisplay.prototype = {
         var tx = drawT.x;
         var ty = drawT.y;
         var tm = Math.min(tx, ty);
-        var scale = (0.5*tm/SunGear.R_OUTER) / 192.91666666666669;
+        var scale = drawT.scale / 192.91666666666669;
         var off = 34*scale;
         p5.push();
         p5.textSize(18);
         p5.textAlign(p5.CENTER);
         p5.textFont("Helvetica");
+
         var l = this.showLongDesc ? this.longDesc : this.shortDesc;
+
         p5.translate(tx, ty);
         p5.rotate(this.angle);
         p5.translate(off + tm/1.3, 0);
         p5.rotate(this.angle < Math.PI ? -Math.PI/2.0 : Math.PI/2.0);
-        // // TODO: Fix this.
         p5.translate(-0.5, 7*scale);
-        p5.fill(this.select ? SunGear.C_SELECT : (this.highlight ? SunGear.C_HIGHLIGHT : SunGear.C_PLAIN));
+
+        var x = tx + (off+tm/1.3) - 0.5;
+        var y = ty + 7*scale;
+
+        // console.log(x +"," + y);
+        // console.log(p5.mouseX +","+p5.mouseY);
+
+        if (p5.dist(p5.mouseX, p5.mouseY, 0, 0) < scale*7) {
+            if (p5.mouseIsPressed) {
+                p5.fill(SunGear.C_SELECT);
+                this.select = true;
+                this.highlight = false;
+            } else {
+
+                p5.fill(SunGear.C_HIGHLIGHT);
+                this.highlight = true;
+                this.select = false;
+            }
+        } else {
+            p5.fill(SunGear.C_PLAIN);
+            this.select = false;
+            this.highlight = false;
+        }
+        // p5.fill(this.select ? SunGear.C_SELECT : (this.highlight ? SunGear.C_HIGHLIGHT : SunGear.C_PLAIN));
         p5.text(l, 0, 0);
         p5.pop();
         // TODO: Continue implementation.
