@@ -334,9 +334,9 @@ DataReader.prototype = {
             this.anchors.push(new Anchor(anchor.name));
         }
         // //REMOVE ME:
-        this.anchors.push(new Anchor("Carl"));
-        this.anchors.push(new Anchor("Sheen"));
-        this.anchors.push(new Anchor("Jimmy"));
+        // this.anchors.push(new Anchor("Carl"));
+        // this.anchors.push(new Anchor("Sheen"));
+        // this.anchors.push(new Anchor("Jimmy"));
         // this.anchors.push(new Anchor("Bobby"));
         // for (i = 0 ; i < passedItems.length; i++) {
         //     var expGene = passedItems[i];

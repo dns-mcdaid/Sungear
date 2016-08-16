@@ -102,45 +102,39 @@ AnchorDisplay.prototype = {
         p5.textSize(18);
         p5.textAlign(p5.CENTER);
         p5.textFont("Helvetica");
-        p5.noStroke();
 
         var l = this.showLongDesc ? this.longDesc : this.shortDesc;
 
+        var getRotation = rotate(tx, ty, (off + tm+25), ty, this.angle);
+        var x = getRotation[0];
+        var tempX = x - tx;
+        x = tx - tempX;
+        var y = getRotation[1];
+
+        // DEBUGGING PURPOSES ONLY:
+        // p5.fill(SunGear.C_PLAIN);
+        // p5.ellipse(x, y, 10, 10);
+
         p5.translate(tx, ty);
         p5.rotate(this.angle);
-        p5.translate(off + tm/1.3, 0);
+        p5.translate(off + tm/1.2, 0);
         p5.rotate(this.angle < Math.PI ? -Math.PI/2.0 : Math.PI/2.0);
         p5.translate(-0.5, 7*scale);
-        // var myVector = p5.createVector(tx, ty);
-        // // myVector.rotate(this.angle);
-        // myVector.x += off + tm/1.3;
 
-        var getRotation = rotate(tx, ty, 0, 0, this.angle);
 
-        if (this.shit) {
-            this.shit = false;
-            console.log(l);
-            console.log(getRotation[0] + (off + tm/1.3));
-            console.log(getRotation[1]);
-        }
-
-        if (p5.dist(p5.mouseX, p5.mouseY, getRotation[0], getRotation[1]) < scale*7*18) {
+        if (p5.dist(p5.mouseX, p5.mouseY, x, y) < scale*18) {
             if (p5.mouseIsPressed) {
-                p5.fill(SunGear.C_SELECT);
                 this.select = true;
                 this.highlight = false;
-
             } else {
-                p5.fill(SunGear.C_HIGHLIGHT);
                 this.highlight = true;
                 this.select = false;
             }
         } else {
-            p5.fill(SunGear.C_PLAIN);
             this.select = false;
             this.highlight = false;
         }
-        // p5.fill(this.select ? SunGear.C_SELECT : (this.highlight ? SunGear.C_HIGHLIGHT : SunGear.C_PLAIN));
+        p5.fill(this.select ? SunGear.C_SELECT : (this.highlight ? SunGear.C_HIGHLIGHT : SunGear.C_PLAIN));
         p5.text(l, 0, 0);
         p5.pop();
         // TODO: Continue implementation.
@@ -169,7 +163,7 @@ AnchorDisplay.prototype = {
 };
 
 function rotate(cx, cy, x, y, angle) {
-    var radians = (Math.PI / 180) * angle,
+    var radians = angle,
         cos = Math.cos(radians),
         sin = Math.sin(radians),
         nx = (cos * (x - cx)) + (sin * (y - cy)) + cx,
