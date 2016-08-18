@@ -9,9 +9,44 @@ const VisGene = require('../lib/visGene');
 /* GET home page. */
 router.get('/', function(req, res, next) {
     var args = [ "--version", "-data_dir", "data/" ];
-    VisGene.main(args, function(response){
-        res.render('index', { title: 'Sungear', data: response});
-    });
+    var testing = {
+        base : "./",
+        dataDir : "data/",
+        dataU : "data/",
+        exp : {
+            exp : [
+                {
+                    attrib : null,
+                    desc : "Comparison of data from different laboratories (N and CN treatments)",
+                    filename : "sungearFig2_v2",
+                    id : "sungearFigure2",
+                    species : "Arabidopsis thaliana columbia tair10"
+                },
+                {
+                    attrib : null,
+                    desc : "2004 MLB statistics",
+                    filename : "batting2004.txt",
+                    id : "MLB2004",
+                    species : "MLB"
+                }
+            ]
+        },
+        src : {
+            reader : {
+                anchors : [
+                    { name : "John" },
+                    { name : "Paul" },
+                    { name : "George" },
+                    { name : "Ringo" }
+                ]
+            }
+        }
+    };
+
+    // VisGene.main(args, function(response){
+    //     res.render('index', { title: 'Sungear', data: response});
+    // });
+    res.render('index', { title: 'Sungear', data: testing});
 });
 
 router.get('/items', function(req, res) {

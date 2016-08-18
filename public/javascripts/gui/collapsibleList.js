@@ -54,18 +54,18 @@ function CollapsibleList(g) {
     this.multi = false;
 
     // TESTING
-    console.log('Building genes...');
-    var myFirstGene = new Gene("AT1G01010", "A really fun gene A less fun gene A less fun gene A less fun gene");
-    var mySecondGene = new Gene("AT1G01020", "A less fun gene");
-    var myThirdGene = new Gene("AT1G66950", "The most fun gene");
-    var myTree = new TreeSet();
-    myTree.add(myThirdGene);
-    myTree.add(mySecondGene);
-    myTree.add(myFirstGene);
-    console.log(myTree);
-    console.log(this.model);
-    this.model.setGenes(myTree);
-    console.log(this.model);
+    // console.log('Building genes...');
+    // var myFirstGene = new Gene("AT1G01010", "A really fun gene A less fun gene A less fun gene A less fun gene");
+    // var mySecondGene = new Gene("AT1G01020", "A less fun gene");
+    // var myThirdGene = new Gene("AT1G66950", "The most fun gene");
+    // var myTree = new TreeSet();
+    // myTree.add(myThirdGene);
+    // myTree.add(mySecondGene);
+    // myTree.add(myFirstGene);
+    // console.log(myTree);
+    // console.log(this.model);
+    // this.model.setGenes(myTree);
+    // console.log(this.model);
 
     this.populateTable();
 }
@@ -275,12 +275,10 @@ CollapsibleList.c1 = "#b0b0b0";
 CollapsibleList.c2 = "#e8e8e8";
 CollapsibleList.c3 = "#909090";
 
-function CompareName() { }
-CompareName.prototype.compare = function(o1, o2) {
+CollapsibleList.compareName = function(o1, o2) {
     return o1.getName().localeCompare(o2.getName());
 };
-function CompareDesc() { }
-CompareDesc.prototype.compare = function(o1, o2) {
+CollapsibleList.compareDesc = function(o1, o2) {
     return o1.getDesc().localeCompare(o2.getDesc());
 };
 
@@ -291,10 +289,11 @@ CompareDesc.prototype.compare = function(o1, o2) {
 function GeneModel(data) {
     this.titles = [ "ID", "Description" ];
     this.colComp = [];  /** {Vector<Comparator<Gene>>} */
-    this.colComp.push(new CompareName());
-    this.colComp.push(new CompareDesc());
+    this.colComp.push(CollapsibleList.compareName);
+    this.colComp.push(CollapsibleList.compareDesc);
     this.setGenes(data, "ID");
-    this.comp = this.colComp[0].compare;this.data.sort(this.comp);
+    this.comp = this.colComp[0];
+    this.data.sort(this.comp);
 }
 
 GeneModel.prototype = {
@@ -307,8 +306,8 @@ GeneModel.prototype = {
     },
     setSortColumn : function(col) {
         if (col < this.colComp.length) {
-            if (this.comp != this.colComp[col].compare) {
-                this.comp = this.colComp[col].compare;
+            if (this.comp != this.colComp[col]) {
+                this.comp = this.colComp[col];
                 this.doSort();
             }
         }

@@ -105,15 +105,30 @@ AnchorDisplay.prototype = {
 
         var l = this.showLongDesc ? this.longDesc : this.shortDesc;
 
-        var getRotation = rotate(tx, ty, (off + tm+25), ty, this.angle);
+        // if (this.shit) {
+        //     this.shit = false;
+        //     console.log(l);
+        //     console.log(tx);
+        //     console.log(ty);
+        //     console.log((off + tm/1.2));
+        //     console.log(this.angle);
+        // }
+        var ratio = tx / ty;
+        if (ratio < 1.6) {
+            ratio *= 9;
+        } else if (ratio > 1.7) {
+            ratio = 1.1;
+        }
+
+        var getRotation = rotate(tx, ty, (off + (tm/ratio)), ty, this.angle);
         var x = getRotation[0];
         var tempX = x - tx;
         x = tx - tempX;
         var y = getRotation[1];
 
         // DEBUGGING PURPOSES ONLY:
-        // p5.fill(SunGear.C_PLAIN);
-        // p5.ellipse(x, y, 10, 10);
+        p5.fill(SunGear.C_PLAIN);
+        p5.ellipse(x, y, 10, 10);
 
         p5.translate(tx, ty);
         p5.rotate(this.angle);
@@ -122,7 +137,8 @@ AnchorDisplay.prototype = {
         p5.translate(-0.5, 7*scale);
 
 
-        if (p5.dist(p5.mouseX, p5.mouseY, x, y) < scale*18) {
+        
+        if (p5.dist(p5.mouseX, p5.mouseY, x, y) < scale*20) {
             if (p5.mouseIsPressed) {
                 this.select = true;
                 this.highlight = false;
