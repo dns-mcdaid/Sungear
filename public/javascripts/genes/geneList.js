@@ -14,8 +14,6 @@
  * @author RajahBimmy
  */
 
-require('javascript.util');
-var TreeSet = javascript.util.TreeSet;
 var SortedSet = require("collections/sorted-set");
 
 var DataSource = require('../data/dataSource');
@@ -76,25 +74,27 @@ GeneList.prototype = {
             throw new ParseException("data source not initialized.");
         } else {
             this.genesS = new SortedSet();
-            var toAdd = this.source.getReader().expGenes.toArray(); // TODO: Ensure this works.
+            var toAdd = this.source.getReader().expGenes.toArray();
+            console.log(toAdd);
             for (var i = 0; i < toAdd.length; i++) {
-                this.geneS.add(toAdd[i]);
+                this.genesS.push(toAdd[i]);
             }
             var iL = this.source.getAttributes().get("itemsLabel", "items");
-            if (this.genesS.isEmpty()) {
+            if (this.genesS.length < 1) {
                 throw new ParseException("no " + iL + " in data set");
             } else {
                 this.activeS = new SortedSet();
                 this.selectionS = new SortedSet();
                 var tempGenesS = this.genesS.toArray();
                 for (i = 0; i < tempGenesS.length; i++) {
-                    this.activeS.add(tempGenesS[i]);
-                    this.selectionS.add(tempGenesS[i]);
+                    this.activeS.push(tempGenesS[i]);
+                    this.selectionS.push(tempGenesS[i]);
                 }
                 this.hist.clear();
                 this.hist.add(this.selectionS);
-                console.log("working items: " + this.genesS.size());
+                console.log("working items: " + this.genesS.length);
                 var ge = new GeneEvent(this, this, GeneEvent.NEW_LIST);
+                console.log("Notifying gene listeners...");
                 this.notifyGeneListeners(ge);
                 this.setMulti(false, this);
             }
@@ -114,9 +114,9 @@ GeneList.prototype = {
      * @return the full gene set
      */
     getAllGenes : function() {
-        var toReturn = new TreeSet();
+        var toReturn = new SortedSet();
         for (var key in this.master) {
-            toReturn.add(this.master[key]);
+            toReturn.push(this.master[key]);
         }
         return toReturn;
     },
@@ -272,18 +272,18 @@ GeneList.prototype = {
      * @param operation one of the {@link MultiSelectable} operations (currently union or intersect)
      */
     finishMultiSelect : function(source, operation) {
-        var s = new TreeSet();
+        var s = new SortedSet();
         if (operation == MultiSelectable.INTERSECT) {
-            s.addAll(this.selectionS);
+            s.union(this.selectionS);
         }
         for (var it = this.multiSelectable.iterator(); it.hasNext(); ) {
             var g = it.next().getMultiSelection(operation);
             if (g !== null) {
                 if (operation == MultiSelectable.UNION) {
-                    s.addAll(g);
+                    s.union(g);
                 } else {
-                    s = new TreeSet();
-                    s.addAll(g);
+                    s = new SortedSet();
+                    s.union(g);
                 }
             }
         }
@@ -317,6 +317,7 @@ GeneList.prototype = {
      * @param e the gene event
      */
     notifyGeneListeners : function(e) {
+        console.log(this.listeners);
         for (var i = 0; i < this.listeners.length; i++) {
             console.log(this.listeners[i]);
             this.listeners[i].listUpdated(e);
@@ -445,10 +446,10 @@ History.prototype = {
             }
         }
 
-        var t = new TreeSet();
+        var t = new SortedSet();
         var sArray = s.toArray();
         for (var j = 0; j < sArray.length; j++) {
-            t.add(sArray[j]);
+            t.push(sArray[j]);
         }
         this.past.push(t);
         this.curr++;

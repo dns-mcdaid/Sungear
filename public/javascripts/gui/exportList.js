@@ -33,6 +33,9 @@ function ExportList(g, context) {
 
 ExportList.prototype = {
     constructor : ExportList,
+    listUpdated : function(e) {
+        this.model.listUpdated(e);
+    },
     /**
      * TODO: @Dennis figure this out to be less stupid.
      * @param node
@@ -325,7 +328,7 @@ ExportModel.prototype = {
         return this.exportList;
     },
     listUpdated : function(e) {
-        // TODO: Implement me.
+        console.log("Export list updated!");
     }
 };
 

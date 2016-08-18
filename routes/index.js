@@ -38,6 +38,64 @@ router.get('/', function(req, res, next) {
                     { name : "Paul" },
                     { name : "George" },
                     { name : "Ringo" }
+                ],
+                expSets : {
+                    John : [
+                        "revolutio",
+                        "acrossthe",
+                        "strawberr",
+                        "adayinthe"
+                    ],
+                    Paul : [
+                        "adayinthe",
+                        "pennylane",
+                        "whydontwe"
+                    ],
+                    George : [
+                        "herecomes",
+                        "savoytruf"
+                    ],
+                    Ringo : [
+                        "octopusga"
+                    ]
+                },
+                items : [
+                    {
+                        id : "revolutio",
+                        description : "Revolution 9"
+                    },
+                    {
+                        id : "acrossthe",
+                        description : "Across the Universe"
+                    },
+                    {
+                        id : "strawberr",
+                        description : "Strawberry Fields Forever"
+                    },
+                    {
+                        id : "adayinthe",
+                        description : "A Day in the Life"
+                    },
+                    {
+                        id : "pennylane",
+                        description : "Penny Lane"
+                    },
+                    {
+                        id : "whydontwe",
+                        description : "Why Don't we do it in the Road?"
+                    },
+                    {
+                        id : "herecomes",
+                        description : "Here Comes the Sun"
+                    },
+                    {
+                        id : "savoytruf",
+                        description : "Savoy Truffle"
+                    },
+                    {
+                        id : "octopusga",
+                        description : "Octopus's Garden"
+                    }
                 ]
             }
         }

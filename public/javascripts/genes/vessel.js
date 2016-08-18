@@ -1,19 +1,14 @@
 /**
  * @author crispy
  * @author Rajah_Bimmy
- * Copyright Chris Poultney 2004.
- * Updated by Dennis McDaid.
  */
-/** @DONE */
 
-require('javascript.util');
-var TreeSet = javascript.util.TreeSet;
-var Gene = require('../genes/gene');
+const SortedSet = require('collections/sorted-set');
 
-/** @param anchor - Anchor[] */
+/** @param anchor {Array} of Anchors */
 function Vessel(anchor) {
-    this.anchor = anchor.sort();    /** @type Anchor[] */
-    this.genes = new TreeSet();
+    this.anchor = anchor.sort();    /** {Anchor[]} */
+    this.genes = new SortedSet();
 }
 
 Vessel.prototype = {
@@ -31,10 +26,10 @@ Vessel.prototype = {
     },
     /** @param g - Gene */
     addGene : function(g) {
-        this.genes.add(g);
+        this.genes.push(g);
     },
     getFullCount : function() {
-        return this.genes.size();
+        return this.genes.length;
     }
 };
 

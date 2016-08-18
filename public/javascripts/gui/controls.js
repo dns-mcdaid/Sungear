@@ -172,6 +172,7 @@ Controls.prototype = {
         this.noneB.title = "Unselect all " + iL;
     },
     listUpdated : function(e) {
+        console.log("Controls updated!");
         switch(e.getType()) {
             case GeneEvent.NEW_LIST:
                 this.updateGUI();

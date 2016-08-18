@@ -122,7 +122,7 @@ VisGene.prototype = {
 
         // TODO: Uncommment this!!!!
         // this.exp = new ExperimentList(new URL("exper.txt", this.dataU), new URL("species.txt", this.dataU), this.dataU, loadBody);
-        this.collectPasssedData();
+
         var openB = document.getElementById('openB');
         openB.addEventListener('click', this.loadExperiment.bind(this));
 
@@ -160,18 +160,17 @@ VisGene.prototype = {
         this.aboutDLabel = document.getElementById('aboutDLabel');
         this.aboutDBody = document.getElementById('aboutDBody');
 
-        this.gear.makeDisplay(this.src.getReader().anchors, null);
+        this.collectPasssedData(function() {
+            this.run();
+        }.bind(this));
+
+
     },
-    // run : function() {
-    //     try {
-    //         if (this.extAttrib !== null && this.extAttrib.get("sungearU") !== null) {
-    //             this.src.setAttributes(this.extAttrib, this.dataU);
-    //             this.openFile(this.extAttrib);  // TODO: Implement
-    //         }
-    //     } catch (e) {
-    //         console.error(e);
-    //     }
-    // },
+    run : function() {
+        this.geneList.setSource(this.src);
+        this.geneList.update();
+        console.log(this.geneList);
+    },
     /**
      * TODO: Ensure this works. It probably doesn't.
      * @param p {Container}
@@ -332,7 +331,7 @@ VisGene.prototype = {
     requestScreenshot : function() {
         this.signal = Signal.SCREENSHOT;
     },
-    collectPasssedData : function() {
+    collectPasssedData : function(callback) {
         var loadBody = document.getElementById('loadBody');
         var vis = JSON.parse(document.getElementById('vis').value);
         this.dataDir = vis.dataDir;
@@ -348,7 +347,9 @@ VisGene.prototype = {
         this.src = new DataSource(this.dataDir);
         this.src.reader = this.reader;
         console.log("READER RESULTS:");
-        console.log(this.src);
+        // console.log(this.src);
+        // console.log(this.l1);
+        callback();
     }
 };
 

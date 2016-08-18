@@ -1,6 +1,8 @@
 require('javascript.util');
 const TreeSet = javascript.util.TreeSet;
 
+const SortedSet = require('collections/sorted-set');
+
 const DataReader = require('../data/dataReader');
 
 const GeneEvent = require('../genes/geneEvent');
@@ -146,8 +148,8 @@ SunGear.prototype = {
         }
         console.log("t: " + t);
         var v = [];
-        DataReader.setThreshold(t, this.genes.getGenesSet(), this.src.getReader().anchors, v);
-        this.makeDisplay(this.src.getReader().anchors, v);
+        DataReader.setThreshold(t, this.genes.getGenesSet(), src.getReader().anchors, v);
+        this.makeDisplay(src.getReader().anchors, v);
         console.log("Anchors: " + this.anchors.length + " vessels: " + this.vessels.length);
     },
     /**
@@ -218,11 +220,11 @@ SunGear.prototype = {
      * @param c {Collection<Gene>}
      */
     getTerms : function(c) {
-        var t = new TreeSet();
-        for (var it = c.iterator(); it.hasNext(); ) {
-            var toAdd = this.getGeneTerms(it.next());
+        var t = new SortedSet();
+        for (var it = 0; it < c.length; it++) {
+            var toAdd = this.getGeneTerms(c[it]);
             for (var i = 0; i < toAdd.length; i++) {
-                t.add(toAdd[i]);
+                t.push(toAdd[i]);
             }
         }
         return t;
@@ -453,26 +455,25 @@ SunGear.prototype = {
                 h : null
             };
         }
-        // TODO: Uncomment this.
-        // // init vessel display components
-        // this.vessels = [];
-        // var vesselConv = {};
-        // for (var i = 0; i < this.vessels.length; i++) {
-        //     var v = ves[i];
-        //     this.vessels[i] = new VesselDisplay(v);
-        //     vesselConv[v] = this.vessels[i];
-        //     this.vessels[i].setRadMin(this.minRad[this.minRadIdx]);
-        //     this.vessels[i].setShowArrows(this.showArrows);
-        //     this.vessels[i].setAnchors(anchorConv);
-        //     this.vessels[i].setMax(this.vMax);
-        //     this.vessels[i].initActive();
-        //     this.vessels[i].makeShape(this.rad_inner);
-        //     if (this.vessels[i].anchor.length == 0) {
-        //         this.moon = this.vessels[i];
-        //     }
-        // }
-        // // offset centers of overlapping vessels
-        // this.positionVessels();
+        // init vessel display components
+        this.vessels = [];
+        var vesselConv = {};
+        for (var i = 0; i < this.vessels.length; i++) {
+            var v = ves[i];
+            this.vessels[i] = new VesselDisplay(v);
+            vesselConv[v] = this.vessels[i];
+            this.vessels[i].setRadMin(this.minRad[this.minRadIdx]);
+            this.vessels[i].setShowArrows(this.showArrows);
+            this.vessels[i].setAnchors(anchorConv);
+            this.vessels[i].setMax(this.vMax);
+            this.vessels[i].initActive();
+            this.vessels[i].makeShape(this.rad_inner);
+            if (this.vessels[i].anchor.length == 0) {
+                this.moon = this.vessels[i];
+            }
+        }
+        // offset centers of overlapping vessels
+        this.positionVessels();
     },
     positionVessels : function() {
         if (this.polarPlot) {

@@ -333,25 +333,21 @@ DataReader.prototype = {
             var anchor = passedAnchors[i];
             this.anchors.push(new Anchor(anchor.name));
         }
-        // //REMOVE ME:
-        // this.anchors.push(new Anchor("Carl"));
-        // this.anchors.push(new Anchor("Sheen"));
-        // this.anchors.push(new Anchor("Jimmy"));
-        // this.anchors.push(new Anchor("Bobby"));
-        // for (i = 0 ; i < passedItems.length; i++) {
-        //     var expGene = passedItems[i];
-        //     var expToAdd = new Gene(expGene.id, expGene.description);
-        //     var exp = [];
-        //     for (var j = 0; j < this.anchors.length; j++) {
-        //         if (passedSets[this.anchors[j].name].indexOf(expGene.id) > -1) {
-        //             exp[j] = 1;
-        //         } else {
-        //             exp[j] = 0;
-        //         }
-        //     }
-        //     expToAdd.setExp(exp);
-        //     this.expGenes.push(expToAdd);
-        // }
+        
+        for (i = 0 ; i < passedItems.length; i++) {
+            var expGene = passedItems[i];
+            var expToAdd = new Gene(expGene.id, expGene.description);
+            var exp = [];
+            for (var j = 0; j < this.anchors.length; j++) {
+                if (passedSets[this.anchors[j].name].indexOf(expGene.id) > -1) {
+                    exp[j] = 1;
+                } else {
+                    exp[j] = 0;
+                }
+            }
+            expToAdd.setExp(exp);
+            this.expGenes.push(expToAdd);
+        }
     }
 };
 

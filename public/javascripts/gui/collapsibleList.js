@@ -165,6 +165,7 @@ CollapsibleList.prototype = {
      * @param e {GeneEvent}
      */
     listUpdated : function(e) {
+        console.log("Collapsible updated!");
         switch (e.getType()) {
             case GeneEvent.NEW_LIST:
                 this.updateGUI();
@@ -197,7 +198,7 @@ CollapsibleList.prototype = {
         // TODO: Implement me
     },
     updateStatus : function() {
-        this.statusF.innerHTML = this.genes.getSelectedSet().size() + " / " + this.genes.getActiveSet().size();
+        this.statusF.innerHTML = this.genes.getSelectedSet().length + " / " + this.genes.getActiveSet().length;
     },
     populateTable : function() {
         while (this.geneTBody.hasChildNodes()) {

@@ -12,6 +12,7 @@ const fs = require('fs');
 const path = require('path');
 const url = require('url');
 
+const Attributes = require('./attributes');
 const ParseException = require('./parseException');
 const DataReader = require('./dataReader');
 const SpeciesList = require('./speciesList');
@@ -32,7 +33,7 @@ function DataSource(dataDir) {
     this.sunSrc = null;     /** Location of Sungear experimentfile */
 
     this.reader = null;     /** {DataReader} Reader object that performs actual file parsing */
-    this.attrib = null;     /** {Attributes} Holds arbitrary information about the current experiment */
+    this.attrib = new Attributes();     /** {Attributes} Holds arbitrary information about the current experiment */
 }
 
 /** Default name of gene description file if none is given */
