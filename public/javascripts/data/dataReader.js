@@ -365,8 +365,11 @@ DataReader.setThreshold = function(t, expGenes, anchors, vessels) {
     var last = "";
     var vh = {};
     var curr = null;
-    for (var it = expGenes.iterator(); it.hasNext(); ) {
-        var g = it.next();
+    var expGenesArray = expGenes.toArray();
+    for (var it = 0; it < expGenesArray.length; it++) {
+        var g = expGenesArray[it];
+        console.log(it);
+        console.log(g);
         var e = g.getExp();
         for (var i = 0; i < e.length; i++) {
             if (e[i] < t) {
@@ -378,7 +381,7 @@ DataReader.setThreshold = function(t, expGenes, anchors, vessels) {
         var sig = m;    // May be redundant
         if (m != last) {
             curr = vh[sig];
-            if (curr === null) {
+            if (typeof curr === 'undefined') {
                 var va = [];
                 for (var j = 0; j < sig.length; j++) {
                     if (sig[j] == "1") {

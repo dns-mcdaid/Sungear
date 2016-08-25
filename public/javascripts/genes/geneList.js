@@ -319,7 +319,7 @@ GeneList.prototype = {
     notifyGeneListeners : function(e) {
         console.log(this.listeners);
         for (var i = 0; i < this.listeners.length; i++) {
-            console.log(this.listeners[i]);
+            // console.log(this.listeners[i]);
             this.listeners[i].listUpdated(e);
         }
     },
