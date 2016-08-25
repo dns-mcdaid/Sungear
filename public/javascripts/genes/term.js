@@ -190,7 +190,7 @@ Term.prototype = {
                 }
             }
             var allArray = this.allGenes.toArray();
-            var s = new TreeSet();
+            var s = new SortedSet();
             for (var k = 0; k < allArray.length; k++) {
                 if (global.contains(allArray[k])) {
                     s.push(allArray[k])
@@ -218,12 +218,21 @@ Term.prototype = {
     initSelectedState : function() {
         this.selectedState = Term.STATE_UNKNOWN;
     },
+    /**
+     * Recursively determines if any of the genes associated with
+     * this term or its children intersect with the passed set
+     * (usually the current selected set).  Call {@link #initSelectedState()}
+     * on all terms before calling this on any term.
+     *
+     * @param s {SortedSet} of Genes
+     */
     updateSelectedState : function(s) {
         if (!this.active) {
             this.selectedState = Term.STATE_UNSELECTED;
         } else {
-            for (var it = this.children.iterator(); it.hasNext(); ) {
-                var t = it.next();
+            const childrenArray = this.children.toArray();
+            for (let it = 0; it < childrenArray.length; it++) {
+                let t = childrenArray[it];
                 if (t.selectedState == Term.STATE_UNKNOWN && t.active) {
                     t.updateSelectedState(s);
                 }
@@ -232,9 +241,9 @@ Term.prototype = {
                 }
             }
             if (this.selectedState = Term.STATE_UNKNOWN) {
-                var x = new SortedSet();
-                var allArr = this.allGenes.toArray();
-                for (var i = 0; i < allArr.length; i++) {
+                const x = new SortedSet();
+                const allArr = this.allGenes.toArray();
+                for (let i = 0; i < allArr.length; i++) {
                     if (s.contains(allArr[i])) {
                         x.push(allArr[i]);
                     }
@@ -243,6 +252,11 @@ Term.prototype = {
             }
         }
     },
+    /**
+     * Returns the selected state of this node as determined by
+     * {@link #updateSelectedState(SortedSet)}.
+     * @return the current selected state
+     */
     getSelectedState : function() {
         return this.selectedState;
     },

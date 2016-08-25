@@ -14,12 +14,12 @@
  * @author RajahBimmy
  */
 
-var SortedSet = require("collections/sorted-set");
+const SortedSet = require("collections/sorted-set");
 
-var DataSource = require('../data/dataSource');
-var ParseException = require('../data/parseException');
-var GeneEvent = require('./geneEvent');
-var MultiSelectable = require('./multiSelectable');
+const DataSource = require('../data/dataSource');
+const ParseException = require('../data/parseException');
+const GeneEvent = require('./geneEvent');
+const MultiSelectable = require('./multiSelectable');
 
 /**
  * Constructs a new gene list.  The list is useless until
@@ -74,11 +74,11 @@ GeneList.prototype = {
             throw new ParseException("data source not initialized.");
         } else {
             this.genesS = new SortedSet();
-            var toAdd = this.source.getReader().expGenes.toArray();
-            for (var i = 0; i < toAdd.length; i++) {
+            let toAdd = this.source.getReader().expGenes.toArray();
+            for (let i = 0; i < toAdd.length; i++) {
                 this.genesS.push(toAdd[i]);
             }
-            var iL = this.source.getAttributes().get("itemsLabel", "items");
+            let iL = this.source.getAttributes().get("itemsLabel", "items");
             if (this.genesS.length < 1) {
                 throw new ParseException("no " + iL + " in data set");
             } else {
@@ -315,8 +315,8 @@ GeneList.prototype = {
      * @param e the gene event
      */
     notifyGeneListeners : function(e) {
-        console.log(this.listeners);
-        for (var i = 0; i < this.listeners.length; i++) {
+        // console.log(this.listeners);
+        for (let i = 0; i < this.listeners.length; i++) {
             // console.log(this.listeners[i]);
             this.listeners[i].listUpdated(e);
         }

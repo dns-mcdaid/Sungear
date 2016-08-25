@@ -1,6 +1,3 @@
-require('javascript.util');
-const TreeSet = javascript.util.TreeSet;
-
 const SortedSet = require('collections/sorted-set');
 
 const DataReader = require('../data/dataReader');
@@ -95,12 +92,11 @@ SunGear.C_SELECT_ALT = "#217C7E";
 SunGear.prototype = {
     constructor : SunGear,
     cleanup : function() {
-        var i = 0;
-        for (i = 0; i < this.anchors.length; i++) {
+        for (let i = 0; i < this.anchors.length; i++) {
             this.anchors[i].cleanup();
         }
         this.anchors = null;
-        for (i = 0; i < this.vessels.length; i++) {
+        for (let i = 0; i < this.vessels.length; i++) {
             this.vessels[i].cleanup();
         }
         this.vessels = null;
@@ -121,7 +117,7 @@ SunGear.prototype = {
     order : function(n) {
         if (n != -1) {
             try {
-                var v = this.orderedVessels[n];
+                let v = this.orderedVessels[n];
                 this.lastVessel = v;
                 this.highlightVessel(v);
                 this.updateCount();
@@ -135,22 +131,19 @@ SunGear.prototype = {
      */
     set : function(src) {
         // make the displayable components
-        var t = this.thresh;
+        let t = this.thresh;
         console.log("thresh: " + this.thresh);
         if(isNaN(t)) {
             console.log("check");
             t = 1.0;
-            try {
-                var att = src.getAttributes().get("threshold");
-                if (att !== null) {
-                    t = att;
-                }
-            } catch(e) {
-                console.log("Oops! From Sungear.set");
+
+            let att = src.getAttributes().get("threshold");
+            if (att !== null) {
+                t = att;
             }
         }
         console.log("t: " + t);
-        var v = [];
+        let v = [];
         DataReader.setThreshold(t, this.genes.getGenesSet(), src.getReader().anchors, v);
         this.makeDisplay(src.getReader().anchors, v);
         console.log("Anchors: " + this.anchors.length + " vessels: " + this.vessels.length);
@@ -181,7 +174,7 @@ SunGear.prototype = {
         this.minRadIdx = n;
         this.minSizeB.step = n;
         if (this.vessels !== null) {
-            for (var i = 0; i < this.vessels.length; i++) {
+            for (let i = 0; i < this.vessels.length; i++) {
                 this.vessels[i].setRadMin(this.minRad[n]);
                 this.positionVessels();
             }
@@ -193,7 +186,7 @@ SunGear.prototype = {
     setShowArrows : function(b) {
         this.showArrows = b;
         if (this.vessels !== null && typeof this.vessels !== 'undefined') {
-            for (var i = 0; i < this.vessels.length; i++) {
+            for (let i = 0; i < this.vessels.length; i++) {
                 this.vessels[i].setShowArrows(b);
                 this.positionVessels();
             }
@@ -204,7 +197,7 @@ SunGear.prototype = {
     },
     /**
      * @param g {Gene}
-     * @returns {Vector<Term>}
+     * @returns {Array} of Terms
      */
     getGeneTerms : function(g) {
         if (this.goTerm === null || this.goTerm.get() === null) {
@@ -217,16 +210,16 @@ SunGear.prototype = {
      * @returns {javascript.util.TreeSet}
      */
     getAssocGenes : function() {
-        return (this.goTerm === null || this.goTerm.get() === null) ? new TreeSet() : this.goTerm.get().assocGenes;
+        return (this.goTerm === null || this.goTerm.get() === null) ? new SortedSet() : this.goTerm.get().assocGenes;
     },
     /**
      * @param c {Collection<Gene>}
      */
     getTerms : function(c) {
-        var t = new SortedSet();
-        for (var it = 0; it < c.length; it++) {
-            var toAdd = this.getGeneTerms(c[it]);
-            for (var i = 0; i < toAdd.length; i++) {
+        const t = new SortedSet();
+        for (let it = 0; it < c.length; it++) {
+            let toAdd = this.getGeneTerms(c[it]);
+            for (let i = 0; i < toAdd.length; i++) {
                 t.push(toAdd[i]);
             }
         }
@@ -251,67 +244,66 @@ SunGear.prototype = {
             this.score = score;
             this.count = count;
         }
-        var cool = new TreeSet();
-        var debug = true; // TODO: Change this in production
-        var ag = this.getAssocGenes();
-        for (var i = 0; i < this.vessels.length; i++) {
+        const cool = new SortedSet();
+        let debug = true; // TODO: Change this in production
+        let ag = this.getAssocGenes();
+        for (let i = 0; i < this.vessels.length; i++) {
             if (this.vessels[i].getActiveCount() == 0) {
                 continue;
             }
             if (debug) {
                 console.log("sz: " + this.vessels[i].activeGenes.size());
             }
-            var tt = this.getTerms(this.vessels[i].activeGenes);
-            var ct = [];
-            for (var it = tt.iterator(); it.hasNext(); ) {
-                var j = 0;
-                var t = it.next();
-                var cnt = new TreeSet();
-                var cnt2 = new TreeSet();
-                var preCnt = t.getAllGenes().toArray();
-                var preCnt2 = this.vessels[i].activeGenes.toArray();
-                for (j = 0; j < preCnt.length; j++) {
+            const tt = this.getTerms(this.vessels[i].activeGenes);
+            const ct = [];
+            for (let it = 0; it < tt.length; it++) {
+                const t = tt[it];
+                const cnt = new SortedSet();
+                const cnt2 = new SortedSet();
+                const preCnt = t.getAllGenes().toArray();
+                const preCnt2 = this.vessels[i].activeGenes.toArray();
+                for (let j = 0; j < preCnt.length; j++) {
                     if (preCnt2.indexOf(preCnt[j]) > -1) {
                         cnt.add(preCnt[j]);
                     }
                 }
-                for (j = 0; j < preCnt2.length; j++) {
+                for (let j = 0; j < preCnt2.length; j++) {
                     if (ag.contains(preCnt2[j])) {
                         cnt2.add(preCnt2[j]);
                     }
                 }
-                var z = t.calcScore(cnt.size(), cnt2.size());
+                let z = t.calcScore(cnt.size(), cnt2.size());
                 if (z >= minScore) {
                     ct.push(new CoolTerm(z, cnt.size()));
                 }
             }
             // per-method stuff - calculate score from cool terms
-            var c;
+            let c;
             switch (method) {
                 case 1:
                     // threshhold and multiply
                     if (debug) {
-                        console.log("\tct: " + ct.size());
+                        console.log("\tct: " + ct.length);
                     }
                     var score = 0;
-                    for (it = ct.iterator(); it.hasNext(); ) {
-                        var t = it.next();
+                    for (let it = 0; it < ct.length; it++) {
+                        const t = ct[it];
                         score += t.score * t.count;
                     }
-                    score /= vessels[i].activeGenes.size();
+                    score /= this.vessels[i].activeGenes.length;
                     if (debug) {
                         console.log("\tscore: " + score);
                     }
-                    c = new Comp.CoolVessel(this.vessels[i], score, this.vessels[i].activeGenes.size());
+                    c = new Comp.CoolVessel(this.vessels[i], score, this.vessels[i].activeGenes.length);
                     break;
                 default:
                     // threshhold only
                     if (debug) {
-                        console.log("\tct: " + ct.size());
+                        console.log("\tct: " + ct.length);
                     }
                     var acnt = 0;
-                    for (it = ct.iterator(); it.hasNext(); ) {
-                        var t = it.next();
+                    for (let it = 0; it < ct.length; it++) {
+                        const t = ct[it];
                         if (t.count >= 2) {
                             acnt++;
                         }
@@ -323,15 +315,14 @@ SunGear.prototype = {
                     break;
             }
             // more generic processing - update cool list if necessary
-            // TODO: @Dennis ensure this method works for actually getting the last element of the TreeSet
-            var coolArray = cool.toArray();
-            var last = coolArray[coolArray.length-1];
-            if (cool.size() < maxVessels || c.compareTo(last) < 0) {
+            let coolArray = cool.toArray();
+            let last = coolArray[coolArray.length-1];
+            if (cool.length < maxVessels || c.compareTo(last) < 0) {
                 if (debug) {
                     console.log("\tadded");
                 }
-                cool.add(c);
-                while(cool.size() > maxVessels) {
+                cool.push(c);
+                while(cool.length > maxVessels) {
                     coolArray = cool.toArray();
                     last = coolArray[coolArray.length-1];
                     cool.remove(last);
@@ -341,9 +332,12 @@ SunGear.prototype = {
                 console.log();
             }
         }
-        console.log("Final scores:");
-        for (it = cool.iterator(); it.hasNext(); ) {
-            console.log(it.next().score);
+        if (debug) {
+            console.log("Final scores:");
+            let coolArray = cool.toArray();
+            for (let it = 0; it < coolArray.length; it++) {
+                console.log(coolArray[it].score);
+            }
         }
         return (cool.toArray());
     },
@@ -356,48 +350,48 @@ SunGear.prototype = {
         // TODO: Ensure this works.
         console.log("Attempting to sort Vessels by ActSize. Remove me later!");
         this.vessels.sort(Comp.VesselActSize);
-        var cool = new TreeSet();
-        var last;
-        for (var i = 0; i < this.vessels.length; i++) {
-            var s = this.getTerms(this.vessels[i].activeGenes);
+        let cool = new SortedSet();
+        let last;
+        for (let i = 0; i < this.vessels.length; i++) {
+            const s = this.getTerms(this.vessels[i].activeGenes);
             if (s.size() > 2) {
-                var pt = [];    // terms potentially meeting cool criteria (score >= minScore)
-                for (var it = s.iterator(); it.hasNext(); ) {
-                    var t = it.next();
+                let pt = [];    // terms potentially meeting cool criteria (score >= minScore)
+                for (let it = 0; it < s.length; it++) {
+                    let t = s[it];
                     if (t.getScore() >= minScore) {
                         pt.push(t);
                     }
                 }
                 if (cool.size() > 0) {
-                    var coolArray = cool.toArray();
+                    let coolArray = cool.toArray();
                     last = coolArray[coolArray.length-1];
                 } else {
                     last = new Comp.CoolVessel(null, 0, null);
                 }
                 if ((cool.size() < maxVessels && pt.size() > 0) || (cool.size() == maxVessels && pt.size() >= last.score)) {
-                    var acnt = 0;   // number of terms actually meeting cool criteria (pcnt genes with gene count >= 2)
-                    var tot = 0;    // total number of genes across all intersections
-                    for (it = 0; it < pt.length; it++) {
-                        var t = pt[it];
-                        var gs = new TreeSet();
-                        var allGenes = t.getAllGenes();
-                        var geneActive = this.genes.getActiveSet().toArray();
-                        var vesselActive = this.vessels[i].activeGenes.toArray();
-                        for (var j = 0; j < allGenes.length; j++) {
+                    let acnt = 0;   // number of terms actually meeting cool criteria (pcnt genes with gene count >= 2)
+                    let tot = 0;    // total number of genes across all intersections
+                    for (let it = 0; it < pt.length; it++) {
+                        let t = pt[it];
+                        let gs = new SortedSet();
+                        let allGenes = t.getAllGenes();
+                        let geneActive = this.genes.getActiveSet().toArray();
+                        let vesselActive = this.vessels[i].activeGenes.toArray();
+                        for (let j = 0; j < allGenes.length; j++) {
                             if (geneActive.indexOf(allGenes[j]) > -1 && vesselActive.indexOf(allGenes[j]) > -1) {
-                                gs.add(allGenes[j]);
+                                gs.push(allGenes[j]);
                             }
                         }
-                        if (gs.size() >= 2) {
+                        if (gs.length >= 2) {
                             acnt++;
-                            tot += gs.size();
+                            tot += gs.length;
                         }
                     }
                     if (acnt > 0) {
                         cool.add(new Comp.CoolVessel(this.vessels[i], acnt, tot));
                         while (cool.size() > maxVessels) {
                             // TODO: Ensure this works.
-                            coolArray = cool.toArray();
+                            let coolArray = cool.toArray();
                             last = coolArray[coolArray.length-1];
                             cool.remove(last);
                         }
@@ -415,19 +409,18 @@ SunGear.prototype = {
         // find vessel min/max vals
         this.vMax = 0;
         this.vMin = Number.MAX_VALUE;
-        var i = 0;
-        for (i = 0; i < ves.length; i++) {
-            var v = ves[i];
+        for (let i = 0; i < ves.length; i++) {
+            let v = ves[i];
             this.vMax = Math.max(this.vMax, v.getFullCount());
             this.vMin = Math.max(this.vMin, v.getFullCount());
         }
         // init anchor display components
         this.anchors = [];
-        var anchorConv = {};
-        var t = 3.0 * Math.PI / 2.0;
-        var dt = 2.0 * Math.PI / anch.length;
-        for (i = 0; i < anch.length; i++) {
-            var a = anch[i];
+        const anchorConv = {};
+        let t = 3.0 * Math.PI / 2.0;
+        let dt = 2.0 * Math.PI / anch.length;
+        for (let i = 0; i < anch.length; i++) {
+            let a = anch[i];
             this.anchors[i] = new AnchorDisplay(a);
             anchorConv[a] = this.anchors[i];
             this.anchors[i].setScale(Math.min(1, 8.0/anch.length));
@@ -444,9 +437,9 @@ SunGear.prototype = {
                 h : 2*SunGear.R_CIRCLE
             };
         } else {
-            var x = [];
-            var y = [];
-            for (i = 0; i < this.anchors.length; i++) {
+            let x = [];
+            let y = [];
+            for (let i = 0; i < this.anchors.length; i++) {
                 var t1 = this.anchors[i].getAngle();
                 x.push(SunGear.R_CIRCLE*Math.cos(t1));
                 y.push(SunGear.R_CIRCLE*Math.sin(t1));
@@ -460,9 +453,9 @@ SunGear.prototype = {
         }
         // init vessel display components
         this.vessels = [];
-        var vesselConv = {};
+        const vesselConv = {};
         for (var i = 0; i < ves.length; i++) {
-            var v = ves[i];
+            let v = ves[i];
             this.vessels[i] = new VesselDisplay(v);
             vesselConv[v] = this.vessels[i];
             this.vessels[i].setRadMin(this.minRad[this.minRadIdx]);
@@ -486,13 +479,15 @@ SunGear.prototype = {
         }
     },
     positionVesselsPolar : function() {
-        for (var i = 0; i < this.vessels.length; i++) {
+        for (let i = 0; i < this.vessels.length; i++) {
             if (this.vessels[i].anchor.length > 0) {
-                var r = this.rad_inner * (1.0 - (this.vessels[i].anchor.length - 1.0)/(this.anchors.length-1.0));
-                var x = this.vessels[i].getStart().x;
-                var y = this.vessels[i].getStart().y;
-                var d = Math.sqrt(x*x + y*y);
-                var t = (d < .001) ? this.vessels[i].anchor[0].getAngle() : Math.atan2(y, x);
+
+                const r = this.rad_inner * (1.0 - (this.vessels[i].anchor.length - 1.0)/(this.anchors.length-1.0));
+                const x = this.vessels[i].getStart().x;
+                const y = this.vessels[i].getStart().y;
+                const d = Math.sqrt(x*x + y*y);
+                const t = (d < .001) ? this.vessels[i].anchor[0].getAngle() : Math.atan2(y, x);
+
                 this.vessels[i].getCenter().x = r * Math.cos(t);
                 this.vessels[i].getCenter().y = r * Math.sin(t);
                 this.vessels[i].setRadMax(.05);
@@ -501,7 +496,7 @@ SunGear.prototype = {
         }
     },
     positionVesselsCartesian : function() {
-        for (var i = 0; i < this.vessels.length; i++) {
+        for (let i = 0; i < this.vessels.length; i++) {
             this.vessels[i].getCenter().x = this.vessels[i].getStart().x;
             this.vessels[i].getCenter().y = this.vessels[i].getStart().y;
             this.vessels[i].updateCenter();
@@ -514,33 +509,34 @@ SunGear.prototype = {
         }
     },
     relaxCenters : function() {
-        var maxIter = 200;
-        var eta = 1.0;
-        var decay = 0.01;
-        var energy = this.vessels.length;
-        var cnt = 0;
+        let maxIter = 200;
+        let eta = 1.0;
+        let decay = 0.01;
+        let energy = this.vessels.length;
+        let cnt = 0;
+
         do {
-            var e = this.relaxStep(eta);
+            let e = this.relaxStep(eta);
             energy = e;
             eta *= (1-decay);
             cnt++;
         } while (cnt < 10 || (energy*eta > 5e-5*this.vessels.length && cnt < maxIter));
-        for (var i = 0; i < this.vessels.length; i++) {
+
+        for (let i = 0; i < this.vessels.length; i++) {
             this.vessels[i].updateCenter();
         }
     },
     /**
      * @param eta {double}
-     * @return {double}
+     * @return {Number} double
      */
     relaxStep : function(eta) {
         // scaling factor to give extra space for vessels (and arrows)
-        var sf = 1.5;
+        let sf = 1.5;
         // random factor added to or substracted from movement
-        var rf = 0.3;
-        var i = 0;
-        for (i = 0; i < this.vessels.length; i++) {
-            var v = this.vessels[i];
+        let rf = 0.3;
+        for (let i = 0; i < this.vessels.length; i++) {
+            let v = this.vessels[i];
             if (v.anchor.length == 0 || v.getActiveCount() == 0) {
                 continue;
             }
@@ -548,46 +544,46 @@ SunGear.prototype = {
             v.dx = 0.02 * (v.getStart().x - v.getCenter().x);
             v.dy = 0.02 * (v.getStart().y - v.getCenter().y);
             // strong repulsion from border
-            var md = Math.sqrt(v.getCenter().x*v.getCenter().x + v.getCenter().y*v.getCenter().y);
+            const md = Math.sqrt(v.getCenter().x*v.getCenter().x + v.getCenter().y*v.getCenter().y);
             if (md > 1) {
                 v.dx -= (md-1) * v.getCenter().x;
                 v.dy -= (md-1) * v.getCenter().y;
             }
         }
         // overlapping vessels repel
-        for (i = 0; i < this.vessels.length; i++) {
-            var v1 = this.vessels[i];
+        for (let i = 0; i < this.vessels.length; i++) {
+            let v1 = this.vessels[i];
             if (v1.getActiveCount() == 0) {
                 continue;
             }
-            for (var j = i+1; j < this.vessels.length; j++) {
-                var v2 = this.vessels[j];
+            for (let j = i+1; j < this.vessels.length; j++) {
+                let v2 = this.vessels[j];
                 if (v2.getActiveCount() == 0) {
                     continue;
                 }
                 // x & y distance b/t points, and total radius
-                var ax = v1.getCenter().x - v2.getCenter().x;
-                var ay = v1.getCenter().y - v2.getCenter().y;
-                var ar = sf * (v1.getRadOuter() + v2.getRadOuter());
+                let ax = v1.getCenter().x - v2.getCenter().x;
+                let ay = v1.getCenter().y - v2.getCenter().y;
+                let ar = sf * (v1.getRadOuter() + v2.getRadOuter());
                 // do vessels overlap?
                 if (ax*ax + ay*ay < ar*ar) {
                     // how much the overlap is
-                    var adist = Math.sqrt(ax*ax + ay*ay);
-                    var dr = ar - adist;
-                    var dx;
-                    var dy;
+                    let adist = Math.sqrt(ax*ax + ay*ay);
+                    let dr = ar - adist;
+                    let dx = 0;
+                    let dy = 0;
                     if (adist < 1e-12) {
                         // total overlap = vessel centers are the same
                         // TODO: Make sure this works the same way.
-                        var t = Math.random() * 2 * Math.PI;
+                        let t = Math.random() * 2 * Math.PI;
                         dx = sf * dr * Math.cos(t);
                         dy = sf * dr * Math.sin(t);
                     } else {
                         dx = 0.75 * (dr/adist) * (v2.getCenter().x - v1.getCenter().x);
                         dy = 0.75 * (dr/adist) * (v2.getCenter().y - v1.getCenter().y);
                     }
-                    var iv = this.vessels[i].anchor.length;
-                    var jv = this.vessels[i].anchor.length;
+                    let iv = this.vessels[i].anchor.length;
+                    let jv = this.vessels[i].anchor.length;
                     v1.dx -= (jv/(iv+jv)) * dx * (1 + 2*rf*Math.random()-rf);
                     v1.dy -= (jv/(iv+jv)) * dy * (1 + 2*rf*Math.random()-rf);
                     v2.dx += (jv/(iv+jv)) * dx * (1 + 2*rf*Math.random()-rf);
@@ -595,9 +591,9 @@ SunGear.prototype = {
                 }
             }
         }
-        var e = 0;
-        for (i = 0; i < this.vessels.length; i++) {
-            var v = this.vessels[i];
+        let e = 0;
+        for (let i = 0; i < this.vessels.length; i++) {
+            const v = this.vessels[i];
             if (v.getActiveCount() != 0) {
                 v.getCenter().x += eta * v.dx;
                 v.getCenter().y += eta * v.dy;
@@ -608,41 +604,40 @@ SunGear.prototype = {
     },
     adjustCenters : function(scl) {
         // split vessels into groups by location
-        var l = [];
-        var i = 0;
-        for (i = 0; i < this.vessels.length; i++) {
+        const l = [];
+        for (let i = 0; i < this.vessels.length; i++) {
             if (this.vessels[i].getActiveCount() == 0) {
                 continue;
             }
-            var p = this.vessels[i].getCenter();
-            var added = false;
-            for (var j = 0; j < l.length && !added; j++) {
-                var v = l[j];
+            let p = this.vessels[i].getCenter();
+            let added = false;
+            for (let j = 0; j < l.length && !added; j++) {
+                let v = l[j];
                 // TODO: Get distance.
-                var distX = p.x - v[0].getCenter().x;
-                var distY = p.y - v[0].getCenter().y;
-                var dist = Math.sqrt((distX*distX) + (distY*distY));
+                let distX = p.x - v[0].getCenter().x;
+                let distY = p.y - v[0].getCenter().y;
+                let dist = Math.sqrt((distX*distX) + (distY*distY));
                 if (dist < .0001) {
                     v.push(this.vessels[i]);
                     added = true;
                 }
             }
             if (!added) {
-                var v = [];
+                let v = [];
                 v.push(this.vessels[i]);
                 l.push(v);
             }
         }
 
         // offset centers of same-centered vessels
-        for (i = 0; i < l.length; i++) {
-            var v = l[i];
+        for (let i = 0; i < l.length; i++) {
+            let v = l[i];
             if (v.length == 1) {
                 continue;
             }
-            for (var k = 0; k < v.length; k++) {
-                var curr = v[k];
-                var p = curr.getCenter();
+            for (let k = 0; k < v.length; k++) {
+                const curr = v[k];
+                const p = curr.getCenter();
                 curr.setCenter(p.x + scl*curr.getRadOuter() * Math.sqrt(v.length) * Math.cos(Math.PI*2*k/v.length),  p.y + scl*curr.getRadOuter() * Math.sqrt(v.length) * Math.sin(Math.PI*2*k/v.length), this.rad_inner);
                 curr.makeShape(this.rad_inner);
             }
@@ -666,7 +661,7 @@ SunGear.prototype = {
      * @return {AnchorDisplay} at the given location, or null if none
      */
     getAnchor : function(p) {
-        for (var i = 0; i < this.anchors.length; i++) {
+        for (let i = 0; i < this.anchors.length; i++) {
             if (this.anchors[i].contains(p)) {
                 return this.anchors[i];
             }
@@ -679,7 +674,7 @@ SunGear.prototype = {
      * @return {VesselDisplay} at the given location, or null if none
      */
     getVessel : function(p) {
-        for (var i = 0; i < this.vessels.length; i++) {
+        for (let i = 0; i < this.vessels.length; i++) {
             if (this.vessels[i].contains(p)) {
                 return this.vessels[i];
             }
@@ -691,19 +686,18 @@ SunGear.prototype = {
      * @param p5 {p5} for processing the mouseEvent
      */
     checkSelect : function(p5) {
-        var p = {
+        const p = {
             x : p5.mouseX,
             y : p5.mouseY
         };
-        var chg = false;
-        var a = this.getAnchor(p);
-        var i = 0;
-        for (i = 0; i < this.anchors.length; i++) {
+        let chg = false;
+        const a = this.getAnchor(p);
+        for (let i = 0; i < this.anchors.length; i++) {
             chg = chg || (this.anchors[i].getSelect() != (this.anchors[i] == a));
             this.anchors[i].setSelect(this.anchors[i] == a);
         }
-        var v = this.getVessel(p);
-        for (i = 0; i < this.vessels.length; i++) {
+        const v = this.getVessel(p);
+        for (let i = 0; i < this.vessels.length; i++) {
             chg = chg || (this.vessels[i].getSelect() != (this.vessels[i] == v));
             this.vessels[i].setSelect(this.vessels[i] == v);
         }
@@ -714,11 +708,10 @@ SunGear.prototype = {
     setMulti : function(b) {
         this.multi = b;
         if (!b) {
-            var i = 0;
-            for (i = 0; i < this.vessels.length; i++) {
+            for (let i = 0; i < this.vessels.length; i++) {
                 this.vessels[i].setSelect(false);
             }
-            for (i = 0; i < this.anchors.length; i++) {
+            for (let i = 0; i < this.anchors.length; i++) {
                 this.anchors[i].setSelect(false);
             }
         }
@@ -728,14 +721,11 @@ SunGear.prototype = {
      * Changes the current selected set if appropriate.
      */
     handleSelect : function(p5) {
-        var p = {
+        let p = {
             x : p5.mouseX,
             y : p5.mouseY
         };
-        var a = this.getAnchor(p);
-        var i = 0;
-        var j = 0;
-        var sel = null;
+        let a = this.getAnchor(p);
         if (a !== null) {
             if (this.multi) {
                 if (p5.keyIsPressed) {
@@ -743,7 +733,7 @@ SunGear.prototype = {
                         a.setSelect(!a.getSelect());
                     }
                 } else {
-                    for (i = 0; i < this.anchors.length; i++) {
+                    for (let i = 0; i < this.anchors.length; i++) {
                         this.anchors[i].setSelect(this.anchors[i] == a);
                     }
                 }
@@ -753,38 +743,38 @@ SunGear.prototype = {
                         this.genes.startMultiSelect(this);
                         a.setSelect(true);
                     } else if (p5.keyCode == p5.CONTROL) {
-                        var ag = new TreeSet();
-                        var add = true;
-                        for (i = 0; i < a.vessels.length; i++) {
-                            var av = a.vessels[i];
-                            var activeArray = av.activeGenes.toArray();
-                            for (j = 0; j < activeArray.length; j++) {
-                                ag.add(activeArray[j]);
+                        const ag = new SortedSet();
+                        let add = true;
+                        for (let i = 0; i < a.vessels.length; i++) {
+                            const av = a.vessels[i];
+                            const activeArray = av.activeGenes.toArray();
+                            for (let j = 0; j < activeArray.length; j++) {
+                                ag.push(activeArray[j]);
                             }
                             add = add && (av.selectedGenes.size() == 0);
                         }
                         a.setSelect(false);
-                        sel = this.genes.getSelectedSet();
-                        var agArray = ag.toArray();
+                        let sel = this.genes.getSelectedSet();
+                        const agArray = ag.toArray();
                         if (add) {
-                            for (j = 0; j < agArray.length; j++) {
-                                sel.add(agArray[j]);
+                            for (let j = 0; j < agArray.length; j++) {
+                                sel.push(agArray[j]);
                             }
                         } else {
-                            for (j = 0; j < agArray.length; j++) {
+                            for (let j = 0; j < agArray.length; j++) {
                                 if (sel.contains(agArray[j])) {
-                                    sel.remove(agArray[j]);
+                                    sel.delete(agArray[j]);
                                 }
                             }
                         }
                         this.genes.setSelection(this, sel);
                     }
                 } else {
-                    sel = new TreeSet();
-                    for (i = 0; i < a.vessels.length; i++) {
-                        var toAdd = a.vessels[i].activeGenes.toArray();
-                        for (j = 0; j < toAdd.length; j++) {
-                            sel.add(toAdd[j]);
+                    let sel = new SortedSet();
+                    for (let i = 0; i < a.vessels.length; i++) {
+                        const toAdd = a.vessels[i].activeGenes.toArray();
+                        for (let j = 0; j < toAdd.length; j++) {
+                            sel.push(toAdd[j]);
                         }
                     }
                     a.setSelect(false);
@@ -795,14 +785,14 @@ SunGear.prototype = {
             }
         }
         if (a === null) {
-            var v = this.getVessel(p);
+            let v = this.getVessel(p);
             if (this.multi) {
                 if (v !== null) {
                     if (p5.keyIsPressed) {
                         if (p5.keyCode == p5.CONTROL) {
                             v.setSelect(!V.getSelect());
                         } else {
-                            for (i = 0; i < this.vessels.length; i++) {
+                            for (let i = 0; i < this.vessels.length; i++) {
                                 this.vessels[i].setSelect(this.vessels[i] == v);
                             }
                         }
@@ -815,18 +805,18 @@ SunGear.prototype = {
                         v.setSelect(true);
                     } else if (p5.keyCode == p5.CONTROL) {
                         if (v !== null) {
-                            sel = this.genes.getSelectedSet();
+                            let sel = this.genes.getSelectedSet();
                             if (v.getSelectedCount() > 0) {
                                 var vSelected = v.selectedGenes.toArray();
-                                for (i = 0; i < vSelected.length; i++) {
+                                for (let i = 0; i < vSelected.length; i++) {
                                     if (sel.contains(vSelected[i])) {
                                         sel.remove(vSelected[i]);
                                     }
                                 }
                             } else {
                                 var vActive = v.activeGenes.toArray();
-                                for (i = 0; i < vActive.length; i++) {
-                                    sel.add(vActive[i]);
+                                for (let i = 0; i < vActive.length; i++) {
+                                    sel.push(vActive[i]);
                                 }
                             }
                             this.genes.setSelection(this, sel);
@@ -835,18 +825,18 @@ SunGear.prototype = {
                     }
                 } else {
                     if (v !== null) {
-                        for (i = 0; i < this.vessels.length; i++) {
+                        for (let i = 0; i < this.vessels.length; i++) {
                             if (this.vessels[i] != v) {
                                 this.vessels[i].clearSelectedGenes();
                             }
                         }
                         v.selectAllGenes();
                     }
-                    sel = new TreeSet();
-                    for (i = 0; i < this.vessels.length; i++) {
-                        var selectedArray = this.vessels[i].selectedGenes.toArray();
-                        for (j = 0; j < selectedArray.length; j++) {
-                            sel.add(selectedArray[j]); // selectedarRAY J - Get it??????
+                    let sel = new SortedSet();
+                    for (let i = 0; i < this.vessels.length; i++) {
+                        const selectedArray = this.vessels[i].selectedGenes.toArray();
+                        for (let j = 0; j < selectedArray.length; j++) {
+                            sel.push(selectedArray[j]); // selectedarRAY J - Get it??????
                         }
                         this.vessels[i].setSelect(false);
                     }
@@ -858,22 +848,21 @@ SunGear.prototype = {
         }
     },
     highlightVessel : function(v) {
-        var i = 0;
-        for (i = 0; i < this.vessels.length; i++) {
+        for (let i = 0; i < this.vessels.length; i++) {
             this.vessels[i].setHighlight(this.vessels[i] == v);
         }
-        for (i = 0; i < this.anchors.length; i++) {
-            var b = (v !== null && (this.anchors[i].vessels.indexOf(v) > -1));
+        for (let i = 0; i < this.anchors.length; i++) {
+            const b = (v !== null && (this.anchors[i].vessels.indexOf(v) > -1));
             this.anchors[i].setHighlight(b);
         }
     },
     updateCount : function() {
-        var c1 = new TreeSet();
-        for (var i = 0; i < this.vessels.length; i++) {
+        const c1 = new SortedSet();
+        for (let i = 0; i < this.vessels.length; i++) {
             if (this.vessels[i].getHighlight()) {
-                var selGenes = this.vessels[i].selectedGenes.toArray();
-                for (var j = 0; j < selGenes.length; j++) {
-                    c1.add(selGenes[j]);
+                const selGenes = this.vessels[i].selectedGenes.toArray();
+                for (let j = 0; j < selGenes.length; j++) {
+                    c1.push(selGenes[j]);
                 }
             }
         }
@@ -881,21 +870,20 @@ SunGear.prototype = {
     },
     checkHighlight : function(a, v) {
         if (typeof v === 'undefined') {
-            var p = a;
-            var anchor = (p === null) ? null : (this.isInGear(p) ? null : this.getAnchor(p));
-            var vessel = (p === null) ? null : (a !== null ? null : this.getVessel(p));
+            const p = a;
+            const anchor = (p === null) ? null : (this.isInGear(p) ? null : this.getAnchor(p));
+            const vessel = (p === null) ? null : (a !== null ? null : this.getVessel(p));
             this.checkHighlight(anchor, vessel);
         } else {
-            var chg = false;
-            var i = 0;
+            let chg = false;
             if (a != this.lastAnchor) {
                 chg = true;
-                for (i = 0; i < this.anchors.length; i++) {
+                for (let i = 0; i < this.anchors.length; i++) {
                     this.anchors[i].setHighlight(this.anchors[i] == a);
                     this.anchors[i].setShowLongDesc(this.anchors[i] == a);
                 }
-                for (i = 0; i < this.vessels.length; i++) {
-                    var b = (a !== null && (this.vessels[i].anchor.indexOf(a) > -1));
+                for (let i = 0; i < this.vessels.length; i++) {
+                    const b = (a !== null && (this.vessels[i].anchor.indexOf(a) > -1));
                     this.vessels[i].setHighlight(b);
                 }
             }
@@ -912,14 +900,13 @@ SunGear.prototype = {
     },
     paintComponent : function(p5) {
         console.log("painting component?");
-        var i = 0;
         p5.push();
         this.makeTransform(p5, this.WIDTH, this.HEIGHT);
         this.paintExterior(p5);
         p5.fill(SunGear.C_PLAIN);
-        // for (i = 0; i < this.vessels.length; i++) {
-        //     this.vessels[i].draw(p5);
-        // }
+        for (let i = 0; i < this.vessels.length; i++) {
+            this.vessels[i].draw(p5);
+        }
         p5.pop();
         p5.push();
         var drawT = {
@@ -927,7 +914,7 @@ SunGear.prototype = {
             y : this.HEIGHT/2.0,
             scale : 0.5*Math.min(this.WIDTH/2.0, this.HEIGHT/2.0)/SunGear.R_OUTER
         };
-        for (i = 0; i < this.anchors.length; i++) {
+        for (let i = 0; i < this.anchors.length; i++) {
             if (this.anchors[i] != this.lastAnchor) {
                 this.anchors[i].draw(p5, drawT);
             }
@@ -948,7 +935,7 @@ SunGear.prototype = {
         // p5.pop();
         //
         // // moon label
-        // var ml = null;
+        // let ml = null;
         // if (this.genes !== null && this.genes.getSource() !== null && this.genes.getSource().getAttributes() !== null) {
         //     ml = this.genes.getSource().getAttributes().get("moonLabel");
         // }
@@ -958,39 +945,38 @@ SunGear.prototype = {
         // }
     },
     makeTransform : function(p5, w, h) {
-        var M = Math.min(w, h);
+        const M = Math.min(w, h);
         p5.translate(w/2.0, h/2.0);
         p5.scale((0.5*M/SunGear.R_OUTER), (0.5*M/SunGear.R_OUTER));
     },
     updateActive : function() {
         // update active sets
         // find max value
-        var max = 0;
-        var i = 0;
-        for (i = 0; i < this.vessels.length; i++) {
+        let max = 0;
+        for (let i = 0; i < this.vessels.length; i++) {
             this.vessels[i].setActiveGenes(this.genes.getActiveSet());
             max = Math.max(max, this.vessels[i].getActiveCount());
         }
         // update max values
         // reshape
-        for (i = 0; i < this.vessels.length; i++) {
+        for (let i = 0; i < this.vessels.length; i++) {
             this.vessels[i].setMax(max);
             this.vessels[i].makeShape(this.rad_inner);
         }
     },
     updateHighlight : function() {
-        var a = this.lastAnchor;
+        const a = this.lastAnchor;
         this.lastAnchor = null;
-        var v = this.lastVessel;
+        const v = this.lastVessel;
         this.lastVessel = null;
         this.checkHighlight(a, v);
     },
     updateSelect : function() {
-        var ac = new Comp.VesselACount();
-        var min = null;
+        const ac = new Comp.VesselACount();
+        let min = null;
         if (this.vessels !== null) {
             this.orderedVessels = [];
-            for (var i = 0; i < this.vessels.length; i++) {
+            for (let i = 0; i < this.vessels.length; i++) {
                 this.vessels[i].setSelectedGenes(this.genes.getSelectedSet());
                 if (this.vessels[i].getSelectedCount() > 0) {
                     this.orderedVessels.push(this.vessels[i]);
@@ -1006,56 +992,54 @@ SunGear.prototype = {
         }
     },
     getMultiSelection : function(operation) {
-        var s = new TreeSet();
-        var cnt = 0;    // number of selected items in component
-        var i = 0;
-        var j = 0;
+        const s = new SortedSet();
+        let cnt = 0;    // number of selected items in component
         if (operation == MultiSelectable.INTERSECT) {
-            var activeArray = this.genes.getActiveSet().toArray();
-            for (i = 0; i < activeArray.length; i++) {
-                s.add(activeArray[i]);
+            const activeArray = this.genes.getActiveSet().toArray();
+            for (let i = 0; i < activeArray.length; i++) {
+                s.push(activeArray[i]);
             }
         }
-        for (i = 0; i < this.vessels.length; i++) {
+        for (let i = 0; i < this.vessels.length; i++) {
             if (this.vessels[i].getSelect()) {
                 cnt++;
-                var selArray = this.vessels[i].selectedGenes.toArray();
+                const selArray = this.vessels[i].selectedGenes.toArray();
                 if (operation == MultiSelectable.UNION) {
-                    for (j = 0; j < selArray.length; j++) {
-                        s.add(selArray[j]);
+                    for (let j = 0; j < selArray.length; j++) {
+                        s.push(selArray[j]);
                     }
                 } else {
-                    var sArray = s.toArray();
-                    // TODO: Make sure this works.
-                    for (j = 0; j < sArray.length; j++) {
+                    const sArray = s.toArray();
+                    for (let j = 0; j < sArray.length; j++) {
                         if (!this.vessels[i].selectedGenes.contains(sArray[j])) {
-                            s.remove(sArray[j]);
+                            // may need remove instead.
+                            s.delete(sArray[j]);
                         }
                     }
                 }
             }
         }
-        for (i = 0; i < this.anchors.length; i++) {
+        for (let i = 0; i < this.anchors.length; i++) {
             if (this.anchors[i].getSelect()) {
                 cnt++;
                 // find all of anchor's selected genes
-                var ag = new TreeSet();
-                for (var it = 0; it < this.anchors[i].vessels.length; it++) {
-                    var selGenes = this.anchors[i].vessels[it];
-                    for (j = 0; j < selGenes.length; j++) {
-                        ag.add(selGenes[j]);
+                const ag = new SortedSet();
+                for (let it = 0; it < this.anchors[i].vessels.length; it++) {
+                    const selGenes = this.anchors[i].vessels[it];
+                    for (let j = 0; j < selGenes.length; j++) {
+                        ag.push(selGenes[j]);
                     }
                 }
-                var agArray = ag.toArray();
+                const agArray = ag.toArray();
                 if (operation == MultiSelectable.UNION) {
-                    for (j = 0; j < agArray.length; j++) {
-                        s.add(agArray[j]);
+                    for (let j = 0; j < agArray.length; j++) {
+                        s.push(agArray[j]);
                     }
                 } else {
-                    var sArray2 = s.toArray();
-                    for (j = 0; j < sArray2.length; j++) {
+                    const sArray2 = s.toArray();
+                    for (let j = 0; j < sArray2.length; j++) {
                         if (!ag.contains(sArray2[j])) {
-                            s.remove(sArray2[j]);
+                            s.delete(sArray2[j]);
                         }
                     }
                 }
@@ -1147,8 +1131,8 @@ SunGear.prototype = {
      * @param p5
      */
     makeButtons : function(p5) {
-        for (var i = 0; i < this.visuals.length; i++) {
-            var model = this.visuals[i].model;
+        for (let i = 0; i < this.visuals.length; i++) {
+            const model = this.visuals[i].model;
             model.paintIcon(p5, this.visuals[i].params);
         }
     },
@@ -1160,7 +1144,7 @@ SunGear.prototype = {
      * @param p5
      */
     handleButtons : function(p5) {
-        for (var i = 0; i < this.visuals.length; i++) {
+        for (let i = 0; i < this.visuals.length; i++) {
             var model = this.visuals[i].model;
             if (model.selected) {
                 this.visuals[i].task();
@@ -1180,8 +1164,8 @@ SunGear.prototype = {
         p5.fill(SunGear.C_BACKGROUND);
         p5.strokeWeight(.025);
         if (this.exterior.w === null || this.exterior.h === null) {
-            var vertX = this.exterior.x;
-            var vertY = this.exterior.y;
+            const vertX = this.exterior.x;
+            const vertY = this.exterior.y;
             p5.beginShape();
             for (var i = 0; i < vertX.length; i++) {
                 p5.vertex(vertX[i], vertY[i]);
