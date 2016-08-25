@@ -75,7 +75,6 @@ GeneList.prototype = {
         } else {
             this.genesS = new SortedSet();
             var toAdd = this.source.getReader().expGenes.toArray();
-            console.log(toAdd);
             for (var i = 0; i < toAdd.length; i++) {
                 this.genesS.push(toAdd[i]);
             }
@@ -94,7 +93,6 @@ GeneList.prototype = {
                 this.hist.add(this.selectionS);
                 console.log("working items: " + this.genesS.length);
                 var ge = new GeneEvent(this, this, GeneEvent.NEW_LIST);
-                console.log("Notifying gene listeners...");
                 this.notifyGeneListeners(ge);
                 this.setMulti(false, this);
             }

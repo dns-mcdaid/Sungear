@@ -4,9 +4,9 @@
  */
 /** @DONE */
 
-/** @param name - String */
+/** @param name {String} */
 function Anchor(name) {
-    this.name = name;   /** @type String */
+    this.name = name;   /** {String} */
 }
 
 Anchor.prototype = {
@@ -14,6 +14,12 @@ Anchor.prototype = {
 
     cleanup : function() {
         console.log("Cleaning up Anchor");
+    },
+
+    compare : function(a) {
+        var str1 = this.name.toLowerCase();
+        var str2 = a.name.toLowerCase();
+        return str1.localeCompare(str2);
     },
 
     compareTo : function(a) {

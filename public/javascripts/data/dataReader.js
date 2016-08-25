@@ -329,6 +329,10 @@ DataReader.prototype = {
         var passedCategories = reader.categories;
         var passedSets = reader.expSets;
 
+        passedAnchors.sort(function(a, b) {
+            return a.name.localeCompare(b.name);
+        });
+
         for (i = 0; i < passedAnchors.length; i++) {
             var anchor = passedAnchors[i];
             this.anchors.push(new Anchor(anchor.name));
@@ -367,9 +371,8 @@ DataReader.setThreshold = function(t, expGenes, anchors, vessels) {
     var curr = null;
     var expGenesArray = expGenes.toArray();
     for (var it = 0; it < expGenesArray.length; it++) {
+        m = "";
         var g = expGenesArray[it];
-        console.log(it);
-        console.log(g);
         var e = g.getExp();
         for (var i = 0; i < e.length; i++) {
             if (e[i] < t) {
@@ -378,7 +381,7 @@ DataReader.setThreshold = function(t, expGenes, anchors, vessels) {
                 m += "1";
             }
         }
-        var sig = m;    // May be redundant
+        var sig = m;
         if (m != last) {
             curr = vh[sig];
             if (typeof curr === 'undefined') {

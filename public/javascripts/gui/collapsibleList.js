@@ -235,6 +235,9 @@ CollapsibleList.prototype = {
             this.geneTBody.appendChild(row);
             row.addEventListener('click', this.rowSelected.bind(this, row));
         }
+        // $('#geneTbody tr').on('click', function(event) {
+        //     $(this).addClass('highlight').siblings().removeClass('highlight');
+        // });
     },
     rowSelected : function(cell) {
         var row = cell.rowIndex-1;

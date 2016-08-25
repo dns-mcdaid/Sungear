@@ -20,7 +20,7 @@ const VesselDisplay = require('./sungear/vesselDisplay');
 function SunGear(genes, thresh, statsF) {
     if (typeof statsF === 'undefined') {
         statsF = thresh;
-        thresh = 0.0;
+        thresh = NaN;
     }
     // Container for GUI buttons.
     this.visuals = [];
@@ -141,7 +141,10 @@ SunGear.prototype = {
             console.log("check");
             t = 1.0;
             try {
-                t = src.getAttributes().get("threshold");
+                var att = src.getAttributes().get("threshold");
+                if (att !== null) {
+                    t = att;
+                }
             } catch(e) {
                 console.log("Oops! From Sungear.set");
             }
@@ -405,19 +408,19 @@ SunGear.prototype = {
         return cool.toArray();
     },
     /**
-     * @param anch {Vector<Anchor>}
-     * @param ves {Vector<Vessel>}
+     * @param anch {Array} of Anchors
+     * @param ves {Array} of Vessels
      */
     makeDisplay : function(anch, ves) {
         // find vessel min/max vals
         this.vMax = 0;
         this.vMin = Number.MAX_VALUE;
         var i = 0;
-        // for (i = 0; i < ves.length; i++) {
-        //     var v = ves[i];
-        //     this.vMax = Math.max(this.vMax, v.getFullCount());
-        //     this.vMin = Math.max(this.vMin, v.getFullCount());
-        // }
+        for (i = 0; i < ves.length; i++) {
+            var v = ves[i];
+            this.vMax = Math.max(this.vMax, v.getFullCount());
+            this.vMin = Math.max(this.vMin, v.getFullCount());
+        }
         // init anchor display components
         this.anchors = [];
         var anchorConv = {};
@@ -458,7 +461,7 @@ SunGear.prototype = {
         // init vessel display components
         this.vessels = [];
         var vesselConv = {};
-        for (var i = 0; i < this.vessels.length; i++) {
+        for (var i = 0; i < ves.length; i++) {
             var v = ves[i];
             this.vessels[i] = new VesselDisplay(v);
             vesselConv[v] = this.vessels[i];
@@ -477,7 +480,7 @@ SunGear.prototype = {
     },
     positionVessels : function() {
         if (this.polarPlot) {
-            this.positionvesselsPolar();
+            this.positionVesselsPolar();
         } else {
             this.positionVesselsCartesian();
         }
@@ -908,6 +911,7 @@ SunGear.prototype = {
         }
     },
     paintComponent : function(p5) {
+        console.log("painting component?");
         var i = 0;
         p5.push();
         this.makeTransform(p5, this.WIDTH, this.HEIGHT);

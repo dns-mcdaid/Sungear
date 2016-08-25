@@ -187,3 +187,7 @@ tr {
     height: 0;
     overflow: hidden;
 }
+
+#geneTBody {
+    cursor: pointer;
+}
