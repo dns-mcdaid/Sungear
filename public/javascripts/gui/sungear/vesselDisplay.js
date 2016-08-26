@@ -2,20 +2,12 @@
 
 const SortedSet = require('collections/sorted-set');
 
-const SunGear = require('../sunGear');
-
 function VesselDisplay(vessel) {
     this.vessel = vessel;
     this.highlight = false;
     this.select = false;
-    this.start = {
-        x : null,
-        y : null
-    };
-    this.center = {
-        x : null,
-        y : null
-    };
+    this.start = null;
+    this.center = null;
     this.activeGenes = new SortedSet();
     this.selectedGenes = new SortedSet();
     this.radMax = 0.1;
@@ -29,10 +21,20 @@ function VesselDisplay(vessel) {
         x : null, y : null,
         w : null, h : null
     };
+
+    this.shit = true;
 }
 
 VesselDisplay.ARROW_LINE = 0.7;
 VesselDisplay.ARROW_END = 0.2;
+
+VesselDisplay.R_OUTER = 1.2;
+VesselDisplay.R_CIRCLE = 1.0;
+VesselDisplay.C_PLAIN = "#F3EFE0";
+VesselDisplay.C_HIGHLIGHT = "#3399FF";
+VesselDisplay.C_SELECT = "#9A3334";
+VesselDisplay.C_BACKGROUND = "#111111";
+VesselDisplay.C_SELECT_ALT = "#217C7E";
 
 VesselDisplay.prototype = {
     constructor : VesselDisplay,
@@ -86,12 +88,12 @@ VesselDisplay.prototype = {
     },
     selectAllGenes : function() {
         this.selectedGenes.clear();
-        this.selectedGenes.union(this.activeGenes.toArray());
+        this.selectedGenes = this.selectedGenes.union(this.activeGenes.toArray());
         this.updateSize();
     },
     setSelectedGenes : function(sel) {
         this.selectedGenes.clear();
-        this.selectedGenes.union(this.activeGenes.toArray());
+        this.selectedGenes = this.selectedGenes.union(this.activeGenes.toArray());
         this.selectedGenes = this.selectedGenes.intersection(sel);
         this.updateSize();
     },
@@ -99,36 +101,40 @@ VesselDisplay.prototype = {
         return this.selectedGenes.length;
     },
     initActive : function() {
-        console.log("vessel genes: " + this.vessel.genes.length);
-        console.log(this.vessel.genes.toArray());
-        this.activeGenes.union(this.vessel.genes.toArray());
-        console.log("vesselDisplay genes: " + this.activeGenes.length);
+        this.activeGenes = this.activeGenes.union(this.vessel.genes.toArray());
     },
     setActiveGenes : function(sel) {
         this.activeGenes.clear();
-        this.activeGenes.union(this.vessel.genes.toArray());
+        this.activeGenes = this.activeGenes.union(this.vessel.genes.toArray());
         this.activeGenes = this.activeGenes.intersection(sel);
     },
     getActiveCount : function() {
         return this.activeGenes.length;
     },
     makeShape : function(rad_inner) {
-        if (this.start === null || this.start.x === null) {
-            var p = {
-                x : null,
-                y : null
+        if (this.start === null) {
+            const p = {
+                x : 0,
+                y : 0
             };
+            console.log("Rad inner:");
+            console.log(rad_inner);
             if (this.anchor.length == 0) {
-                p.x = -(SunGear.R_CIRCLE);
-                p.y = -(SunGear.R_CIRCLE+0.15);
+                p.x = -(VesselDisplay.R_CIRCLE);
+                p.y = -(VesselDisplay.R_CIRCLE+0.15);
+                console.log("anchor length was fucking 0");
             } else {
                 for (let i = 0; i < this.anchor.length; i++) {
-                    var theta = this.anchor.angle;
+                    const theta = this.anchor[i].angle;
+                    console.log("Theta:");
+                    console.log(theta);
                     p.x += rad_inner * Math.cos(theta) / this.anchor.length;
                     p.y += rad_inner * Math.sin(theta) / this.anchor.length;
                 }
             }
             this.start = p;
+            console.log("P:");
+            console.log(p);
             this.setCenter(p, rad_inner);
             this.selectAllGenes();
         }
@@ -212,9 +218,9 @@ VesselDisplay.prototype = {
             return;
         }
         p5.strokeWeight(.005);
-        let color = (this.select ? SunGear.C_SELECT : (this.highlight ? SunGear.C_HIGHLIGHT : SunGear.C_PLAIN));
+        let color = (this.select ? VesselDisplay.C_SELECT : (this.highlight ? VesselDisplay.C_HIGHLIGHT : VesselDisplay.C_PLAIN));
         p5.stroke(color);
-        // if (this.getSelectedCount() == 0 && color == SunGear.C_PLAIN) {
+        // if (this.getSelectedCount() == 0 && color == VesselDisplay.C_PLAIN) {
         //     p5.fill('#D1CDB8');
         // }
         if (this.getSelectedCount() > 0) {

@@ -439,6 +439,7 @@ SunGear.prototype = {
                 h : 2*SunGear.R_CIRCLE
             };
         } else {
+            this.rad_inner = 1 - this.vRadMax * (1 + 3.0/this.anchors.length);
             let x = [];
             let y = [];
             for (let i = 0; i < this.anchors.length; i++) {

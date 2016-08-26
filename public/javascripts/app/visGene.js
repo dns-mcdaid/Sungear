@@ -170,7 +170,7 @@ VisGene.prototype = {
     run : function() {
         this.geneList.setSource(this.src);
         this.geneList.update();
-        console.log(this.geneList);
+        // console.log(this.geneList);
     },
     /**
      * TODO: Ensure this works. It probably doesn't.
