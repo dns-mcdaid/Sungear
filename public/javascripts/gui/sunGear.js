@@ -901,7 +901,6 @@ SunGear.prototype = {
         }
     },
     paintComponent : function(p5) {
-        console.log("painting component?");
         p5.push();
         this.makeTransform(p5, this.WIDTH, this.HEIGHT);
         this.paintExterior(p5);

@@ -1,7 +1,8 @@
-require('javascript.util');
-var TreeSet = javascript.util.TreeSet;
+"use strict";
 
-var SunGear = require('../sunGear');
+const SortedSet = require('collections/sorted-set');
+
+const SunGear = require('../sunGear');
 
 function VesselDisplay(vessel) {
     this.vessel = vessel;
@@ -15,8 +16,8 @@ function VesselDisplay(vessel) {
         x : null,
         y : null
     };
-    this.activeGenes = new TreeSet();
-    this.selectedGenes = new TreeSet();
+    this.activeGenes = new SortedSet();
+    this.selectedGenes = new SortedSet();
     this.radMax = 0.1;
     this.radMin = 0.0;
     this.showArrows = true;
@@ -40,11 +41,11 @@ VesselDisplay.prototype = {
         this.selectedGenes = new TreeSet();
     },
     /**
-     * @param conv {Hashtable<Anchor,AnchorDisplay>}
+     * @param conv {{}} Hashtable mapping Anchor to AnchorDisplay
      */
     setAnchors : function(conv) {
         this.anchor = [];
-        for (var i = 0; i < this.anchor.length; i++) {
+        for (let i = 0; i < this.anchor.length; i++) {
             this.anchor[i] = conv[this.vessel.anchor[i]];
             this.anchor[i].vessels.push(this);
         }
@@ -80,42 +81,30 @@ VesselDisplay.prototype = {
         return this.radOuter * (1.0 + (this.showArrows ? VesselDisplay.ARROW_LINE : 0.0));
     },
     clearSelectedGenes : function() {
-        this.selectedGenes = new TreeSet();
+        this.selectedGenes.clear();
         this.updateSize();
     },
     selectAllGenes : function() {
-        this.selectedGenes = new TreeSet();
-        var temp = this.activeGenes.toArray();
-        for (var i = 0; i < temp.length; i++) {
-            this.selectedGenes.add(temp[i]);
-        }
+        this.selectedGenes.clear();
+        this.selectedGenes.union(this.activeGenes.toArray());
         this.updateSize();
     },
     setSelectedGenes : function(sel) {
-        var incoming = sel.toArray();
-        for (var i = 0; i < incoming.length; i++) {
-            if (this.activeGenes.contains(incoming[i])) {
-                this.selectedGenes.add(incoming[i]);
-            }
-        }
+        this.selectedGenes.clear();
+        this.selectedGenes.union(this.activeGenes.toArray());
+        this.selectedGenes = this.selectedGenes.intersection(sel);
         this.updateSize();
     },
     getSelectedCount : function() {
         return this.selectedGenes.size();
     },
     initActive : function() {
-        var temp = this.vessel.genes.toArray();
-        for (var i = 0; i < temp.length; i++) {
-            this.activeGenes.add(temp[i]);
-        }
+        this.activeGenes.union(this.vessel.genes);
     },
     setActiveGenes : function(sel) {
-        var incoming = sel.toArray();
-        for (var i = 0; i < incoming.length; i++) {
-            if (this.vessel.genes.contains(incoming[i])) {
-                this.activeGenes.add(incoming[i]);
-            }
-        }
+        this.activeGenes.clear();
+        this.activeGenes.union(this.vessel.genes);
+        this.activeGenes = this.activeGenes.intersection(sel);
     },
     getActiveCount : function() {
         return this.activeGenes.size();
