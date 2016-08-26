@@ -1,3 +1,4 @@
+"use strict";
 /**
  * Created on Nov 9, 2004
  * Copyright Chris Poultney 2004.
@@ -8,7 +9,6 @@
  * @author crispy
  * @author Rajah_Bimmy
  */
-/** @DONE */
 
 /**
  * Constructs a new Gene.

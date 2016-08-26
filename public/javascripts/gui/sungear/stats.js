@@ -1,5 +1,5 @@
-require('javascript.util');
-var TreeSet = javascript.util.TreeSet;
+"use strict";
+const SortedSet = require('collections/sorted-set');
 
 function Stats(genes, sun) {
     this.genes = genes;         /** {GeneList} */
@@ -14,33 +14,33 @@ Stats.prototype = {
     constructor : Stats,
     update : function() {
         this.localUpdate = true;
-        var hash = {};
-        var vessels = this.sun.getVessels();
-        for (var i = 0; i < vessels.length; i++) {
+        const hash = {};
+        const vessels = this.sun.getVessels();
+        for (let i = 0; i < vessels.length; i++) {
             if (vessels[i].getActiveCount() > 0) {
-                var idx = vessels[i].anchor.length;
-                var info = hash[idx];
-                if (info === null) {
-                    hash[idx] = new VesselInfo(idx);
+                const idx = vessels[i].anchor.length;
+                let info = hash[idx];
+                if (typeof info === 'undefined') {
+                    info = new VesselInfo(idx);
+                    hash[idx] = info;
                 }
                 info.addVessel(vessels[i]);
             }
         }
-        var keys = Object.keys(hash);
-        var values = [];
-        for (i = 0; i < keys.length; i++) {
+        const keys = Object.keys(hash);
+        const values = [];
+        for (let i = 0; i < keys.length; i++) {
             values.push(hash[keys[i]]);
         }
         this.model.update(values);
         this.localUpdate = false;
     },
     selectStats : function(rows) {
-        var s = new TreeSet();
-        // FIXME: Sloppy implementation.
-        for (var i = 0; i < rows.length; i++) {
-            var localGenes = this.model.getInfo(rows[i]).genes.toArray();
-            for (var j = 0; j < localGenes.length; j++) {
-                s.add(localGenes[j]);
+        var s = new SortedSet();
+        for (let i = 0; i < rows.length; i++) {
+            const localGenes = this.model.getInfo(rows[i]).genes.toArray();
+            for (let j = 0; j < localGenes.length; j++) {
+                s.push(localGenes[j]);
             }
         }
         this.genes.setSelection(this, s);
@@ -62,7 +62,7 @@ StatsModel.prototype = {
     update : function(c) {
         this.titles[2] = this.parent.genes.getSource().getAttributes().get("itemsLabel", "items");
         this.vlist = [];
-        for (var i = 0; i < c.length; i++) {
+        for (let i = 0; i < c.length; i++) {
             this.vlist.push(c[i]);
         }
         this.vlist.sort(); // This should work, as it calls VesselInfo' compareTo
@@ -77,7 +77,7 @@ StatsModel.prototype = {
         return this.titles.length;
     },
     getValueAt : function(row, column) {
-        var info = this.vlist[row];
+        const info = this.vlist[row];
         switch (column) {
             case 0:
                 return info.anchorCount;
@@ -97,16 +97,16 @@ StatsModel.prototype = {
 function VesselInfo(cnt) {
     this.anchorCount = cnt; /** {int} */
     this.vessels = [];      /** {Vector<VesselDisplay>} */
-    this.genes = new TreeSet(); /** {TreeSet<Gene>} */
+    this.genes = new SortedSet(); /** {TreeSet<Gene>} */
 }
 
 VesselInfo.prototype = {
     constructor : VesselInfo,
     addVessel : function(v) {
         this.vessels.push(v);
-        var selected = v.selectedGenes.toArray();
-        for (var i = 0; i < selected.length; i++) {
-            this.genes.add(selected[i]);
+        const selected = v.selectedGenes.toArray();
+        for (let i = 0; i < selected.length; i++) {
+            this.genes.push(selected[i]);
         }
     },
     compareTo : function(o) {

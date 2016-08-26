@@ -1,3 +1,4 @@
+"use strict";
 /**
  * Encapsulates all events affecting the master {@link GeneList}.
  * Sungear creates one {@link GeneList} object and one {@link DataSource} object in

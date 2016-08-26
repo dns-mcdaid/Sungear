@@ -1,3 +1,4 @@
+"use strict";
 const SortedSet = require("collections/sorted-set");
 /**
  * @author RajahBimmy
@@ -58,9 +59,9 @@ SearchResults.prototype = {
         }
     },
     selectTerms : function(t) {
-        var s = new SortedSet();
+        const s = new SortedSet();
         if (t !== null && typeof t !== 'undefined') {
-            for (var i = 0; i < t.length; i++) {
+            for (let i = 0; i < t.length; i++) {
                 s.union(t[i].getAllGenes());
             }
         }

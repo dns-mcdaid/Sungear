@@ -1,3 +1,4 @@
+"use strict";
 /**
  * Represents a term in the GO hierarchy.  This class is a little more complicated
  * than one might expect because of the set operations required to support the

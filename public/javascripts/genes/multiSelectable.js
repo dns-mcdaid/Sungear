@@ -1,3 +1,4 @@
+"use strict";
 /**
  * Interface to be implemented by all components that can participate
  * in a multiple select operation.

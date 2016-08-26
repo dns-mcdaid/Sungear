@@ -1,12 +1,13 @@
+"use strict";
 const DataReader = require('../data/dataReader');
 
 /**
- * @param experU {JSON Object}
- * @param par
+ * @param experU {Object}
+ * @param par {Container}
  * @constructor
  */
 function ExperimentList(experU, par) {
-    this.parent = par;  /** @type Container */
+    this.parent = par;
     this.exp = [];
     for (var i = 0; i < experU.length; i++) {
         this.exp.push($.extend(new Experiment(), experU[i]));
@@ -19,11 +20,6 @@ function ExperimentList(experU, par) {
     this.loadB = document.getElementById('loadB');
     this.loadB.addEventListener('click', this.refreshTable.bind(this));
 
-    // this.adjustColumnSize(0);
-    // this.adjustColumnSize(2);
-    // this.openB = document.getElementById('openB');
-    // this.openB.addEventListener("click", this.handleSelect.bind(this));
-
     this.selection = null;
     $('#loadTable').on('click', 'tbody tr', function(event) {
         $(this).addClass('highlight').siblings().removeClass('highlight');
@@ -33,11 +29,8 @@ function ExperimentList(experU, par) {
 ExperimentList.prototype = {
     constructor : ExperimentList,
 
-    // Unnecessary function.
-    // adjustColumnSize : function(c) { },
-
     handleSelect : function(row) {
-        var rowInt = row.rowIndex-1;
+        const rowInt = row.rowIndex-1;
         this.selection = null;
         if (rowInt != -1) {
             this.selection = this.model.getValueAt(rowInt, 0);
@@ -53,17 +46,17 @@ ExperimentList.prototype = {
      * @returns {Array} of Experiments
      */
     parseExper : function(u) {
-        var v = [];
-        var buf = DataReader.readURL(u);
-        var line = buf.toString().split("\\n");
-        for (var i = 0; i < line.length; i++) {
+        const v = [];
+        let buf = DataReader.readURL(u);
+        const line = buf.toString().split("\\n");
+        for (let i = 0; i < line.length; i++) {
             try {
                 if (line[i][0] == "#") {
                     continue;
                 }
-                var f = DataReader.trimAll(line[i].split("\\|"));
-                var sn = f.length > 3 ? f[3] : "arabidopsis";
-                var at = f.length > 4 ? f[4] : null;
+                let f = DataReader.trimAll(line[i].split("\\|"));
+                let sn = f.length > 3 ? f[3] : "arabidopsis";
+                let at = f.length > 4 ? f[4] : null;
                 v.push(new Experiment(f[0], f[1], f[2], sn, at));
             } catch (e) {
                 console.error("error parsing experiment file at line: " + (i+1));
@@ -75,17 +68,17 @@ ExperimentList.prototype = {
     },
     populateTable : function() {
         for (var i = 0; i < this.exp.length; i++) {
-            var e = this.exp[i];
-            var row = document.createElement('tr');
+            const e = this.exp[i];
+            const row = document.createElement('tr');
 
-            var nameCell = row.insertCell(0);
-            var descCell = row.insertCell(1);
-            var specCell = row.insertCell(2);
+            const nameCell = row.insertCell(0);
+            const descCell = row.insertCell(1);
+            const specCell = row.insertCell(2);
 
-            var specDiv = document.createElement('div');
-            var specContent = document.createElement('div');
-            var spaceDiv = document.createElement('div');
-            var dotSpan = document.createElement('span');
+            const specDiv = document.createElement('div');
+            const specContent = document.createElement('div');
+            const spaceDiv = document.createElement('div');
+            const dotSpan = document.createElement('span');
 
             nameCell.innerHTML = e.getFilename();
             descCell.innerHTML = e.getDesc();

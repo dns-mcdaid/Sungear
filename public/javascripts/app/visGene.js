@@ -1,3 +1,4 @@
+"use strict";
 /**
  * Top-level GUI component for Sungear.  Can be instantiated
  * as an applet or an application.
@@ -432,7 +433,7 @@ VisGene.usage = function(){
  * @param args {String[]}
  */
 VisGene.main = function(args) {
-    try {
+    // try {
         var i = 0;
         var warn = true;
         var plugin = [];
@@ -465,9 +466,9 @@ VisGene.main = function(args) {
         var vis = new VisGene(new URL("file:./"), warn, plugin, dataDir);
         vis.init();
         return vis;
-    } catch(mu) {
-        console.error(mu);
-    }
+    // } catch(mu) {
+    //     console.error(mu);
+    // }
 };
 
 module.exports = VisGene;

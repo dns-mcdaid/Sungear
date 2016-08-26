@@ -1,3 +1,4 @@
+"use strict";
 /**
  * Created 2016.07.07
  * @author RajahBimmy

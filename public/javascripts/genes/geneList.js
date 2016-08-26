@@ -1,3 +1,4 @@
+"use strict";
 /**
  * The central class for gene subset selection operations.
  * Maintains master gene table as well as relevant gene sets: all genes in the
@@ -61,7 +62,7 @@ GeneList.prototype = {
         this.source = src;
         this.master = src.getReader().allGenes;
         console.log("total items: " + this.master.length);
-        var ge = new GeneEvent(this, this, GeneEvent.NEW_SOURCE);
+        const ge = new GeneEvent(this, this, GeneEvent.NEW_SOURCE);
         this.notifyGeneListeners(ge);
     },
     /**
@@ -85,7 +86,7 @@ GeneList.prototype = {
                 this.activeS = new SortedSet();
                 this.selectionS = new SortedSet();
                 var tempGenesS = this.genesS.toArray();
-                for (i = 0; i < tempGenesS.length; i++) {
+                for (let i = 0; i < tempGenesS.length; i++) {
                     this.activeS.push(tempGenesS[i]);
                     this.selectionS.push(tempGenesS[i]);
                 }
@@ -112,7 +113,7 @@ GeneList.prototype = {
      * @return the full gene set
      */
     getAllGenes : function() {
-        var toReturn = new SortedSet();
+        const toReturn = new SortedSet();
         for (var key in this.master) {
             toReturn.push(this.master[key]);
         }
@@ -190,7 +191,7 @@ GeneList.prototype = {
      */
     restart : function(src) {
         this.setActive(src, this.genesS, false);
-        var e = new GeneEvent(this, src, GeneEvent.RESTART);
+        const e = new GeneEvent(this, src, GeneEvent.RESTART);
         this.notifyGeneListeners(e);
         this.setMulti(false, src);
     },
@@ -246,7 +247,7 @@ GeneList.prototype = {
      */
     setMulti : function(b, source) {
         if (this.multi != b) {
-            var e = null;
+            let e = null;
             if (b) {
                 e = new GeneEvent(this, source, GeneEvent.MULTI_START);
             } else {
@@ -270,13 +271,13 @@ GeneList.prototype = {
      * @param operation one of the {@link MultiSelectable} operations (currently union or intersect)
      */
     finishMultiSelect : function(source, operation) {
-        var s = new SortedSet();
+        let s = new SortedSet();
         if (operation == MultiSelectable.INTERSECT) {
             s.union(this.selectionS);
         }
-        for (var it = this.multiSelectable.iterator(); it.hasNext(); ) {
-            var g = it.next().getMultiSelection(operation);
-            if (g !== null) {
+        for (let it = 0; it < this.multiSelectable.length; it++) {
+            const g = this.multiSelectable[it].getMultiSelection(operation);
+            if (g !== null && typeof g !== 'undefined') {
                 if (operation == MultiSelectable.UNION) {
                     s.union(g);
                 } else {
@@ -305,7 +306,7 @@ GeneList.prototype = {
      * @param l the object to remove
      */
     removeGeneListener : function(l) {
-        var idx = this.listeners.indexOf(l);
+        const idx = this.listeners.indexOf(l);
         if (idx > -1) {
             this.listeners.splice(idx, 1);
         }
@@ -344,7 +345,7 @@ GeneList.prototype = {
      * @param src the source of the selection change
      */
     forward : function(src) {
-        var s = this.hist.forward();
+        const s = this.hist.forward();
         if (s !== null) {
             this.setSelection(src, s, true, false);
         }
@@ -355,7 +356,7 @@ GeneList.prototype = {
      * @param src the source of the selection change
      */
     back : function(src) {
-        var s = this.hist.back();
+        const s = this.hist.back();
         if (s !== null) {
             this.setSelection(src, s, true, false);
         }
@@ -408,8 +409,7 @@ History.prototype = {
             return null;
         } else {
             this.curr--;
-            var s = this.past[this.curr];
-            return s;
+            return this.past[this.curr];
         }
     },
     /**
@@ -439,14 +439,14 @@ History.prototype = {
              * var numOfElements = this.past.length - this.curr - 1;
              * this.past.splice(curr+1, numOfElements);
              */
-            for (var i = this.past.length; i > this.curr; i--) {
+            for (let i = this.past.length; i > this.curr; i--) {
                 this.past.splice(i, 1);
             }
         }
 
-        var t = new SortedSet();
-        var sArray = s.toArray();
-        for (var j = 0; j < sArray.length; j++) {
+        const t = new SortedSet();
+        const sArray = s.toArray();
+        for (let j = 0; j < sArray.length; j++) {
             t.push(sArray[j]);
         }
         this.past.push(t);

@@ -1,3 +1,5 @@
+"use strict";
+
 const SortedSet = require('collections/sorted-set');
 
 const DataReader = require('../data/dataReader');

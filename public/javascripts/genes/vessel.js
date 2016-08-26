@@ -1,3 +1,4 @@
+"use strict";
 /**
  * @author crispy
  * @author Rajah_Bimmy

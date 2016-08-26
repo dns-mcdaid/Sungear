@@ -1,3 +1,4 @@
+"use strict";
 /**
  * @author crispy & Rajah_Bimmy
  * Copyright Chris Poultney 2004.
