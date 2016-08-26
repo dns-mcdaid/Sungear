@@ -1,3 +1,4 @@
+"use strict";
 /**
  * BEFORE RUNNING:
  * Navigate to the overarching Sungear folder, then run:
@@ -14,9 +15,9 @@ var args = [ "" ];
 var vis;
 
 new p5(function(p5) {
-    var WIDTH;
-    var HEIGHT;
-    var canvas;
+    let WIDTH;
+    let HEIGHT;
+    let canvas;
 
     p5.setup = function() {
         WIDTH = document.getElementById('sungearGui').offsetWidth;
@@ -62,18 +63,18 @@ new p5(function(p5) {
         setTimeout(receiveSignal, 100);
     };
 
-    var receiveSignal = function() {
+    const receiveSignal = function() {
         if (vis.signal !== null) {
             switch(vis.signal) {
                 case Signal.SCREENSHOT:
-                    var fName = 'SunGear Session ';
+                    let fName = 'SunGear Session ';
 
-                    var today = new Date();
-                    var minute = today.getMinutes();
-                    var hour = today.getHours();
-                    var day = today.getDate();
-                    var month = today.getMonth()+1;
-                    var year = today.getFullYear();
+                    const today = new Date();
+                    let minute = today.getMinutes();
+                    let hour = today.getHours();
+                    let day = today.getDate();
+                    let month = today.getMonth()+1;
+                    let year = today.getFullYear();
 
                     if (month < 10) {   month = '0' + month;    }
                     if (day < 10) { day = '0' + day;    }
@@ -85,7 +86,7 @@ new p5(function(p5) {
                     vis.signal = null;
                     break;
                 case Signal.FULLSCREEN:
-                    var fs = p5.fullscreen();
+                    let fs = p5.fullscreen();
                     p5.fullscreen(!fs);
                     vis.signal = null;
                     break;
