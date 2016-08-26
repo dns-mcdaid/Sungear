@@ -127,8 +127,8 @@ AnchorDisplay.prototype = {
         var y = getRotation[1];
 
         // DEBUGGING PURPOSES ONLY:
-        p5.fill(SunGear.C_PLAIN);
-        p5.ellipse(x, y, 10, 10);
+        // p5.fill(SunGear.C_PLAIN);
+        // p5.ellipse(x, y, 10, 10);
 
         p5.translate(tx, ty);
         p5.rotate(this.angle);
@@ -137,7 +137,6 @@ AnchorDisplay.prototype = {
         p5.translate(-0.5, 7*scale);
 
 
-        
         if (p5.dist(p5.mouseX, p5.mouseY, x, y) < scale*20) {
             if (p5.mouseIsPressed) {
                 this.select = true;

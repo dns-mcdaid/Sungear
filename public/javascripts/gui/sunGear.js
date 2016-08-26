@@ -456,7 +456,7 @@ SunGear.prototype = {
         // init vessel display components
         this.vessels = [];
         const vesselConv = {};
-        for (var i = 0; i < ves.length; i++) {
+        for (let i = 0; i < ves.length; i++) {
             let v = ves[i];
             this.vessels[i] = new VesselDisplay(v);
             vesselConv[v] = this.vessels[i];
@@ -868,7 +868,7 @@ SunGear.prototype = {
                 }
             }
         }
-        this.highCnt = c1.size();
+        this.highCnt = c1.length;
     },
     checkHighlight : function(a, v) {
         if (typeof v === 'undefined') {

@@ -37,15 +37,15 @@ VesselDisplay.ARROW_END = 0.2;
 VesselDisplay.prototype = {
     constructor : VesselDisplay,
     cleanup : function() {
-        this.activeGenes = new TreeSet();
-        this.selectedGenes = new TreeSet();
+        this.activeGenes.clear();
+        this.selectedGenes.clear();
     },
     /**
-     * @param conv {{}} Hashtable mapping Anchor to AnchorDisplay
+     * @param conv {{}} Hash table mapping Anchor to AnchorDisplay
      */
     setAnchors : function(conv) {
         this.anchor = [];
-        for (let i = 0; i < this.anchor.length; i++) {
+        for (let i = 0; i < this.vessel.anchor.length; i++) {
             this.anchor[i] = conv[this.vessel.anchor[i]];
             this.anchor[i].vessels.push(this);
         }
@@ -96,29 +96,33 @@ VesselDisplay.prototype = {
         this.updateSize();
     },
     getSelectedCount : function() {
-        return this.selectedGenes.size();
+        return this.selectedGenes.length;
     },
     initActive : function() {
-        this.activeGenes.union(this.vessel.genes);
+        console.log("vessel genes: " + this.vessel.genes.length);
+        console.log(this.vessel.genes.toArray());
+        this.activeGenes.union(this.vessel.genes.toArray());
+        console.log("vesselDisplay genes: " + this.activeGenes.length);
     },
     setActiveGenes : function(sel) {
         this.activeGenes.clear();
-        this.activeGenes.union(this.vessel.genes);
+        this.activeGenes.union(this.vessel.genes.toArray());
         this.activeGenes = this.activeGenes.intersection(sel);
     },
     getActiveCount : function() {
-        return this.activeGenes.size();
+        return this.activeGenes.length;
     },
     makeShape : function(rad_inner) {
-        if (this.start === null) {
+        if (this.start === null || this.start.x === null) {
             var p = {
                 x : null,
                 y : null
             };
             if (this.anchor.length == 0) {
-                p.x = (-(SunGear.R_CIRCLE), -(SunGear.R_CIRCLE+0.15));
+                p.x = -(SunGear.R_CIRCLE);
+                p.y = -(SunGear.R_CIRCLE+0.15);
             } else {
-                for (var i = 0; i < this.anchor.length; i++) {
+                for (let i = 0; i < this.anchor.length; i++) {
                     var theta = this.anchor.angle;
                     p.x += rad_inner * Math.cos(theta) / this.anchor.length;
                     p.y += rad_inner * Math.sin(theta) / this.anchor.length;
@@ -161,13 +165,13 @@ VesselDisplay.prototype = {
             y : y
         };
         this.angle = [];
-        var angleSize = this.anchor.length;
-        for (var i = 0; i < angleSize; i++) {
-            var a = this.anchor[i];
-            var dx = a.position.x - this.center.x;
-            var dy = a.position.y - this.center.y;
-            var r = Math.sqrt(dx*dx + dy*dy);
-            var theta = Math.acos(dx/r);
+        const angleSize = this.anchor.length;
+        for (let i = 0; i < angleSize; i++) {
+            const a = this.anchor[i];
+            const dx = a.position.x - this.center.x;
+            const dy = a.position.y - this.center.y;
+            const r = Math.sqrt(dx*dx + dy*dy);
+            const theta = Math.acos(dx/r);
             this.angle[i] = (dy > 0) ? theta : -theta;
         }
         this.makeShape(rad_inner);
@@ -199,7 +203,7 @@ VesselDisplay.prototype = {
         return this.select;
     },
     highlightAnchors : function(b) {
-        for (var i = 0; i < this.anchor.length; i++) {
+        for (let i = 0; i < this.anchor.length; i++) {
             this.anchor[i].setHighlight(b);
         }
     },
@@ -208,17 +212,17 @@ VesselDisplay.prototype = {
             return;
         }
         p5.strokeWeight(.005);
-        var color = (this.select ? SunGear.C_SELECT : (this.highlight ? SunGear.C_HIGHLIGHT : SunGear.C_PLAIN));
-        p5.fill(color);
-        if (this.getSelectedCount() == 0 && color == SunGear.C_PLAIN) {
-            p5.fill('#D1CDB8');
+        let color = (this.select ? SunGear.C_SELECT : (this.highlight ? SunGear.C_HIGHLIGHT : SunGear.C_PLAIN));
+        p5.stroke(color);
+        // if (this.getSelectedCount() == 0 && color == SunGear.C_PLAIN) {
+        //     p5.fill('#D1CDB8');
+        // }
+        if (this.getSelectedCount() > 0) {
+            p5.fill(color);
         }
         p5.ellipse(this.shape.x,this.shape.y,this.shape.h,this.shape.w);
-        if (this.getSelectedCount() > 0) {
-            // FIXME: g2.fill(selectedShape)
-        }
-        if (this.showArrows) {
-            for (var i = 0; i < this.angle.length; i++) {
+        if (/**this.showArrows*/false) {
+            for (let i = 0; i < this.angle.length; i++) {
                 this.drawArrow(p5, this.angle[i]);
             }
         }
