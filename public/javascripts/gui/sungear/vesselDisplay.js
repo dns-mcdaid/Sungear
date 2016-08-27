@@ -77,6 +77,8 @@ VesselDisplay.prototype = {
      * @param b {boolean}
      */
     setShowArrows : function(b) {
+        console.log("VESSEL with values:");
+        console.log(this);
         this.showArrows = b;
     },
     getFullRad : function() {
@@ -117,24 +119,17 @@ VesselDisplay.prototype = {
                 x : 0,
                 y : 0
             };
-            console.log("Rad inner:");
-            console.log(rad_inner);
             if (this.anchor.length == 0) {
                 p.x = -(VesselDisplay.R_CIRCLE);
                 p.y = -(VesselDisplay.R_CIRCLE+0.15);
-                console.log("anchor length was fucking 0");
             } else {
                 for (let i = 0; i < this.anchor.length; i++) {
                     const theta = this.anchor[i].angle;
-                    console.log("Theta:");
-                    console.log(theta);
                     p.x += rad_inner * Math.cos(theta) / this.anchor.length;
                     p.y += rad_inner * Math.sin(theta) / this.anchor.length;
                 }
             }
             this.start = p;
-            console.log("P:");
-            console.log(p);
             this.setCenter(p, rad_inner);
             this.selectAllGenes();
         }
@@ -171,8 +166,7 @@ VesselDisplay.prototype = {
             y : y
         };
         this.angle = [];
-        const angleSize = this.anchor.length;
-        for (let i = 0; i < angleSize; i++) {
+        for (let i = 0; i < this.anchor.length; i++) {
             const a = this.anchor[i];
             const dx = a.position.x - this.center.x;
             const dy = a.position.y - this.center.y;
@@ -214,10 +208,9 @@ VesselDisplay.prototype = {
         }
     },
     draw : function(p5) {
-        if (this.getActiveCount() == 0) {
-            return;
-        }
+        if (this.getActiveCount() == 0) return;
         p5.strokeWeight(.005);
+        p5.ellipseMode(p5.CORNER);
         let color = (this.select ? VesselDisplay.C_SELECT : (this.highlight ? VesselDisplay.C_HIGHLIGHT : VesselDisplay.C_PLAIN));
         p5.stroke(color);
         // if (this.getSelectedCount() == 0 && color == VesselDisplay.C_PLAIN) {
@@ -227,7 +220,7 @@ VesselDisplay.prototype = {
             p5.fill(color);
         }
         p5.ellipse(this.shape.x,this.shape.y,this.shape.h,this.shape.w);
-        if (/**this.showArrows*/false) {
+        if (this.showArrows) {
             for (let i = 0; i < this.angle.length; i++) {
                 this.drawArrow(p5, this.angle[i]);
             }
