@@ -927,14 +927,14 @@ SunGear.prototype = {
         }
         p5.pop();
 
-        // p5.push();
-        // p5.textSize(18);
-        // p5.textAlign(p5.RIGHT);
-        // p5.textFont("Helvetica");
-        // p5.text(this.highCnt+"", this.WIDTH-10, 18);
-        // p5.text(this.genes.getSelectedSet().size()+"", this.WIDTH-10, this.HEIGHT-40);
-        // p5.text(this.genes.getActiveSet().size()+"", this.WIDTH-10, this.HEIGHT-18);
-        // p5.pop();
+        p5.push();
+        p5.textSize(18);
+        p5.textAlign(p5.RIGHT);
+        p5.textFont("Helvetica");
+        p5.text(this.highCnt+"", this.WIDTH-10, 18);
+        p5.text(this.genes.getSelectedSet().length+"", this.WIDTH-10, this.HEIGHT-40);
+        p5.text(this.genes.getActiveSet().length+"", this.WIDTH-10, this.HEIGHT-18);
+        p5.pop();
         //
         // // moon label
         // let ml = null;
