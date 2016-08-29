@@ -8,7 +8,7 @@ const SortedSet = require('collections/sorted-set');
 
 /** @param anchor {Array} of Anchors */
 function Vessel(anchor) {
-    this.anchor = anchor.sort();    /** {Anchor[]} */
+    this.anchor = anchor.sort();
     this.genes = new SortedSet();
 }
 
@@ -16,7 +16,7 @@ Vessel.prototype = {
     constructor : Vessel,
     toString : function(){
         var s = "";
-        for(var i = 0; i < this.anchor.length; i++) {
+        for(let i = 0; i < this.anchor.length; i++) {
             s += (i > 0 ? " | " : "") + this.anchor[i].name;
         }
         return s;
@@ -25,7 +25,7 @@ Vessel.prototype = {
         this.genes = null;
         this.anchor = null;
     },
-    /** @param g - Gene */
+    /** @param g {Gene} */
     addGene : function(g) {
         this.genes.push(g);
     },

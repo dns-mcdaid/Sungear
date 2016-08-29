@@ -463,6 +463,8 @@ SunGear.prototype = {
             vesselConv[v] = this.vessels[i];
             this.vessels[i].setRadMin(this.minRad[this.minRadIdx]);
             this.vessels[i].setShowArrows(this.showArrows);
+            console.log("Vessel #" + i);
+            console.log()
             this.vessels[i].setAnchors(anchorConv);
             this.vessels[i].setMax(this.vMax);
             this.vessels[i].initActive();
@@ -505,9 +507,11 @@ SunGear.prototype = {
             this.vessels[i].updateCenter();
         }
         if (this.relax) {
+            console.log("relax bro.");
             this.adjustCenters(.005);
             this.relaxCenters();
         } else {
+            console.log("never relax.");
             this.adjustCenters(1.0);
         }
     },
@@ -519,7 +523,7 @@ SunGear.prototype = {
         let cnt = 0;
 
         do {
-            let e = this.relaxStep(eta);
+            const e = this.relaxStep(eta);
             energy = e;
             eta *= (1-decay);
             cnt++;
@@ -607,7 +611,7 @@ SunGear.prototype = {
     },
     adjustCenters : function(scl) {
         // split vessels into groups by location
-        const l = [];
+        let l = [];
         for (let i = 0; i < this.vessels.length; i++) {
             if (this.vessels[i].getActiveCount() == 0) {
                 continue;
@@ -935,8 +939,8 @@ SunGear.prototype = {
         p5.text(this.genes.getSelectedSet().length+"", this.WIDTH-10, this.HEIGHT-40);
         p5.text(this.genes.getActiveSet().length+"", this.WIDTH-10, this.HEIGHT-18);
         p5.pop();
-        //
-        // // moon label
+
+        // moon label
         // let ml = null;
         // if (this.genes !== null && this.genes.getSource() !== null && this.genes.getSource().getAttributes() !== null) {
         //     ml = this.genes.getSource().getAttributes().get("moonLabel");

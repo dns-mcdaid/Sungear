@@ -1,3 +1,4 @@
+"use strict";
 /**
  * @author Dennis McDaid
  */
@@ -19,8 +20,8 @@ function AnchorDisplay(anchor) {
     this.shortDesc = s[0];      /** {String} Short anchor text for default display */
     this.longDesc = (s.length > 1) ? s[1] : this.shortDesc; /** @type String Long anchor text to display on rollover */
     this.vessels = [];          /** {Vector<VesselDisplay>} */
-    this.shape = null;          /** {Shape} */
-    this.position = null;       /** {Point2D.Double} */
+    // this.shape = null;          /** {Shape} */
+    this.position = {};       /** {Point2D.Double} */
     this.shit = true;
 }
 
@@ -48,10 +49,10 @@ AnchorDisplay.prototype = {
      */
     setAngle : function(theta) {
         this.angle = theta;
-        this.position = {
-            x: SunGear.R_CIRCLE * Math.cos(theta),
-            y: SunGear.R_CIRCLE * Math.sin(theta)
-        };
+        this.position.x = SunGear.R_CIRCLE * Math.cos(theta);
+        this.position.y = SunGear.R_CIRCLE * Math.sin(theta);
+        // console.log(this.longDesc + " position: ");
+        // console.log("X: " + this.position.x + ", Y: " + this.position.y);
     },
     /** @return {double} */
     getAngle : function() {
@@ -120,11 +121,11 @@ AnchorDisplay.prototype = {
             ratio = 1.1;
         }
 
-        var getRotation = rotate(tx, ty, (off + (tm/ratio)), ty, this.angle);
-        var x = getRotation[0];
-        var tempX = x - tx;
+        let getRotation = rotate(tx, ty, (off + (tm/ratio)), ty, this.angle);
+        let x = getRotation[0];
+        let tempX = x - tx;
         x = tx - tempX;
-        var y = getRotation[1];
+        let y = getRotation[1];
 
         // DEBUGGING PURPOSES ONLY:
         // p5.fill(SunGear.C_PLAIN);
@@ -146,8 +147,7 @@ AnchorDisplay.prototype = {
                 this.select = false;
             }
         } else {
-            this.select = false;
-            this.highlight = false;
+            // TODO: maybe set highlight to false?
         }
         p5.fill(this.select ? SunGear.C_SELECT : (this.highlight ? SunGear.C_HIGHLIGHT : SunGear.C_PLAIN));
         p5.text(l, 0, 0);

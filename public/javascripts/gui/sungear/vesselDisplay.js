@@ -6,8 +6,12 @@ function VesselDisplay(vessel) {
     this.vessel = vessel;
     this.highlight = false;
     this.select = false;
-    this.start = null;
-    this.center = null;
+    this.start = {
+        x : null, y : null
+    };
+    this.center = {
+        x : null, y : null
+    };
     this.activeGenes = new SortedSet();
     this.selectedGenes = new SortedSet();
     this.radMax = 0.1;
@@ -22,7 +26,7 @@ function VesselDisplay(vessel) {
         w : null, h : null
     };
 
-    this.shit = true;
+    this.debug = true;
 }
 
 VesselDisplay.ARROW_LINE = 0.7;
@@ -53,19 +57,19 @@ VesselDisplay.prototype = {
         }
     },
     /**
-     * @param vMax {double}
+     * @param vMax {Number} double
      */
     setMax : function(vMax) {
         this.vMax = vMax;
     },
     /**
-     * @param rMax {double}
+     * @param rMax {Number} double
      */
     setRadMax : function(rMax) {
         this.radMax = rMax;
     },
     /**
-     * @param rMin {double}
+     * @param rMin {Number} double
      */
     setRadMin : function(rMin) {
         this.radMin = rMin;
@@ -77,8 +81,6 @@ VesselDisplay.prototype = {
      * @param b {boolean}
      */
     setShowArrows : function(b) {
-        console.log("VESSEL with values:");
-        console.log(this);
         this.showArrows = b;
     },
     getFullRad : function() {
@@ -114,23 +116,24 @@ VesselDisplay.prototype = {
         return this.activeGenes.length;
     },
     makeShape : function(rad_inner) {
-        if (this.start === null) {
-            const p = {
+        if (this.start === null || this.start.x === null) {
+            let p = {
                 x : 0,
                 y : 0
             };
             if (this.anchor.length == 0) {
                 p.x = -(VesselDisplay.R_CIRCLE);
-                p.y = -(VesselDisplay.R_CIRCLE+0.15);
+                p.y = -(VesselDisplay.R_CIRCLE)+0.15;
             } else {
                 for (let i = 0; i < this.anchor.length; i++) {
                     const theta = this.anchor[i].angle;
-                    p.x += rad_inner * Math.cos(theta) / this.anchor.length;
-                    p.y += rad_inner * Math.sin(theta) / this.anchor.length;
+                    p.x += rad_inner * Math.cos(theta);// / this.anchor.length;
+                    p.y += rad_inner * Math.sin(theta);// / this.anchor.length;
                 }
             }
-            this.start = p;
-            this.setCenter(p, rad_inner);
+            this.start.x = p.x;
+            this.start.y = p.y;
+            this.setCenter(p.x, p.y, rad_inner);
             this.selectAllGenes();
         }
         // area 0 - vMax ==> 0 - 0.1
@@ -152,7 +155,7 @@ VesselDisplay.prototype = {
         };
     },
     updateCenter : function() {
-        this.setCenter(this.center, this.radInner);
+        this.setCenter(this.center.x, this.center.y, this.radInner);
     },
     setCenter : function(x, y, rad_inner) {
         // Necessary for the 2 parameter constructor
@@ -216,6 +219,15 @@ VesselDisplay.prototype = {
         // if (this.getSelectedCount() == 0 && color == VesselDisplay.C_PLAIN) {
         //     p5.fill('#D1CDB8');
         // }
+        if (this.debug) {
+            // console.log("Start: ");
+            // console.log(this.start);
+            // console.log("Center: ");
+            // console.log(this.center);
+            // console.log("Shape: ");
+            // console.log(this.shape);
+            this.debug = false;
+        }
         if (this.getSelectedCount() > 0) {
             p5.fill(color);
         }
