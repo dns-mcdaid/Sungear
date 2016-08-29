@@ -34,7 +34,7 @@ new p5(function(p5) {
         vis.gear.makeButtons(p5);
 
         p5.fill("#ffffff");
-        p5.text(p5.mouseX + ", " + p5.mouseY, 100, 100);
+        // p5.text(p5.mouseX + ", " + p5.mouseY, 100, 100);
     };
 
     p5.mouseMoved = function() {

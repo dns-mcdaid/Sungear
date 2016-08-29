@@ -44,22 +44,62 @@ router.get('/', function(req, res, next) {
                         "revolutio",
                         "acrossthe",
                         "strawberr",
-                        "adayinthe"
+                        "adayinthe",
+                        "iwanttoho",
+                        "iwantyous",
+                        "goodnight",
+                        "whatgoeso"
                     ],
                     Paul : [
                         "adayinthe",
                         "pennylane",
-                        "whydontwe"
+                        "whydontwe",
+                        "iwanttoho",
+                        "i_will_68",
+                        "letitbe69",
+                        "whatgoeso"
                     ],
                     George : [
                         "herecomes",
-                        "savoytruf"
+                        "savoytruf",
+                        "piggies68",
+                        "something"
                     ],
                     Ringo : [
-                        "octopusga"
+                        "octopusga",
+                        "goodnight",
+                        "whatgoeso"
                     ]
                 },
                 items : [
+                    {
+                        id : "iwantyous",
+                        description : "I Want You (She's So Heavy)"
+                    },
+                    {
+                        id : "iwanttoho",
+                        description : "I Want to Hold Your Hand"
+                    },
+                    {
+                        id : "i_will_68",
+                        description : "I Will"
+                    },
+                    {
+                        id : "letitbe69",
+                        description : "Let it Be"
+                    },
+                    {
+                        id : "piggies68",
+                        description : "Piggies"
+                    },
+                    {
+                        id : "whatgoeso",
+                        description : "What Goes On"
+                    },
+                    {
+                        id : "goodnight",
+                        description : "Good Night"
+                    },
                     {
                         id : "revolutio",
                         description : "Revolution 9"
