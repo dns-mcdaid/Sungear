@@ -6,6 +6,7 @@ const CompareScore = require('./go/compareScore');
 const CompareName = require('./go/compareName');
 const CompareCount = require('./go/compareCount');
 
+const GeneEvent = require('../genes/geneEvent');
 const Term = require('../genes/term');
 
 function GoTerm(genes, fd) {
@@ -222,6 +223,62 @@ GoTerm.prototype = {
     },
     getShortTerm : function() {
         return this.listLeafT.isSelected() ? this.uniq : this.all;
+    },
+    addNodes : function(r, n) {
+        if (n.isActive()) {
+            // TODO: Figure out jsTree
+        }
+    },
+    listUpdated : function(e) {
+        switch (e.getType()) {
+            case GeneEvent.NEW_SOURCE:
+                this.set(this.genes.getSource());
+                break;
+            case GeneEvent.NEW_LIST:
+                // TODO: this.findD shouldn't be visible.
+                this.findGeneUnions();
+                this.updateGeneTerms();
+                this.updateActiveGeneCounts();
+                console.log("associated terms: " + this.assocGenes.length);
+                this.makeTreeFromDAG();
+                this.makeTree();
+                this.updateGUI();
+                break;
+            case GeneEvent.RESTART:
+                break;
+            case GeneEvent.NARROW:
+                // TODO: this.findD shouldn't be visible.
+                this.highTerm = null;
+                this.updateActiveGeneCounts();
+                this.makeTree();
+                this.updateSelect();
+                break;
+            case GeneEvent.SELECT:
+                if (this.collapsed) {
+                    this.updateShortList();
+                }
+                this.updateSelect();
+                break;
+            case GeneEvent.MULTI_START:
+                this.setMulti(true);
+                break;
+            case GeneEvent.MULTI_FINISH:
+                this.setMulti(false);
+                break;
+        }
+    },
+
+    getMultiSelection : function(operation) {
+        // TODO: Implement.
+    },
+
+    setMulti : function(b) {
+        this.multi = b;
+        if (b) {
+            // TODO: Implement
+        } else {
+            // TODO: Implement
+        }
     }
 };
 
