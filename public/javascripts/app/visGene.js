@@ -132,7 +132,7 @@ VisGene.prototype = {
         this.l1 = new CollapsibleList(this.geneList);
         // TODO: Attach l1 to geneF
         this.sungearF = document.getElementById("sungearF");
-        var statsF = null; // TODO: @Dennis fix.
+        const statsF = null;
         this.gear = new SunGear(this.geneList, statsF);
         // TODO: @Dennis implement resultsF (333-335)
         var resultsF = null;
