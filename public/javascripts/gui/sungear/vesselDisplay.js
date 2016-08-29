@@ -47,12 +47,12 @@ VesselDisplay.prototype = {
         this.selectedGenes.clear();
     },
     /**
-     * @param conv {{}} Hash table mapping Anchor to AnchorDisplay
+     * @param conv {Map} Hash table mapping Anchor to AnchorDisplay
      */
     setAnchors : function(conv) {
         this.anchor = [];
         for (let i = 0; i < this.vessel.anchor.length; i++) {
-            this.anchor[i] = conv[this.vessel.anchor[i]];
+            this.anchor[i] = conv.get(this.vessel.anchor[i]);
             this.anchor[i].vessels.push(this);
         }
     },
@@ -127,8 +127,8 @@ VesselDisplay.prototype = {
             } else {
                 for (let i = 0; i < this.anchor.length; i++) {
                     const theta = this.anchor[i].angle;
-                    p.x += rad_inner * Math.cos(theta);// / this.anchor.length;
-                    p.y += rad_inner * Math.sin(theta);// / this.anchor.length;
+                    p.x += rad_inner * Math.cos(theta) / this.anchor.length;
+                    p.y += rad_inner * Math.sin(theta) / this.anchor.length;
                 }
             }
             this.start.x = p.x;

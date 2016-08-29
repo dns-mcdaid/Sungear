@@ -22,7 +22,7 @@ function AnchorDisplay(anchor) {
     this.vessels = [];          /** {Vector<VesselDisplay>} */
     // this.shape = null;          /** {Shape} */
     this.position = {};       /** {Point2D.Double} */
-    this.shit = true;
+    this.debug = true;
 }
 
 AnchorDisplay.NAME_SEPARATOR = ";";
@@ -106,8 +106,8 @@ AnchorDisplay.prototype = {
 
         var l = this.showLongDesc ? this.longDesc : this.shortDesc;
 
-        // if (this.shit) {
-        //     this.shit = false;
+        // if (this.debug) {
+        //     this.debug = false;
         //     console.log(l);
         //     console.log(tx);
         //     console.log(ty);

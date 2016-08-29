@@ -418,13 +418,13 @@ SunGear.prototype = {
         }
         // init anchor display components
         this.anchors = [];
-        const anchorConv = {};
+        const anchorConv = new Map();
         let t = 3.0 * Math.PI / 2.0;
         let dt = 2.0 * Math.PI / anch.length;
         for (let i = 0; i < anch.length; i++) {
-            let a = anch[i];
+            const a = anch[i];
             this.anchors[i] = new AnchorDisplay(a);
-            anchorConv[a] = this.anchors[i];
+            anchorConv.set(a, this.anchors[i]);
             this.anchors[i].setScale(Math.min(1, 8.0/anch.length));
             this.anchors[i].setAngle(t);
             t = (t+dt) % (2.0 * Math.PI);
@@ -456,15 +456,13 @@ SunGear.prototype = {
         }
         // init vessel display components
         this.vessels = [];
-        const vesselConv = {};
+        const vesselConv = new Map();
         for (let i = 0; i < ves.length; i++) {
             let v = ves[i];
             this.vessels[i] = new VesselDisplay(v);
-            vesselConv[v] = this.vessels[i];
+            vesselConv.set(v, this.vessels[i]);
             this.vessels[i].setRadMin(this.minRad[this.minRadIdx]);
             this.vessels[i].setShowArrows(this.showArrows);
-            console.log("Vessel #" + i);
-            console.log()
             this.vessels[i].setAnchors(anchorConv);
             this.vessels[i].setMax(this.vMax);
             this.vessels[i].initActive();
@@ -507,11 +505,9 @@ SunGear.prototype = {
             this.vessels[i].updateCenter();
         }
         if (this.relax) {
-            console.log("relax bro.");
             this.adjustCenters(.005);
             this.relaxCenters();
         } else {
-            console.log("never relax.");
             this.adjustCenters(1.0);
         }
     },
