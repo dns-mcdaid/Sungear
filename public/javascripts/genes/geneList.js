@@ -160,13 +160,14 @@ GeneList.prototype = {
             sendEvent = true;
             addHist = true;
         }
+        const selArray = sel.toArray();
         this.selectionS.clear();
         // TODO: This might be safer
         // var selArray = sel.toArray();
         // for (var i = 0; i < selArray.length; i++) {
         //     this.selectionS.push(selArray[i]);
         // }
-        this.selectionS = this.selectionS.union(sel.toArray());
+        this.selectionS = this.selectionS.union(selArray);
         this.selectionS = this.selectionS.intersection(this.activeS.toArray());
 
         if (addHist) {

@@ -338,7 +338,6 @@ DataReader.prototype = {
             var expToAdd = new Gene(expGene.id, expGene.description);
             var exp = [];
             for (var j = 0; j < this.anchors.length; j++) {
-                console.log(this.anchors[j].name);
                 if (passedSets[this.anchors[j].name].indexOf(expGene.id) > -1) {
                     exp[j] = 1;
                 } else {

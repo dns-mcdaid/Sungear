@@ -112,9 +112,9 @@ CollapsibleList.prototype = {
     },
     updateSelect : function() {
         this.updateStatus();
-        const selGenes = this.model.getData();
+        const selGenes = this.genes.getSelectedSet().toArray();
 
-        if (selGenes.length > 0) {
+        if (selGenes.length > 0 && selGenes.length !== this.genes.getActiveSet().length) {
             for (let i = 1; i < this.geneFTable.rows.length; i++) {
                 this.geneFTable.rows[i].className = "faded";
             }
@@ -165,7 +165,6 @@ CollapsibleList.prototype = {
      */
     listUpdated : function(e) {
         console.log("Collapsible updated!");
-        console.log(e.getType());
         switch (e.getType()) {
             case GeneEvent.NEW_LIST:
                 this.updateGUI();
@@ -241,14 +240,14 @@ CollapsibleList.prototype = {
         // });
     },
     rowSelected : function(cell) {
-        var row = cell.rowIndex-1;
+        const row = cell.rowIndex-1;
         if (row != -1 && !this.multi) {
             if (window.event.altKey) {
                 this.genes.startMultiSelect(this);
                 // TODO: Maybe keep track of this gene?
             } else {
-                var g = this.model.getData()[row];
-                var s = this.genes.getSelectedSet();
+                const g = this.model.getData()[row];
+                let s = this.genes.getSelectedSet();
                 if (window.event.ctrlKey || window.event.metaKey) {
                     if (s.contains(g)) {
                         s.remove(g);
@@ -257,14 +256,16 @@ CollapsibleList.prototype = {
                     }
                 } else if (this.lastRow != -1 && window.event.shiftKey) {
                     s.clear();
-                    var start = Math.min(this.lastRow, row);
-                    var end = Math.max(this.lastRow, row)+1;
-                    s.union(this.model.getData().slice(start, end));
+                    const start = Math.min(this.lastRow, row);
+                    const end = Math.max(this.lastRow, row)+1;
+                    s = s.union(this.model.getData().slice(start, end));
                 } else {
                     s.clear();
                     s.push(g);
                     if (window.event.shiftKey) {
                         this.lastRow = row;
+                    } else {
+                        this.tableChanged();
                     }
                 }
                 this.genes.setSelection(this, s);
