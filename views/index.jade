@@ -61,14 +61,17 @@ block content
         div(class='col-md-3')
             div(id='geneF', class='img-rounded')
                 h3 Genes
-                table(class='table table-striped img-rounded', id='geneFtable')
-                    col(width='80px')
-                    col
-                    thead
-                        tr
-                            th ID
-                            th Description
-                    tbody(id='geneTBody')
+                div(id='table-wrapper')
+                    div(id='table-scroll')
+                        // potentially make the below class img-rounded?
+                        table(class='table table-striped', id='geneFTable')
+                            col(width='80px')
+                            col
+                            thead
+                                tr
+                                    th ID
+                                    th Description
+                            tbody(id='geneTBody')
 
                 input(type='text', name='findF', id='findF')
                 a(class='btn btn-primary', id='findSelectB', role='button', data-toggle='tooltip') Find
@@ -103,7 +106,7 @@ block content
                         a(class='btn btn-primary', id='intersectB', role='button', data-toggle='tooltip')
                             span(class='glyphicon glyphicon-adjust')
                     li(class='dropdown')
-                        a(class='btn btn-primary', id='coolB', role='button', class='dropdown-toggle', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false') Find Cool
+                        a(class='btn btn-primary dropdown-toggle', id='coolB', role='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false') Find Cool
                         ul(class='dropdown-menu', id='coolM')
 
                 table(class='table table-striped img-rounded', id='controlFtable')

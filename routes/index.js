@@ -33,110 +33,230 @@ router.get('/', function(req, res, next) {
         },
         src : {
             reader : {
+                // anchors : [
+                //     { name : "John" },
+                //     { name : "Paul" },
+                //     { name : "George" },
+                //     { name : "Ringo" }
+                // ],
                 anchors : [
-                    { name : "John" },
-                    { name : "Paul" },
-                    { name : "George" },
-                    { name : "Ringo" }
+                    { name : "King's Landing" },
+                    { name : "The Wall" },
+                    { name : "The North" },
+                    { name : "Essos" },
+                    { name : "The Vale" }
                 ],
                 expSets : {
-                    John : [
-                        "revolutio",
-                        "acrossthe",
-                        "strawberr",
-                        "adayinthe",
-                        "iwanttoho",
-                        "iwantyous",
-                        "goodnight",
-                        "whatgoeso"
+                    "King's Landing" : [
+                        "eddardsta",
+                        "aryastark",
+                        "sansastar",
+                        "catelynst",
+                        "jaimelann",
+                        "cerseilan",
+                        "tyrionlan",
+                        "joffreyba",
+                        "littlefin"
                     ],
-                    Paul : [
-                        "adayinthe",
-                        "pennylane",
-                        "whydontwe",
-                        "iwanttoho",
-                        "i_will_68",
-                        "letitbe69",
-                        "whatgoeso"
+                    "The Wall" : [
+                        "tyrionlan",
+                        "jonsnow",
+                        "brandonst"
                     ],
-                    George : [
-                        "herecomes",
-                        "savoytruf",
-                        "piggies68",
-                        "something"
+                    "The North" : [
+                        "eddardsta",
+                        "aryastark",
+                        "sansastar",
+                        "catelynst",
+                        "jonshow",
+                        "robbstark",
+                        "brandonst",
+                        "rickonsta",
+                        "jaimelann",
+                        "cerseilan",
+                        "tyrionlan",
+                        "joffreyla"
                     ],
-                    Ringo : [
-                        "octopusga",
-                        "goodnight",
-                        "whatgoeso"
+                    "Essos" : [
+                        "daenaryst",
+                        "tyrionlan",
+                        "greyworm",
+                        "jorahmorm",
+                        "aryastark"
+                    ],
+                    "The Vale" : [
+                        "littlefin",
+                        "catelynst",
+                        "tyrionlan",
+                        "sansastar"
                     ]
                 },
+
                 items : [
                     {
-                        id : "iwantyous",
-                        description : "I Want You (She's So Heavy)"
+                        id : 'greyworm',
+                        description : 'Grey Worm'
                     },
                     {
-                        id : "iwanttoho",
-                        description : "I Want to Hold Your Hand"
+                        id : 'jorahmorm',
+                        description : 'Jorah Mormont'
                     },
                     {
-                        id : "i_will_68",
-                        description : "I Will"
+                        id : 'daenaryst',
+                        description : 'Daenerys Targaryen'
                     },
                     {
-                        id : "letitbe69",
-                        description : "Let it Be"
+                        id : 'joffreyba',
+                        description : 'Joffrey Baratheon'
                     },
                     {
-                        id : "piggies68",
-                        description : "Piggies"
+                        id : 'tyrionlan',
+                        description : 'Tyrion Lannister'
                     },
                     {
-                        id : "whatgoeso",
-                        description : "What Goes On"
+                        id : 'cerseilan',
+                        description : 'Cersei Lannister'
                     },
                     {
-                        id : "goodnight",
-                        description : "Good Night"
+                        id : 'jaimelann',
+                        description : 'Jaime Lannister'
                     },
                     {
-                        id : "revolutio",
-                        description : "Revolution 9"
+                        id : 'aryastark',
+                        description : 'Arya Stark'
                     },
                     {
-                        id : "acrossthe",
-                        description : "Across the Universe"
+                        id : 'brandonst',
+                        description : 'Brandon Stark'
                     },
                     {
-                        id : "strawberr",
-                        description : "Strawberry Fields Forever"
+                        id : 'rickonsta',
+                        description : 'Rickon Stark'
                     },
                     {
-                        id : "adayinthe",
-                        description : "A Day in the Life"
+                        id : 'sansastar',
+                        description : 'Sansa Stark'
                     },
                     {
-                        id : "pennylane",
-                        description : "Penny Lane"
+                        id : 'jonsnow',
+                        description : 'Jon Snow'
                     },
                     {
-                        id : "whydontwe",
-                        description : "Why Don't we do it in the Road?"
+                        id : 'robbstark',
+                        description : 'Robb Stark'
                     },
                     {
-                        id : "herecomes",
-                        description : "Here Comes the Sun"
+                        id : 'catelynst',
+                        description : 'Cateyln Stark'
                     },
                     {
-                        id : "savoytruf",
-                        description : "Savoy Truffle"
+                        id : 'eddardsta',
+                        description : 'Eddard Stark'
                     },
                     {
-                        id : "octopusga",
-                        description : "Octopus's Garden"
+                        id : 'littlefin',
+                        description : 'Little Finger'
                     }
                 ]
+
+                // expSets : {
+                //     John : [
+                //         "revolutio",
+                //         "acrossthe",
+                //         "strawberr",
+                //         "adayinthe",
+                //         "iwanttoho",
+                //         "iwantyous",
+                //         "goodnight",
+                //         "whatgoeso"
+                //     ],
+                //     Paul : [
+                //         "adayinthe",
+                //         "pennylane",
+                //         "whydontwe",
+                //         "iwanttoho",
+                //         "i_will_68",
+                //         "letitbe69",
+                //         "whatgoeso"
+                //     ],
+                //     George : [
+                //         "herecomes",
+                //         "savoytruf",
+                //         "piggies68",
+                //         "something"
+                //     ],
+                //     Ringo : [
+                //         "octopusga",
+                //         "goodnight",
+                //         "whatgoeso"
+                //     ]
+                // },
+                // items : [
+                //     {
+                //         id : "iwantyous",
+                //         description : "I Want You (She's So Heavy)"
+                //     },
+                //     {
+                //         id : "iwanttoho",
+                //         description : "I Want to Hold Your Hand"
+                //     },
+                //     {
+                //         id : "i_will_68",
+                //         description : "I Will"
+                //     },
+                //     {
+                //         id : "letitbe69",
+                //         description : "Let it Be"
+                //     },
+                //     {
+                //         id : "piggies68",
+                //         description : "Piggies"
+                //     },
+                //     {
+                //         id : "whatgoeso",
+                //         description : "What Goes On"
+                //     },
+                //     {
+                //         id : "goodnight",
+                //         description : "Good Night"
+                //     },
+                //     {
+                //         id : "revolutio",
+                //         description : "Revolution 9"
+                //     },
+                //     {
+                //         id : "acrossthe",
+                //         description : "Across the Universe"
+                //     },
+                //     {
+                //         id : "strawberr",
+                //         description : "Strawberry Fields Forever"
+                //     },
+                //     {
+                //         id : "adayinthe",
+                //         description : "A Day in the Life"
+                //     },
+                //     {
+                //         id : "pennylane",
+                //         description : "Penny Lane"
+                //     },
+                //     {
+                //         id : "whydontwe",
+                //         description : "Why Don't we do it in the Road?"
+                //     },
+                //     {
+                //         id : "herecomes",
+                //         description : "Here Comes the Sun"
+                //     },
+                //     {
+                //         id : "savoytruf",
+                //         description : "Savoy Truffle"
+                //     },
+                //     {
+                //         id : "octopusga",
+                //         description : "Octopus's Garden"
+                //     }
+                // ]
             }
         }
     };

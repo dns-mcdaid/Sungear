@@ -5,6 +5,6 @@
  */
 module.exports = {
     compare : function(t1, t2) {
-        return t2.getName().toLowerCase().localeCompare(t2.getName().toLowerCase());
+        return t1.getName().toLowerCase().localeCompare(t2.getName().toLowerCase());
     }
 };

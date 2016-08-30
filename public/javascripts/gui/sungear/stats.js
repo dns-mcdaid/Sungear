@@ -53,15 +53,11 @@ Stats.prototype = {
         this.genes.setSelection(this, s);
     },
     populateTable : function() {
-        console.log("Populating table..");
-        console.log(this.model.getRowCount());
         for (let i = 0; i < this.model.getRowCount(); i++) {
-            console.log("Row " + i);
             const row = document.createElement('tr');
             for (let j = 0; j < this.model.getColumnCount(); j++) {
                 const colCell = row.insertCell(j);
                 colCell.innerHTML = this.model.getValueAt(i, j);
-                console.log(colCell.innerHTML);
             }
             this.statsT.appendChild(row);
             row.addEventListener('click', this.handleSelect.bind(this, row));
@@ -106,7 +102,6 @@ StatsModel.prototype = {
         return this.titles.length;
     },
     getValueAt : function(row, column) {
-        console.log(this.vlist);
         const info = this.vlist[row];
         switch (column) {
             case 0:

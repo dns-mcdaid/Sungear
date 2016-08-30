@@ -1,3 +1,4 @@
+"use strict";
 /**
  * A simple Hashtable<String, Object> wrapper for named attributes associated with
  * an experiment.  The locations of required Sungear files are stored here, as well
@@ -21,22 +22,22 @@
  * @author crispy
  */
 
-var DataReader = require('./dataReader');
-var ParseException = require('./parseException');
+const DataReader = require('./dataReader');
+const ParseException = require('./parseException');
 
 /**
  * Constructs a new object with attributes derived from parsing the query string.
  * @param queryString the query string, usually the one used to open Sungear
  */
 function Attributes(queryString) {
-    this.attrib = {}; /** {Hashtable<String, Object>} Master hash table that stores all attributes */
+    this.attrib = new Map(); /** Master hash table that stores all attributes (String -> Object) */
     if (typeof queryString !== "undefined") {
-        var nvp = queryString.split("&");
-        for (var i = 0; i < nvp.length; i++) {
-            var s = DataReader.trimAll(nvp[i].split("="));
-            var v = (s.length > 1) ? s[1] : "";
+        const nvp = queryString.split("&");
+        for (let i = 0; i < nvp.length; i++) {
+            const s = DataReader.trimAll(nvp[i].split("="));
+            const v = (s.length > 1) ? s[1] : "";
             try {
-                this.attrib[s[0]] = decodeURIComponent(v);
+                this.attrib.set(s[0], decodeURIComponent(v));
             } catch(e) {
                 console.error("warning: unable to parse query string NVP, ignoring (error follows): " + s[0] + "=" + v);
                 console.log(e);
@@ -53,24 +54,23 @@ Attributes.prototype = {
      * @throws IOException on low-level file errors
      */
     parseAttributes : function(file) {
-        var buf = DataReader.readURL(file);
-        var line = buf.toString().split("\\n");
-        for (var i = 0; i < line.length; i++) {
+        const buf = DataReader.readURL(file);
+        const line = buf.toString().split("\\n");
+        for (let i = 0; i < line.length; i++) {
             try {
                 if (line[i][0] == "#") {
                     continue;
                 }
-                var idx = line[i].indexOf(':');
+                const idx = line[i].indexOf(':');
                 if (idx == -1) {
                     throw new ParseException("attribute error: improper format at line " + (i+1) + ": missing \":\"", line[i]);
                 }
-                var n = line[i].substring(0, idx).trim();
-                var v = line[i].substring(idx+1).trim();
-                // TODO: Ensure that a new ParseException is actually thrown
-                if (n in this.attrib) {
+                const n = line[i].substring(0, idx).trim();
+                const v = line[i].substring(idx+1).trim();
+                if (typeof this.attrib.get(n) !== 'undefined') {
                     throw new ParseException("attribute warning: ignoring duplicate key ("+n+") at line " + (i+1), line[i]);
                 }
-                this.attrib[n] = v;
+                this.attrib.set(n, v);
             } catch(e) {
                 if (typeof e !== ParseException) {
                     console.log("error parsing attributes file at line: " + (i+1) + ", ignoring line (error follows");
@@ -87,9 +87,9 @@ Attributes.prototype = {
      * @return the old attribute associated with that key, or null if none
      */
     put : function(key, value) {
-        var toReturn = this.attrib[key];
-        this.attrib[key] = value;
-        return (toReturn === null ? this.attrib[key] : toReturn);
+        const toReturn = this.attrib.get(key);
+        this.attrib.set(key, value);
+        return (typeof toReturn === 'undefined' ? this.attrib.get(key) : toReturn);
     },
     /**
      * Removes a key/attribute pair.
@@ -97,7 +97,7 @@ Attributes.prototype = {
      * @return the attribute associated with the key, or null if none
      */
     remove : function(key) {
-        delete this.attrib[key];
+        this.attrib.delete(key);
     },
     /**
      * Convenience method to get a attribute or, if the attribute is null,
@@ -108,21 +108,21 @@ Attributes.prototype = {
      */
     get : function(key, defaultValue) {
         if (typeof defaultValue !== 'undefined') {
-            var o = this.attrib[key];
-            return (o === null ? defaultValue : o);
+            const o = this.attrib.get(key);
+            return (typeof o === 'undefined' ? defaultValue : o);
         }
-        return typeof this.attrib[key] !== 'undefined' ? this.attrib[key] : null;
+        return typeof this.attrib.get(key) !== 'undefined' ? this.attrib.get(key) : null;
     },
     /**
      * Returns all the attribute keys.
-     * @return the set of keys
+     * @return {Iterator} on the Map's keys.
      */
     getKeys : function() {
-        return Object.keys(this.attrib);
+        return this.attrib.keys();
     },
-    // TODO: Make sure absolutely nothing calls this for the love of God.
+
     toString : function() {
-        return JSON.stringify(this.attrib);
+        return this.attrib.toString();
     }
 };
 

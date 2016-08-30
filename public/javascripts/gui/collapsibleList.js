@@ -1,10 +1,10 @@
+"use strict";
 /**
  * CollapsibleList corresponds to the Genes Frame
  * @author RajahBimmy
  */
 
-require('javascript.util');
-const TreeSet = javascript.util.TreeSet;
+const SortedSet = require('collections/sorted-set');
 
 const GeneEvent = require('../genes/geneEvent');
 
@@ -17,7 +17,7 @@ const Gene = require('../genes/gene');
 function CollapsibleList(g) {
     this.genes = g;
     this.lastRow = -1;
-    this.model = new GeneModel(new TreeSet());
+    this.model = new GeneModel(new SortedSet());
     // RIP lines 89 - 99
     this.statusF = document.getElementById('statusF');
 
@@ -32,6 +32,7 @@ function CollapsibleList(g) {
     this.genes.addGeneListener(this);
     this.genes.addMultiSelect(this);
     this.geneTBody = document.getElementById('geneTBody');
+    this.geneFTable = document.getElementById('geneFTable');
 
     // Difference between this and Java SunGear:
         // queryB opens a modal in both,
@@ -53,20 +54,6 @@ function CollapsibleList(g) {
     this.collapsed = false;
     this.multi = false;
 
-    // TESTING
-    // console.log('Building genes...');
-    // var myFirstGene = new Gene("AT1G01010", "A really fun gene A less fun gene A less fun gene A less fun gene");
-    // var mySecondGene = new Gene("AT1G01020", "A less fun gene");
-    // var myThirdGene = new Gene("AT1G66950", "The most fun gene");
-    // var myTree = new TreeSet();
-    // myTree.add(myThirdGene);
-    // myTree.add(mySecondGene);
-    // myTree.add(myFirstGene);
-    // console.log(myTree);
-    // console.log(this.model);
-    // this.model.setGenes(myTree);
-    // console.log(this.model);
-
     this.populateTable();
 }
 
@@ -79,29 +66,28 @@ CollapsibleList.prototype = {
         this.table = null;
     },
     lostOwnership : function(c, t) {
-        return;
+        console.log("Why is this function even here?");
     },
     copyGenes : function() {
         // TODO: Find a .js package which grants access to the clipboard.
         console.log("Might work!");
     },
     queryGenes : function() {
-        var v = this.queryA.value;
+        const v = this.queryA.value;
         if (v !== null) {
-            var s = new TreeSet();
-            var gene = v.split("\n");
+            const s = new SortedSet();
+            const gene = v.split("\n");
             for (var i = 0; i < gene.length; i++) {
-                var g = this.genes.find(gene[i]);
-                if (g !== null) {
-                    s.add(g);
+                const g = this.genes.find(gene[i]);
+                if (g !== null && typeof g !== 'undefined') {
+                    s.push(g);
                 }
             }
             this.genes.setSelection(this, s);
         }
     },
     updateQueryDLabel : function() {
-        var msg = "Query " /** TODO: + this.genes.getSource().getAttributes().get("itemsLabel", "items")*/;
-        this.queryDLabel.innerHTML = msg;
+        this.queryDLabel.innerHTML = "Query " + this.genes.getSource().getAttributes().get("itemsLabel", "items");
         this.queryA.value = "";
     },
     setCollapsed : function(b) {
@@ -115,30 +101,43 @@ CollapsibleList.prototype = {
         }
     },
     updateList : function() {
-        var t = new TreeSet();
+        let t = new SortedSet();
         if (this.collapsed) {
-            var selArray = this.genes.getSelectedSet().toArray();
-            for (var i = 0; i < selArray.length; i++) {
-                t.add(selArray[i]);
-            }
+            t = t.union(this.genes.getSelectedSet().toArray());
         } else {
-            var actArray = this.genes.getActiveSet().toArray();
-            for (var j = 0; j < actArray.length; j++) {
-                t.add(actArray[j]);
-            }
+            t = t.union(this.genes.getActiveSet().toArray());
         }
         this.model.setGenes(t, this.genes.getSource().getAttributes().get("idLabel", "ID"));
-        this.populateTable();
         this.updateSelect();
     },
     updateSelect : function() {
         this.updateStatus();
+        const selGenes = this.model.getData();
+
+        if (selGenes.length > 0) {
+            for (let i = 1; i < this.geneFTable.rows.length; i++) {
+                this.geneFTable.rows[i].className = "faded";
+            }
+            const geneNames = selGenes.map(function(gene) {
+                return gene.getName();
+            });
+            for (let i = 0; i < geneNames.length; i++) {
+                const row = document.getElementById('gene-' + geneNames[i]);
+                if (row !== null) {
+                    row.className = "highlight";
+                }
+            }
+        } else {
+            for (let i = 1; i < this.geneFTable.rows.length; i++) {
+                this.geneFTable.rows[i].className = "";
+            }
+        }
     },
     processSelect : function() {
         // TODO: Implement me.
     },
     updateGUI : function() {
-        var iL = this.genes.getSource().getAttributes().get("itemsLabel", "items");
+        const iL = this.genes.getSource().getAttributes().get("itemsLabel", "items");
         this.findSelectB.title = "Select all " + iL + " matching the search text";
         this.collapseT.title = "Toggles collapsing list to selected " + iL + " only";
         this.queryB.title = "Search the active " + iL + " using a query list";
@@ -149,14 +148,14 @@ CollapsibleList.prototype = {
      * in the search field.
      */
     findSelectGenes : function() {
-        var found = new TreeSet();
-        var pattern = ".*" + this.findF.value + ".*";
-        var p = new RegExp(pattern, "i");
-        var activeArray = this.genes.getActiveSet().toArray();
-        for (var it = 0; it < activeArray.length; it++) {
-            var g = activeArray[it];
+        const found = new SortedSet();
+        const pattern = ".*" + this.findF.value + ".*";
+        const p = new RegExp(pattern, "i");
+        const activeArray = this.genes.getActiveSet().toArray();
+        for (let i = 0; i < activeArray.length; i++) {
+            const g = activeArray[i];
             if (p.test(g.getName()) || p.test(g.getDesc())) {
-                found.add(g);
+                found.push(g);
             }
         }
         this.genes.setSelection(this, found);
@@ -166,10 +165,12 @@ CollapsibleList.prototype = {
      */
     listUpdated : function(e) {
         console.log("Collapsible updated!");
+        console.log(e.getType());
         switch (e.getType()) {
             case GeneEvent.NEW_LIST:
                 this.updateGUI();
                 this.updateList();
+                this.populateTable();
                 this.updateSelect();
                 break;
             case GeneEvent.RESTART:
@@ -204,8 +205,8 @@ CollapsibleList.prototype = {
         while (this.geneTBody.hasChildNodes()) {
             this.geneTBody.removeChild(this.geneTBody.firstChild);
         }
-        var genes = this.model.getData();
-        for (var i = 0; i < genes.length; i++) {
+        const genes = this.model.getData();
+        for (let i = 0; i < genes.length; i++) {
             var g = genes[i];
             var row = document.createElement('tr');
             var idCell = row.insertCell(0);
@@ -230,12 +231,12 @@ CollapsibleList.prototype = {
             descDiv.appendChild(dotSpan);
             descCell.appendChild(descDiv);
 
-            row.id = 'gene-' + i;
+            row.id = 'gene-' + g.getName();
 
             this.geneTBody.appendChild(row);
             row.addEventListener('click', this.rowSelected.bind(this, row));
         }
-        // $('#geneTbody tr').on('click', function(event) {
+        // $('#geneTBody tr').on('click', function(event) {
         //     $(this).addClass('highlight').siblings().removeClass('highlight');
         // });
     },

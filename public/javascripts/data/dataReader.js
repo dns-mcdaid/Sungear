@@ -41,7 +41,7 @@ DataReader.prototype = {
     constructor : DataReader,
 
     clear : function() {
-        this.allGenes = {};
+        this.allGenes = new Map();
         this.terms = {};
         this.roots = [];
         this.geneToGo = {};
@@ -80,26 +80,26 @@ DataReader.prototype = {
     },
     /**
      * @param geneU {URL}
-     * @param genes {Hashtable<String, Gene>}
+     * @param genes {Map} of String to Gene
      * @param a {Attributes}
      */
     readGenes : function(geneU, callback, genes, a) {
         if (typeof a == 'undefined') {
-            this.allGenes = {};
+            this.allGenes = new Map();
             this.readGenes(geneU, callback, this.allGenes, this.attrib);
         } else {
             console.log("In readGenes!");
             DataReader.openURL(geneU, function(response) {
                 DataReader.parseHeader(response, a, "items");
-                var lines = response.split("\n");
+                const lines = response.split("\n");
                 for (var i = 0; i < lines.length; i++) {
-                    var line = lines[i];
+                    const line = lines[i];
                     try {
-                        var s = DataReader.trimAll(line.split(DataReader.SEP));
-                        var pub = s[0];
-                        var desc = s[1];
-                        var g = new Gene(pub, desc);
-                        genes[pub.toLowerCase()] = g;
+                        const s = DataReader.trimAll(line.split(DataReader.SEP));
+                        const pub = s[0];
+                        const desc = s[1];
+                        const g = new Gene(pub, desc);
+                        genes.put(pub.toLowerCase(), g);
                     } catch (e) {
                         console.log("Offending line: " + line);
                         throw new ParseException("parse error at line: " + i + " of " + geneU, line, e);
@@ -225,17 +225,10 @@ DataReader.prototype = {
                             continue;
                         }
                         var p_t = Number(f[1].trim());
-                        // if ( i == 246 ) {
-                        //     // console.log("F: " + f);
-                        //     // console.log("S: " + s);
-                        //     console.log("TN: " + tn);
-                        //     console.log("T: " + t);
-                        //     console.log("p_t: " + p_t);
-                        // }
                         t.setRatio(p_t);
                         for (var k = 0; k < s.length; k++) {
                             var gn = s[k].trim();
-                            var g = genes[gn.toLowerCase()];
+                            var g = genes.get(gn.toLowerCase());
                             if (g === null || typeof g === 'undefined') {
                                 missingGene.push(gn);
                             } else {
@@ -296,7 +289,7 @@ DataReader.prototype = {
                         f = DataReader.trimAll(line.split(DataReader.SEP));
                         // find current gene
                         var gn = f[anchors.length];
-                        var g = genes[gn.toLowerCase()];
+                        var g = genes.get(gn.toLowerCase());
                         if (g === null || typeof g === 'undefined') {
                             missingGenes.add(gn);
                         } else if (expGenes.contains(g)) {
@@ -324,7 +317,8 @@ DataReader.prototype = {
     },
 
     addPassedData : function(reader) {
-        var i = 0;
+
+        // TODO: @Dennis actually get all genes?
         var passedAnchors = reader.anchors;
         var passedItems = reader.items;
         var passedCategories = reader.categories;
@@ -334,16 +328,17 @@ DataReader.prototype = {
             return a.name.localeCompare(b.name);
         });
 
-        for (i = 0; i < passedAnchors.length; i++) {
+        for (let i = 0; i < passedAnchors.length; i++) {
             var anchor = passedAnchors[i];
             this.anchors.push(new Anchor(anchor.name));
         }
         
-        for (i = 0 ; i < passedItems.length; i++) {
+        for (let i = 0 ; i < passedItems.length; i++) {
             var expGene = passedItems[i];
             var expToAdd = new Gene(expGene.id, expGene.description);
             var exp = [];
             for (var j = 0; j < this.anchors.length; j++) {
+                console.log(this.anchors[j].name);
                 if (passedSets[this.anchors[j].name].indexOf(expGene.id) > -1) {
                     exp[j] = 1;
                 } else {
@@ -352,6 +347,7 @@ DataReader.prototype = {
             }
             expToAdd.setExp(exp);
             this.expGenes.push(expToAdd);
+            this.allGenes.set(expGene.id.toLowerCase(), expToAdd);
         }
     }
 };

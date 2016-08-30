@@ -27,7 +27,7 @@ const MultiSelectable = require('./multiSelectable');
  * {@link #setSource(data.DataSource)} is called.
  */
 function GeneList() {
-    this.master = {};                   /** Master table of all genes in this species */
+    this.master = new Map();                   /** Master table of all genes in this species */
     this.genesS = new SortedSet();      /** List of all genes in the current experiment */
     this.activeS = new SortedSet();     /** List of genes in the current active set */
     this.selectionS = new SortedSet();  /** List of the current selected genes */
@@ -173,7 +173,6 @@ GeneList.prototype = {
             this.hist.add(this.selectionS);
         }
         if (sendEvent) {
-            console.log("Send Event time!");
             const e = new GeneEvent(this, src, GeneEvent.SELECT);
             this.notifyGeneListeners(e);
         }

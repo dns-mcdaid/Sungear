@@ -81,12 +81,17 @@ table {
     margin-bottom: 10px;
 }
 
-#controlFtable, #geneFtable {
+#controlFtable, #geneFTable {
     background-color: #ddd;
     width: 100%;
     height: 100px;
     color: #404040;
     overflow: auto;
+    cursor: pointer;
+}
+
+#statusF {
+    color: #ddd;
 }
 
 .gene-id {
@@ -188,6 +193,26 @@ tr {
     overflow: hidden;
 }
 
-#geneTBody {
-    cursor: pointer;
+#table-wrapper {
+    position:relative;
 }
+#table-scroll {
+    height:400px;
+    overflow:auto;
+    margin-top:20px;
+}
+#table-wrapper table {
+    width:100%;
+}
+
+.faded {
+    color : #666666;
+}
+
+.selected {
+
+}
+
+/*#table-wrapper table thead {*/
+    /*position:absolute;*/
+/*}*/
