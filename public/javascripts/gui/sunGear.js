@@ -1062,7 +1062,6 @@ SunGear.prototype = {
                 this.stats.update(this.genes);
                 break;
             case GeneEvent.NARROW:
-                break;
             case GeneEvent.RESTART:
                 this.updateActive();
                 this.updateSelect();

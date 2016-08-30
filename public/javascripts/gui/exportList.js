@@ -1,6 +1,13 @@
 require('javascript.util');
 var TreeSet = javascript.util.TreeSet;
 
+/**
+ * This entire class should offer to write up a gene set to the database.
+ * @param g
+ * @param context
+ * @constructor
+ */
+
 function ExportList(g, context) {
     this.genes = g; /** {GeneList} */
     this.context = context; /** {AppletContext} */

@@ -1,10 +1,13 @@
+"use strict";
 /**
  * The Controls class contains the buttons which belong to the controlF panel.
  * They then call actions on a given GeneList
  */
 
-var MultiSelectable = require('../genes/multiSelectable');
-var GeneEvent = require('../genes/geneEvent');
+const SortedSet = require('collections/sorted-set');
+
+const GeneEvent = require('../genes/geneEvent');
+const MultiSelectable = require('../genes/multiSelectable');
 
 /**
  * @param gn {GeneList}
@@ -95,6 +98,9 @@ Controls.prototype = {
         }
     },
     getCachedCool : function() {
+        // FIXME: Temporary workaround
+        return null;
+
         var v = this.export.get().getExtra(this); // TODO: Ensure this works.
         var cc = null;
         if (v !== null && v.length > this.coolMethod) {
@@ -122,11 +128,10 @@ Controls.prototype = {
         this.updateCool(false);
     },
     updateCool : function(load) {
-        if (this.gear !== null && this.gear.get() !== null) {
+        if (this.gear !== null) {
             this.cool = this.getCachedCool();
             if (this.cool === null && load) {
                 switch(this.coolMethod) {
-                    // TODO: @Dennis find out what is going on here.
                     case 1:
                         this.cool = this.gear.get().getCool(3, -1000, 1);
                         break;
@@ -178,7 +183,6 @@ Controls.prototype = {
                 this.updateGUI();
                 break;
             case GeneEvent.RESTART:
-                break;
             case GeneEvent.NARROW:
                 this.cool = null;
                 this.updateCool(false);
@@ -203,6 +207,8 @@ Controls.prototype = {
                 this.unionB.className = Controls.DISABLED;
                 this.intersectB.className = Controls.DISABLED;
                 break;
+            default:
+                break;
         }
     },
     runRestart : function() {
@@ -212,13 +218,33 @@ Controls.prototype = {
         this.genes.setSelection(this, this.genes.getActiveSet());
     },
     runNone : function() {
-        this.genes.setSelection(this, new TreeSet());
+        this.genes.setSelection(this, new SortedSet());
     },
     runBack : function() {
         this.genes.back(this);
+        // if (this.genes.hasPrev()) {
+        //     this.backB.className = Controls.ENABLED;
+        // } else {
+        //     this.backB.className = Controls.DISABLED;
+        // }
+        // if (this.genes.hasNext()) {
+        //     this.forwardB.className = Controls.ENABLED;
+        // } else {
+        //     this.forwardB.className = Controls.DISABLED;
+        // }
     },
     runForward : function() {
         this.genes.forward(this);
+        // if (this.genes.hasPrev()) {
+        //     this.backB.className = Controls.ENABLED;
+        // } else {
+        //     this.backB.className = Controls.DISABLED;
+        // }
+        // if (this.genes.hasNext()) {
+        //     this.forwardB.className = Controls.ENABLED;
+        // } else {
+        //     this.forwardB.className = Controls.DISABLED;
+        // }
     },
     runNarrow : function() {
         this.genes.narrow(this);

@@ -53,6 +53,9 @@ Stats.prototype = {
         this.genes.setSelection(this, s);
     },
     populateTable : function() {
+        while (this.statsT.hasChildNodes()) {
+            this.statsT.removeChild(this.statsT.firstChild);
+        }
         for (let i = 0; i < this.model.getRowCount(); i++) {
             const row = document.createElement('tr');
             for (let j = 0; j < this.model.getColumnCount(); j++) {

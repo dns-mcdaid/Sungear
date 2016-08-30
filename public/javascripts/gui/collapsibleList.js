@@ -8,8 +8,6 @@ const SortedSet = require('collections/sorted-set');
 
 const GeneEvent = require('../genes/geneEvent');
 
-const Gene = require('../genes/gene');
-
 /**
  * @param g {GeneList}
  * @constructor
@@ -110,8 +108,9 @@ CollapsibleList.prototype = {
         } else {
             t = t.union(this.genes.getActiveSet().toArray());
         }
+        const prevData = this.model.getData();
         this.model.setGenes(t, this.genes.getSource().getAttributes().get("idLabel", "ID"));
-        if (this.collapsed) {
+        if (this.model.getData().length !== prevData) {
             this.populateTable();
         }
         this.updateSelect();
@@ -120,7 +119,7 @@ CollapsibleList.prototype = {
         this.updateStatus();
         const selGenes = this.genes.getSelectedSet().toArray();
 
-        if (selGenes.length > 0 && selGenes.length !== this.model.getData().length) {
+        if (selGenes.length !== this.model.getData().length) {
             for (let i = 1; i < this.geneFTable.rows.length; i++) {
                 this.geneFTable.rows[i].className = "faded";
             }
@@ -170,7 +169,6 @@ CollapsibleList.prototype = {
      * @param e {GeneEvent}
      */
     listUpdated : function(e) {
-        console.log("Collapsible updated!");
         switch (e.getType()) {
             case GeneEvent.NEW_LIST:
                 this.updateGUI();
@@ -179,7 +177,6 @@ CollapsibleList.prototype = {
                 this.updateSelect();
                 break;
             case GeneEvent.RESTART:
-                break;
             case GeneEvent.NARROW:
                 this.updateList();
                 break;
