@@ -49,8 +49,8 @@ function CollapsibleList(g) {
     this.findF.addEventListener('input', this.findSelectGenes.bind(this));
     this.findSelectB.addEventListener("click", this.findSelectGenes.bind(this));
     this.geneTBody.addEventListener('blur', this.tableChanged.bind(this));
-    // TODO: Check out this next one:
-    //this.collapseT.addEventListener("click", this.setCollapsed.bind(this)/** TODO: Include Parameters */);
+
+    this.collapseT.addEventListener("click", this.setCollapsed.bind(this));
     this.collapsed = false;
     this.multi = false;
 
@@ -90,9 +90,12 @@ CollapsibleList.prototype = {
         this.queryDLabel.innerHTML = "Query " + this.genes.getSource().getAttributes().get("itemsLabel", "items");
         this.queryA.value = "";
     },
-    setCollapsed : function(b) {
-        this.collapsed = b;
+    setCollapsed : function() {
+        this.collapsed = !this.collapsed;
+        this.findF.value = "";
         this.updateList();
+        this.populateTable();
+        this.updateSelect();
     },
     setMulti : function(b) {
         this.multi = b;
@@ -108,13 +111,16 @@ CollapsibleList.prototype = {
             t = t.union(this.genes.getActiveSet().toArray());
         }
         this.model.setGenes(t, this.genes.getSource().getAttributes().get("idLabel", "ID"));
+        if (this.collapsed) {
+            this.populateTable();
+        }
         this.updateSelect();
     },
     updateSelect : function() {
         this.updateStatus();
         const selGenes = this.genes.getSelectedSet().toArray();
 
-        if (selGenes.length > 0 && selGenes.length !== this.genes.getActiveSet().length) {
+        if (selGenes.length > 0 && selGenes.length !== this.model.getData().length) {
             for (let i = 1; i < this.geneFTable.rows.length; i++) {
                 this.geneFTable.rows[i].className = "faded";
             }
