@@ -6,44 +6,70 @@ function Stats(genes, sun) {
     this.sun = sun;             /** {SunGear} */
     this.localUpdate = false;   /** {boolean} */
     this.model = new StatsModel(this);
-    this.statsT = document.getElementById('statsT');
-    // TODO: add an event listener to the table.
+    this.statsT = document.getElementById('statsTBody');
 }
 
 Stats.prototype = {
     constructor : Stats,
     update : function() {
         this.localUpdate = true;
-        const hash = {};
+        const hash = new Map();
         const vessels = this.sun.getVessels();
         for (let i = 0; i < vessels.length; i++) {
             if (vessels[i].getActiveCount() > 0) {
                 const idx = vessels[i].anchor.length;
-                let info = hash[idx];
+                let info = hash.get(idx);
                 if (typeof info === 'undefined') {
                     info = new VesselInfo(idx);
-                    hash[idx] = info;
+                    hash.set(idx, info);
                 }
                 info.addVessel(vessels[i]);
             }
         }
-        const keys = Object.keys(hash);
-        const values = [];
-        for (let i = 0; i < keys.length; i++) {
-            values.push(hash[keys[i]]);
+        const it = hash.values();
+        const valuesArray = [];
+
+        // TODO: Refactor.
+        let next = it.next();
+        let finished = next.done;
+        let nextValue = next.value;
+
+        while(!finished) {
+            valuesArray.push(nextValue);
+            next = it.next();
+            finished = next.done;
+            nextValue = next.value;
         }
-        this.model.update(values);
+
+        this.model.update(valuesArray);
         this.localUpdate = false;
+        this.populateTable();
     },
     selectStats : function(rows) {
-        var s = new SortedSet();
+        let s = new SortedSet();
         for (let i = 0; i < rows.length; i++) {
-            const localGenes = this.model.getInfo(rows[i]).genes.toArray();
-            for (let j = 0; j < localGenes.length; j++) {
-                s.push(localGenes[j]);
-            }
+            s = s.union(this.model.getInfo(rows[i]).genes.toArray());
         }
         this.genes.setSelection(this, s);
+    },
+    populateTable : function() {
+        console.log("Populating table..");
+        console.log(this.model.getRowCount());
+        for (let i = 0; i < this.model.getRowCount(); i++) {
+            console.log("Row " + i);
+            const row = document.createElement('tr');
+            for (let j = 0; j < this.model.getColumnCount(); j++) {
+                const colCell = row.insertCell(j);
+                colCell.innerHTML = this.model.getValueAt(i, j);
+                console.log(colCell.innerHTML);
+            }
+            this.statsT.appendChild(row);
+            row.addEventListener('click', this.handleSelect.bind(this, row));
+        }
+    },
+    handleSelect : function(row) {
+        const rowInt = row.rowIndex-1;
+        // TODO: Implement EventListener
     }
 };
 
@@ -59,13 +85,16 @@ function StatsModel (parent) {
 
 StatsModel.prototype = {
     constructor : StatsModel,
+    /**
+     * @param c {Array} of VesselInfo objects
+     */
     update : function(c) {
         this.titles[2] = this.parent.genes.getSource().getAttributes().get("itemsLabel", "items");
         this.vlist = [];
         for (let i = 0; i < c.length; i++) {
             this.vlist.push(c[i]);
         }
-        this.vlist.sort(); // This should work, as it calls VesselInfo' compareTo
+        this.vlist.sort(); // This should work, as it calls VesselInfo's compareTo
     },
     getColumnName : function(col) {
         return this.titles[col];
@@ -77,6 +106,7 @@ StatsModel.prototype = {
         return this.titles.length;
     },
     getValueAt : function(row, column) {
+        console.log(this.vlist);
         const info = this.vlist[row];
         switch (column) {
             case 0:
@@ -84,7 +114,7 @@ StatsModel.prototype = {
             case 1:
                 return info.vessels.length;
             case 2:
-                return info.genes.size();
+                return info.genes.length;
             default:
                 return "";
         }
@@ -95,7 +125,7 @@ StatsModel.prototype = {
 };
 
 function VesselInfo(cnt) {
-    this.anchorCount = cnt; /** {int} */
+    this.anchorCount = cnt; /** {Number} int */
     this.vessels = [];      /** {Vector<VesselDisplay>} */
     this.genes = new SortedSet(); /** {TreeSet<Gene>} */
 }
@@ -110,6 +140,9 @@ VesselInfo.prototype = {
         }
     },
     compareTo : function(o) {
+        return this.anchorCount - o.anchorCount;
+    },
+    compare : function(o) {
         return this.anchorCount - o.anchorCount;
     }
 };

@@ -167,14 +167,14 @@ GeneList.prototype = {
         //     this.selectionS.push(selArray[i]);
         // }
         this.selectionS = this.selectionS.union(sel.toArray());
-        this.selectionS = this.selectionS.intersection(this.activeS);
+        this.selectionS = this.selectionS.intersection(this.activeS.toArray());
 
         if (addHist) {
             this.hist.add(this.selectionS);
         }
         if (sendEvent) {
             console.log("Send Event time!");
-            var e = new GeneEvent(this, src, GeneEvent.SELECT);
+            const e = new GeneEvent(this, src, GeneEvent.SELECT);
             this.notifyGeneListeners(e);
         }
     },
