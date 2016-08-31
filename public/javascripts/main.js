@@ -11,13 +11,14 @@ const p5 = require('p5');
 const VisGene = require('./app/visGene');
 const Signal = require('./app/signal');
 
-var args = [ "" ];
-var vis;
+let args = [ "" ];
+let vis;
 
 new p5(function(p5) {
     let WIDTH;
     let HEIGHT;
     let canvas;
+    let debug = true;
 
     p5.setup = function() {
         WIDTH = document.getElementById('sungearGui').offsetWidth;
@@ -34,7 +35,9 @@ new p5(function(p5) {
         vis.gear.makeButtons(p5);
 
         p5.fill("#ffffff");
-        // p5.text(p5.mouseX + ", " + p5.mouseY, 100, 100);
+        if (debug) {
+            p5.text(p5.mouseX + ", " + p5.mouseY, 100, 100);
+        }
     };
 
     p5.mouseMoved = function() {

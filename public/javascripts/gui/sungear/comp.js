@@ -7,9 +7,9 @@ VesselActSize.prototype.compareTo = function(v1, v2) {
 };
 
 function CoolVessel(vessel, score, count) {
-    this.vessel = vessel;   /** @type VesselDisplay */
-    this.score = score;     /** @type double */
-    this.count = count;     /** @type int */
+    this.vessel = vessel;   /** {VesselDisplay} */
+    this.score = score;     /** {Number} double */
+    this.count = count;     /** {Number} int */
 }
 
 CoolVessel.prototype.compareTo = function(o) {
@@ -27,6 +27,8 @@ function VesselACount() {
 }
 
 VesselACount.prototype.compareTo = function(v1, v2) {
+    if (v1 === null || v2 === null) return -1;
+
     if (v1.anchor.length < v2.anchor.length) {
         return -1;
     } else if (v1.anchor.length > v2.anchor.length) {

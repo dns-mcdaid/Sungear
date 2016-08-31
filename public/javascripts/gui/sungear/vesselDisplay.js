@@ -98,7 +98,7 @@ VesselDisplay.prototype = {
     setSelectedGenes : function(sel) {
         this.selectedGenes.clear();
         this.selectedGenes = this.selectedGenes.union(this.activeGenes.toArray());
-        this.selectedGenes = this.selectedGenes.intersection(sel);
+        this.selectedGenes = this.selectedGenes.intersection(sel.toArray());
         this.updateSize();
     },
     getSelectedCount : function() {
@@ -110,7 +110,7 @@ VesselDisplay.prototype = {
     setActiveGenes : function(sel) {
         this.activeGenes.clear();
         this.activeGenes = this.activeGenes.union(this.vessel.genes.toArray());
-        this.activeGenes = this.activeGenes.intersection(sel);
+        this.activeGenes = this.activeGenes.intersection(sel.toArray());
     },
     getActiveCount : function() {
         return this.activeGenes.length;
@@ -212,22 +212,30 @@ VesselDisplay.prototype = {
     },
     draw : function(p5) {
         if (this.getActiveCount() == 0) return;
+
+        if (this.debug) {
+            console.log(this.shape.h);
+            console.log("inner " + this.radInner);
+            console.log("outer " + this.radOuter);
+            console.log((p5.width/2.0 + this.shape.x) + ", " + (p5.height/2.0 + this.shape.y));
+            this.debug = false;
+        }
+
         p5.strokeWeight(.005);
         p5.ellipseMode(p5.CORNER);
-        let color = (this.select ? VesselDisplay.C_SELECT : (this.highlight ? VesselDisplay.C_HIGHLIGHT : VesselDisplay.C_PLAIN));
+        let color = VesselDisplay.C_PLAIN;
+        if (p5.dist((p5.width/2.0 + this.shape.x), (p5.height/2.0 + this.shape.y), p5.mouseX, p5.mouseY) < this.shape.h) {
+            if (p5.mouseIsPressed) {
+                color = VesselDisplay.C_HIGHLIGHT;
+            } else {
+                color = VesselDisplay.C_SELECT;
+            }
+        }
+        color = (this.select ? VesselDisplay.C_SELECT : (this.highlight ? VesselDisplay.C_HIGHLIGHT : color));
         p5.stroke(color);
         // if (this.getSelectedCount() == 0 && color == VesselDisplay.C_PLAIN) {
         //     p5.fill('#D1CDB8');
         // }
-        if (this.debug) {
-            // console.log("Start: ");
-            // console.log(this.start);
-            // console.log("Center: ");
-            // console.log(this.center);
-            // console.log("Shape: ");
-            // console.log(this.shape);
-            this.debug = false;
-        }
         if (this.getSelectedCount() > 0) {
             p5.fill(color);
         }
@@ -243,7 +251,7 @@ VesselDisplay.prototype = {
         p5.translate(this.center.x, this.center.y);
         p5.scale(this.radOuter, this.radOuter);
         p5.rotate(theta);
-        var w = 0.05 * this.radMax / this.radOuter;
+        const w = 0.05 * this.radMax / this.radOuter;
         p5.strokeWeight(w);
         p5.line(1.0, 0, 1.0 + VesselDisplay.ARROW_LINE, 0);
         p5.line(1.0 + VesselDisplay.ARROW_LINE, 0, 1.0 + VesselDisplay.ARROW_LINE - VesselDisplay.ARROW_END, VesselDisplay.ARROW_END);

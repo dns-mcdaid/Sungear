@@ -177,7 +177,6 @@ Controls.prototype = {
         this.noneB.title = "Unselect all " + iL;
     },
     listUpdated : function(e) {
-        console.log("Controls updated!");
         switch(e.getType()) {
             case GeneEvent.NEW_LIST:
                 this.updateGUI();
@@ -222,29 +221,9 @@ Controls.prototype = {
     },
     runBack : function() {
         this.genes.back(this);
-        // if (this.genes.hasPrev()) {
-        //     this.backB.className = Controls.ENABLED;
-        // } else {
-        //     this.backB.className = Controls.DISABLED;
-        // }
-        // if (this.genes.hasNext()) {
-        //     this.forwardB.className = Controls.ENABLED;
-        // } else {
-        //     this.forwardB.className = Controls.DISABLED;
-        // }
     },
     runForward : function() {
         this.genes.forward(this);
-        // if (this.genes.hasPrev()) {
-        //     this.backB.className = Controls.ENABLED;
-        // } else {
-        //     this.backB.className = Controls.DISABLED;
-        // }
-        // if (this.genes.hasNext()) {
-        //     this.forwardB.className = Controls.ENABLED;
-        // } else {
-        //     this.forwardB.className = Controls.DISABLED;
-        // }
     },
     runNarrow : function() {
         this.genes.narrow(this);

@@ -335,7 +335,7 @@ ExportModel.prototype = {
         return this.exportList;
     },
     listUpdated : function(e) {
-        console.log("Export list updated!");
+        // console.log("Export list updated!");
     }
 };
 
