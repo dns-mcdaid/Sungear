@@ -17,14 +17,14 @@ Anchor.prototype = {
     },
 
     compare : function(a) {
-        let str1 = this.name.toLowerCase();
-        let str2 = a.name.toLowerCase();
+        const str1 = this.name.toLowerCase();
+        const str2 = a.name.toLowerCase();
         return str1.localeCompare(str2);
     },
 
     compareTo : function(a) {
-        let str1 = this.name.toLowerCase();
-        let str2 = a.name.toLowerCase();
+        const str1 = this.name.toLowerCase();
+        const str2 = a.name.toLowerCase();
         return str1.localeCompare(str2);
     }
 };

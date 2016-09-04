@@ -61,7 +61,7 @@ GeneList.prototype = {
     setSource : function(src) {
         this.source = src;
         this.master = src.getReader().allGenes;
-        console.log("total items: " + this.master.length);
+        console.log("total items: ", this.master.length);
         const ge = new GeneEvent(this, this, GeneEvent.NEW_SOURCE);
         this.notifyGeneListeners(ge);
     },
@@ -74,22 +74,17 @@ GeneList.prototype = {
         if (this.source === null) {
             throw new ParseException("data source not initialized.");
         } else {
-            this.genesS = new SortedSet();
-            let toAdd = this.source.getReader().expGenes.toArray();
-            for (let i = 0; i < toAdd.length; i++) {
-                this.genesS.push(toAdd[i]);
-            }
-            let iL = this.source.getAttributes().get("itemsLabel", "items");
+            this.genesS.clear();
+            this.genesS = new SortedSet(this.source.getReader().expGenes);
+            const iL = this.source.getAttributes().get("itemsLabel", "items");
             if (this.genesS.length < 1) {
-                throw new ParseException("no " + iL + " in data set");
+                throw new ParseException("no ", iL, " in data set");
             } else {
-                this.activeS = new SortedSet();
-                this.selectionS = new SortedSet();
-                var tempGenesS = this.genesS.toArray();
-                for (let i = 0; i < tempGenesS.length; i++) {
-                    this.activeS.push(tempGenesS[i]);
-                    this.selectionS.push(tempGenesS[i]);
-                }
+                this.activeS.clear();
+                this.activeS = new SortedSet(this.genesS);
+                this.selectionS.clear();
+                this.selectionS = new SortedSet(this.geneS);
+
                 this.hist.clear();
                 this.hist.add(this.selectionS);
                 console.log("working items: " + this.genesS.length);
@@ -110,32 +105,38 @@ GeneList.prototype = {
      * Gets the set of genes recognized by the gene list (generally
      * all genes for the current species).  This list is not limited
      * by the current experiment set.
-     * @return the full gene set
+     * @return {SortedSet} full gene set
      */
     getAllGenes : function() {
-        const toReturn = new SortedSet();
-        for (var key in this.master) {
-            toReturn.push(this.master[key]);
+        const valuesIt = this.master.values();
+        const valuesSet = new SortedSet();
+        while(true) {
+            const nextItem = valuesIt.next();
+            if (nextItem.done) {
+                break;
+            } else {
+                valuesSet.push(nextItem.value);
+            }
         }
-        return toReturn;
+        return valuesSet;
     },
     /**
      * Gets the full set of genes for this experiment.
-     * @return the gene set, as a set
+     * @return {SortedSet} the gene set, as a set
      */
     getGenesSet : function() {
         return this.genesS;
     },
     /**
      * Gets the current active gene set.
-     * @return the active set
+     * @return {SortedSet} the active set
      */
     getActiveSet : function() {
         return this.activeS;
     },
     /**
      * Gets the currently selected gene set.
-     * @return the current selection, as a set
+     * @return {SortedSet} the current selection, as a set
      */
     getSelectedSet : function() {
         return this.selectionS;
@@ -143,7 +144,7 @@ GeneList.prototype = {
     /**
      * Determines if a gene is in the current selection.
      * @param g the gene to test
-     * @return true if selected, otherwise false
+     * @return {boolean} true if selected, otherwise false
      */
     isSelected : function(g) {
         return this.selectionS.contains(g);
@@ -155,20 +156,10 @@ GeneList.prototype = {
      * @param sendEvent true to generate a {@link GeneEvent} with selection, otherwise false
      * @param addHist true to update browsing history, otherwise false
      */
-    setSelection : function(src, sel, sendEvent, addHist) {
-        if (typeof sendEvent === 'undefined') {
-            sendEvent = true;
-            addHist = true;
-        }
-        const selArray = sel.toArray();
+    setSelection : function(src, sel, sendEvent = true, addHist = true) {
         this.selectionS.clear();
-        // TODO: This might be safer
-        // var selArray = sel.toArray();
-        // for (var i = 0; i < selArray.length; i++) {
-        //     this.selectionS.push(selArray[i]);
-        // }
-        this.selectionS = this.selectionS.union(selArray);
-        this.selectionS = this.selectionS.intersection(this.activeS.toArray());
+        this.selectionS = this.selectionS.union(sel);
+        this.selectionS = this.selectionS.intersection(this.activeS);
 
         if (addHist) {
             this.hist.add(this.selectionS);
@@ -180,14 +171,14 @@ GeneList.prototype = {
     },
     /**
      * Performs a Narrow operation: updates the active set by setting to all currently selected genes.
-     * @param src the object that generated the Narrow operation
+     * @param src {Object} the object that generated the Narrow operation
      */
     narrow : function(src) {
         this.setActive(src, this.selectionS);
     },
     /**
      * Performs a Restart operation: returns all sets to their condition immediately after initial load.
-     * @param src the source of the Restart operation
+     * @param src {Object} the source of the Restart operation
      */
     restart : function(src) {
         this.setActive(src, this.genesS, false);
@@ -201,10 +192,7 @@ GeneList.prototype = {
      * @param s {SortedSet<Gene>} the new active set
      * @param sendEvent {boolean} true to generate a {@link GeneEvent} on set change, otherwise false
      */
-    setActive : function(src, s, sendEvent) {
-        if (typeof sendEvent === 'undefined') {
-            sendEvent = true;
-        }
+    setActive : function(src, s, sendEvent = true) {
         this.activeS.clear();
         
         // var sArray = s.toArray();

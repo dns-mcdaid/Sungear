@@ -58,13 +58,13 @@ Gene.prototype = {
      * @returns {number}
      */
     compareTo : function(g){
-        let str1 = this.name.toLowerCase();
-        let str2 = g.getName().toLowerCase();
+        const str1 = this.name.toLowerCase();
+        const str2 = g.getName().toLowerCase();
         return str1.localeCompare(str2);
     },
     compare : function(g){
-        let str1 = this.name.toLowerCase();
-        let str2 = g.getName().toLowerCase();
+        const str1 = this.name.toLowerCase();
+        const str2 = g.getName().toLowerCase();
         return str1.localeCompare(str2);
     },
     toString : function(){

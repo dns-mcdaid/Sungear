@@ -5,6 +5,7 @@ var mongodb = require('mongodb');
 const dataTest = require('../public/javascripts/test/dataTest');
 // require('../public/javascripts/test/HyperGeoTest').test();
 const VisGene = require('../lib/visGene');
+const SortedSet = require('collections/sorted-set');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
