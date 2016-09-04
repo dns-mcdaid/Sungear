@@ -11,6 +11,7 @@ const AnchorDisplay = require('./sungear/anchorDisplay');
 const Comp = require('./sungear/comp');
 const Icons = require('./sungear/icons');
 const Stats = require('./sungear/stats');
+const SunValues = require('./sungear/sunValues');
 const VesselDisplay = require('./sungear/vesselDisplay');
 
 /**
@@ -48,24 +49,26 @@ function SunGear(genes, thresh, statsF) {
     this.WIDTH = document.getElementById('sungearGui').offsetWidth;
     this.HEIGHT = document.getElementById('sungearGui').offsetHeight;
 
-    var prevBParams = [ 10, this.HEIGHT-30 ];
+    const prevBParams = [ 10, this.HEIGHT-30 ];
+    const selBParams = [ 35.5, this.HEIGHT-22 ];
+    const nextBParams = [ 45, this.HEIGHT-30 ];
+    const statsBParams = [ 13, this.HEIGHT-108 ];
+    const showArrowBParams = [ 20, this.HEIGHT-50 ];
+    const minSizeBParams = [ 20, this.HEIGHT-75 ];
+
+
     this.visuals.push(new Visual(this.prevB, prevBParams, this.prevBFunction.bind(this)));
-    var selBParams = [ 35.5, this.HEIGHT-22 ];
     this.visuals.push(new Visual(this.selB, selBParams, this.selBFunction.bind(this)));
-    var nextBParams = [ 45, this.HEIGHT-30 ];
     this.visuals.push(new Visual(this.nextB, nextBParams, this.nextBFunction.bind(this)));
-    var statsBParams = [ 13, this.HEIGHT-108 ];
     this.visuals.push(new Visual(this.statsB, statsBParams, this.statsBFunction.bind(this)));
-    var showArrowBParams = [ 20, this.HEIGHT-50 ];
     this.visuals.push(new Visual(this.showArrowB, showArrowBParams, this.showArrowBFunction.bind(this)));
-    var minSizeBParams = [ 20, this.HEIGHT-75 ];
     this.visuals.push(new Visual(this.minSizeB, minSizeBParams, this.minSizeBFunction.bind(this)));
 
     this.exterior = {
-        x : -(SunGear.R_CIRCLE),
-        y : -(SunGear.R_CIRCLE),
-        w : 2*SunGear.R_CIRCLE,
-        h : 2*SunGear.R_CIRCLE
+        x : -(SunValues.R_CIRCLE),
+        y : -(SunValues.R_CIRCLE),
+        w : 2*SunValues.R_CIRCLE,
+        h : 2*SunValues.R_CIRCLE
     };
 
     this.setShowArrows(this.showArrows);
@@ -82,14 +85,6 @@ function SunGear(genes, thresh, statsF) {
     this.multi = false;
     this.relax = true;
 }
-
-SunGear.R_OUTER = 1.2;
-SunGear.R_CIRCLE = 1.0;
-SunGear.C_PLAIN = "#F3EFE0";
-SunGear.C_HIGHLIGHT = "#3399FF";
-SunGear.C_SELECT = "#9A3334";
-SunGear.C_BACKGROUND = "#111111";
-SunGear.C_SELECT_ALT = "#217C7E";
 
 SunGear.prototype = {
     constructor : SunGear,
@@ -432,10 +427,10 @@ SunGear.prototype = {
         if (this.anchors.length < 3) {
             this.rad_inner = 1 - this.vRadMax;
             this.exterior = {
-                x : -(SunGear.R_CIRCLE),
-                y : -(SunGear.R_CIRCLE),
-                w : 2*SunGear.R_CIRCLE,
-                h : 2*SunGear.R_CIRCLE
+                x : -(SunValues.R_CIRCLE),
+                y : -(SunValues.R_CIRCLE),
+                w : 2*SunValues.R_CIRCLE,
+                h : 2*SunValues.R_CIRCLE
             };
         } else {
             this.rad_inner = 1 - this.vRadMax * (1 + 3.0/this.anchors.length);
@@ -443,8 +438,8 @@ SunGear.prototype = {
             let y = [];
             for (let i = 0; i < this.anchors.length; i++) {
                 var t1 = this.anchors[i].getAngle();
-                x.push(SunGear.R_CIRCLE*Math.cos(t1));
-                y.push(SunGear.R_CIRCLE*Math.sin(t1));
+                x.push(SunValues.R_CIRCLE*Math.cos(t1));
+                y.push(SunValues.R_CIRCLE*Math.sin(t1));
             }
             this.exterior = {
                 x : x,
@@ -904,12 +899,12 @@ SunGear.prototype = {
         let drawT = {
             x : this.WIDTH/2.0,
             y : this.HEIGHT/2.0,
-            scale : 0.5*Math.min(this.WIDTH/2.0, this.HEIGHT/2.0)/SunGear.R_OUTER
+            scale : 0.5*Math.min(this.WIDTH/2.0, this.HEIGHT/2.0)/SunValues.R_OUTER
         };
         this.paintExterior(p5);
         p5.pop();
         p5.push();
-        p5.fill(SunGear.C_PLAIN);
+        p5.fill(SunValues.C_PLAIN);
         for (let i = 0; i < this.vessels.length; i++) {
             this.vessels[i].draw(p5);
         }
@@ -949,7 +944,7 @@ SunGear.prototype = {
     makeTransform : function(p5, w, h) {
         const M = Math.min(w, h);
         p5.translate(w/2.0, h/2.0);
-        p5.scale((0.5*M/SunGear.R_OUTER), (0.5*M/SunGear.R_OUTER));
+        p5.scale((0.5*M/SunValues.R_OUTER), (0.5*M/SunValues.R_OUTER));
     },
     updateActive : function() {
         // update active sets
@@ -1164,8 +1159,8 @@ SunGear.prototype = {
      * @param p5
      */
     paintExterior : function(p5) {
-        p5.stroke(SunGear.C_PLAIN);
-        p5.fill(SunGear.C_BACKGROUND);
+        p5.stroke(SunValues.C_PLAIN);
+        p5.fill(SunValues.C_BACKGROUND);
         p5.strokeWeight(.025);
         if (this.exterior.w === null || this.exterior.h === null) {
             const vertX = this.exterior.x;
@@ -1186,7 +1181,7 @@ SunGear.prototype = {
 /**
  * A Visual Model which acts as a generic parent for SunGear Icons
  *
- * @param model {Icons}
+ * @param model {Object}
  * @param params {Array}
  * @param task {function}
  * @constructor

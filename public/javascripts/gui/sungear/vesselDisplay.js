@@ -1,6 +1,8 @@
 "use strict";
 
+const SunGear = require('./sunValues');
 const SortedSet = require('collections/sorted-set');
+
 
 function VesselDisplay(vessel) {
     this.vessel = vessel;
@@ -31,14 +33,6 @@ function VesselDisplay(vessel) {
 
 VesselDisplay.ARROW_LINE = 0.7;
 VesselDisplay.ARROW_END = 0.2;
-
-VesselDisplay.R_OUTER = 1.2;
-VesselDisplay.R_CIRCLE = 1.0;
-VesselDisplay.C_PLAIN = "#F3EFE0";
-VesselDisplay.C_HIGHLIGHT = "#3399FF";
-VesselDisplay.C_SELECT = "#9A3334";
-VesselDisplay.C_BACKGROUND = "#111111";
-VesselDisplay.C_SELECT_ALT = "#217C7E";
 
 VesselDisplay.prototype = {
     constructor : VesselDisplay,
@@ -122,8 +116,8 @@ VesselDisplay.prototype = {
                 y : 0
             };
             if (this.anchor.length == 0) {
-                p.x = -(VesselDisplay.R_CIRCLE);
-                p.y = -(VesselDisplay.R_CIRCLE)+0.15;
+                p.x = -(SunGear.R_CIRCLE);
+                p.y = -(SunGear.R_CIRCLE)+0.15;
             } else {
                 for (let i = 0; i < this.anchor.length; i++) {
                     const theta = this.anchor[i].angle;
@@ -213,24 +207,24 @@ VesselDisplay.prototype = {
     draw : function(p5) {
         if (this.getActiveCount() == 0) return;
 
-        if (this.debug) {
-            console.log((p5.width/2.0 + this.shape.x) + ", " + (p5.height/2.0 + this.shape.y));
-            // this.debug = false;
-        }
+        // if (this.debug) {
+        //     console.log((p5.width/2.0 + this.shape.x) + ", " + (p5.height/2.0 + this.shape.y));
+        //     this.debug = false;
+        // }
 
         p5.strokeWeight(.005);
         p5.ellipseMode(p5.CORNER);
-        let color = VesselDisplay.C_PLAIN;
+        let color = SunGear.C_PLAIN;
         if (p5.dist((p5.width/2.0 + this.shape.x), (p5.height/2.0 + this.shape.y), p5.mouseX, p5.mouseY) < this.shape.h) {
             if (p5.mouseIsPressed) {
-                color = VesselDisplay.C_HIGHLIGHT;
+                color = SunGear.C_HIGHLIGHT;
             } else {
-                color = VesselDisplay.C_SELECT;
+                color = SunGear.C_SELECT;
             }
         }
-        color = (this.select ? VesselDisplay.C_SELECT : (this.highlight ? VesselDisplay.C_HIGHLIGHT : color));
+        color = (this.select ? SunGear.C_SELECT : (this.highlight ? SunGear.C_HIGHLIGHT : color));
         p5.stroke(color);
-        p5.fill(VesselDisplay.C_BACKGROUND);
+        p5.fill(SunGear.C_BACKGROUND);
         p5.ellipse(this.shape.x,this.shape.y,this.shape.h,this.shape.w);
         if (this.getSelectedCount() > 0) {
             p5.fill(color);

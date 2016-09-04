@@ -1,26 +1,29 @@
 "use strict";
 /**
- * @author Dennis McDaid
+ * AnchorDisplay objects are short titles fixed on each corner of the gear's main outer shape (or just top and bottom if the gear is a circle).
+ * There should be one AnchorDisplay to each Anchor (and one Anchor to each Gene Set).
+ *
+ * @mvc View
+ * @author RajahBimmy
  */
 
 const DataReader = require('../../data/dataReader');
-const SunGear = require('../sungear');
-
+const SunGear = require('./sunValues');
 
 function AnchorDisplay(anchor) {
-    this.anchor = anchor;       /** {Anchor} */
+    this.anchor = anchor;       /** {Anchor} 1 to 1 relationship */
     this.highlight = false;
     this.select = false;
-    this.showLongDesc = false;  /** True to show long anchor description, false for short */
-    this.scale = 1;             /** {double} */
-    this.textScale = 1;         /** {double} Scale for text size */
-    this.angle = NaN;          /** {double} */
+    this.showLongDesc = false;  /** {boolean} True to show long anchor description, false for short */
+    this._scale = 1;            /** {Number} double */
+    // this.textScale = 1;         /** {Number} double Scale for text size. Possibly unused? */
+    this.angle = NaN;          /** {Number} Angling of AnchorDisplay relative to Gear's main component */
 
-    var s = DataReader.trimAll(this.anchor.name.split(AnchorDisplay.NAME_SEPARATOR));
+    const s = DataReader.trimAll(this.anchor.name.split(AnchorDisplay.NAME_SEPARATOR));
     this.shortDesc = s[0];      /** {String} Short anchor text for default display */
     this.longDesc = (s.length > 1) ? s[1] : this.shortDesc; /** @type String Long anchor text to display on rollover */
     this.vessels = [];          /** {Vector<VesselDisplay>} */
-    // this.shape = null;          /** {Shape} */
+    this._shape = null;          /** {Shape} */
     this.position = {};       /** {Point2D.Double} */
     this.debug = true;
 }
@@ -33,28 +36,29 @@ AnchorDisplay.prototype = {
     cleanup : function() {
         this.anchor.cleanup();
     },
-    /** @param s {Number} */
+    /** @param s {Number} double */
     setScale : function(s) {
-        this.scale = s;
+        this._scale = s;
         if(!isNaN(this.angle)) {
             this.setAngle(this.angle);
         }
     },
-    /** @param s {double} */
-    setTextScale : function(s) {
-        this.textScale = s;
-    },
+    // /** @param s {double} */
+    // setTextScale : function(s) {
+    //     this.textScale = s;
+    // },
     /**
-     * @param theta {Number}
+     * This function should be called on each unique AnchorDisplay to offset their angles from the gear's center.
+     * Likely calling function is SunGear.makeDisplay
+     *
+     * @param theta {Number} double
      */
     setAngle : function(theta) {
         this.angle = theta;
         this.position.x = SunGear.R_CIRCLE * Math.cos(theta);
         this.position.y = SunGear.R_CIRCLE * Math.sin(theta);
-        // console.log(this.longDesc + " position: ");
-        // console.log("X: " + this.position.x + ", Y: " + this.position.y);
     },
-    /** @return {double} */
+    /** @return {Number} double */
     getAngle : function() {
         return this.angle;
     },
@@ -66,9 +70,13 @@ AnchorDisplay.prototype = {
     getHighlight : function() {
         return this.highlight;
     },
-    /** @param b {boolean} */
+    /**
+     * This function either highlights or removes the highlight from each individual vessel.
+     *
+     * @param b {boolean}
+     */
     highlightVessels : function(b) {
-        for (var i = 0; i < this.vessels.length; i++) {
+        for (let i = 0; i < this.vessels.length; i++) {
             this.vessels[i].setHighlight(b);
         }
     },
@@ -82,7 +90,7 @@ AnchorDisplay.prototype = {
     getSelect : function() {
         return this.select;
     },
-    /** @param b of type boolean */
+    /** @param b {boolean} */
     setShowLongDesc : function(b) {
         this.showLongDesc = b;
     },
@@ -92,19 +100,27 @@ AnchorDisplay.prototype = {
     isShowLongDesc : function() {
         return this.showLongDesc;
     },
+    /**
+     * Principle drawing function used in the p5.draw loop
+     * Likely called by SunGear.paintComponent
+     *
+     * @param p5 {p5} processing library
+     * @param drawT {Object} Coordinates to use as basis.
+     */
     draw : function(p5, drawT) {
-        var tx = drawT.x;
-        var ty = drawT.y;
-        var tm = Math.min(tx, ty);
-        var scale = drawT.scale / 192.91666666666669;
-        var off = 34*scale;
+        const tx = drawT.x;
+        const ty = drawT.y;
+        const tm = Math.min(tx, ty);
+        const scale = drawT.scale / 192.91666666666669;
+        const off = 34*scale;
 
         p5.push();
         p5.textSize(18);
+        //noinspection JSCheckFunctionSignatures
         p5.textAlign(p5.CENTER);
         p5.textFont("Helvetica");
 
-        var l = this.showLongDesc ? this.longDesc : this.shortDesc;
+        const l = this.showLongDesc ? this.longDesc : this.shortDesc;
 
         // if (this.debug) {
         //     this.debug = false;
@@ -114,18 +130,18 @@ AnchorDisplay.prototype = {
         //     console.log((off + tm/1.2));
         //     console.log(this.angle);
         // }
-        var ratio = tx / ty;
-        if (ratio < 1.6) {
-            ratio *= 9;
-        } else if (ratio > 1.7) {
-            ratio = 1.1;
-        }
+        // let ratio = tx / ty;
+        // if (ratio < 1.6) {
+        //     ratio *= 9;
+        // } else if (ratio > 1.7) {
+        //     ratio = 1.1;
+        // }
 
-        let getRotation = rotate(tx, ty, (off + (tm/ratio)), ty, this.angle);
-        let x = getRotation[0];
-        let tempX = x - tx;
-        x = tx - tempX;
-        let y = getRotation[1];
+        // let getRotation = rotate(tx, ty, (off + (tm/ratio)), ty, this.angle);
+        // let x = getRotation[0];
+        // let tempX = x - tx;
+        // x = tx - tempX;
+        // let y = getRotation[1];
 
         // DEBUGGING PURPOSES ONLY:
         // p5.fill(SunGear.C_PLAIN);
@@ -159,13 +175,13 @@ AnchorDisplay.prototype = {
      * @returns {boolean}
      */
     contains : function(p) {
-        if (this.shape === null) {
+        if (this._shape === null) {
             return false;
         } else {
-            var distX = p.x - this.shape.x;
-            var distY = p.y - this.shape.y;
+            var distX = p.x - this._shape.x;
+            var distY = p.y - this._shape.y;
             var dist = Math.sqrt((distX*distX) + (distY*distY));
-            return (dist < this.shape.w / 2);
+            return (dist < this._shape.w / 2);
         }
     },
     /**
@@ -177,13 +193,13 @@ AnchorDisplay.prototype = {
     }
 };
 
-function rotate(cx, cy, x, y, angle) {
-    var radians = angle,
-        cos = Math.cos(radians),
-        sin = Math.sin(radians),
-        nx = (cos * (x - cx)) + (sin * (y - cy)) + cx,
-        ny = (cos * (y - cy)) - (sin * (x - cx)) + cy;
-    return [nx, ny];
-}
+// function rotate(cx, cy, x, y, angle) {
+//     var radians = angle,
+//         cos = Math.cos(radians),
+//         sin = Math.sin(radians),
+//         nx = (cos * (x - cx)) + (sin * (y - cy)) + cx,
+//         ny = (cos * (y - cy)) - (sin * (x - cx)) + cy;
+//     return [nx, ny];
+// }
 
 module.exports = AnchorDisplay;

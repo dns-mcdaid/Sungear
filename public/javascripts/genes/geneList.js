@@ -88,8 +88,6 @@ GeneList.prototype = {
                 this.hist.clear();
                 this.hist.add(this.selectionS);
                 console.log("working items: " + this.genesS.length);
-                console.log("# of active: ", this.activeS.length);
-                console.log("# of selected: ", this.selectionS.length);
                 const ge = new GeneEvent(this, this, GeneEvent.NEW_LIST);
                 this.notifyGeneListeners(ge);
                 this.setMulti(false, this);
