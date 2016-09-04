@@ -900,6 +900,7 @@ SunGear.prototype = {
     paintComponent : function(p5) {
         p5.push();
         this.makeTransform(p5, this.WIDTH, this.HEIGHT);
+        p5.push();
         let drawT = {
             x : this.WIDTH/2.0,
             y : this.HEIGHT/2.0,
@@ -908,11 +909,11 @@ SunGear.prototype = {
         this.paintExterior(p5);
         p5.pop();
         p5.push();
-        this.makeTransform(p5, this.WIDTH, this.HEIGHT);
         p5.fill(SunGear.C_PLAIN);
         for (let i = 0; i < this.vessels.length; i++) {
             this.vessels[i].draw(p5);
         }
+        p5.pop();
         p5.pop();
         p5.push();
         for (let i = 0; i < this.anchors.length; i++) {

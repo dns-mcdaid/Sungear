@@ -213,13 +213,10 @@ VesselDisplay.prototype = {
     draw : function(p5) {
         if (this.getActiveCount() == 0) return;
 
-        // if (this.debug) {
-        //     console.log(this.shape.h);
-        //     console.log("inner " + this.radInner);
-        //     console.log("outer " + this.radOuter);
-        //     console.log((p5.width/2.0 + this.shape.x) + ", " + (p5.height/2.0 + this.shape.y));
-        //     this.debug = false;
-        // }
+        if (this.debug) {
+            console.log((p5.width/2.0 + this.shape.x) + ", " + (p5.height/2.0 + this.shape.y));
+            // this.debug = false;
+        }
 
         p5.strokeWeight(.005);
         p5.ellipseMode(p5.CORNER);
@@ -239,7 +236,11 @@ VesselDisplay.prototype = {
         if (this.getSelectedCount() > 0) {
             p5.fill(color);
         }
-        p5.ellipse(this.shape.x,this.shape.y,this.shape.h,this.shape.w);
+        var x = p5.ellipse(this.shape.x,this.shape.y,this.shape.h,this.shape.w);
+        if (this.debug) {
+            console.log(x);
+            this.debug = false;
+        }
         if (this.showArrows) {
             for (let i = 0; i < this.angle.length; i++) {
                 this.drawArrow(p5, this.angle[i]);
