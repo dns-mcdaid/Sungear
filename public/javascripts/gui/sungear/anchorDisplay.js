@@ -138,17 +138,17 @@ AnchorDisplay.prototype = {
         p5.translate(-0.5, 7*scale);
 
 
-        if (p5.dist(p5.mouseX, p5.mouseY, x, y) < scale*20) {
-            if (p5.mouseIsPressed) {
-                this.select = true;
-                this.highlight = false;
-            } else {
-                this.highlight = true;
-                this.select = false;
-            }
-        } else {
-            // TODO: maybe set highlight to false?
-        }
+        // if (p5.dist(p5.mouseX, p5.mouseY, x, y) < scale*20) {
+        //     if (p5.mouseIsPressed) {
+        //         this.select = true;
+        //         this.highlight = false;
+        //     } else {
+        //         this.highlight = true;
+        //         this.select = false;
+        //     }
+        // } else {
+        //     // TODO: maybe set highlight to false?
+        // }
         p5.fill(this.select ? SunGear.C_SELECT : (this.highlight ? SunGear.C_HIGHLIGHT : SunGear.C_PLAIN));
         p5.text(l, 0, 0);
         p5.pop();

@@ -230,17 +230,13 @@ VesselDisplay.prototype = {
         }
         color = (this.select ? VesselDisplay.C_SELECT : (this.highlight ? VesselDisplay.C_HIGHLIGHT : color));
         p5.stroke(color);
-        // if (this.getSelectedCount() == 0 && color == VesselDisplay.C_PLAIN) {
-        //     p5.fill('#D1CDB8');
-        // }
+        p5.fill(VesselDisplay.C_BACKGROUND);
+        p5.ellipse(this.shape.x,this.shape.y,this.shape.h,this.shape.w);
         if (this.getSelectedCount() > 0) {
             p5.fill(color);
+            p5.ellipse(this.selectedShape.x, this.selectedShape.y, this.selectedShape.h, this.selectedShape.w);
         }
-        var x = p5.ellipse(this.shape.x,this.shape.y,this.shape.h,this.shape.w);
-        if (this.debug) {
-            console.log(x);
-            this.debug = false;
-        }
+
         if (this.showArrows) {
             for (let i = 0; i < this.angle.length; i++) {
                 this.drawArrow(p5, this.angle[i]);
