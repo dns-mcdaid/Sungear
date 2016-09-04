@@ -347,7 +347,7 @@ VisGene.prototype = {
 
         this.src = new DataSource(this.dataDir);
         this.src.reader = this.reader;
-        console.log("READER RESULTS:");
+        // console.log("READER RESULTS:");
         // console.log(this.src);
         // console.log(this.l1);
         callback();

@@ -250,7 +250,7 @@ CollapsibleList.prototype = {
                 // TODO: Maybe keep track of this gene?
             } else {
                 const g = this.model.getData()[row];
-                let s = this.genes.getSelectedSet();
+                let s = new SortedSet(this.genes.getSelectedSet());
                 if (window.event.ctrlKey || window.event.metaKey) {
                     if (s.contains(g)) {
                         s.remove(g);

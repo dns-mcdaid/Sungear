@@ -107,23 +107,24 @@ SunGear.prototype = {
         this.lastVessel = null;
     },
     /**
-     * @returns {VesselDisplay[]}
+     * @returns {Array} of VesselDisplay objects
      */
     getVessels : function() {
         return this.vessels;
     },
     /** @function makeButton was removed */
     /**
-     * @param n {int}
+     * @param n {Number} int
      */
     order : function(n) {
         if (n != -1) {
             try {
-                let v = this.orderedVessels[n];
+                const v = this.orderedVessels[n];
                 this.lastVessel = v;
                 this.highlightVessel(v);
                 this.updateCount();
             } catch (e) {
+                console.error("ERROR: ");
                 console.log(e);
             }
         }
@@ -134,7 +135,7 @@ SunGear.prototype = {
     set : function(src) {
         // make the displayable components
         let t = this.thresh;
-        console.log("thresh: " + this.thresh);
+        console.log("thresh: ", this.thresh);
         if(isNaN(t)) {
             console.log("check");
             t = 1.0;
@@ -148,7 +149,7 @@ SunGear.prototype = {
         let v = [];
         DataReader.setThreshold(t, this.genes.getGenesSet(), src.getReader().anchors, v);
         this.makeDisplay(src.getReader().anchors, v);
-        console.log("Anchors: " + this.anchors.length + " vessels: " + this.vessels.length);
+        console.log("Anchors: ", this.anchors.length, " vessels: ", this.vessels.length);
     },
     /**
      * @param t {GoTerm}
@@ -209,21 +210,19 @@ SunGear.prototype = {
         }
     },
     /**
-     * @returns {javascript.util.TreeSet}
+     * @returns {SortedSet}
      */
     getAssocGenes : function() {
         return (this.goTerm === null || this.goTerm.get() === null) ? new SortedSet() : this.goTerm.get().assocGenes;
     },
     /**
-     * @param c {Collection<Gene>}
+     * @param c {SortedSet}? of Genes
      */
     getTerms : function(c) {
-        const t = new SortedSet();
-        for (let it = 0; it < c.length; it++) {
-            let toAdd = this.getGeneTerms(c[it]);
-            for (let i = 0; i < toAdd.length; i++) {
-                t.push(toAdd[i]);
-            }
+        let t = new SortedSet();
+        const genes = c.toArray();
+        for (let i = 0; i < genes.length; i++) {
+            t = t.union(this.getGeneTerms(genes[i]));
         }
         return t;
     },

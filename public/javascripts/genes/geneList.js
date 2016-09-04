@@ -158,8 +158,10 @@ GeneList.prototype = {
      */
     setSelection : function(src, sel, sendEvent = true, addHist = true) {
         this.selectionS.clear();
-        this.selectionS = this.selectionS.union(sel);
+        this.selectionS = new SortedSet(sel);
+        console.log(this.selectionS.length);
         this.selectionS = this.selectionS.intersection(this.activeS);
+        console.log(this.selectionS.length);
 
         if (addHist) {
             this.hist.add(this.selectionS);
@@ -194,18 +196,13 @@ GeneList.prototype = {
      */
     setActive : function(src, s, sendEvent = true) {
         this.activeS.clear();
-        
-        // var sArray = s.toArray();
-        // for (var i = 0; i < sArray.length; i++) {
-        //     this.activeS.push(sArray[i]);
-        // }
 
         this.activeS = this.activeS.union(s);
 
         this.hist.clear();
         this.setSelection(this, this.activeS, false, true);
         if (sendEvent) {
-            var e = new GeneEvent(this, src, GeneEvent.NARROW);
+            const e = new GeneEvent(this, src, GeneEvent.NARROW);
             this.notifyGeneListeners(e);
             this.setMulti(false, src);
         }
@@ -263,14 +260,13 @@ GeneList.prototype = {
         if (operation == MultiSelectable.INTERSECT) {
             s.union(this.selectionS);
         }
-        for (let it = 0; it < this.multiSelectable.length; it++) {
-            const g = this.multiSelectable[it].getMultiSelection(operation);
+        for (let i = 0; ii < this.multiSelectable.length; i++) {
+            const g = this.multiSelectable[i].getMultiSelection(operation);
             if (g !== null && typeof g !== 'undefined') {
                 if (operation == MultiSelectable.UNION) {
                     s.union(g);
                 } else {
-                    s = new SortedSet();
-                    s.union(g);
+                    s = s.intersection(g);
                 }
             }
         }
@@ -282,7 +278,7 @@ GeneList.prototype = {
 
     /**
      * Registers a regular {@link GeneEvent} listener.
-     * @param l the object to register
+     * @param l {GeneListener} the object to register
      */
     addGeneListener : function(l) {
         if (this.listeners.indexOf(l) < 0) {
@@ -304,9 +300,7 @@ GeneList.prototype = {
      * @param e the gene event
      */
     notifyGeneListeners : function(e) {
-        // console.log(this.listeners);
         for (let i = 0; i < this.listeners.length; i++) {
-            // console.log(this.listeners[i]);
             this.listeners[i].listUpdated(e);
         }
     },
@@ -428,15 +422,10 @@ History.prototype = {
              * this.past.splice(curr+1, numOfElements);
              */
             for (let i = this.past.length; i > this.curr; i--) {
-                this.past.splice(i, 1);
+                this.past.pop();
             }
         }
-
-        const t = new SortedSet();
-        const sArray = s.toArray();
-        for (let j = 0; j < sArray.length; j++) {
-            t.push(sArray[j]);
-        }
+        const t = new SortedSet(s);
         this.past.push(t);
         this.curr++;
     }

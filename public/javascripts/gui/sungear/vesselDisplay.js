@@ -213,13 +213,13 @@ VesselDisplay.prototype = {
     draw : function(p5) {
         if (this.getActiveCount() == 0) return;
 
-        if (this.debug) {
-            console.log(this.shape.h);
-            console.log("inner " + this.radInner);
-            console.log("outer " + this.radOuter);
-            console.log((p5.width/2.0 + this.shape.x) + ", " + (p5.height/2.0 + this.shape.y));
-            this.debug = false;
-        }
+        // if (this.debug) {
+        //     console.log(this.shape.h);
+        //     console.log("inner " + this.radInner);
+        //     console.log("outer " + this.radOuter);
+        //     console.log((p5.width/2.0 + this.shape.x) + ", " + (p5.height/2.0 + this.shape.y));
+        //     this.debug = false;
+        // }
 
         p5.strokeWeight(.005);
         p5.ellipseMode(p5.CORNER);

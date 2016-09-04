@@ -15,7 +15,7 @@ function Vessel(anchor) {
 Vessel.prototype = {
     constructor : Vessel,
     toString : function(){
-        var s = "";
+        let s = "";
         for(let i = 0; i < this.anchor.length; i++) {
             s += (i > 0 ? " | " : "") + this.anchor[i].name;
         }
