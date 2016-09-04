@@ -83,12 +83,14 @@ GeneList.prototype = {
                 this.activeS.clear();
                 this.activeS = new SortedSet(this.genesS);
                 this.selectionS.clear();
-                this.selectionS = new SortedSet(this.geneS);
+                this.selectionS = new SortedSet(this.genesS);
 
                 this.hist.clear();
                 this.hist.add(this.selectionS);
                 console.log("working items: " + this.genesS.length);
-                var ge = new GeneEvent(this, this, GeneEvent.NEW_LIST);
+                console.log("# of active: ", this.activeS.length);
+                console.log("# of selected: ", this.selectionS.length);
+                const ge = new GeneEvent(this, this, GeneEvent.NEW_LIST);
                 this.notifyGeneListeners(ge);
                 this.setMulti(false, this);
             }
@@ -157,11 +159,9 @@ GeneList.prototype = {
      * @param addHist true to update browsing history, otherwise false
      */
     setSelection : function(src, sel, sendEvent = true, addHist = true) {
-        this.selectionS.clear();
+        // this.selectionS.clear();
         this.selectionS = new SortedSet(sel);
-        console.log(this.selectionS.length);
         this.selectionS = this.selectionS.intersection(this.activeS);
-        console.log(this.selectionS.length);
 
         if (addHist) {
             this.hist.add(this.selectionS);

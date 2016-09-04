@@ -986,7 +986,6 @@ SunGear.prototype = {
                     }
                 }
             }
-            // TODO: Make sure this sort function works.
             this.orderedVessels.sort(this.vSort.compareTo);
             this.orderIdx = -1;
             this.firstIdx = (min === null) ? -1 : this.orderedVessels.indexOf(min);
@@ -1087,6 +1086,10 @@ SunGear.prototype = {
      */
     prevBFunction : function() {
         this.orderIdx = (this.orderIdx == -1) ? this.firstIdx : (this.orderIdx + this.orderedVessels.length - 1) % this.orderedVessels.length;
+        console.log("FIRST INDEX: ");
+        console.log(this.firstIdx);
+        console.log("ORDER INDEX: ");
+        console.log(this.orderIdx);
         this.order(this.orderIdx);
     },
     nextBFunction : function() {
@@ -1145,7 +1148,7 @@ SunGear.prototype = {
      */
     handleButtons : function(p5) {
         for (let i = 0; i < this.visuals.length; i++) {
-            var model = this.visuals[i].model;
+            const model = this.visuals[i].model;
             if (model.selected) {
                 this.visuals[i].task();
             }
@@ -1182,7 +1185,7 @@ SunGear.prototype = {
 /**
  * A Visual Model which acts as a generic parent for SunGear Icons
  *
- * @param model {Icons.Type<T>}
+ * @param model {Icons}
  * @param params {Array}
  * @param task {function}
  * @constructor
