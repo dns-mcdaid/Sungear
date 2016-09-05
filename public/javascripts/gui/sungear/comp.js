@@ -21,8 +21,6 @@ VesselActSize.prototype.compare = function(v1, v2) {
 };
 
 /**
- * People who smoke cigarettes are so self destructive and cool...
- *
  * @param vessel {VesselDisplay}
  * @param score {number} double
  * @param count {number} int

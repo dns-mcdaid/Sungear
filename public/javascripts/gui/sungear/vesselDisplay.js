@@ -1,6 +1,6 @@
 "use strict";
 
-const SunGear = require('./sunValues');
+const SunValues = require('./sunValues');
 const SortedSet = require('collections/sorted-set');
 
 
@@ -116,8 +116,8 @@ VesselDisplay.prototype = {
                 y : 0
             };
             if (this.anchor.length == 0) {
-                p.x = -(SunGear.R_CIRCLE);
-                p.y = -(SunGear.R_CIRCLE)+0.15;
+                p.x = -(SunValues.R_CIRCLE);
+                p.y = -(SunValues.R_CIRCLE)+0.15;
             } else {
                 for (let i = 0; i < this.anchor.length; i++) {
                     const theta = this.anchor[i].angle;
@@ -214,17 +214,17 @@ VesselDisplay.prototype = {
 
         p5.strokeWeight(.005);
         p5.ellipseMode(p5.CORNER);
-        let color = SunGear.C_PLAIN;
+        let color = SunValues.C_PLAIN;
         if (p5.dist((p5.width/2.0 + this.shape.x), (p5.height/2.0 + this.shape.y), p5.mouseX, p5.mouseY) < this.shape.h) {
             if (p5.mouseIsPressed) {
-                color = SunGear.C_HIGHLIGHT;
+                color = SunValues.C_HIGHLIGHT;
             } else {
-                color = SunGear.C_SELECT;
+                color = SunValues.C_SELECT;
             }
         }
-        color = (this.select ? SunGear.C_SELECT : (this.highlight ? SunGear.C_HIGHLIGHT : color));
+        color = (this.select ? SunValues.C_SELECT : (this.highlight ? SunValues.C_HIGHLIGHT : color));
         p5.stroke(color);
-        p5.fill(SunGear.C_BACKGROUND);
+        p5.fill(SunValues.C_BACKGROUND);
         p5.ellipse(this.shape.x,this.shape.y,this.shape.h,this.shape.w);
         if (this.getSelectedCount() > 0) {
             p5.fill(color);

@@ -1115,6 +1115,7 @@ SunGear.prototype = {
      */
     showArrowBFunction : function() {
         this.setShowArrows(!this.showArrows);
+        this.showArrowB.arrow = !this.showArrowB.arrow;
     },
     /**
      * Triggered by clicking the statsB Icon in the SunGear dialog.

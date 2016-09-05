@@ -1,10 +1,19 @@
-/** DONE */
+"use strict";
+/**
+ * The Icons class contains p5 drawing instructions for the icons which populate the bottom left-hand corner of the SunGear dialog
+ *
+ * @author RajahBimmy
+ */
+const SunValues = require('./sunValues');
 
-var C_SELECT = "#9A3334";
-var C_HIGHLIGHT = "#3399FF";
-var C_PLAIN = "#F3EFE0";
-var C_BACKGROUND = "#FFFFFF";
-
+/**
+ * There should only be two implementations of this object, one for the forward vessel button, and one for the back vessel button.
+ *
+ * @param type {number} 0 or 2, depending on whether the arrow should point left or right.
+ * @param scale {number} Used for sizing the ArrowIcon
+ * @param fill {boolean} Whether or not the arrow should be filled or stroked? (change wording) by default.
+ * @constructor
+ */
 function ArrowIcon(type, scale, fill) {
     this.arrowX = [0, 2, 0, 0,-2,-2,0];
     this.arrowY = [2, 0,-2,-1,-1, 1,1];
@@ -22,8 +31,16 @@ ArrowIcon.prototype = {
     getIconHeight : function() {
         return this.scale * 4;
     },
+    /**
+     * Primary drawing function, called by p5.draw -> SunGear.makeButtons
+     *
+     * @param p5 {p5} instance for processing
+     * @param x {number} x coordinate of ArrowIcon
+     * @param y {number} y coordinate of ArrowIcon
+     */
     paintIcon : function(p5, x, y) {
         if (typeof y == 'undefined') {
+            // If x is passed as an array, just split the values.
             y = x[1];
             x = x[0];
         }
@@ -32,30 +49,36 @@ ArrowIcon.prototype = {
         p5.translate(x + 2 * this.scale, y + 2 * this.scale);
         p5.rotate(.5 * Math.PI * this.type);
         p5.scale(this.scale, this.scale);
-        // p5.strokeWeight(.5);
         p5.noStroke();
+
         if (p5.dist(p5.mouseX, p5.mouseY, x+8, y+8) < this.scale*2) {
             if (p5.mouseIsPressed) {
-                p5.fill(C_SELECT);
+                p5.fill(SunValues.C_SELECT);
                 this.selected = true;
             } else {
-                p5.fill(C_HIGHLIGHT);
+                p5.fill(SunValues.C_HIGHLIGHT);
             }
         } else {
-            // p5.strokeWeight(.3);
-            // p5.fill("#111111");
-            // p5.stroke(C_PLAIN);
-            p5.fill(C_PLAIN);
+            p5.strokeWeight(.25);
+            p5.stroke(SunValues.C_PLAIN);
+            p5.fill(SunValues.C_BACKGROUND);
         }
         p5.beginShape();
-        for (var i = 0; i < this.arrowX.length; i++) {
+        for (let i = 0; i < this.arrowX.length; i++) {
             p5.vertex(this.arrowX[i], this.arrowY[i]);
         }
         p5.endShape(p5.CLOSE);
         p5.pop();
     }
 };
-
+/**
+ * The VesselMinIcon is the circle nested inside of another circle in the SunGear dialog. When selected, it should increase or reset the minimum size of vessels.
+ *
+ * @param steps {number} of different possible sizes (increasing)
+ * @param stepSize {number} used for sizing of current inner circle
+ * @param step {number} which step we're currently on, from 0 to whatever amount steps is.
+ * @constructor
+ */
 function VesselMinIcon(steps, stepSize, step) {
     this.steps = steps;
     this.stepSize = stepSize;
@@ -73,8 +96,16 @@ VesselMinIcon.prototype = {
     getIconHeight : function() {
         return this.H;
     },
+    /**
+     * Primary drawing function, called by p5.draw -> SunGear.makeButtons
+     *
+     * @param p5 {p5} instance for processing
+     * @param x {number} x coordinate of VesselMinIcon
+     * @param y {number} y coordinate of VesselMinIcon
+     */
     paintIcon : function(p5, x, y) {
         if (typeof y == 'undefined') {
+            // If x is passed as an array, just split the values.
             y = x[1];
             x = x[0];
         }
@@ -84,24 +115,31 @@ VesselMinIcon.prototype = {
         p5.ellipseMode(p5.CENTER);
         for (var i = this.steps - 1; i >= 0; i--) {
             if (this.step == i) {
-                p5.fill(C_SELECT);
+                p5.fill(SunValues.C_SELECT);
             } else {
                 if (p5.dist(p5.mouseX, p5.mouseY, x, y) < this.stepSize * this.steps) {
-                    p5.fill(C_HIGHLIGHT);
+                    p5.fill(SunValues.C_HIGHLIGHT);
                     if (p5.mouseIsPressed) {
                         this.selected = true;
                     }
                 } else {
-                    p5.fill(C_PLAIN);
+                    p5.fill(SunValues.C_PLAIN);
                 }
             }
-            var sz = this.stepSize * (i+1) * 2;
+            const sz = this.stepSize * (i+1) * 2;
             p5.ellipse(x, y, sz, sz);
         }
         p5.pop();
     }
 };
 
+/**
+ * The ShowArrowIcon sits on the left of the SunGear display, featuring an mini vessel with arrows pointing out in four directions.
+ * Back in the SunGear instance, when this is clicked, VesselDisplay's arrows are toggled.
+ *
+ * @param arrow {boolean}
+ * @constructor
+ */
 function ShowArrowIcon(arrow) {
     this.arrow = arrow;
     this.selected = false;
@@ -119,8 +157,16 @@ ShowArrowIcon.prototype = {
     getIconHeight : function() {
         return ShowArrowIcon.H;
     },
+    /**
+     * Primary drawing function, called by p5.draw -> SunGear.makeButtons
+     *
+     * @param p5 {p5} instance for processing
+     * @param x {number} x coordinate of ShowArrowIcon
+     * @param y {number} y coordinate of ShowArrowIcon
+     */
     paintIcon : function(p5, x, y) {
         if (typeof y == 'undefined') {
+            // If x is passed as an array, just split the values.
             y = x[1];
             x = x[0];
         }
@@ -129,20 +175,25 @@ ShowArrowIcon.prototype = {
         // Set color and build oval
         if (p5.dist(p5.mouseX, p5.mouseY, x, y) < 10) {
             if (p5.mouseIsPressed) {
-                p5.stroke(C_SELECT);
-                p5.fill(C_SELECT);
+                p5.stroke(SunValues.C_SELECT);
+                p5.fill(SunValues.C_SELECT);
                 this.selected = true;
             } else {
-                p5.stroke(C_HIGHLIGHT);
-                p5.fill(C_HIGHLIGHT);
+                p5.stroke(SunValues.C_HIGHLIGHT);
+                p5.fill(SunValues.C_HIGHLIGHT);
             }
         } else {
-            p5.stroke(C_PLAIN);
-            p5.fill(C_PLAIN);
+            p5.fill(this.arrow ? SunValues.C_PLAIN_ALT : SunValues.C_PLAIN);
+            p5.stroke(this.arrow ? SunValues.C_PLAIN : SunValues.C_PLAIN_ALT);
         }
+
+        p5.push();
+        p5.noStroke();
         p5.ellipse(x, y, 7, 7);
+        p5.pop();
+
         p5.translate(x, y);
-        for (var i = 0; i < 4; i++) {
+        for (let i = 0; i < 4; i++) {
             p5.push();
             p5.rotate(i*2*Math.PI/4.0);
             p5.translate(1, -.5);
@@ -155,6 +206,13 @@ ShowArrowIcon.prototype = {
     }
 };
 
+/**
+ * Circular Icon sitting on bottom of the SunGear Dialog, between two ArrowIcons
+ *
+ * @param scale {number} for size
+ * @param fill {boolean} likely unnecessary?
+ * @constructor
+ */
 function EllipseIcon(scale, fill) {
     this.ellipse = {
         x : -2,
@@ -175,8 +233,16 @@ EllipseIcon.prototype = {
     getIconHeight : function() {
         return this.scale * 4;
     },
+    /**
+     * Primary drawing function, called by p5.draw -> SunGear.makeButtons
+     *
+     * @param p5 {p5} instance for processing
+     * @param x {number} x coordinate of EllipseIcon
+     * @param y {number} y coordinate of EllipseIcon
+     */
     paintIcon : function(p5, x, y) {
         if (typeof y == 'undefined') {
+            // If x is passed as an array, just split the values.
             y = x[1];
             x = x[0];
         }
@@ -184,26 +250,29 @@ EllipseIcon.prototype = {
         p5.push();
         p5.translate(x+2*this.scale, y+2*this.scale);
         p5.scale(this.scale, this.scale);
-        // p5.strokeWeight(.5);
-        p5.noStroke();
+
         if (p5.dist(p5.mouseX, p5.mouseY, x, y) < 2*this.scale) {
+            p5.noStroke();
             if (p5.mouseIsPressed) {
-                p5.fill(C_SELECT);
+                p5.fill(SunValues.C_SELECT);
                 this.selected = true;
             } else {
-                p5.fill(C_HIGHLIGHT);
+                p5.fill(SunValues.C_HIGHLIGHT);
             }
         } else {
-            // p5.strokeWeight(.5);
-            // p5.fill("#111111");
-            // p5.stroke(C_PLAIN);
-            p5.fill(C_PLAIN);
+            p5.strokeWeight(.25);
+            p5.stroke(SunValues.C_PLAIN);
+            p5.fill(SunValues.C_BACKGROUND);
         }
         p5.ellipse(this.ellipse.x, this.ellipse.y, this.ellipse.w, this.ellipse.h);
         p5.pop();
     }
 };
 
+/**
+ * Grid on the left hand side of the SunGear Dialog which calls the Stats Frame upon selection.
+ * @constructor
+ */
 function StatsIcon() {
     this.W = 15;
     this.H = 16;
@@ -218,8 +287,16 @@ StatsIcon.prototype = {
     getIconHeight : function() {
         return this.H;
     },
+    /**
+     * Primary drawing function, called by p5.draw -> SunGear.makeButtons
+     *
+     * @param p5 {p5} instance for processing
+     * @param x {number} x coordinate of StatsIcon
+     * @param y {number} y coordinate of StatsIcon
+     */
     paintIcon : function(p5, x, y) {
         if (typeof y == 'undefined') {
+            // If x is passed as an array, just split the values.
             y = x[1];
             x = x[0];
         }
@@ -227,19 +304,19 @@ StatsIcon.prototype = {
         p5.push();
         if (p5.dist(p5.mouseX, p5.mouseY, x+(this.W/2), y+(this.H/y)) < this.H) {
             if (p5.mouseIsPressed) {
-                p5.stroke(C_SELECT);
+                p5.stroke(SunValues.C_SELECT);
                 this.selected = true;
             } else {
-                p5.stroke(C_HIGHLIGHT);
+                p5.stroke(SunValues.C_HIGHLIGHT);
             }
         } else {
-            p5.stroke(C_PLAIN);
+            p5.stroke(SunValues.C_PLAIN);
         }
-        for (var i = 0; i < 3; i++) {
-            p5.line(x+7*i, y+0, x+7*i, y+this.H-1);
+        for (let i = 0; i < 3; i++) {
+            p5.line(x+7*i, y, x+7*i, y+this.H-1);
         }
-        for (i = 0; i < 6; i++) {
-            p5.line(x+0, y+3*i, x+this.W-1, y+3*i);
+        for (let i = 0; i < 6; i++) {
+            p5.line(x, y+3*i, x+this.W-1, y+3*i);
         }
         p5.pop();
     }

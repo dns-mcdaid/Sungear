@@ -13,5 +13,6 @@ module.exports = {
     C_HIGHLIGHT : "#3399FF",
     C_SELECT : "#9A3334",
     C_BACKGROUND : "#111111",
+    C_PLAIN_ALT : "#A39F90",
     C_SELECT_ALT : "#217C7E"
 };

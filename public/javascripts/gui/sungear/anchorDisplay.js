@@ -8,7 +8,7 @@
  */
 
 const DataReader = require('../../data/dataReader');
-const SunGear = require('./sunValues');
+const SunValues = require('./sunValues');
 
 function AnchorDisplay(anchor) {
     this.anchor = anchor;       /** {Anchor} 1 to 1 relationship */
@@ -49,14 +49,14 @@ AnchorDisplay.prototype = {
     // },
     /**
      * This function should be called on each unique AnchorDisplay to offset their angles from the gear's center.
-     * Likely calling function is SunGear.makeDisplay
+     * Likely calling function is SunValues.makeDisplay
      *
      * @param theta {Number} double
      */
     setAngle : function(theta) {
         this.angle = theta;
-        this.position.x = SunGear.R_CIRCLE * Math.cos(theta);
-        this.position.y = SunGear.R_CIRCLE * Math.sin(theta);
+        this.position.x = SunValues.R_CIRCLE * Math.cos(theta);
+        this.position.y = SunValues.R_CIRCLE * Math.sin(theta);
     },
     /** @return {Number} double */
     getAngle : function() {
@@ -102,7 +102,7 @@ AnchorDisplay.prototype = {
     },
     /**
      * Principle drawing function used in the p5.draw loop
-     * Likely called by SunGear.paintComponent
+     * Likely called by SunValues.paintComponent
      *
      * @param p5 {p5} processing library
      * @param drawT {Object} Coordinates to use as basis.
@@ -144,7 +144,7 @@ AnchorDisplay.prototype = {
         // let y = getRotation[1];
 
         // DEBUGGING PURPOSES ONLY:
-        // p5.fill(SunGear.C_PLAIN);
+        // p5.fill(SunValues.C_PLAIN);
         // p5.ellipse(x, y, 10, 10);
 
         p5.translate(tx, ty);
@@ -165,7 +165,7 @@ AnchorDisplay.prototype = {
         // } else {
         //     // TODO: maybe set highlight to false?
         // }
-        p5.fill(this.select ? SunGear.C_SELECT : (this.highlight ? SunGear.C_HIGHLIGHT : SunGear.C_PLAIN));
+        p5.fill(this.select ? SunValues.C_SELECT : (this.highlight ? SunValues.C_HIGHLIGHT : SunValues.C_PLAIN));
         p5.text(l, 0, 0);
         p5.pop();
         // TODO: Continue implementation.
