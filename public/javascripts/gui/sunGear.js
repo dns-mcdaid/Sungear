@@ -345,7 +345,7 @@ SunGear.prototype = {
     getCoolThresh : function(maxVessels, minScore) {
         // TODO: Ensure this works.
         console.log("Attempting to sort Vessels by ActSize. Remove me later!");
-        this.vessels.sort(Comp.VesselActSize);
+        this.vessels.sort(Comp.VesselActSize.compare);
         let cool = new SortedSet();
         let last;
         for (let i = 0; i < this.vessels.length; i++) {
@@ -977,12 +977,12 @@ SunGear.prototype = {
                 this.vessels[i].setSelectedGenes(this.genes.getSelectedSet());
                 if (this.vessels[i].getSelectedCount() > 0) {
                     this.orderedVessels.push(this.vessels[i]);
-                    if (min === null || ac.compareTo(this.vessels[i], min) < 0) {
+                    if (min === null || ac.compare(this.vessels[i], min) < 0) {
                         min = this.vessels[i];
                     }
                 }
             }
-            this.orderedVessels.sort(this.vSort.compareTo);
+            this.orderedVessels.sort(this.vSort.compare);
             this.orderIdx = -1;
             this.firstIdx = (min === null) ? -1 : this.orderedVessels.indexOf(min);
         }
