@@ -92,3 +92,23 @@ In order to run on a modern web browser, Sungear requires the following dependen
 * [Jade](http://jade-lang.com/): Template engine used for Node apps.
 * [jQuery](https://jquery.com/): Necessary for Bootstrap and manipulating Javascript Objects.
 * [Bootstrap](http://getbootstrap.com/): Grid System responsible for our entire UI looking somewhat easy on the eyes.
+
+## Running Locally
+
+To run SunGear locally, you'll need [Node.js](https://nodejs.org/en/) installed, then install [Browserify](http://browserify.org/) via the following command:
+
+`npm install -g browserify`
+
+With Node and Browserify, navigate to the SunGear project folder and run:
+
+`npm install`
+
+This may take a minute or two to set up all SunGear dependencies, but once complete you'll only have one more step to go.
+
+`browserify public/javascripts/main.js -o public/javascripts/out.js -d`
+
+This will compress all client-side SunGear files into a file called `out.js`, which handles the work from here. At this point, run
+
+`npm start`
+
+and navigate to `localhost:3000` to test SunGear with fake data (at this time, the data is taken from George R.R. Martin's _Game of Thrones_.
