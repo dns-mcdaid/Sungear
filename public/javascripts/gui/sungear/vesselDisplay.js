@@ -29,7 +29,7 @@ function VesselDisplay(vessel) {
     };
     this.contains = false;
 
-    this.debug = true;
+    this.debug = false;
 }
 
 VesselDisplay.ARROW_LINE = 0.7;
@@ -184,9 +184,9 @@ VesselDisplay.prototype = {
     getShapeRad : function(count, vMax) {
         return this.radMin + Math.sqrt(count/vMax)*(this.radMax-this.radMin);
     },
-    contains : function() {
-        return this.contains;
-    },
+    // contains : function() {
+    //     return this.contains;
+    // },
     setHighlight : function(b) {
         this.highlight = b;
     },

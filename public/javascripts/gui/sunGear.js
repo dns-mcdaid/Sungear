@@ -659,7 +659,7 @@ SunGear.prototype = {
      */
     getAnchor : function() {
         for (let i = 0; i < this.anchors.length; i++) {
-            if (this.anchors[i].contains()) {
+            if (this.anchors[i].contains) {
                 return this.anchors[i];
             }
         }
@@ -672,7 +672,7 @@ SunGear.prototype = {
      */
     getVessel : function() {
         for (let i = 0; i < this.vessels.length; i++) {
-            if (this.vessels[i].contains()) {
+            if (this.vessels[i].contains) {
                 return this.vessels[i];
             }
         }
@@ -682,18 +682,14 @@ SunGear.prototype = {
      * Changes appearance only, not selected gene sets.
      * @param p5 {p5} for processing the mouseEvent
      */
-    checkSelect : function(p5) {
-        const p = {
-            x : p5.mouseX,
-            y : p5.mouseY
-        };
+    checkSelect : function() {
         let chg = false;
-        const a = this.getAnchor(p);
+        const a = this.getAnchor();
         for (let i = 0; i < this.anchors.length; i++) {
             chg = chg || (this.anchors[i].getSelect() != (this.anchors[i] == a));
             this.anchors[i].setSelect(this.anchors[i] == a);
         }
-        const v = this.getVessel(p);
+        const v = this.getVessel();
         for (let i = 0; i < this.vessels.length; i++) {
             chg = chg || (this.vessels[i].getSelect() != (this.vessels[i] == v));
             this.vessels[i].setSelect(this.vessels[i] == v);
@@ -719,7 +715,7 @@ SunGear.prototype = {
             x : p5.mouseX,
             y : p5.mouseY
         };
-        let a = this.getAnchor(p);
+        let a = this.getAnchor();
         if (a !== null) {
             if (this.multi) {
                 if (p5.keyIsPressed) {

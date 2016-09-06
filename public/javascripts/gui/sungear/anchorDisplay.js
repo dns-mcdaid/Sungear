@@ -25,7 +25,8 @@ function AnchorDisplay(anchor) {
     this.vessels = [];          /** {Vector<VesselDisplay>} */
     this._shape = null;          /** {Shape} */
     this.position = {};       /** {Point2D.Double} */
-    this.debug = true;
+    this.contains = false;
+    this.debug = false;
 }
 
 AnchorDisplay.NAME_SEPARATOR = ";";
@@ -122,32 +123,7 @@ AnchorDisplay.prototype = {
 
         const l = this.showLongDesc ? this.longDesc : this.shortDesc;
 
-        const location = this.findAnchorCenter(tx, ty, tm, scale, off);
-
-        // if (this.debug) {
-        //     this.debug = false;
-        //     console.log(l);
-        //     console.log(tx);
-        //     console.log(ty);
-        //     console.log((off + tm/1.2));
-        //     console.log(this.angle);
-        // }
-        // let ratio = tx / ty;
-        // if (ratio < 1.6) {
-        //     ratio *= 9;
-        // } else if (ratio > 1.7) {
-        //     ratio = 1.1;
-        // }
-
-        // let getRotation = rotate(tx, ty, (off + (tm/ratio)), ty, this.angle);
-        // let x = getRotation[0];
-        // let tempX = x - tx;
-        // x = tx - tempX;
-        // let y = getRotation[1];
-
-        // DEBUGGING PURPOSES ONLY:
-        // p5.fill(SunValues.C_PLAIN);
-        // p5.ellipse(x, y, 10, 10);
+        const location = this.findAnchorCorner(tx, ty, tm, scale, off);
 
         p5.translate(tx, ty);
         p5.rotate(this.angle);
@@ -155,35 +131,34 @@ AnchorDisplay.prototype = {
         p5.rotate(this.angle < Math.PI ? -Math.PI/2.0 : Math.PI/2.0);
         p5.translate(-0.5, 7*scale);
 
-
-        // if (p5.dist(p5.mouseX, p5.mouseY, x, y) < scale*20) {
-        //     if (p5.mouseIsPressed) {
-        //         this.select = true;
-        //         this.highlight = false;
-        //     } else {
-        //         this.highlight = true;
-        //         this.select = false;
-        //     }
-        // } else {
-        //     // TODO: maybe set highlight to false?
-        // }
-        p5.fill(this.select ? SunValues.C_SELECT : (this.highlight ? SunValues.C_HIGHLIGHT : SunValues.C_PLAIN));
+        let color = SunValues.C_PLAIN;
+        if (p5.dist(p5.mouseX, p5.mouseY, location.x, location.y) < l.length) {
+            if (p5.mouseIsPressed) {
+                color = SunValues.C_SELECT;
+            } else {
+                color = SunValues.C_HIGHLIGHT;
+            }
+            this.contains = true;
+        } else {
+            this.contains = false;
+        }
+        color = (this.select ? SunValues.C_SELECT : (this.highlight ? SunValues.C_HIGHLIGHT : color));
+        p5.fill(color);
         p5.text(l, 0, 0);
         p5.pop();
         // TODO: Continue implementation.
     },
-    findAnchorCenter : function(tx, ty, tm, scale, off) {
-        let rotation = this.getRotation(tx, ty, (off + tm/1.2), ty, this.angle);
-        let newScale = (0.5*Math.min(tx, ty)/SunValues.R_OUTER);
-        if (this.debug) {
-            console.log(this.longDesc);
-            console.log("X ", rotation[0]);
-            console.log("Y ", rotation[1]);
-            console.log("old scale: ", scale);
-            console.log("new scale: ", newScale);
-            this.debug = false;
-        }
-        // return the rotation coordinates either + or - newScale, based on whether or not the coordinates are greater than or less than tx and ty.
+    findAnchorCorner : function(tx, ty, tm, scale, off) {
+        const rotation = this.getRotation(tx, ty, (off + tm/1.2), ty, this.angle);
+        const newScale = (0.5*Math.min(tx, ty)/SunValues.R_OUTER);
+        let x = rotation[0];
+        let y = rotation[1];
+        x += (x == tx ? 0 : (x > tx ? newScale : -newScale));
+        y += (y == ty ? 0 : (y > ty ? newScale : -newScale));
+        return {
+            x : x,
+            y : y
+        };
     },
     getRotation : function(cx, cy, x, y, angle) {
         const radians = angle,
@@ -199,16 +174,16 @@ AnchorDisplay.prototype = {
      * @param p {object} containing an X and Y coordinate.
      * @returns {boolean}
      */
-    contains : function(p) {
-        if (this._shape === null) {
-            return false;
-        } else {
-            const distX = p.x - this._shape.x;
-            const distY = p.y - this._shape.y;
-            const dist = Math.sqrt((distX*distX) + (distY*distY));
-            return (dist < this._shape.w / 2);
-        }
-    },
+    // contains : function(p) {
+    //     if (this._shape === null) {
+    //         return false;
+    //     } else {
+    //         const distX = p.x - this._shape.x;
+    //         const distY = p.y - this._shape.y;
+    //         const dist = Math.sqrt((distX*distX) + (distY*distY));
+    //         return (dist < this._shape.w / 2);
+    //     }
+    // },
     /**
      * @param a {AnchorDisplay}
      * @returns {boolean}

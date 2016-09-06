@@ -18,7 +18,7 @@ new p5(function(p5) {
     let WIDTH;
     let HEIGHT;
     let canvas;
-    let debug = true;
+    let debug = false;
 
     p5.setup = function() {
         WIDTH = document.getElementById('sungearGui').offsetWidth;
@@ -45,20 +45,20 @@ new p5(function(p5) {
     };
 
     p5.mouseDragged = function() {
-        // vis.gear.checkHighlight(p5);
+        // vis.gear.checkHighlight();
         // if (!vis.gear.multi) {
-        //     vis.gear.checkSelect(p5);
+        //     vis.gear.checkSelect();
         // }
     };
 
     p5.mousePressed = function() {
         // if (!vis.gear.multi) {
-        //     vis.gear.checkSelect(p5);
+        //     vis.gear.checkSelect();
         // }
     };
 
     p5.mouseReleased = function() {
-        // vis.gear.handleSelect(p5);
+        vis.gear.handleSelect(p5);
         vis.gear.handleButtons(p5);
     };
 
@@ -79,10 +79,11 @@ new p5(function(p5) {
                     let month = today.getMonth()+1;
                     let year = today.getFullYear();
 
-                    if (month < 10) {   month = '0' + month;    }
-                    if (day < 10) { day = '0' + day;    }
-                    if (hour < 10) {    hour = '0' + hour;  }
-                    if (minute < 10) {  minute = '0' + minute;  }
+                    if (month < 10)     month = '0' + month;
+                    if (day < 10)       day = '0' + day;
+                    if (hour < 10)      hour = '0' + hour;
+                    if (minute < 10)    minute = '0' + minute;
+
                     fName += year+'/'+month+'/'+day+' '+hour+'.'+minute+'.jpg';
 
                     p5.save(fName);
