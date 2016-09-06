@@ -356,40 +356,41 @@ DataReader.prototype = {
 /**
  * Updates vessel membership based on the provided threshold value.
  * @param t {float} threshold for vessel inclusion
- * @param expGenes {SortedSet<Gene>} all genes in the experiment set
- * @param anchors {Vector<Anchor>} experiment anchors (static)
- * @param vessels {Vector<Vessel>} updated vessels are placed here
+ * @param expGenes {SortedSet} all genes in the experiment set
+ * @param anchors {Array} of Vessels experiment anchors (static)
+ * @param vessels {Array} of Anchors updated vessels are placed here
  */
 DataReader.setThreshold = function(t, expGenes, anchors, vessels) {
-    var m = "";
-    var last = "";
-    var vh = {};
-    var curr = null;
-    var expGenesArray = expGenes.toArray();
-    for (var it = 0; it < expGenesArray.length; it++) {
+    let m = "";
+    let last = "";
+    const vh = new Map();
+    let curr = null;
+    //noinspection JSUnresolvedFunction
+    const expGenesArray = expGenes.toArray();
+    for (let i = 0; i < expGenesArray.length; i++) {
         m = "";
-        var g = expGenesArray[it];
-        var e = g.getExp();
-        for (var i = 0; i < e.length; i++) {
-            if (e[i] < t) {
+        const g = expGenesArray[i];
+        const e = g.getExp();
+        for (let j = 0; j < e.length; j++) {
+            if (e[j] < t) {
                 m += "0";
             } else {
                 m += "1";
             }
         }
-        var sig = m;
+        const sig = m;
         if (m != last) {
-            curr = vh[sig];
+            curr = vh.get(sig);
             if (typeof curr === 'undefined') {
-                var va = [];
-                for (var j = 0; j < sig.length; j++) {
+                const va = [];
+                for (let j = 0; j < sig.length; j++) {
                     if (sig[j] == "1") {
                         va.push(anchors[j]);
                     }
                 }
                 curr = new Vessel(va);
                 vessels.push(curr);
-                vh[sig] = curr;
+                vh.set(sig, curr);
             }
             last = sig;
         }

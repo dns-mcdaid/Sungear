@@ -15,16 +15,16 @@ function AnchorDisplay(anchor) {
     this.highlight = false;
     this.select = false;
     this.showLongDesc = false;  /** {boolean} True to show long anchor description, false for short */
-    this._scale = 1;            /** {Number} double */
+    this._scale = 1;            /** {number} double */
     // this.textScale = 1;         /** {Number} double Scale for text size. Possibly unused? */
-    this.angle = NaN;          /** {Number} Angling of AnchorDisplay relative to Gear's main component */
+    this.angle = NaN;          /** {number} Angling of AnchorDisplay relative to Gear's main component */
 
     const s = DataReader.trimAll(this.anchor.name.split(AnchorDisplay.NAME_SEPARATOR));
-    this.shortDesc = s[0];      /** {String} Short anchor text for default display */
-    this.longDesc = (s.length > 1) ? s[1] : this.shortDesc; /** @type String Long anchor text to display on rollover */
-    this.vessels = [];          /** {Vector<VesselDisplay>} */
+    this.shortDesc = s[0];      /** {string} Short anchor text for default display */
+    this.longDesc = (s.length > 1) ? s[1] : this.shortDesc; /** {string} Long anchor text to display on rollover */
+    this.vessels = [];          /** {Array} of VesselDisplays */
     this._shape = null;          /** {Shape} */
-    this.position = {};       /** {Point2D.Double} */
+    this.position = {};       /** {object with x and y coordinates} */
     this.contains = false;
     this.debug = false;
 }
@@ -37,17 +37,14 @@ AnchorDisplay.prototype = {
     cleanup : function() {
         this.anchor.cleanup();
     },
-    /** @param s {Number} double */
+    /** @param s {number} double */
     setScale : function(s) {
         this._scale = s;
         if(!isNaN(this.angle)) {
             this.setAngle(this.angle);
         }
     },
-    // /** @param s {double} */
-    // setTextScale : function(s) {
-    //     this.textScale = s;
-    // },
+    /** @function setTextScale was removed */
     /**
      * This function should be called on each unique AnchorDisplay to offset their angles from the gear's center.
      * Likely calling function is SunValues.makeDisplay
@@ -123,7 +120,7 @@ AnchorDisplay.prototype = {
 
         const l = this.showLongDesc ? this.longDesc : this.shortDesc;
 
-        const location = this.findAnchorCorner(tx, ty, tm, scale, off);
+        const location = this.findAnchorCorner(tx, ty, tm, off);
 
         p5.translate(tx, ty);
         p5.rotate(this.angle);
@@ -146,9 +143,18 @@ AnchorDisplay.prototype = {
         p5.fill(color);
         p5.text(l, 0, 0);
         p5.pop();
-        // TODO: Continue implementation.
+        // TODO: Make shape around AnchorDisplay text?
     },
-    findAnchorCorner : function(tx, ty, tm, scale, off) {
+    /**
+     * Finds the corner point of an Anchor
+     *
+     * @param tx {number} Center X of Gear
+     * @param ty {number} Center Y of Gear
+     * @param tm {number} Minimum between tx and ty
+     * @param off {number} offset
+     * @returns {{x: number, y: number}}
+     */
+    findAnchorCorner : function(tx, ty, tm, off) {
         const rotation = this.getRotation(tx, ty, (off + tm/1.2), ty, this.angle);
         const newScale = (0.5*Math.min(tx, ty)/SunValues.R_OUTER);
         let x = rotation[0];
@@ -160,6 +166,16 @@ AnchorDisplay.prototype = {
             y : y
         };
     },
+    /**
+     * This function takes in a center point, x-y point, and angle, then returns an array of the x-y point rotated on the center axis.
+     *
+     * @param cx {number} Center X
+     * @param cy {number} Center Y
+     * @param x {number} Point X
+     * @param y {number} Point Y
+     * @param angle {number} Rotation Angle
+     * @returns {Array} New X and Y coordinates
+     */
     getRotation : function(cx, cy, x, y, angle) {
         const radians = angle,
         cos = Math.cos(radians),
@@ -170,20 +186,7 @@ AnchorDisplay.prototype = {
         let returnX = cx - tempX;
         return [returnX, returnY];
     },
-    /**
-     * @param p {object} containing an X and Y coordinate.
-     * @returns {boolean}
-     */
-    // contains : function(p) {
-    //     if (this._shape === null) {
-    //         return false;
-    //     } else {
-    //         const distX = p.x - this._shape.x;
-    //         const distY = p.y - this._shape.y;
-    //         const dist = Math.sqrt((distX*distX) + (distY*distY));
-    //         return (dist < this._shape.w / 2);
-    //     }
-    // },
+    /** @function contains was removed */
     /**
      * @param a {AnchorDisplay}
      * @returns {boolean}

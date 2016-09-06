@@ -59,7 +59,7 @@ new p5(function(p5) {
 
     p5.mouseReleased = function() {
         vis.gear.handleSelect(p5);
-        vis.gear.handleButtons(p5);
+        vis.gear.handleButtons();
     };
 
     p5.mouseClicked = function() {

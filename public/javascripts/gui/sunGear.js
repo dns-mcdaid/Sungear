@@ -1,4 +1,9 @@
 "use strict";
+/**
+ * Main SunGear graphical interface class. Everything from the SunGear dialog goes in here.
+ *
+ * @author RajahBimmy
+ */
 
 const SortedSet = require('collections/sorted-set');
 
@@ -16,6 +21,9 @@ const VesselDisplay = require('./sungear/vesselDisplay');
 
 /**
  * Interactive generalization of a Venn diagram to many dimensions.
+ * The SunGear constructor establishes all SunGear GUI components (Anchors, Vessels, Icons, etc.)
+ *
+ * @constructor
  */
 function SunGear(genes, thresh, statsF) {
     if (typeof statsF === 'undefined') {
@@ -107,9 +115,16 @@ SunGear.prototype = {
     getVessels : function() {
         return this.vessels;
     },
+
     /** @function makeButton was removed */
+
     /**
-     * @param n {Number} int
+     * Gets the Vessel at index n
+     *
+     * @calls highlightVessel
+     * @calls updateCount
+     *
+     * @param n {number} int
      */
     order : function(n) {
         if (n != -1) {
@@ -125,6 +140,11 @@ SunGear.prototype = {
         }
     },
     /**
+     * Find Genes in the src which fit the threshold.
+     *
+     * @calls DataReader.setThreshold
+     * @calls makeDisplay
+     *
      * @param src {DataSource}
      */
     set : function(src) {
@@ -147,12 +167,17 @@ SunGear.prototype = {
         console.log("Anchors: ", this.anchors.length, " vessels: ", this.vessels.length);
     },
     /**
+     * Sets GOTerm object
+     *
      * @param t {GoTerm}
      */
     setGo : function(t) {
         this.goTerm = t;
     },
     /**
+     * Toggles relaxation of Vessels
+     * @calls positionVessels
+     *
      * @param b {boolean}
      */
     setRelax : function(b) {
@@ -166,7 +191,9 @@ SunGear.prototype = {
         return this.relax;
     },
     /**
-     * @param n {int}
+     * Increments or decrements the minimum size of VesselDisplays.
+     *
+     * @param n {int} index to use in the minimum vessel size array.
      */
     setMinVesselSizeIdx : function(n) {
         this.minRadIdx = n;
@@ -179,6 +206,8 @@ SunGear.prototype = {
         }
     },
     /**
+     * Toggles whether or not VesselDisplay arrows (pointing two the VesselDisplay's Anchors) are displayed.
+     *
      * @param b {boolean}
      */
     setShowArrows : function(b) {
@@ -190,38 +219,50 @@ SunGear.prototype = {
             }
         }
     },
+    /**
+     * Opens the statsF modal.
+     */
     showStats : function() {
-        $('#statsF').modal('show');
+        $("#statsF").modal('show');
     },
     /**
+     * Get All the Terms for and individual gene.
+     *
      * @param g {Gene}
      * @returns {Array} of Terms
      */
     getGeneTerms : function(g) {
-        if (this.goTerm === null || this.goTerm.get() === null) {
+        if (this.goTerm === null ) {
             return [];
         } else {
-            return this.goTerm.get().getCurrentTerms(g);
+            return this.goTerm.getCurrentTerms(g);
         }
     },
     /**
+     * Get Gene to Term Associations.
+     *
      * @returns {SortedSet}
      */
     getAssocGenes : function() {
-        return (this.goTerm === null || this.goTerm.get() === null) ? new SortedSet() : this.goTerm.get().assocGenes;
+        return (this.goTerm === null) ? new SortedSet() : this.goTerm.assocGenes;
     },
     /**
-     * @param c {SortedSet}? of Genes
+     * Get all terms for a set of Genes
+     *
+     * @param c {SortedSet} of Genes
      */
     getTerms : function(c) {
         let t = new SortedSet();
+        //noinspection JSUnresolvedFunction
         const genes = c.toArray();
         for (let i = 0; i < genes.length; i++) {
+            //noinspection JSUnresolvedFunction
             t = t.union(this.getGeneTerms(genes[i]));
         }
         return t;
     },
     /**
+     * TODO: Find out what this function does.
      *
      * @param maxVessels {int}
      * @param minScore {int}
@@ -338,6 +379,8 @@ SunGear.prototype = {
         return (cool.toArray());
     },
     /**
+     * TODO: Find out what this function does.
+     *
      * @param maxVessels {int}
      * @param minScore {int}
      * @return {Comp.CoolVessel[]}
@@ -398,11 +441,19 @@ SunGear.prototype = {
         return cool.toArray();
     },
     /**
+     * Using Anchors and Vessels, this function constructs all AnchorDisplays and VesselDisplays,
+     * which will be graphically displayed once paintComponent is called.
+     *
+     * @calls Vessel.getFulLCount
+     * @calls AnchorDisplay.setScale
+     * @calls AnchorDisplay.setAngle
+     *
+     *
      * @param anch {Array} of Anchors
      * @param ves {Array} of Vessels
      */
     makeDisplay : function(anch, ves) {
-        // find vessel min/max vals
+        // find vessel min/max values
         this.vMax = 0;
         this.vMin = Number.MAX_VALUE;
         for (let i = 0; i < ves.length; i++) {
@@ -468,6 +519,9 @@ SunGear.prototype = {
         // offset centers of overlapping vessels
         this.positionVessels();
     },
+    /**
+     * Position VesselDisplays in either a cartesian or polar fashion.
+     */
     positionVessels : function() {
         if (this.polarPlot) {
             this.positionVesselsPolar();
@@ -513,8 +567,9 @@ SunGear.prototype = {
         let cnt = 0;
 
         do {
-            const e = this.relaxStep(eta);
-            energy = e;
+            // const e = this.relaxStep(eta);
+            // energy = e;
+            energy = this.relaxStep(eta);
             eta *= (1-decay);
             cnt++;
         } while (cnt < 10 || (energy*eta > 5e-5*this.vessels.length && cnt < maxIter));
@@ -524,8 +579,8 @@ SunGear.prototype = {
         }
     },
     /**
-     * @param eta {double}
-     * @return {Number} double
+     * @param eta {number} double
+     * @return {number} double
      */
     relaxStep : function(eta) {
         // scaling factor to give extra space for vessels (and arrows)
@@ -610,7 +665,7 @@ SunGear.prototype = {
             let added = false;
             for (let j = 0; j < l.length && !added; j++) {
                 let v = l[j];
-                // TODO: Get distance.
+                // Get distance
                 let distX = p.x - v[0].getCenter().x;
                 let distY = p.y - v[0].getCenter().y;
                 let dist = Math.sqrt((distX*distX) + (distY*distY));
@@ -744,6 +799,7 @@ SunGear.prototype = {
                         }
                         a.setSelect(false);
                         let sel = this.genes.getSelectedSet();
+                        //noinspection JSUnresolvedFunction
                         const agArray = ag.toArray();
                         if (add) {
                             for (let j = 0; j < agArray.length; j++) {
@@ -779,7 +835,7 @@ SunGear.prototype = {
                 if (v !== null) {
                     if (p5.keyIsPressed) {
                         if (p5.keyCode == p5.CONTROL) {
-                            v.setSelect(!V.getSelect());
+                            v.setSelect(!v.getSelect());
                         } else {
                             for (let i = 0; i < this.vessels.length; i++) {
                                 this.vessels[i].setSelect(this.vessels[i] == v);
@@ -860,8 +916,8 @@ SunGear.prototype = {
     checkHighlight : function(a, v) {
         if (typeof v === 'undefined') {
             const p = a;
-            const anchor = (p === null) ? null : (this.isInGear(p) ? null : this.getAnchor(p));
-            const vessel = (p === null) ? null : (a !== null ? null : this.getVessel(p));
+            const anchor = (p === null) ? null : (this.isInGear(p) ? null : this.getAnchor());
+            const vessel = (p === null) ? null : (a !== null ? null : this.getVessel());
             this.checkHighlight(anchor, vessel);
         } else {
             let chg = false;
@@ -927,14 +983,23 @@ SunGear.prototype = {
         p5.pop();
 
         // moon label
-        // let ml = null;
-        // if (this.genes !== null && this.genes.getSource() !== null && this.genes.getSource().getAttributes() !== null) {
-        //     ml = this.genes.getSource().getAttributes().get("moonLabel");
-        // }
-        // if (ml !== null && this.moon !== null && this.moon.getActiveCount() > 0) {
-        //     p5.textSize(14);
-        //     // TODO: Something here. Unsure.
-        // }
+        let ml = null;
+        if (this.genes !== null && this.genes.getSource() !== null && this.genes.getSource().getAttributes() !== null) {
+            ml = this.genes.getSource().getAttributes().get("moonLabel");
+        }
+        if (ml !== null && this.moon !== null && this.moon.getActiveCount() > 0) {
+            // TODO: Ensure this works.
+            p5.push();
+            p5.textSize(14);
+            const pp = {
+                x : this.moon.getCenter().x,
+                y : this.moon.getCenter().y
+            };
+            p5.translate(pp.x, pp.y);
+            const x = Math.max(0, (pp.x-.5)); // TODO: Get visible advance?
+            p5.fill(this.moon.getHighlight() ? SunValues.C_HIGHLIGHT : SunValues.C_PLAIN);
+            p5.text(ml, x, pp.y);
+        }
     },
     makeTransform : function(p5, w, h) {
         const M = Math.min(w, h);
@@ -1000,6 +1065,7 @@ SunGear.prototype = {
                         s.push(selArray[j]);
                     }
                 } else {
+                    //noinspection JSUnresolvedFunction
                     const sArray = s.toArray();
                     for (let j = 0; j < sArray.length; j++) {
                         if (!this.vessels[i].selectedGenes.contains(sArray[j])) {
@@ -1021,14 +1087,17 @@ SunGear.prototype = {
                         ag.push(selGenes[j]);
                     }
                 }
+                //noinspection JSUnresolvedFunction
                 const agArray = ag.toArray();
                 if (operation == MultiSelectable.UNION) {
                     for (let j = 0; j < agArray.length; j++) {
                         s.push(agArray[j]);
                     }
                 } else {
+                    //noinspection JSUnresolvedFunction
                     const sArray2 = s.toArray();
                     for (let j = 0; j < sArray2.length; j++) {
+                        //noinspection JSUnresolvedFunction
                         if (!ag.contains(sArray2[j])) {
                             s.delete(sArray2[j]);
                         }
@@ -1135,10 +1204,8 @@ SunGear.prototype = {
      * Triggered by a p5.mouseReleased event,
      * this function checks to see if any of the icons have been clicked,
      * then triggers their corresponding functions.
-     *
-     * @param p5
      */
-    handleButtons : function(p5) {
+    handleButtons : function() {
         for (let i = 0; i < this.visuals.length; i++) {
             const model = this.visuals[i].model;
             if (model.selected) {
