@@ -122,6 +122,8 @@ AnchorDisplay.prototype = {
 
         const l = this.showLongDesc ? this.longDesc : this.shortDesc;
 
+        const location = this.findAnchorCenter(tx, ty, tm, scale, off);
+
         // if (this.debug) {
         //     this.debug = false;
         //     console.log(l);
@@ -170,17 +172,40 @@ AnchorDisplay.prototype = {
         p5.pop();
         // TODO: Continue implementation.
     },
+    findAnchorCenter : function(tx, ty, tm, scale, off) {
+        let rotation = this.getRotation(tx, ty, (off + tm/1.2), ty, this.angle);
+        let newScale = (0.5*Math.min(tx, ty)/SunValues.R_OUTER);
+        if (this.debug) {
+            console.log(this.longDesc);
+            console.log("X ", rotation[0]);
+            console.log("Y ", rotation[1]);
+            console.log("old scale: ", scale);
+            console.log("new scale: ", newScale);
+            this.debug = false;
+        }
+        // return the rotation coordinates either + or - newScale, based on whether or not the coordinates are greater than or less than tx and ty.
+    },
+    getRotation : function(cx, cy, x, y, angle) {
+        const radians = angle,
+        cos = Math.cos(radians),
+        sin = Math.sin(radians),
+        nx = (cos * (x - cx)) + (sin * (y - cy)) + cx,
+        returnY = (cos * (y - cy)) - (sin * (x - cx)) + cy;
+        let tempX = nx - cx;
+        let returnX = cx - tempX;
+        return [returnX, returnY];
+    },
     /**
-     * @param p of type Point2D.Double
+     * @param p {object} containing an X and Y coordinate.
      * @returns {boolean}
      */
     contains : function(p) {
         if (this._shape === null) {
             return false;
         } else {
-            var distX = p.x - this._shape.x;
-            var distY = p.y - this._shape.y;
-            var dist = Math.sqrt((distX*distX) + (distY*distY));
+            const distX = p.x - this._shape.x;
+            const distY = p.y - this._shape.y;
+            const dist = Math.sqrt((distX*distX) + (distY*distY));
             return (dist < this._shape.w / 2);
         }
     },
@@ -192,14 +217,5 @@ AnchorDisplay.prototype = {
         return this.anchor.compareTo(a.anchor);
     }
 };
-
-// function rotate(cx, cy, x, y, angle) {
-//     var radians = angle,
-//         cos = Math.cos(radians),
-//         sin = Math.sin(radians),
-//         nx = (cos * (x - cx)) + (sin * (y - cy)) + cx,
-//         ny = (cos * (y - cy)) - (sin * (x - cx)) + cy;
-//     return [nx, ny];
-// }
 
 module.exports = AnchorDisplay;

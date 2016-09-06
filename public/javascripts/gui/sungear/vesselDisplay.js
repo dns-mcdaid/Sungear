@@ -27,6 +27,7 @@ function VesselDisplay(vessel) {
         x : null, y : null,
         w : null, h : null
     };
+    this.contains = false;
 
     this.debug = true;
 }
@@ -183,9 +184,8 @@ VesselDisplay.prototype = {
     getShapeRad : function(count, vMax) {
         return this.radMin + Math.sqrt(count/vMax)*(this.radMax-this.radMin);
     },
-    contains : function(p, p5) {
-        // TODO: Make sure this works.
-        return p5.dist(p.x,p.y,this.shape.x,this.shape.y) < (this.shape.width / 2);
+    contains : function() {
+        return this.contains;
     },
     setHighlight : function(b) {
         this.highlight = b;
@@ -207,20 +207,20 @@ VesselDisplay.prototype = {
     draw : function(p5) {
         if (this.getActiveCount() == 0) return;
 
-        // if (this.debug) {
-        //     console.log((p5.width/2.0 + this.shape.x) + ", " + (p5.height/2.0 + this.shape.y));
-        //     this.debug = false;
-        // }
+        const location = this.findVesselCenter(p5);
 
         p5.strokeWeight(.005);
         p5.ellipseMode(p5.CORNER);
         let color = SunValues.C_PLAIN;
-        if (p5.dist((p5.width/2.0 + this.shape.x), (p5.height/2.0 + this.shape.y), p5.mouseX, p5.mouseY) < this.shape.h) {
+        if (p5.dist(p5.mouseX, p5.mouseY, location.x, location.y) < location.r) {
             if (p5.mouseIsPressed) {
-                color = SunValues.C_HIGHLIGHT;
-            } else {
                 color = SunValues.C_SELECT;
+            } else {
+                color = SunValues.C_HIGHLIGHT;
             }
+            this.contains = true;
+        } else {
+            this.contains = false;
         }
         color = (this.select ? SunValues.C_SELECT : (this.highlight ? SunValues.C_HIGHLIGHT : color));
         p5.stroke(color);
@@ -248,6 +248,17 @@ VesselDisplay.prototype = {
         p5.line(1.0 + VesselDisplay.ARROW_LINE, 0, 1.0 + VesselDisplay.ARROW_LINE - VesselDisplay.ARROW_END, VesselDisplay.ARROW_END);
         p5.line(1.0 + VesselDisplay.ARROW_LINE, 0, 1.0 + VesselDisplay.ARROW_LINE - VesselDisplay.ARROW_END, -(VesselDisplay.ARROW_END));
         p5.pop();
+    },
+    findVesselCenter : function(p5) {
+        const M = Math.min(p5.width, p5.height);
+        const radius = this.shape.w * (0.5*M/SunValues.R_OUTER) / 2;
+        const locX = ((this.shape.x * (0.5*M/SunValues.R_OUTER)) + p5.width / 2) + radius;
+        const locY = ((this.shape.y * (0.5*M/SunValues.R_OUTER)) + p5.height / 2) + radius;
+        return {
+            x : locX,
+            y : locY,
+            r : radius
+        }
     }
 };
 

@@ -657,9 +657,9 @@ SunGear.prototype = {
      * @param p {Point} in sungear coordinates
      * @return {AnchorDisplay} at the given location, or null if none
      */
-    getAnchor : function(p) {
+    getAnchor : function() {
         for (let i = 0; i < this.anchors.length; i++) {
-            if (this.anchors[i].contains(p)) {
+            if (this.anchors[i].contains()) {
                 return this.anchors[i];
             }
         }
@@ -670,9 +670,9 @@ SunGear.prototype = {
      * @param p {Point} in sungear coordinates
      * @return {VesselDisplay} at the given location, or null if none
      */
-    getVessel : function(p) {
+    getVessel : function() {
         for (let i = 0; i < this.vessels.length; i++) {
-            if (this.vessels[i].contains(p)) {
+            if (this.vessels[i].contains()) {
                 return this.vessels[i];
             }
         }
@@ -899,7 +899,7 @@ SunGear.prototype = {
         let drawT = {
             x : this.WIDTH/2.0,
             y : this.HEIGHT/2.0,
-            scale : 0.5*Math.min(this.WIDTH/2.0, this.HEIGHT/2.0)/SunValues.R_OUTER
+            scale : 0.5*Math.min(p5.width/2, p5.height/2)/SunValues.R_OUTER
         };
         this.paintExterior(p5);
         p5.pop();
