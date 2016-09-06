@@ -667,7 +667,6 @@ SunGear.prototype = {
     },
     /**
      * Finds the vessel at a point in sungear coordinates.
-     * @param p {Point} in sungear coordinates
      * @return {VesselDisplay} at the given location, or null if none
      */
     getVessel : function() {
@@ -676,11 +675,11 @@ SunGear.prototype = {
                 return this.vessels[i];
             }
         }
+        return null;
     },
     /**
      * Updates the selected state of anchors/vessels based on mouse location.
      * Changes appearance only, not selected gene sets.
-     * @param p5 {p5} for processing the mouseEvent
      */
     checkSelect : function() {
         let chg = false;
@@ -775,7 +774,7 @@ SunGear.prototype = {
             }
         }
         if (a === null) {
-            let v = this.getVessel(p);
+            let v = this.getVessel();
             if (this.multi) {
                 if (v !== null) {
                     if (p5.keyIsPressed) {
@@ -830,7 +829,7 @@ SunGear.prototype = {
                         }
                         this.vessels[i].setSelect(false);
                     }
-                    this.genes.setSelect(this, sel);
+                    this.genes.setSelection(this, sel);
                 }
                 this.lastVessel = null;
                 this.checkHighlight(p);
@@ -895,7 +894,7 @@ SunGear.prototype = {
         let drawT = {
             x : this.WIDTH/2.0,
             y : this.HEIGHT/2.0,
-            scale : 0.5*Math.min(p5.width/2, p5.height/2)/SunValues.R_OUTER
+            scale : 0.5*Math.min(this.WIDTH/2, this.HEIGHT/2)/SunValues.R_OUTER
         };
         this.paintExterior(p5);
         p5.pop();
@@ -914,7 +913,7 @@ SunGear.prototype = {
         }
         // draw current mouse-over anchor last, if any?
         if (this.lastAnchor !== null) {
-            this.lastAnchor.draw(p5);
+            this.lastAnchor.draw(p5, drawT);
         }
         p5.pop();
 
