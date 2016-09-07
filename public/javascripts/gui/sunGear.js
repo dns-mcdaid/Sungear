@@ -902,45 +902,68 @@ SunGear.prototype = {
         }
     },
     updateCount : function() {
-        const c1 = new SortedSet();
+        let c1 = new SortedSet();
         for (let i = 0; i < this.vessels.length; i++) {
             if (this.vessels[i].getHighlight()) {
-                const selGenes = this.vessels[i].selectedGenes.toArray();
-                for (let j = 0; j < selGenes.length; j++) {
-                    c1.push(selGenes[j]);
-                }
+                c1 = c1.union(this.vessels[i].selectedGenes.toArray());
             }
         }
         this.highCnt = c1.length;
     },
-    checkHighlight : function(a, v) {
-        if (typeof v === 'undefined') {
-            const p = a;
-            const anchor = (p === null) ? null : (this.isInGear(p) ? null : this.getAnchor());
-            const vessel = (p === null) ? null : (a !== null ? null : this.getVessel());
-            this.checkHighlight(anchor, vessel);
-        } else {
-            let chg = false;
-            if (a != this.lastAnchor) {
-                chg = true;
-                for (let i = 0; i < this.anchors.length; i++) {
-                    this.anchors[i].setHighlight(this.anchors[i] == a);
-                    this.anchors[i].setShowLongDesc(this.anchors[i] == a);
-                }
-                for (let i = 0; i < this.vessels.length; i++) {
-                    const b = (a !== null && (this.vessels[i].anchor.indexOf(a) > -1));
-                    this.vessels[i].setHighlight(b);
-                }
-            }
-            if (a === null && v != this.lastVessel) {
-                chg = true;
-                this.highlightVessel(v);
-            }
+    // checkHighlight : function(a, v) {
+    //     if (typeof v === 'undefined') {
+    //         const p = a;
+    //         const anchor = (p === null) ? null : (this.isInGear(p) ? null : this.getAnchor());
+    //         const vessel = (p === null) ? null : (a !== null ? null : this.getVessel());
+    //         this.checkHighlight(anchor, vessel);
+    //     } else {
+    //         let chg = false;
+    //         if (a != this.lastAnchor) {
+    //             chg = true;
+    //             for (let i = 0; i < this.anchors.length; i++) {
+    //                 this.anchors[i].setHighlight(this.anchors[i] == a);
+    //                 this.anchors[i].setShowLongDesc(this.anchors[i] == a);
+    //             }
+    //             for (let i = 0; i < this.vessels.length; i++) {
+    //                 const b = (a !== null && (this.vessels[i].anchor.indexOf(a) > -1));
+    //                 this.vessels[i].setHighlight(b);
+    //             }
+    //         }
+    //         if (a === null && v != this.lastVessel) {
+    //             chg = true;
+    //             this.highlightVessel(v);
+    //         }
+    //         this.lastAnchor = a;
+    //         this.lastVessel = v;
+    //         if (chg) {
+    //             this.updateCount();
+    //         }
+    //     }
+    // },
+    checkHighlight : function() {
+        const a = this.getAnchor();
+        const v = this.getVessel();
+        for (let i = 0; i < this.vessels.length; i++) {
+            this.vessels[i].setHighlight(this.vessels[i].anchor.indexOf(a) > -1);
+        }
+        for (let i = 0; i < this.anchors.length; i++) {
+            this.anchors[i].setHighlight(this.anchors[i].vessels.indexOf(v) > -1);
+        }
+        if (a !== null) {
+            a.setHighlight(true);
+        } else if (v !== null) {
+            v.setHighlight(true);
+        }
+        let chg = false;
+        if (a != this.lastAnchor) {
             this.lastAnchor = a;
+            chg = true;
+        } else if (v != this.lastVessel) {
             this.lastVessel = v;
-            if (chg) {
-                this.updateCount();
-            }
+            chg = true;
+        }
+        if (chg) {
+            this.updateCount();
         }
     },
     paintComponent : function(p5) {
@@ -977,7 +1000,9 @@ SunGear.prototype = {
         p5.textSize(18);
         p5.textAlign(p5.RIGHT);
         p5.textFont("Helvetica");
+        p5.fill(SunValues.C_HIGHLIGHT);
         p5.text(this.highCnt+"", this.WIDTH-10, 18);
+        p5.fill(SunValues.C_PLAIN);
         p5.text(this.genes.getSelectedSet().length+"", this.WIDTH-10, this.HEIGHT-40);
         p5.text(this.genes.getActiveSet().length+"", this.WIDTH-10, this.HEIGHT-18);
         p5.pop();
@@ -1210,6 +1235,7 @@ SunGear.prototype = {
             const model = this.visuals[i].model;
             if (model.selected) {
                 this.visuals[i].task();
+                return true;
             }
         }
     },

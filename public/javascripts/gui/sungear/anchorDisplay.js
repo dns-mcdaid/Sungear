@@ -129,6 +129,7 @@ AnchorDisplay.prototype = {
         p5.translate(-0.5, 7*scale);
 
         let color = SunValues.C_PLAIN;
+        color = (this.select ? SunValues.C_SELECT : (this.highlight ? SunValues.C_HIGHLIGHT : color));
         if (p5.dist(p5.mouseX, p5.mouseY, location.x, location.y) < l.length) {
             if (p5.mouseIsPressed) {
                 color = SunValues.C_SELECT;
@@ -139,7 +140,6 @@ AnchorDisplay.prototype = {
         } else {
             this.contains = false;
         }
-        color = (this.select ? SunValues.C_SELECT : (this.highlight ? SunValues.C_HIGHLIGHT : color));
         p5.fill(color);
         p5.text(l, 0, 0);
         p5.pop();

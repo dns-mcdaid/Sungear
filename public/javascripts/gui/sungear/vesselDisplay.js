@@ -212,6 +212,7 @@ VesselDisplay.prototype = {
         p5.strokeWeight(.005);
         p5.ellipseMode(p5.CORNER);
         let color = SunValues.C_PLAIN;
+        color = (this.select ? SunValues.C_SELECT : (this.highlight ? SunValues.C_HIGHLIGHT : color));
         if (p5.dist(p5.mouseX, p5.mouseY, location.x, location.y) < location.r) {
             if (p5.mouseIsPressed) {
                 color = SunValues.C_SELECT;
@@ -222,7 +223,6 @@ VesselDisplay.prototype = {
         } else {
             this.contains = false;
         }
-        color = (this.select ? SunValues.C_SELECT : (this.highlight ? SunValues.C_HIGHLIGHT : color));
         p5.stroke(color);
         p5.fill(SunValues.C_BACKGROUND);
         p5.ellipse(this.shape.x,this.shape.y,this.shape.h,this.shape.w);

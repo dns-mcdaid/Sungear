@@ -41,7 +41,7 @@ new p5(function(p5) {
     };
 
     p5.mouseMoved = function() {
-        // vis.gear.checkHighlight(p5);
+        vis.gear.checkHighlight(p5);
     };
 
     p5.mouseDragged = function() {
@@ -58,8 +58,10 @@ new p5(function(p5) {
     };
 
     p5.mouseReleased = function() {
-        vis.gear.handleSelect(p5);
-        vis.gear.handleButtons();
+        const handled = vis.gear.handleButtons();
+        if (!handled) {
+            vis.gear.handleSelect(p5);
+        }
     };
 
     p5.mouseClicked = function() {
