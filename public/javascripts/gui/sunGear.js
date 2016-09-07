@@ -826,7 +826,7 @@ SunGear.prototype = {
                     this.genes.setSelection(this, sel);
                 }
                 this.lastAnchor = null;
-                this.checkHighlight(p);
+                this.checkHighlight();
             }
         }
         if (a === null) {
@@ -888,7 +888,7 @@ SunGear.prototype = {
                     this.genes.setSelection(this, sel);
                 }
                 this.lastVessel = null;
-                this.checkHighlight(p);
+                this.checkHighlight();
             }
         }
     },
@@ -941,29 +941,39 @@ SunGear.prototype = {
     //     }
     // },
     checkHighlight : function() {
-        const a = this.getAnchor();
-        const v = this.getVessel();
-        for (let i = 0; i < this.vessels.length; i++) {
-            this.vessels[i].setHighlight(this.vessels[i].anchor.indexOf(a) > -1);
+        let doingAButtonActivity = false;
+        for (let i = 0; i < this.visuals.length; i++) {
+            const model = this.visuals[i].model;
+            if (model.contains) {
+                doingAButtonActivity = true;
+                break;
+            }
         }
-        for (let i = 0; i < this.anchors.length; i++) {
-            this.anchors[i].setHighlight(this.anchors[i].vessels.indexOf(v) > -1);
-        }
-        if (a !== null) {
-            a.setHighlight(true);
-        } else if (v !== null) {
-            v.setHighlight(true);
-        }
-        let chg = false;
-        if (a != this.lastAnchor) {
-            this.lastAnchor = a;
-            chg = true;
-        } else if (v != this.lastVessel) {
-            this.lastVessel = v;
-            chg = true;
-        }
-        if (chg) {
-            this.updateCount();
+        if (!doingAButtonActivity) {
+            const a = this.getAnchor();
+            const v = this.getVessel();
+            for (let i = 0; i < this.vessels.length; i++) {
+                this.vessels[i].setHighlight(this.vessels[i].anchor.indexOf(a) > -1);
+            }
+            for (let i = 0; i < this.anchors.length; i++) {
+                this.anchors[i].setHighlight(this.anchors[i].vessels.indexOf(v) > -1);
+            }
+            if (a !== null) {
+                a.setHighlight(true);
+            } else if (v !== null) {
+                v.setHighlight(true);
+            }
+            let chg = false;
+            if (a != this.lastAnchor) {
+                this.lastAnchor = a;
+                chg = true;
+            } else if (v != this.lastVessel) {
+                this.lastVessel = v;
+                chg = true;
+            }
+            if (chg) {
+                this.updateCount();
+            }
         }
     },
     paintComponent : function(p5) {
@@ -1238,6 +1248,7 @@ SunGear.prototype = {
                 return true;
             }
         }
+        return false;
     },
     /**
      * This function uses the existing properties of the exterior shape

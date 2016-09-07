@@ -21,6 +21,7 @@ function ArrowIcon(type, scale, fill) {
     this.scale = scale;
     this.fill = fill;
     this.selected = false;
+    this.contains = false;
 }
 
 ArrowIcon.prototype = {
@@ -45,6 +46,7 @@ ArrowIcon.prototype = {
             x = x[0];
         }
         this.selected = false;
+        this.contains = false;
         p5.push();
         p5.translate(x + 2 * this.scale, y + 2 * this.scale);
         p5.rotate(.5 * Math.PI * this.type);
@@ -52,6 +54,7 @@ ArrowIcon.prototype = {
         p5.noStroke();
 
         if (p5.dist(p5.mouseX, p5.mouseY, x+8, y+8) < this.scale*2) {
+            this.contains = true;
             if (p5.mouseIsPressed) {
                 p5.fill(SunValues.C_SELECT);
                 this.selected = true;
@@ -86,6 +89,7 @@ function VesselMinIcon(steps, stepSize, step) {
     this.W = 2 * steps * stepSize;
     this.H = this.W;
     this.selected = false;
+    this.contains = false;
 }
 
 VesselMinIcon.prototype = {
@@ -110,6 +114,7 @@ VesselMinIcon.prototype = {
             x = x[0];
         }
         this.selected = false;
+        this.contains = false;
         p5.push();
         p5.noStroke();
         p5.ellipseMode(p5.CENTER);
@@ -118,6 +123,7 @@ VesselMinIcon.prototype = {
                 p5.fill(SunValues.C_SELECT);
             } else {
                 if (p5.dist(p5.mouseX, p5.mouseY, x, y) < this.stepSize * this.steps) {
+                    this.contains = true;
                     p5.fill(SunValues.C_HIGHLIGHT);
                     if (p5.mouseIsPressed) {
                         this.selected = true;
@@ -143,6 +149,7 @@ VesselMinIcon.prototype = {
 function ShowArrowIcon(arrow) {
     this.arrow = arrow;
     this.selected = false;
+    this.contains = false;
 }
 
 ShowArrowIcon.W = 15;
@@ -171,9 +178,11 @@ ShowArrowIcon.prototype = {
             x = x[0];
         }
         this.selected = false;
+        this.contains = false;
         p5.push();
         // Set color and build oval
         if (p5.dist(p5.mouseX, p5.mouseY, x, y) < 10) {
+            this.contains = true;
             if (p5.mouseIsPressed) {
                 p5.stroke(SunValues.C_SELECT);
                 p5.fill(SunValues.C_SELECT);
@@ -223,6 +232,7 @@ function EllipseIcon(scale, fill) {
     this.scale = scale;
     this.fill = fill;
     this.selected = false;
+    this.contains = false;
 }
 
 EllipseIcon.prototype = {
@@ -246,12 +256,14 @@ EllipseIcon.prototype = {
             y = x[1];
             x = x[0];
         }
+        this.contains = false;
         this.selected = false;
         p5.push();
         p5.translate(x+2*this.scale, y+2*this.scale);
         p5.scale(this.scale, this.scale);
 
         if (p5.dist(p5.mouseX, p5.mouseY, x, y) < 2*this.scale) {
+            this.contains = true;
             p5.noStroke();
             if (p5.mouseIsPressed) {
                 p5.fill(SunValues.C_SELECT);
@@ -277,6 +289,7 @@ function StatsIcon() {
     this.W = 15;
     this.H = 16;
     this.selected = false;
+    this.contains = false;
 }
 
 StatsIcon.prototype = {
@@ -301,8 +314,10 @@ StatsIcon.prototype = {
             x = x[0];
         }
         this.selected = false;
+        this.contains = false;
         p5.push();
         if (p5.dist(p5.mouseX, p5.mouseY, x+(this.W/2), y+(this.H/y)) < this.H) {
+            this.contains = true;
             if (p5.mouseIsPressed) {
                 p5.stroke(SunValues.C_SELECT);
                 this.selected = true;
