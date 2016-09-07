@@ -80,7 +80,8 @@ block content
                 p(id='statusF') TBD
                 span(data-toggle='modal', data-target='#queryD')
                     a(class='btn btn-primary', id='queryB', role='button', data-toggle="tooltip") Query
-                a(class='btn btn-primary', id='copyB', role='button', data-toggle="tooltip") Copy
+                button(class='btn btn-primary', id='copyB', role='button', data-clipboard-action="copy", data-toggle="tooltip")
+                    span Copy
 
         div(class='col-md-6')
             div(id='controlF', class='img-rounded')
@@ -221,7 +222,8 @@ block content
     input(type='hidden', id='vis' value=JSON.stringify(data))
     //script(src='/javascripts/lib/jquery-3.1.0.min.js')
     //script(src='/javascripts/lib/bootstrap.min.js')
-    script(src='/javascripts/out.js')
 
+    script(src='https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.5.12/clipboard.min.js')
     script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js')
     script(src='http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js')
+    script(src='/javascripts/out.js')

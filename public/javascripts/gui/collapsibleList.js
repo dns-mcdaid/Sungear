@@ -5,6 +5,7 @@
  */
 
 const SortedSet = require('collections/sorted-set');
+const Clipboard = require('clipboard');
 
 const GeneEvent = require('../genes/geneEvent');
 
@@ -42,7 +43,6 @@ function CollapsibleList(g) {
 
     this.queryB.addEventListener("click", this.updateQueryDLabel.bind(this));
     this.queryDSubmit.addEventListener("click", this.queryGenes.bind(this));
-    this.copyB.addEventListener("click", this.copyGenes.bind(this));
     this.findF = document.getElementById('findF');
     this.findF.addEventListener('input', this.findSelectGenes.bind(this));
     this.findSelectB.addEventListener("click", this.findSelectGenes.bind(this));
@@ -53,6 +53,13 @@ function CollapsibleList(g) {
     this.multi = false;
 
     this.populateTable();
+
+    // The Clipboard will copy all selected genes and their descriptions to the clipboard.
+    const clipboard = new Clipboard(this.copyB, {
+        text : function(trigger) {
+            return trigger.getAttribute('value');
+        }
+    });
 }
 
 CollapsibleList.prototype = {
@@ -65,10 +72,6 @@ CollapsibleList.prototype = {
     },
     lostOwnership : function(c, t) {
         console.log("Why is this function even here?");
-    },
-    copyGenes : function() {
-        // TODO: Find a .js package which grants access to the clipboard.
-        console.log("Might work!");
     },
     queryGenes : function() {
         const v = this.queryA.value;
@@ -137,6 +140,11 @@ CollapsibleList.prototype = {
                 this.geneFTable.rows[i].className = "";
             }
         }
+        let selectedString = '';
+        for (let i = 0; i < selGenes.length; i++) {
+            selectedString += '"' + selGenes[i].name + '","' + selGenes[i].desc + '"\n';
+        }
+        this.copyB.value = selectedString;
     },
     processSelect : function() {
         // TODO: Implement me.

@@ -26,7 +26,7 @@ function AnchorDisplay(anchor) {
     this._shape = null;          /** {Shape} */
     this.position = {};       /** {object with x and y coordinates} */
     this.contains = false;
-    this.debug = false;
+    this.debug = true;
 }
 
 AnchorDisplay.NAME_SEPARATOR = ";";
@@ -161,6 +161,10 @@ AnchorDisplay.prototype = {
         let y = rotation[1];
         x += (x == tx ? 0 : (x > tx ? newScale : -newScale));
         y += (y == ty ? 0 : (y > ty ? newScale : -newScale));
+        if (this.debug) {
+            console.log(this.longDesc, " - x: ", x, ", y: ", y);
+            this.debug = false;
+        }
         return {
             x : x,
             y : y

@@ -1181,10 +1181,6 @@ SunGear.prototype = {
      */
     prevBFunction : function() {
         this.orderIdx = (this.orderIdx == -1) ? this.firstIdx : (this.orderIdx + this.orderedVessels.length - 1) % this.orderedVessels.length;
-        console.log("FIRST INDEX: ");
-        console.log(this.firstIdx);
-        console.log("ORDER INDEX: ");
-        console.log(this.orderIdx);
         this.order(this.orderIdx);
     },
     nextBFunction : function() {
