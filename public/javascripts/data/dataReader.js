@@ -348,6 +348,10 @@ DataReader.prototype = {
             this.expGenes.push(expToAdd);
             this.allGenes.set(expGene.id.toLowerCase(), expToAdd);
         }
+
+        for (let i = 0; i < passedCategories.length; i++) {
+
+        }
     }
 };
 

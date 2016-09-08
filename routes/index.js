@@ -34,12 +34,6 @@ router.get('/', function(req, res, next) {
         },
         src : {
             reader : {
-                // anchors : [
-                //     { name : "John" },
-                //     { name : "Paul" },
-                //     { name : "George" },
-                //     { name : "Ringo" }
-                // ],
                 anchors : [
                     { name : "King's Landing" },
                     { name : "The Wall" },
@@ -157,107 +151,120 @@ router.get('/', function(req, res, next) {
                     {
                         id : 'littlefin',
                         description : 'Little Finger'
+                    },
+                    {
+                        id : 'theongrey',
+                        description : 'Theon Greyjoy'
                     }
-                ]
+                ],
+                categories : [
+                    {
+                        "id": "GOT:001",
+                        "description": "noble",
+                        "zScore": null,
+                        "items": [],
+                        "parents": [],
+                        "children": [
+                            "GOT:004",
+                            "GOT:005",
+                            "GOT:006",
+                            "GOT:007",
+                            "GOT:008",
+                            "GOT:009",
+                            "GOT:010",
+                        ],
+                        "species": "default"
+                    },
+                    {
+                        "id": "GOT:002",
+                        "description": "commoner",
+                        "zScore": null,
+                        "items": [],
+                        "parents": [],
+                        "children": [],
+                        "species": "default"
+                    },
+                    {
+                        "id": "GOT:003",
+                        "description": "bastard",
+                        "zScore": null,
+                        "items": [],
+                        "parents": [],
+                        "children": [
 
-                // expSets : {
-                //     John : [
-                //         "revolutio",
-                //         "acrossthe",
-                //         "strawberr",
-                //         "adayinthe",
-                //         "iwanttoho",
-                //         "iwantyous",
-                //         "goodnight",
-                //         "whatgoeso"
-                //     ],
-                //     Paul : [
-                //         "adayinthe",
-                //         "pennylane",
-                //         "whydontwe",
-                //         "iwanttoho",
-                //         "i_will_68",
-                //         "letitbe69",
-                //         "whatgoeso"
-                //     ],
-                //     George : [
-                //         "herecomes",
-                //         "savoytruf",
-                //         "piggies68",
-                //         "something"
-                //     ],
-                //     Ringo : [
-                //         "octopusga",
-                //         "goodnight",
-                //         "whatgoeso"
-                //     ]
-                // },
-                // items : [
-                //     {
-                //         id : "iwantyous",
-                //         description : "I Want You (She's So Heavy)"
-                //     },
-                //     {
-                //         id : "iwanttoho",
-                //         description : "I Want to Hold Your Hand"
-                //     },
-                //     {
-                //         id : "i_will_68",
-                //         description : "I Will"
-                //     },
-                //     {
-                //         id : "letitbe69",
-                //         description : "Let it Be"
-                //     },
-                //     {
-                //         id : "piggies68",
-                //         description : "Piggies"
-                //     },
-                //     {
-                //         id : "whatgoeso",
-                //         description : "What Goes On"
-                //     },
-                //     {
-                //         id : "goodnight",
-                //         description : "Good Night"
-                //     },
-                //     {
-                //         id : "revolutio",
-                //         description : "Revolution 9"
-                //     },
-                //     {
-                //         id : "acrossthe",
-                //         description : "Across the Universe"
-                //     },
-                //     {
-                //         id : "strawberr",
-                //         description : "Strawberry Fields Forever"
-                //     },
-                //     {
-                //         id : "adayinthe",
-                //         description : "A Day in the Life"
-                //     },
-                //     {
-                //         id : "pennylane",
-                //         description : "Penny Lane"
-                //     },
-                //     {
-                //         id : "whydontwe",
-                //         description : "Why Don't we do it in the Road?"
-                //     },
-                //     {
-                //         id : "herecomes",
-                //         description : "Here Comes the Sun"
-                //     },
-                //     {
-                //         id : "savoytruf",
-                //         description : "Savoy Truffle"
-                //     },
-                //     {
-                //         id : "octopusga",
-                //         description : "Octopus's Garden"
-                //     }
-                // ]
+                        ],
+                        "species": "default"
+                    },
+                    {
+                        "id": "GOT:004",
+                        "description": "arryn",
+                        "zScore": null,
+                        "items": [],
+                        "parents": [],
+                        "children": [],
+                        "species": "default"
+                    },
+                    {
+                        "id": "GOT:005",
+                        "description": "frey",
+                        "zScore": null,
+                        "items": [],
+                        "parents": [],
+                        "children": [],
+                        "species": "default"
+                    },
+                    {
+                        "id": "GOT:006",
+                        "description": "greyjoy",
+                        "zScore": null,
+                        "items": [],
+                        "parents": [],
+                        "children": [
+                            "theongrey"
+                        ],
+                        "species": "default"
+                    },
+                    {
+                        "id": "GOT:007",
+                        "description": "lannister",
+                        "zScore": null,
+                        "items": [],
+                        "parents": [],
+                        "children": [
+                            "jaimelann",
+                            "cerseilan",
+                            "tyrionlan"
+                        ],
+                        "species": "default"
+                    },
+                    {
+                        "id": "GOT:008",
+                        "description": "stark",
+                        "zScore": null,
+                        "items": [],
+                        "parents": [],
+                        "children": [],
+                        "species": "default"
+                    },
+                    {
+                        "id": "GOT:009",
+                        "description": "targaryen",
+                        "zScore": null,
+                        "items": [],
+                        "parents": [],
+                        "children": [],
+                        "species": "default"
+                    },
+                    {
+                        "id": "GOT:010",
+                        "description": "tyrell",
+                        "zScore": null,
+                        "items": [],
+                        "parents": [],
+                        "children": [],
+                        "species": "default"
+                    },
+                ]
             }
         }
     };

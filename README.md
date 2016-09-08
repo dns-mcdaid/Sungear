@@ -87,8 +87,8 @@ In order to run on a modern web browser, Sungear requires the following dependen
 * [Express](https://expressjs.com/): The jelly to Node's peanut butter. Holds together and keeps track of our dependencies.
 * [p5](http://p5js.org/): Data visualizer for Sungear GUI and GeneLights description.
 * [Browserify](http://browserify.org/): A magical gift from the Gods which brings all of the fun Node has to offer to the client side.
-* [javascript.util](https://www.npmjs.com/package/javascript.util): Tree Set resource.
-* [collections.js](http://www.collectionsjs.com/): SortedSet resource.
+* [Collections.js](http://www.collectionsjs.com/): SortedSet resource.
+* [Clipboard.js](https://clipboardjs.com/): Used for copying data to the clipboard.
 * [Jade](http://jade-lang.com/): Template engine used for Node apps.
 * [jQuery](https://jquery.com/): Necessary for Bootstrap and manipulating Javascript Objects.
 * [Bootstrap](http://getbootstrap.com/): Grid System responsible for our entire UI looking somewhat easy on the eyes.

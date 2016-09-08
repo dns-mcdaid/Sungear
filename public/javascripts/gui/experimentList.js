@@ -9,7 +9,7 @@ const DataReader = require('../data/dataReader');
 function ExperimentList(experU, par) {
     this.parent = par;
     this.exp = [];
-    for (var i = 0; i < experU.length; i++) {
+    for (let i = 0; i < experU.length; i++) {
         this.exp.push($.extend(new Experiment(), experU[i]));
     }
     this.model = new ExperModel(this.exp);
