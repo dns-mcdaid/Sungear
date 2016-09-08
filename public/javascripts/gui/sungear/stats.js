@@ -123,9 +123,9 @@ StatsModel.prototype = {
 };
 
 function VesselInfo(cnt) {
-    this.anchorCount = cnt; /** {Number} int */
-    this.vessels = [];      /** {Vector<VesselDisplay>} */
-    this.genes = new SortedSet(); /** {TreeSet<Gene>} */
+    this.anchorCount = cnt; /** {number} int */
+    this.vessels = [];
+    this.genes = new SortedSet();
 }
 
 VesselInfo.prototype = {

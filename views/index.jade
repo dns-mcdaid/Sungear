@@ -134,9 +134,13 @@ block content
                     a(class='btn btn-primary', id='expand', role='button') Expand
                     a(class='btn btn-primary', id='collapse', role='button') Collapse
                 div(id='goHierarchy', class='img-rounded')
-                    ul
-                        li GO Terms
-                        ul(id='goDir')
+                    ul(id='goHier')
+                        li
+                            span(class='glyphicon glyphicon-chevron-right')
+                            p Test
+                        li
+                            span(class='glyphicon glyphicon-chevron-right')
+                            p Test2
 
                 div(id='goZscore', class='img-rounded')
                     ul(id='goList')
@@ -145,7 +149,7 @@ block content
                 a(class='btn btn-primary', id='zFind', role='button') Find
                 p(id='goCount') GO Terms: ####
                 a(class='btn btn-primary', id='goCopy', role='button') Copy
-                select(id='sort', class='btn btn-primary')
+                select(id='sort')
                     option(disabled, selected, value) --select a sort option--
                     option(value='zScore') Sort by Z-Score
                     option(value='name') Sort by Name
@@ -185,6 +189,7 @@ block content
                 div(class='modal-body', id='aboutDBody')
                 div(class='modal-footer')
                     button(type='button', class='btn btn-default', data-dismiss='modal') Close
+
     // Query Dialog
     div(class='modal fade', id='queryD', tabindex='-1', role='dialog', aria-labelledby='queryDLabel')
         div(class='modal-dialog', role='document')

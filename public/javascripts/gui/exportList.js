@@ -1,5 +1,7 @@
-require('javascript.util');
-var TreeSet = javascript.util.TreeSet;
+"use strict";
+const SortedSet = require('collections/sorted-set');
+
+const GeneEvent = require('../genes/geneEvent');
 
 /**
  * This entire class should offer to write up a gene set to the database.
@@ -15,33 +17,52 @@ function ExportList(g, context) {
     this.groupCnt = 0;
     this.table = document.getElementById('controlFtable');
     this.model = new ExportModel();
+
     this.removeB = document.getElementById('removeB');
+    this.removeB.title = "Remove the selected sets of items";
+
     this.exportB = document.getElementById('exportB');
+    this.exportB.title = "Send the selected sets of items to an external program";
+
+    let that = this;    // TODO: Refactor
     this.removeB.addEventListener("click", function() {
-        this.model.deleteSelected();
+        that.model.deleteSelected();
     });
     this.exportB.addEventListener("click", function() {
-        console.log("List size: " + this.model.getList().length);
-        for (var i = 0; i < this.model.getList().length; i++) {
-            var l = this.model.getList()[i];
+        console.log("List size: " + that.model.getList().length);
+        for (let i = 0; i < that.model.getList().length; i++) {
+            const l = that.model.getList()[i];
             console.log(l.name + " (" + l.genes.length + ")"); // TODO: @Dennis check back to make sure it should be genes.length
         }
-        this.exportGeneList();
+        that.exportGeneList();
     });
     document.getElementById('controlFtableHeader').addEventListener("click", function() {
         // Lines 115 - 119 allow the header rows to be manipulated
     });
     document.getElementById('controlFtableAdd').addEventListener("click", function() {
-        this.selectAll();
+        that.selectAll();
     });
-    // TODO: @Dennis migrate lines 124 - 152 to a private function.
     g.addGeneListener(this);
 }
 
 ExportList.prototype = {
     constructor : ExportList,
-    listUpdated : function(e) {
-        this.model.listUpdated(e);
+    cleanup : function() {
+        this.model.cleanup();
+        this.model = null;
+        this.table = null;
+        this.genes = null;
+    },
+    /**
+     * Convenience method that creates a POST method form submit
+     * and reads the response.
+     * @param cgi the URL to which the form should be submitted
+     * @param data the form data
+     * @return the text response
+     * @throws IOException
+     */
+    post : function(cgi, data) {
+        // TODO: Implement.
     },
     /**
      * TODO: @Dennis figure this out to be less stupid.
@@ -49,24 +70,22 @@ ExportList.prototype = {
      * @param row
      * @param col
      */
-    addMouseListener : function(node, row, col) {
+    mouseListener : function(node, row, col) {
         if (row != -1) {
             var l = this.model.getList()[row];
-            var s = new TreeSet();
-            s.addAll(this.genes.getSelectedSet());
+            let s = new SortedSet(this.genes.getSelectedSet().toArray());
             this.localUpdate = true;
             switch (col) {
                 case 3:
-                    s.addAll(l.genes);
+                    s = s.union(l.genes);
                     this.genes.setSelection(this, s);
                     break;
                 case 4:
-                    s = new TreeSet();
-                    s.addAll(l.genes);
+                    s = new SortedSet(l.genes);
                     this.genes.setSelection(this, s);
                     break;
                 case 5:
-                    for (var i = 0; i < l.genes.length; i++) {
+                    for (let i = 0; i < l.genes.length; i++) {
                         s.remove(l.genes[i]);
                     }
                     this.genes.setSelection(this, s);
@@ -74,14 +93,220 @@ ExportList.prototype = {
                 case 6:
                     this.model.setCurrent(l);
                     this.genes.setActive(this, l.genes);
-                    // TODO: Possibly impelement a table.repaint?
+                    // TODO: Possibly call a table.repaint?
                     break;
             }
             this.localUpdate = false;
         }
+    },
+    exportCellStorm : function() {
+        try {
+            let gl = "";
+            const selectedGenes = this.genes.getSelectedSet().toArray();
+            selectedGenes.forEach((gene) => {
+                if (gl != "") {
+                    gl += "|";
+                }
+                gl += gene.getName();
+            });
+            // TODO: Get runtime?
+        } catch (e) {
+            console.log("ERROR (from exportList.exportCellStorm:");
+            console.log(e);
+        }
+    },
+    exportGeneList : function() {
+        try {
+            const data = this.getExportsGeneList();
+            console.log(data);
+            const exportU = this.genes.getSource().getAttributes().get("export_url");
+            const res = this.post(exportU, data);
+            console.log("response: ");
+            console.log(res);
+            const h = new Map(); /** String => String */
+            const p = res.split('&');
+            p.forEach((token) => {
+                const nvp = token.split("=");
+                h.set(nvp[0], nvp[1]);
+            });
+            console.log("export response pairs:");
+            console.log(h);
+            if (this.context !== null) {
+                try {
+                    let url = h.get("url");
+                    console.log("url: " + url);
+                    if (typeof url !== 'undefined') {
+                        let u = new URL(url); // TODO: Ensure this works.
+                        const target = h.get("target");
+                        console.log("u: " + u + ", target : |" +  (typeof target !== 'undefined' ? target : null) + "|");
+                        if (typeof target !== 'undefined') {
+                            u = new URL(target, u); // Might need to be url instead of u
+                        }
+                        const win = window.open(u);
+                        if (win) {
+                            win.focus();
+                        } else {
+                            alert('Please enable popups on this site to export gene lists');
+                        }
+                        alert('Export Complete'); // Maybe refactor?
+                    } else {
+                        alert('Export Warning: no response page given');
+                    }
+                } catch (re) {
+                    alert('Export Warning: could not show response page');
+                }
+            }
+        } catch (e) {
+            alert('Export Error');
+            console.log(e);
+        }
+    },
+    /**
+     * Formats the exports list as a pair of StringBuffer that contain
+     * gene and group information, respectively.  The first StringBuffer
+     * is a list of genes, one gene per line.  The second contains
+     * gene/group associations in Cytoscape .noa file format.
+     * @return {Array} the two StringBuffers as a Vector
+     */
+    getExportsCytoscape : function () {
+        const ent = this.model.getList(); // Maybe??
+        const v = [];
+        let sif = "";   // list of all genes
+        let s = new SortedSet();
+        ent.forEach((entry) => {
+            //noinspection JSUnresolvedFunction
+            s = s.union(entry.genes);
+        });
+        let noa = "";   // gene group membership
+        noa += "Group\n";
+        //noinspection JSUnresolvedFunction
+        const sArray = s.toArray();
+        sArray.forEach((g) => {
+            sif += g + "\n";
+            let gTag = "";
+            ent.forEach((entry) => {
+                if (entry.genes.contains(g)) {
+                    if (gTag != "") {
+                        gTag += "+";
+                    }
+                    gTag += entry.name;
+                }
+            });
+            noa += g + " = " + gTag + "\n";
+        });
+        v.push(sif);
+        v.push(noa);
+        return v;
+    },
+    /**
+     * Formats the exports list as form data for the gene list export.
+     * Form data is name/value pairs.  For each NVP, the name is the group
+     * name, and the value is a &quot;|&quot;-delimited list of genes in
+     * the group.
+     * @return {String} the gene list form data
+     */
+    getExportsGeneList : function() {
+        const nvp = [];
+        const attrib = this.genes.getSource().getAttributes();
+        const exportRegex = new RegExp("export_", "i");
+        const keys = attrib.keys();
+        let next = keys.next();
+        while(!next.done) {
+            const k = next.value;
+            if (exportRegex.test(k) && k != "export_url") {
+                this.addPair(nvp, k.substr(7), attrib.get(k));
+            }
+        }
+        // gather group/gene information
+        const modelList = this.model.getList();
+        const groups = [];
+        const genes = [];
+        let that = this;    // TODO: refactor. Watch egghead.io's tutorial on es6
+        modelList.forEach((e) => {
+            if (e.selected) {
+                groups.push(e.name);
+                genes.push(e.name + "=" + that.separate(e.genes, "|", true));
+            }
+        });
+        this.addPair(nvp, "groups", this.separate(groups, "|", false));
+        genes.forEach((gene) => {
+            nvp.push(gene);
+        });
+        const exp = this.separate(nvp, "&", false);
+        console.log(exp);
+        return exp;
+    },
+    /**
+     * Updates the column names and tool tips based on the current data items type.
+     * Deals with the stupid column-sizing issue on column name change.
+     */
+    updateGUI : function() {
+        const iL = this.genes.getSource().getAttributes().get("itemsLabel", "items");
+        this.removeB.title = "Remove the selected sets of " + iL;
+        this.exportB.title = "Send the selected sets of " + iL + " to an external program";
+        // TODO: Finish
+    },
+    setColumnToolTip : function(col, text) {
+        // TODO: Implement
+    },
+    /**
+     * @param nvp {Array} of Strings
+     * @param name {string}
+     * @param value {string}
+     */
+    addPair : function(nvp, name, value) {
+        nvp.push(name + "=" + value);
+    },
+    /**
+     * @param c {Object}
+     * @param sep {string}
+     * @param escape {bool}
+     * @returns {string}
+     */
+    separate : function(c, sep, escape) {
+        let f = true;
+        if (!Array.isArray(c)) {
+            c = c.toArray();
+        }
+        let s = "";
+        c.forEach((item) => {
+            if (!f) s += sep;
+            f = false;
+            s += item;
+        });
+        return escape ? new URL(s) : s; // TODO: Ensure this is correct.
+    },
+    /**
+     * @param e {GeneEvent}
+     */
+    listUpdated : function(e) {
+        switch (e.getType) {
+            case GeneEvent.NEW_LIST:
+                this.model.clear();
+                this.model.setCurrent(this.addGroup());
+                const hasExport = this.genes.getSource().getAttributes().get("export_url");
+                this.exportB.className = (typeof hasExport !== 'undefined' ? ExportList.ENABLED : ExportList.DISABLED);
+                this.updateGUI();
+                break;
+            case GeneEvent.RESTART:
+                this.model.resetCurrent();
+                this.model.setCurrent(this.addGroup());
+                break;
+            case GeneEvent.NARROW:
+                if (!this.localUpdate) this.addGroup();
+                break;
+            default:
+                break;
+        }
     }
-
 };
+
+ExportList.ENABLED = "btn btn-primary";
+ExportList.DISABLED = "btn btn-primary disabled";
+
+function getPasswordAuthentication() {
+    // TODO: Implement
+}
 
 function ListEntry(name, genes, parent) {
     this.name = name;       /** {String} */
@@ -121,7 +346,7 @@ function ExportModel() {
     this.subI = document.createElement('span');
     this.subI.className = "glyphicon glyphicon-minus-sign";
     this.exportList = [];
-    this.root = new ListEntry("root", new TreeSet(), null);
+    this.root = new ListEntry("root", new SortedSet(), null);
     this.curr = this.root;
 }
 
