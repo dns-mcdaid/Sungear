@@ -18,7 +18,7 @@ new p5(function(p5) {
     let WIDTH;
     let HEIGHT;
     let canvas;
-    let debug = true;
+    let debug = false;
 
     p5.setup = function() {
         WIDTH = document.getElementById('sungearGui').offsetWidth;

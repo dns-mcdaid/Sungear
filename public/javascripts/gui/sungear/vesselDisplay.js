@@ -3,7 +3,6 @@
 const SunValues = require('./sunValues');
 const SortedSet = require('collections/sorted-set');
 
-
 function VesselDisplay(vessel) {
     this.vessel = vessel;
     this.highlight = false;
@@ -37,6 +36,7 @@ VesselDisplay.ARROW_END = 0.2;
 
 VesselDisplay.prototype = {
     constructor : VesselDisplay,
+
     cleanup : function() {
         this.activeGenes.clear();
         this.selectedGenes.clear();
@@ -111,6 +111,10 @@ VesselDisplay.prototype = {
         return this.activeGenes.length;
     },
     makeShape : function(rad_inner) {
+        // if (this.anchor.length == 0) {
+        //     console.log("BEFORE");
+        //     console.log(JSON.stringify(this.center));
+        // }
         if (this.start === null || this.start.x === null) {
             let p = {
                 x : 0,
@@ -131,14 +135,20 @@ VesselDisplay.prototype = {
             this.setCenter(p.x, p.y, rad_inner);
             this.selectAllGenes();
         }
+
         // area 0 - vMax ==> 0 - 0.1
         this.radOuter = this.getShapeRad(this.getActiveCount(), this.vMax);
+
         this.shape = {
             x : this.center.x-this.radOuter,
             y : this.center.y-this.radOuter,
             w : this.radOuter*2,
             h : this.radOuter*2
         };
+        // if (this.anchor.length == 0) {
+        //     console.log("AT END:");
+        //     console.log(JSON.stringify(this.center));
+        // }
     },
     updateSize : function() {
         this.radInner = this.getShapeRad(this.getSelectedCount(), this.vMax);

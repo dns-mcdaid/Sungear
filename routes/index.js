@@ -35,14 +35,15 @@ router.get('/', function(req, res, next) {
         src : {
             reader : {
                 anchors : [
-                    { name : "King's Landing" },
-                    { name : "The Wall" },
+                    { name : "The Crownlands" },
+                    { name : "The Iron Islands" },
                     { name : "The North" },
                     { name : "Essos" },
-                    { name : "The Vale" }
+                    { name : "The Vale" },
+                    { name : "Dorne" }
                 ],
                 expSets : {
-                    "King's Landing" : [
+                    "The Crownlands" : [
                         "eddardsta",
                         "aryastark",
                         "sansastar",
@@ -51,110 +52,159 @@ router.get('/', function(req, res, next) {
                         "cerseilan",
                         "tyrionlan",
                         "joffreyba",
-                        "littlefin"
+                        "littlefin",
+                        "olennatyr",
+                        "macetyrel",
+                        "margaeryt",
+                        "lorastyre",
+                        "viserysta",
+                        "rahegarta",
+                        "tommenbar"
                     ],
-                    "The Wall" : [
-                        "tyrionlan",
-                        "jonsnow",
-                        "brandonst"
-                    ],
+                    // "The Wall" : [
+                    //     "tyrionlan",
+                    //     "jonsnow",
+                    //     "brandonst"
+                    // ],
                     "The North" : [
                         "eddardsta",
                         "aryastark",
                         "sansastar",
                         "catelynst",
-                        "jonshow",
+                        "jonsnow",
                         "robbstark",
                         "brandonst",
                         "rickonsta",
                         "jaimelann",
                         "cerseilan",
                         "tyrionlan",
-                        "joffreyla"
+                        "joffreyla",
+                        "theongrey",
+                        "roosebolt",
+                        "tommenbar",
+                        "ramseybol"
                     ],
                     "Essos" : [
                         "daenaryst",
                         "tyrionlan",
                         "greyworm",
                         "jorahmorm",
-                        "aryastark"
+                        "aryastark",
+                        "theongrey",
+                        "yaragreyj",
+                        "viserysta"
                     ],
                     "The Vale" : [
                         "littlefin",
                         "catelynst",
                         "tyrionlan",
                         "sansastar"
+                    ],
+                    "The Iron Islands" : [
+                        "theongrey",
+                        "yaragreyj",
+                        "eurongrey"
+                    ],
+                    "Dorne" : [
+                        "olennatyr",
+                        "jaimelann",
+                        "rahegarta"
                     ]
                 },
 
                 items : [
                     {
-                        id : 'greyworm',
-                        description : 'Grey Worm'
+                        id : 'greyworm', description : 'Grey Worm'
                     },
                     {
-                        id : 'jorahmorm',
-                        description : 'Jorah Mormont'
+                        id : 'jorahmorm', description : 'Jorah Mormont'
                     },
                     {
-                        id : 'daenaryst',
-                        description : 'Daenerys Targaryen'
+                        id : 'daenaryst', description : 'Daenerys Targaryen'
                     },
                     {
-                        id : 'joffreyba',
-                        description : 'Joffrey Baratheon'
+                        id : 'joffreyba', description : 'Joffrey Baratheon'
                     },
                     {
-                        id : 'tyrionlan',
-                        description : 'Tyrion Lannister'
+                        id : 'tyrionlan', description : 'Tyrion Lannister'
                     },
                     {
-                        id : 'cerseilan',
-                        description : 'Cersei Lannister'
+                        id : 'cerseilan', description : 'Cersei Lannister'
                     },
                     {
-                        id : 'jaimelann',
-                        description : 'Jaime Lannister'
+                        id : 'jaimelann', description : 'Jaime Lannister'
                     },
                     {
-                        id : 'aryastark',
-                        description : 'Arya Stark'
+                        id : 'aryastark', description : 'Arya Stark'
                     },
                     {
-                        id : 'brandonst',
-                        description : 'Brandon Stark'
+                        id : 'brandonst', description : 'Brandon Stark'
                     },
                     {
-                        id : 'rickonsta',
-                        description : 'Rickon Stark'
+                        id : 'rickonsta', description : 'Rickon Stark'
                     },
                     {
-                        id : 'sansastar',
-                        description : 'Sansa Stark'
+                        id : 'sansastar', description : 'Sansa Stark'
                     },
                     {
-                        id : 'jonsnow',
-                        description : 'Jon Snow'
+                        id : 'jonsnow', description : 'Jon Snow'
                     },
                     {
-                        id : 'robbstark',
-                        description : 'Robb Stark'
+                        id : 'robbstark', description : 'Robb Stark'
                     },
                     {
-                        id : 'catelynst',
-                        description : 'Cateyln Stark'
+                        id : 'catelynst', description : 'Cateyln Stark'
                     },
                     {
-                        id : 'eddardsta',
-                        description : 'Eddard Stark'
+                        id : 'eddardsta', description : 'Eddard Stark'
                     },
                     {
-                        id : 'littlefin',
-                        description : 'Little Finger'
+                        id : 'littlefin', description : 'Little Finger'
                     },
                     {
-                        id : 'theongrey',
-                        description : 'Theon Greyjoy'
+                        id : 'theongrey', description : 'Theon Greyjoy'
+                    },
+                    {
+                        id : 'yaragreyj', description : 'Yara Greyjoy'
+                    },
+                    {
+                        id : 'eurongrey', description : 'Euron Greyjoy'
+                    },
+                    {
+                        id : "viserysta", description : 'Viserys Targaryen'
+                    },
+                    {
+                        id : 'rahegarta', description : 'Rahegar Targaryen'
+                    },
+                    {
+                        id : "olennatyr", description : 'Olenna Tyrell'
+                    },
+                    {
+                        id : "macetyrel", description : 'Mace Tyrell'
+                    },
+                    {
+                        id : "margaeryt", description : 'Margaery Tyrell'
+                    },
+                    {
+                        id : "lorastyre", description : 'Loras Tyrell'
+                    },
+                    {
+                        id : "roosebolt", description : "Roose Bolton"
+                    },
+                    {
+                        id : "lysaarryn", description : "Lysa Arryn"
+                    },
+                    {
+                        id : "robinarry", description : "Robin Arryn"
+                    },
+                    {
+                        id : "ramseybol", description : "Ramsey Bolton"
+                    },
+                    {
+                        id : "tommenbar", description : "Tommen Baratheon"
+                    },
+                    {
+                        id : "walderfre", description : "Walder Frey"
                     }
                 ],
                 categories : [
@@ -173,7 +223,7 @@ router.get('/', function(req, res, next) {
                             "GOT:009",
                             "GOT:010",
                         ],
-                        "species": "default"
+                        "species": "game of thrones"
                     },
                     {
                         "id": "GOT:002",
@@ -181,8 +231,11 @@ router.get('/', function(req, res, next) {
                         "zScore": null,
                         "items": [],
                         "parents": [],
-                        "children": [],
-                        "species": "default"
+                        "children": [
+                            "GOT:011",
+                            "GOT:012"
+                        ],
+                        "species": "game of thrones"
                     },
                     {
                         "id": "GOT:003",
@@ -191,27 +244,31 @@ router.get('/', function(req, res, next) {
                         "items": [],
                         "parents": [],
                         "children": [
-
                         ],
-                        "species": "default"
+                        "species": "game of thrones"
                     },
                     {
                         "id": "GOT:004",
                         "description": "arryn",
                         "zScore": null,
-                        "items": [],
+                        "items": [
+                            "lysaarryn",
+                            "robinarry"
+                        ],
                         "parents": [],
                         "children": [],
-                        "species": "default"
+                        "species": "game of thrones"
                     },
                     {
                         "id": "GOT:005",
                         "description": "frey",
                         "zScore": null,
-                        "items": [],
+                        "items": [
+                            "roosebolt"
+                        ],
                         "parents": [],
                         "children": [],
-                        "species": "default"
+                        "species": "game of thrones"
                     },
                     {
                         "id": "GOT:006",
@@ -220,49 +277,128 @@ router.get('/', function(req, res, next) {
                         "items": [],
                         "parents": [],
                         "children": [
-                            "theongrey"
+                            "theongrey",
+                            "yaragreyj",
+                            "eurongrey"
                         ],
-                        "species": "default"
+                        "species": "game of thrones"
                     },
                     {
                         "id": "GOT:007",
                         "description": "lannister",
                         "zScore": null,
-                        "items": [],
-                        "parents": [],
-                        "children": [
+                        "items": [
                             "jaimelann",
                             "cerseilan",
                             "tyrionlan"
                         ],
-                        "species": "default"
+                        "parents": [],
+                        "children": [],
+                        "species": "game of thrones"
                     },
                     {
                         "id": "GOT:008",
                         "description": "stark",
                         "zScore": null,
-                        "items": [],
+                        "items": [
+                            'eddardsta',
+                            'catelynst',
+                            'aryastark',
+                            'sansastar',
+                            'robbstark',
+                            'rickonsta',
+                            'brandonst'
+                        ],
                         "parents": [],
                         "children": [],
-                        "species": "default"
+                        "species": "game of thrones"
                     },
                     {
                         "id": "GOT:009",
                         "description": "targaryen",
                         "zScore": null,
-                        "items": [],
+                        "items": [
+                            "daenaryst",
+                            "viserysta",
+                            "rahegarta"
+                        ],
                         "parents": [],
                         "children": [],
-                        "species": "default"
+                        "species": "game of thrones"
                     },
                     {
                         "id": "GOT:010",
                         "description": "tyrell",
                         "zScore": null,
-                        "items": [],
+                        "items": [
+                            "olennatyr",
+                            "macetyrel",
+                            "margaeryt",
+                            "lorastyre"
+                        ],
                         "parents": [],
                         "children": [],
-                        "species": "default"
+                        "species": "game of thrones"
+                    },
+                    {
+                        "id": "GOT:010",
+                        "description": "tyrell",
+                        "zScore": null,
+                        "items": [
+                            "olennatyr",
+                            "macetyrel",
+                            "margaeryt",
+                            "lorastyre"
+                        ],
+                        "parents": [],
+                        "children": [],
+                        "species": "game of thrones"
+                    },
+                    {
+                        "id": "GOT:011",
+                        "description": "westerosi",
+                        "zScore": null,
+                        "items": [
+                            "littlefin"
+                        ],
+                        "parents": [],
+                        "children": [],
+                        "species": "game of thrones"
+                    },
+                    {
+                        "id": "GOT:012",
+                        "description": "essosi",
+                        "zScore": null,
+                        "items": [
+                            "greyworm"
+                        ],
+                        "parents": [],
+                        "children": [],
+                        "species": "game of thrones"
+                    },
+                    {
+                        "id": "GOT:013",
+                        "description": "snow",
+                        "zScore": null,
+                        "items": [
+                            "jonsnow",
+                            "ramseybol"
+                        ],
+                        "parents": [],
+                        "children": [],
+                        "species": "game of thrones"
+                    },
+                    {
+                        "id": "GOT:013",
+                        "description": "waters",
+                        "zScore": null,
+                        "items": [
+                            "joffreyba",
+                            "tommenbar"
+                        ],
+                        "parents": [],
+                        "children": [],
+                        "species": "game of thrones"
                     },
                 ]
             }

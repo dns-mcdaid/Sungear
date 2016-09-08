@@ -337,7 +337,7 @@ DataReader.prototype = {
             var expGene = passedItems[i];
             var expToAdd = new Gene(expGene.id, expGene.description);
             var exp = [];
-            for (var j = 0; j < this.anchors.length; j++) {
+            for (let j = 0; j < this.anchors.length; j++) {
                 if (passedSets[this.anchors[j].name].indexOf(expGene.id) > -1) {
                     exp[j] = 1;
                 } else {
@@ -350,7 +350,6 @@ DataReader.prototype = {
         }
 
         for (let i = 0; i < passedCategories.length; i++) {
-
         }
     }
 };
@@ -520,7 +519,7 @@ DataReader.openGz = function(buffer, callback) {
     zlib.gunzip(buffer, function(err, decoded) {
         if (err) {
         } else {
-            raw = decoded.toString();
+            let raw = decoded.toString();
             callback(raw);
         }
     });

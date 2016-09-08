@@ -92,6 +92,8 @@ function SunGear(genes, thresh, statsF) {
     this.goTerm = null;
     this.multi = false;
     this.relax = true;
+
+    this.debug = true;
 }
 
 SunGear.prototype = {
@@ -590,6 +592,8 @@ SunGear.prototype = {
         for (let i = 0; i < this.vessels.length; i++) {
             let v = this.vessels[i];
             if (v.anchor.length == 0 || v.getActiveCount() == 0) {
+                v.dx = 0;
+                v.dy = 0;
                 continue;
             }
             // weak attraction to center point
@@ -626,7 +630,6 @@ SunGear.prototype = {
                     let dy = 0;
                     if (adist < 1e-12) {
                         // total overlap = vessel centers are the same
-                        // TODO: Make sure this works the same way.
                         let t = Math.random() * 2 * Math.PI;
                         dx = sf * dr * Math.cos(t);
                         dy = sf * dr * Math.sin(t);
@@ -1023,8 +1026,9 @@ SunGear.prototype = {
             ml = this.genes.getSource().getAttributes().get("moonLabel");
         }
         if (ml !== null && this.moon !== null && this.moon.getActiveCount() > 0) {
-            // TODO: Ensure this works.
+            // FIXME
             p5.push();
+            this.makeTransform(p5, this.WIDTH, this.HEIGHT);
             p5.textSize(14);
             const pp = {
                 x : this.moon.getCenter().x,
@@ -1034,6 +1038,7 @@ SunGear.prototype = {
             const x = Math.max(0, (pp.x-.5)); // TODO: Get visible advance?
             p5.fill(this.moon.getHighlight() ? SunValues.C_HIGHLIGHT : SunValues.C_PLAIN);
             p5.text(ml, x, pp.y);
+            p5.pop();
         }
     },
     makeTransform : function(p5, w, h) {
