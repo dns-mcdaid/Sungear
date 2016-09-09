@@ -1,6 +1,7 @@
 "use strict";
 
 const SortedSet = require('collections/sorted-set');
+const Clipboard = require('clipboard');
 
 const CompareScore = require('./go/compareScore');
 const CompareName = require('./go/compareName');
@@ -41,6 +42,7 @@ function GoTerm(genes, fd) {
     this.collapseT = document.getElementById('goCollapseT');    /** GO list collapse toggle */
     this.collapseT.title = "Toggles collapsing list to selected categories only";
     this.listLeafT = document.getElementById('goListLeafT');    /** GO list show leaves only toggle */
+    this.listLeafT.value = false;
     this.listAllT = document.getElementById('goListAllT');      /** GO list show all nodes toggle */
     this.listLeafT.title = "Show direct associations only";
     this.listAllT.title = "Show all associations.";
@@ -70,8 +72,28 @@ function GoTerm(genes, fd) {
     // this.tree.addEventListener('click', this.clearSelectionRecursive.bind(this.tree), false);
     // this.shortList.addEventListener('click', this.clearSelectionRecursive.bind(this.shortList), false);
 
-    this.geneToGo = new Map();         /** {Hashtable<Gene, Vector<Term>>} GO term lookup by gene, for direct associations */
-    this.geneToGoIndir = new Map();    /** {Hashtable<Gene, Vector<Term>>} GO term lookup by gene, for direct and indirect associations */
+    this.expandB.addEventListener('click', this.expandTree.bind(this, true), false);
+    this.collapseB.addEventListener('click', this.expandTree.bind(this, false), false);
+	this.sortB.addEventListener('click', this.updateShortList.bind(this), false);
+	this.findB.addEventListener('click', this.findA.bind(this), false);
+	// TODO: Add findA to findF
+	// TODO: Refactor next two lines
+	this.isCollapsed = false;
+	this.collapseT.addEventListener('click', this.setCollapsed.bind(this, !this.isCollapsed), false);
+	this.listLeafT.addEventListener('click', this.updateShortList.bind(this), false);
+	this.listAllT.addEventListener('click', this.updateShortList.bind(this), false);
+	// TODO: Update copyB's value based on selected Terms
+	const clipboard = new Clipboard(this.copyB, {
+		text : function(trigger) {
+			return trigger.getAttribute('value');
+		}
+	});
+	
+	this.genes.addGeneListener(this);
+	this.genes.addMultiSelect(this);
+
+    this.geneToGo = new Map();         /** Gene => Array of Terms. GO term lookup by gene, for direct associations */
+    this.geneToGoIndir = new Map();    /** Gene => Array of Terms. GO term lookup by gene, for direct and indirect associations */
     this.nodes = [];            /** {Vector<DefaultMutableTreeNode>} All tree nodes. */
     this.roots = new SortedSet();          /** {TreeSet<Term>} All roots of GO term DAG */
     this.highTerm = null;   /** {Term} term to highlight in short list */
@@ -83,11 +105,13 @@ GoTerm.sortComp = [ CompareScore, CompareName, CompareCount ];
 GoTerm.prototype = {
     constructor : GoTerm,
     cleanup : function() {
-        for (let it = 0; it < this.roots.length; it++) {
-            this.roots[it].cleanup();
-        }
+    	const rootsArray = this.roots.toArray();
+	    rootsArray.forEach((term) => {
+	    	term.cleanup();
+	    });
+	    this.roots.clear();
         this.terms.clear();
-        this.geneToGo = {};
+        this.geneToGo.clear();
         this.uniq.clear();
         this.all.clear();
         this.assocGenes.clear();
@@ -102,7 +126,7 @@ GoTerm.prototype = {
      */
     set : function(src) {
         this.terms = src.getReader().terms;
-        this.roots = src.getReader().roots;
+        this.roots = new SortedSet(src.getReader().roots);
         this.geneToGo = src.getReader().geneToGo;
     },
     /**
@@ -110,16 +134,14 @@ GoTerm.prototype = {
      * @returns {Array} of Terms
      */
     getLeafTerms : function(g) {
-        const v = this.geneToGo.get(g);
-        return (v === null) ? [] : v;
+        return (this.geneToGo.has(g)) ? this.geneToGo.get(g) : [];
     },
     /**
      * @param g {Gene}
      * @returns {Array} of Terms
      */
     getCurrentTerms : function(g) {
-        const v = this.geneGoIndir.get(g);
-        return (v === null) ? [] : v;
+        return (this.geneGoIndir.has(g)) ? this.geneGoIndir.get(g) : [];
     },
     updateGUI : function() {
         const iL = this.genes.getSource().getAttributes().get("itemsLabel", "items");
@@ -141,14 +163,17 @@ GoTerm.prototype = {
         for (let i = 0; i < trm.length; i++) {
             const t = this.terms[trm[i]];
             t.resetStoredCount();
-            this.assocGenes = this.assocGenes.union(t.getAllGenes().toArray());
+            //noinspection JSUnresolvedFunction
+	        this.assocGenes = this.assocGenes.union(t.getAllGenes().toArray());
         }
-        this.assocGenes = this.assocGenes.intersection(this.genes.getActiveSet().toArray());
-        const rootsArray = this.roots.toArray();
-        for (let i = 0; i < rootsArray.length; i++) {
-            // TODO: Check that this works.
-            rootsArray[i].updateStoredCount(this.assocGenes);
-        }
+        //noinspection JSUnresolvedFunction
+	    this.assocGenes = this.assocGenes.intersection(this.genes.getActiveSet().toArray());
+	    const rootsIterator = this.roots.iterate();
+	    let next = rootsIterator.next();
+	    while (!next.done) {
+	    	next.value.updateStoredCount(this.assocGenes);
+		    next = rootsIterator.next();
+	    }
     },
     /**
      * Initiates the recursive process of determining the full set of genes
@@ -159,34 +184,35 @@ GoTerm.prototype = {
      * is changed.
      */
     findGeneUnions : function() {
-        let trm = this.terms.keys();
-        for (let i = 0; i < trm.length; i++) {
-            this.terms[trm[i]].initUnion();
-        }
-        const rootsArray = this.roots.toArray();
-        for (let i = 0; i < rootsArray.length; i++) {
-            // TODO: Check that this works.
-            rootsArray[i].findUnion(this.genes.getGenesSet());
-        }
+        const trm = this.terms.values();
+	    let next = trm.next();
+	    while(!next.done) {
+	    	next.initUnion();
+		    next = trm.next();
+	    }
+	    const rootsIt = this.roots.iterate();
+	    let it = rootsIt.next();
+	    while (!it.done) {
+	    	it.value.findUnion(this.genes.getGenesSet());
+		    it = rootsIt.next();
+	    }
     },
     updateGeneTerms : function() {
-        this.geneToGoIndir = {};
-        const trm = this.terms.keys();
+        this.geneToGoIndir.clear();
+        const trm = this.terms.values();
         let cnt = 0;
-        for (let i = 0; i < trm.length; i++) {
-            const t = this.terms[trm[i]];
-            let gi = t.getAllGenes().toArray();
-            for (let j = 0; j < gi.length; j++) {
-                const g = gi[j]; //oe
-                let gv = this.geneToGoIndir[g];
-                if (typeof gv === 'undefined' || gv === null) {
-                    gv = [];
-                }
-                gv.push(t);
-                this.geneToGoIndir[g] = gv;
-            }
-            cnt += t.getAllGenes().length;
-        }
+	    let next = trm.next;
+	    while (!next.done) {
+	    	const t = next.value;
+		    const gi = t.getAllGenes().toArray();
+		    gi.forEach((gene) => {
+		    	let gv = this.geneToGoIndir.get(gene);
+			    if (typeof gv === 'undefined') gv = [];
+			    gv.push(t);
+			    this.geneToGoIndir.set(gene, gv);
+		    });
+		    cnt += t.getAllGenes().length;
+	    }
         console.log("total item <==> category associations: " + cnt);
     },
     /**
@@ -194,24 +220,23 @@ GoTerm.prototype = {
      * @param ctrl {boolean}
      */
     selectTerm : function(t, ctrl) {
-        let s = t.getAllGenes();
-        s = s.intersection(this.genes.getSelectedSet().toArray());
+        let s = new SortedSet(t.getAllGenes());
+        //noinspection JSUnresolvedFunction
+	    s = s.intersection(this.genes.getSelectedSet().toArray());
         if (ctrl) {
-            let r = this.genes.getSelectedSet();
+            let r = new SortedSet(this.genes.getSelectedSet());
             if (s.length > 0) {
-                const sArray = s.toArray();
-                for (let i = 0; i < sArray.length; i++) {
-                    if (r.contains(sArray[i])) {
-                        r.remove(sArray[i]);
-                    }
-                }
+            	//noinspection JSUnresolvedFunction
+	            r = r.difference(s.toArray());
             } else {
-                r = r.union(t.getAllGenes().toArray());
+                //noinspection JSUnresolvedFunction
+	            r = r.union(t.getAllGenes().toArray());
             }
             this.genes.setSelection(this, r);
         } else {
-            s = t.getAllGenes();
-            s = s.intersection(this.genes.getActiveSet().toArray());
+            s = new SortedSet(t.getAllGenes());
+            //noinspection JSUnresolvedFunction
+	        s = s.intersection(this.genes.getActiveSet().toArray());
             this.genes.setSelection(this, s);
         }
     },
@@ -229,32 +254,197 @@ GoTerm.prototype = {
      */
     updateShortList : function() {
         // depends on uniq, which is calculated in trimDAG
-        const test = new SortedSet();
-        const comparator = GoTerm.sortComp[this.sortB.options[this.sortB.selectedIndex]];
-        if (this.collapsed) {
-            this.updateSelectedState();
-        }
+	    const comparator = GoTerm.sortComp[this.sortB.options[this.sortB.selectedIndex]];
+        const test = new SortedSet(null,null,comparator);
+	    
+        if (this.collapsed) this.updateSelectedState();
+	    
         const shortTermArray = this.getShortTerm();
-        for (let i = 0; i < shortTermArray.length; i++) {
-            const t = shortTermArray[i];
-            if (t.getStoredCount() >= this.geneThresh && (!this.collapse || t.getSelectedState() == Term.STATE_SELECTED)) {
-                test.push(t);
-            }
-        }
-        const testArray = test.sorted(comparator);
-        // TODO: Check this.
-        this.listModel.setListData(testArray);
+	    shortTermArray.forEach((t) => {
+		    if (t.getStoredCount() >= this.geneThresh && (!this.collapse || t.getSelectedState() == Term.STATE_SELECTED)) {
+			    test.push(t);
+		    }
+	    });
+        this.listModel.setListData(test);
         this.statusF.innerHTML = this.genes.getSource().getAttributes().get('categoriesLabel', 'categories') + ": " + this.listModel.getSize();
     },
     findTermMatches : function() {
-        // TODO: Implement me.
+	    const pattern = ".*" + this.findF.value + ".*";
+	    const p = new RegExp(pattern, "i");
+	    const v = [];
+	    const shortTermIt = this.getShortTerm().iterator();
+	    const it = shortTermIt.next();
+	    while (!it.done) {
+	    	const t = it.value;
+		    if (p.test(t.getName())) v.push(t);
+	    }
+	    this.setResults(v);
     },
     findNodeMatches : function() {
-        // TODO: Implement me.
+	    const pattern = ".*" + this.findF.value + ".*";
+	    const p = new RegExp(pattern, "i");
+	    const v = [];
+	    // TODO: Finish
     },
     getShortTerm : function() {
-        return this.listLeafT.isSelected() ? this.uniq : this.all;
+    	const currentValue = JSON.parse(this.listLeafT.value);
+	    // this.listLeafT.value = !currentValue;
+        return currentValue ? this.uniq : this.all;
     },
+	/**
+	 * @param t {Term}
+	 */
+	showTerm : function(t) {
+		this.highTerm = null;
+		for (let i = 0; i < this.listModel.getSize(); i++) {
+			if (this.listModel.getElementAt(i) == t) {
+				// ensure index is visible?
+				this.highTerm = t;
+				break;
+			}
+		}
+		// repaint?
+	},
+	showNode : function(n) {
+		// TODO: Figure this out.
+	},
+	getHighTerm : function() {
+		return this.highTerm;
+	},
+	showLocateMenu : function(match, comp, x, y) {
+		// TODO: Figure this out
+	},
+	makeTree : function() {
+		const t = new SortedSet(this.genes.getSelectedSet());
+		// TODO: Figure out these next two lines
+		this.trimDAG(t);
+		this.synchronizeTreeToDAG(this.treeModel.getRoot(), roots);
+		this.updateShortList();
+	},
+	/**
+	 * @param expand {boolean}
+	 */
+	expandTree : function(expand) {
+		// TODO: Figure this out.
+	},
+	/**
+	 * Determines the active terms in the GO term DAG based on the current
+	 * set of selected genes.
+	 * @param s {SortedSet} the currently selected genes
+	 */
+	trimDAG : function (s) {
+		// deselect all terms
+		const e = this.terms.values();
+		let nextTerm = e.next;
+		while (!nextTerm.done) {
+			nextTerm.values.setActive(false);
+			nextTerm = e.next;
+		}
+		const gi = s.iterate();
+		this.uniq.clear();
+		this.all.clear();
+		// for each gene...
+		let next = gi.next();
+		while (!next.done) {
+			const g = next.value;
+			// ...get its go terms..
+			const v = this.getLeafTerms(g);
+			if (v !== null) {
+				// ...and mark each term and its parents selected
+				v.forEach((term) => {
+					this.uniq.push(term);
+					this.all.push(term);
+					this.traceParent(term);
+				});
+			}
+		}
+	},
+	/**
+	 * @param t {Term}
+	 */
+	traceParent : function(t) {
+		if (!t.isActive()) {
+			t.setActive(true);
+			this.all.push(t);
+			const parentIter = t.getParents().iterate();
+			let next = parentIter.next();
+			while (!next.done) {
+				this.traceParent(next.value);
+				next = parentIter.next();
+			}
+		}
+	},
+	/**
+	 * Toggles the GO term list collapsed state, and updates
+	 * its display.
+	 * @param b {boolean} true to collapse list, otherwise false
+	 */
+	setCollapsed : function(b) {
+		this.collapsed = b;
+		this.updateShortList();
+	},
+	/**
+	 * Updates the selected state of all the GO terms.
+	 */
+	updateSelectedState : function() {
+		const termsIt = this.terms.values();
+		let nextTerm = termsIt.next();
+		while (!nextTerm.done) {
+			nextTerm.value.initSelectedState();
+			nextTerm = termsIt.next();
+		}
+		const rootsIt = this.roots.iterate();
+		let nextRoot = rootsIt.next();
+		while (!nextRoot.done) {
+			nextRoot.value.updateSelectedState(this.genes.getSelectedSet());
+			nextRoot = rootsIt.next();
+		}
+	},
+	/**
+	 * Updates the display when the selected set changes.
+	 */
+	updateSelect : function() {
+		// TODO: Implement
+		// shortList repaint?
+		// tree repaint?
+	},
+	lostOwnership : function(c, t) { },
+	copyTerms : function() {
+		const comparator = GoTerm.sortComp[this.sortB.options[this.sortB.selectedIndex]];
+		const test = new SortedSet(null,null,comparator);
+		this.updateSelectedState();
+		const termIt = this.getShortTerm().iterate();
+		let nextTerm = termIt.next();
+		while (!nextTerm.done) {
+			const t = nextTerm.value;
+			if (t.getSelectedState() == Term.STATE_SELECTED) test.push(t);
+		}
+		let b = "";
+		const testIt = test.iterate();
+		let nextTest = testIt.next();
+		while (!nextTest.done) {
+			const t = nextTest.value;
+			b += t.toString() + "\n";
+		}
+		this.copyB.value = b;
+	},
+	/**
+	 * Synchronizes the hierarchy with the active nodes in the DAG.
+	 * The parent parameter's children are synchronized with the passed collection,
+	 * and this process is continued recursively for the children.
+	 * @param parent {Object} the parent node at which to start synchronizing
+	 * @param terms {SortedSet} the list of nodes with which the parent's children will be synchronized
+	 */
+	synchronizeTreeToDAG : function(parent, terms) {
+		// TODO: Implement me.
+	},
+	/**
+	 * Builds the displayed tree from the DAG.  Nodes with multiple
+	 * parents are represented as repeated sub-graphs in the tree.
+	 */
+	makeTreeFromDAG : function() {
+		// TODO: Implement me.
+	},
     addNodes : function(r, n) {
         if (n.isActive()) {
             // TODO: Figure out jsTree
@@ -309,34 +499,48 @@ GoTerm.prototype = {
             // TODO: Implement
         }
     },
+	
+	findA : function() {
+    	this.findTermMatches();
+		if (this.results.getMatchCount() == 0) {
+			const cL = this.genes.getSource().getAttributes().get("categoriesLabel", "categories");
+			alert("No matching " + cL + " found");
+		}
+		// TODO: tree.repaint?
+		$("#findD").modal('show');
+	},
 
     setShortListListeners : function() {
-        this.shortList.forEach((row, i) => {
-           row.addEventListener('click', () => {
-               if (!this.multi && i > -1) {
-                   if (false) {
-                       // if it is a popup trigger
-                   } else {
-                       if (window.event.altKey) {
-                           this.genes.startMultiSelect(this);
-                           row.className = "selected";
-                       } else {
-                           if (this.lastRowList != -1 && window.event.shiftKey) {
-                               let s = new SortedSet();
-                               const sublist = this.listModel.data.splice(Math.min(i, this.lastRowList), Math.max(i, this.lastRowList)+1);
-                               sublist.forEach((item) => {
-                                   //noinspection JSUnresolvedFunction
-                                   s = s.union(item.getAllGenes());
-                               });
-                               this.genes.setSelection(this, s);
-                           } else {
-                               this.selectTerm(this.listModel.data[i], window.event.ctrlKey || window.event.metaKey);
-                           }
-                       }
-                       if (!window.event.shiftKey) this.lastRowList = i;
-                   }
-               }
-           }, false);
+        this.listModel.data.forEach((item, i) => {
+            const row = document.createElement('li');
+            row.innerHTML = item.name;
+
+            row.addEventListener('click', () => {
+                if (!this.multi && i > -1) {
+                    if (false) {
+                        // if it is a popup trigger
+                    } else {
+                        if (window.event.altKey) {
+                            this.genes.startMultiSelect(this);
+                            row.className = "selected";
+                        } else {
+                            if (this.lastRowList != -1 && window.event.shiftKey) {
+                                let s = new SortedSet();
+                                const sublist = this.listModel.data.splice(Math.min(i, this.lastRowList), Math.max(i, this.lastRowList)+1);
+                                sublist.forEach((item) => {
+                                    //noinspection JSUnresolvedFunction
+                                    s = s.union(item.getAllGenes());
+                                });
+                                this.genes.setSelection(this, s);
+                            } else {
+                                this.selectTerm(this.listModel.data[i], window.event.ctrlKey || window.event.metaKey);
+                            }
+                        }
+                        if (!window.event.shiftKey) this.lastRowList = i;
+                    }
+                }
+            }, false);
+            this.shortList.appendChild(row);
         });
     },
     clearSelectionRecursive : function(el) {

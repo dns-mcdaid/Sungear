@@ -140,7 +140,7 @@ Term.prototype = {
         return this.name.localeCompare(t.name);
     },
     toString : function() {
-       var Dig = 100000;
+    	var Dig = 100000;
         Term.Hyp = (Term.Hyp * Dig)/Dig;
         var v = (!Number.isFinite(Term.Hyp) || Number.isNaN(Term.Hyp)) ? Number.toString(Term.Hyp) : Term.Hyp + "";
         return "(" + v + " ; " + this.getStoredCount() + " ) " + this.name;
