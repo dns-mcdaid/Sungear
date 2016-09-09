@@ -86,7 +86,7 @@ GoTerm.prototype = {
         for (let it = 0; it < this.roots.length; it++) {
             this.roots[it].cleanup();
         }
-        this.terms = {};
+        this.terms.clear();
         this.geneToGo = {};
         this.uniq.clear();
         this.all.clear();
@@ -310,8 +310,34 @@ GoTerm.prototype = {
         }
     },
 
-    shortListListener : function(index) {
-
+    setShortListListeners : function() {
+        this.shortList.forEach((row, i) => {
+           row.addEventListener('click', () => {
+               if (!this.multi && i > -1) {
+                   if (false) {
+                       // if it is a popup trigger
+                   } else {
+                       if (window.event.altKey) {
+                           this.genes.startMultiSelect(this);
+                           row.className = "selected";
+                       } else {
+                           if (this.lastRowList != -1 && window.event.shiftKey) {
+                               let s = new SortedSet();
+                               const sublist = this.listModel.data.splice(Math.min(i, this.lastRowList), Math.max(i, this.lastRowList)+1);
+                               sublist.forEach((item) => {
+                                   //noinspection JSUnresolvedFunction
+                                   s = s.union(item.getAllGenes());
+                               });
+                               this.genes.setSelection(this, s);
+                           } else {
+                               this.selectTerm(this.listModel.data[i], window.event.ctrlKey || window.event.metaKey);
+                           }
+                       }
+                       if (!window.event.shiftKey) this.lastRowList = i;
+                   }
+               }
+           }, false);
+        });
     },
     clearSelectionRecursive : function(el) {
         el.childNodes.forEach((child) => {
