@@ -76,7 +76,7 @@ block content
                 input(type='text', name='findF', id='findF')
                 a(class='btn btn-primary', id='findSelectB', role='button', data-toggle='tooltip') Find
                 a(class='btn btn-primary', id='collapseT', role='button', data-toggle='tooltip')
-                    span(class='glyphicon glyphicon-align-justify')
+                    span(class='glyphicon glyphicon-menu-hamburger')
                 p(id='statusF') TBD
                 span(data-toggle='modal', data-target='#queryD')
                     a(class='btn btn-primary', id='queryB', role='button', data-toggle="tooltip") Query
@@ -89,25 +89,25 @@ block content
                 h3 Controls
                 div(id='controlFbuttons')
                     li
-                        a(class='btn btn-primary', id='restartB', role='button', data-toggle='tooltip') Restart
+                        button(class='btn btn-primary', id='restartB', role='button', data-toggle='tooltip') Restart
                     li
-                        a(class='btn btn-primary', id='allB', role='button', data-toggle='tooltip') All
+                        button(class='btn btn-primary', id='allB', role='button', data-toggle='tooltip') All
                     li
-                        a(class='btn btn-primary', id='noneB', role='button', data-toggle='tooltip') None
+                        button(class='btn btn-primary', id='noneB', role='button', data-toggle='tooltip') None
                     li
-                        a(class='btn btn-primary', id='backB', role='button', data-toggle='tooltip') <<
+                        button(class='btn btn-primary', id='backB', role='button', data-toggle='tooltip') <<
                     li
-                        a(class='btn btn-primary', id='forwardB', role='button', data-toggle='tooltip') >>
+                        button(class='btn btn-primary', id='forwardB', role='button', data-toggle='tooltip') >>
                     li
-                        a(class='btn btn-primary', id='narrowB', role='button', data-toggle='tooltip') Narrow
+                        button(class='btn btn-primary', id='narrowB', role='button', data-toggle='tooltip') Narrow
                     li
-                        a(class='btn btn-primary', id='unionB', role='button', data-toggle='tooltip')
+                        button(class='btn btn-primary', id='unionB', role='button', data-toggle='tooltip')
                             span(class='glyphicon glyphicon-plus-sign')
                     li
-                        a(class='btn btn-primary', id='intersectB', role='button', data-toggle='tooltip')
+                        button(class='btn btn-primary', id='intersectB', role='button', data-toggle='tooltip')
                             span(class='glyphicon glyphicon-adjust')
                     li(class='dropdown')
-                        a(class='btn btn-primary dropdown-toggle', id='coolB', role='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false') Find Cool
+                        button(class='btn btn-primary dropdown-toggle', id='coolB', role='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false') Find Cool
                         ul(class='dropdown-menu', id='coolM')
 
                 table(class='table table-striped img-rounded', id='controlFtable')
@@ -131,8 +131,8 @@ block content
             div(id='goTerms', class='img-rounded')
                 h3 GO Terms
                 div(id='goTop')
-                    a(class='btn btn-primary', id='expand', role='button') Expand
-                    a(class='btn btn-primary', id='collapse', role='button') Collapse
+                    a(class='btn btn-primary', id='goExpandB', role='button', data-toggle='tooltip') Expand
+                    a(class='btn btn-primary', id='goCollapseB', role='button', data-toggle='tooltip') Collapse
                 div(id='goHierarchy', class='img-rounded')
                     ul(id='goHier')
                         li
@@ -145,11 +145,22 @@ block content
                 div(id='goZscore', class='img-rounded')
                     ul(id='goList')
 
-                input(type='text', name='zSearch', id='zSearch')
-                a(class='btn btn-primary', id='zFind', role='button') Find
+                input(type='text', name='zSearch', id='goFindF')
+                button(class='btn btn-primary', id='goFindB', role='button', data-toggle='tooltip') Find
+                button(class='btn btn-primary', id='goCollapseT', role='button', data-toggle='tooltip')
+                    span(class='glyphicon glyphicon-menu-hamburger')
+                button(class='btn btn-primary', id='goListLeafT', role='button', data-toggle='tooltip')
+                    span(class='glyphicon glyphicon-eye-close')
+                button(class='btn btn-primary', id='goListAllT', role='button', data-toggle='tooltip')
+                    span(class='glyphicon glyphicon-eye-open')
+                div(class='dropdown')
+                    button(class='btn btn-primary dropdown-toggle', id='goThreshB', role='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
+                        span(class='glyphicon glyphicon-th-list')
+                    ul(class='dropdown-menu', id='threshM')
+
                 p(id='goCount') GO Terms: ####
                 a(class='btn btn-primary', id='goCopy', role='button') Copy
-                select(id='sort')
+                select(id='goSort')
                     option(disabled, selected, value) --select a sort option--
                     option(value='zScore') Sort by Z-Score
                     option(value='name') Sort by Name

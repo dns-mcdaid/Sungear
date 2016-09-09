@@ -5,45 +5,76 @@ const SortedSet = require('collections/sorted-set');
 const CompareScore = require('./go/compareScore');
 const CompareName = require('./go/compareName');
 const CompareCount = require('./go/compareCount');
+const SearchResults = require('./go/searchResults');
+const TreeModel = require('./go/treeModel');
 
 const GeneEvent = require('../genes/geneEvent');
 const Term = require('../genes/term');
 
 function GoTerm(genes, fd) {
-    this.genes = genes;         /** {GeneList} Temporary flag: set true to use only associated gene count in z-scores, false to use all genes */
-    this.terms = {};            /** {Hashtable<String, Term>} All DAG nodes */
-    this.geneToGo = {};         /** {Hashtable<Gene, Vector<Term>>} GO term lookup by gene, for direct associations */
-    this.geneToGoIndir = {};    /** {Hashtable<Gene, Vector<Term>>} GO term lookup by gene, for direct and indirect associations */
+    this.genes = genes;     /** {GeneList} Temporary flag: set true to use only associated gene count in z-scores, false to use all genes */
+    this.geneThresh = 1;    /** {number} Gene count threshold for inclusion in short list */
+    this.multi = false;     /** {boolean} Multi-select operation indicator - true if in multi-select */
+    this.collapsed = false; /** {boolean} GO term list collapse flag */
+    this.lastRowList = -1;  /** {number} Last row click in GO term list, for range select */
+
+    this.terms = new Map();             /** {Map} String => Term All DAG nodes */
+    this.uniq = new SortedSet();        /** {SortedSet} of Terms. Unique GO terms in DAG - currently terms w/ direct gene associations only */
+    this.all = new SortedSet();         /** {SortedSet} of Terms. All GO terms in DAG, both direct and indirect */
+    this.assocGenes = new SortedSet();  /** {SortedSet} of Genes. All genes w/ GO term assocations */
+
+    this.treeModel = new TreeModel(null);           /** {TreeModel} Tree data model - same model is used over entire life of tree */
+
+    this.listModel = new GOListModel();      /** {GOListModel} List data model - used over entire life of tree */
+
+    // TESTING
+    this.tree = document.getElementById('goTree');              /** GO term hierarchy display component */
+    this.shortList = document.getElementById('goList');         /** GO term list display component */
+
+    this.expandB = document.getElementById('goExpandB');        /** GO hierarchy expand all button */
+    this.expandB.title = "Show all categories in the hierarchy";
+    this.collapseB = document.getElementById('goCollapseB');    /** GO hierarchy collapse all button */
+    this.collapseB.title = "Hide all non-root categories in the hierarchy";
+    this.findF = document.getElementById('goFindF');            /** text box for search */
+    this.findB = document.getElementById('goFindB');            /** button for find */
+    this.findB.title = "Display all categories matching the search text";
+    this.collapseT = document.getElementById('goCollapseT');    /** GO list collapse toggle */
+    this.collapseT.title = "Toggles collapsing list to selected categories only";
+    this.listLeafT = document.getElementById('goListLeafT');    /** GO list show leaves only toggle */
+    this.listAllT = document.getElementById('goListAllT');      /** GO list show all nodes toggle */
+    this.listLeafT.title = "Show direct associations only";
+    this.listAllT.title = "Show all associations.";
+    this.threshB = document.getElementById('goThreshB');    /** Gene count threshold set button */
+    this.threshM = document.getElementById('threshM');      /** Gene threshold choice menu */
+
+    for (let i = 1; i <= 10; i++) {
+        const row = document.createElement('li');
+        row.innerHTML = i;
+        row.value = i;
+        row.addEventListener('click', () => this.setGeneThreshold(row.value), false);
+        this.threshM.appendChild(row);
+    }
+
+    this.statusF = document.getElementById('goStatusF');    /** Status display field */
+    this.copyB = document.getElementById('goCopyB');        /** Short list copy button */
+    this.copyB.title = "Copy the current  selected categories to the clipboard";
+    this.sortB = document.getElementById('sortB');          /** Combo Box Term list sort pull-down */
+
+    // TODO: Figure out what's going on here.
+    this.locateM = document.getElementById('locateM');  /** List of hierarchy terms matching list term */
+    this.listM = document.getElementById('listM');      /** Menu of options for list term right-click */
+    this.findD = fd;                                    /** dialog for find results */
+    this.results = new SearchResults(genes, this);      /** {SearchResults} search results display component */
+
+    // TODO: Right now it wipes all selections, should wipe all but the one clicked.
+    // this.tree.addEventListener('click', this.clearSelectionRecursive.bind(this.tree), false);
+    // this.shortList.addEventListener('click', this.clearSelectionRecursive.bind(this.shortList), false);
+
+    this.geneToGo = new Map();         /** {Hashtable<Gene, Vector<Term>>} GO term lookup by gene, for direct associations */
+    this.geneToGoIndir = new Map();    /** {Hashtable<Gene, Vector<Term>>} GO term lookup by gene, for direct and indirect associations */
     this.nodes = [];            /** {Vector<DefaultMutableTreeNode>} All tree nodes. */
     this.roots = new SortedSet();          /** {TreeSet<Term>} All roots of GO term DAG */
-    this.uniq = new SortedSet();           /** {TreeSet<Term>} Unique GO terms in DAG - currently terms w/ direct gene associations only */
-    this.all = new SortedSet();            /** {TreeSet<Term>} All GO terms in DAG, both direct and indirect */
-    this.assocGenes = new SortedSet();     /** {TreeSet<Gene>} All genes w/ GO term assocations */
-    this.tree = null;           /** {JTree} GO term hierarchy display component */
-    this.shortList = null;      /** {JList} GO term list display component */
-    this.treeModel = null;      /** {DefaultTreeModel} Tree data model - same model is used over entire life of tree */
-    this.listModel = null;      /** {GOListModel} List data model - used over entire life of tree */
-    this.expandB = document.getElementById('expandB');  /** {JButton} GO hierarchy expand all button */
-    this.collapseB = document.getElementById('goCollapseB');    /** {JButton} GO hierarchy collapse all button */
-    this.statusF = document.getElementById('goStatusF');    /** {JTextField} Status display field */
-    this.copyB = document.getElementById('goCopyB');    /** {JButton} Short list copy button */
-    this.sortB = document.getElementById('sortB');      /** {JComboBox} Term list sort pull-down */
-    this.collapseT = document.getElementById('goCollapseT');    /** {JToggleButton} GO list collapse toggle */
-    this.threshB = document.getElementById('threshB');  /** {JButton} Gene count threshold set button */
-    this.geneThresh = 0;        /** {int} Gene count threshold for inclusion in short list */
-    this.threshM = document.getElementById('threshM');  /** {JPopupMenu} Gene threshold choice menu */
-    this.listLeafT = document.getElementById('listLeafT');  /** {JToggleButton} GO list show leaves only toggle */
-    this.listAllT = document.getElementById('listAllT');    /** {JToggleButton} GO list show all nodes toggle */
-    this.findF = document.getElementById('goFindF');    /** {JTextField} text box for search */
-    this.findB = document.getElementById('goFindB');    /** {JButton} button for find */
-    this.findD = document.getElementById('findD');      /** {JInternal Frame} dialog for find results */
-    this.results = null;    /** {SearchResults} search results display component */
     this.highTerm = null;   /** {Term} term to highlight in short list */
-    this.multi = false;     /** {boolean} Multi-select operation indicator - true if in multi-select */
-    this.listM = document.getElementById('listM');  /** {JPopupMenu} Menu of options for list term right-click */
-    this.locateM = document.getElementById('locateM');  /** {JMenu} List of hierarchy terms matching list term */
-    this.collapsed = false; /** {boolean} GO term list collapse flag */
-    this.lastRowList = -1;  /** {Last row click in GO term list, for range select */
 }
 
 GoTerm.sortOptions = [ "Sort by Z-Score", "Sort by Name", "Sort by Count" ];
@@ -199,7 +230,7 @@ GoTerm.prototype = {
     updateShortList : function() {
         // depends on uniq, which is calculated in trimDAG
         const test = new SortedSet();
-        const comparator = GoTerm.sortComp[this.sortB.selectedIndex];
+        const comparator = GoTerm.sortComp[this.sortB.options[this.sortB.selectedIndex]];
         if (this.collapsed) {
             this.updateSelectedState();
         }
@@ -254,9 +285,7 @@ GoTerm.prototype = {
                 this.updateSelect();
                 break;
             case GeneEvent.SELECT:
-                if (this.collapsed) {
-                    this.updateShortList();
-                }
+                if (this.collapsed) this.updateShortList();
                 this.updateSelect();
                 break;
             case GeneEvent.MULTI_START:
@@ -279,6 +308,18 @@ GoTerm.prototype = {
         } else {
             // TODO: Implement
         }
+    },
+
+    shortListListener : function(index) {
+
+    },
+    clearSelectionRecursive : function(el) {
+        el.childNodes.forEach((child) => {
+            if (child.childNodes.length > 0) {
+                this.clearSelectionRecursive(child);
+            }
+            child.className = "";
+        });
     }
 };
 

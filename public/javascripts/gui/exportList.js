@@ -27,10 +27,9 @@ function ExportList(g, context) {
     this.removeB.addEventListener("click", () => this.model.deleteSelected(), false);
     this.exportB.addEventListener("click", () => {
         console.log("List size: " + this.model.getList().length);
-        for (let i = 0; i < this.model.getList().length; i++) {
-            const l = this.model.getList()[i];
-            console.log(l.name + " (" + l.genes.length + ")"); // TODO: @Dennis check back to make sure it should be genes.length
-        }
+        this.model.getList().forEach((entry) => {
+            console.log(entry.name + " (" + entry.genes.length + ")");
+        });
         this.exportGeneList();
     });
     document.getElementById('controlFtableHeader').addEventListener("click", function() {
@@ -468,10 +467,6 @@ ExportModel.prototype = {
         r.children.forEach((child) => {
             this.buildListRec(child);
         });
-
-        // for (let i = 0; i < r.children.length; i++) {
-        //     this.buildListRec(r.children[i]);
-        // }
     },
     buildList : function() {
         this.exportList = [];
@@ -496,11 +491,6 @@ ExportModel.prototype = {
             e.children = [];
             e.parent = null;
         });
-        // for (var it = 0; it < r.length; i++) {
-        //     let e = r[it];
-        //     e.children = [];
-        //     e.parent = null;
-        // }
         this.buildList();
     },
     setCurrent : function(e) {
@@ -572,45 +562,39 @@ ExportModel.prototype = {
             let msg = "";
             if (delList.length > 0) {
                 msg += "Deleting the following groups (selected groups and their child groups):\n";
-                for (it = 0; it < delList.length; i++) {
-                    l = delList[it];
-                    for (i = 0; i < l.indent; i++) {
+                delList.forEach((entry) => {
+                    for (let i = 0; i < entry.indent; i++) {
                         msg += "\t";
                     }
-                    msg += l.name + "\n";
-                }
+                    msg += entry.name +"\n";
+                });
             }
             if (noDelList.length > 0) {
                 msg += "Could not delete the following groups (current group and parent groups):\n";
-                for (it = 0; it < noDelList.length; it++) {
-                    l = noDelList[it];
-                    for (i = 0; i < l.indent; i++) {
+                noDelList.forEach((entry) => {
+                    for (let i = 0; i < entry.indent; i++) {
                         msg += "\t";
                     }
-                    msg += l.name + "\n";
-                }
+                    msg += entry.name + "\n";
+                });
             }
-            var status = 0; // FIXME: @Dennis implement lines 673 & 674
-            if (status == OK_OPTION) {
-                for (it = 0; it < delList.length; it++) {
-                    l = delList[it];
-                    var idx = l.parent.children.indexOf(l);
-                    if (idx > -1) {
-                        l.parent.children.splice(idx, 1);
-                    }
-                    l.parent = null;
-                    l.children = [];
-                }
+            let status = document.getElementById('deleteGroupOption'); // FIXME: @Dennis implement lines 673 & 674
+            if (status.value == true) {
+                delList.forEach((entry) => {
+                    const idx = entry.parent.children.indexOf(entry);
+                    if (idx > -1) entry.parent.children.splice(idx, 1);
+                    entry.parent = null;
+                    entry.children = [];
+                });
                 this.buildList();
             }
         }
     },
     getList : function() {
         return this.exportList;
-    },
-    listUpdated : function(e) {
-        // console.log("Export list updated!");
     }
 };
+
+// TODO: Implement IndentRenderer, IconRenderer, and IndentEditor?
 
 module.exports = ExportList;
