@@ -12,8 +12,8 @@ var NotStrictlyPositiveException = require("../exception/NotStrictlyPositiveExce
 var LocalizedFormats = require("../exception/util/LocalizedFormats");
 var seedrandom = require("seedrandom");
 
-AbstractIntegerDistribution.DEFAULT_INVERSE_ABSOLUTE_ACCURACY= 1e-9;
-AbstractIntegerDistribution.EXPONENTIAL_SA_QI = [];
+ExponentialDistribution.DEFAULT_INVERSE_ABSOLUTE_ACCURACY= 1e-9;
+ExponentialDistribution.EXPONENTIAL_SA_QI = [];
 
 ExponentialDistribution.prototype = Object.create(AbstractIntegerDistribution.prototype);
 ExponentialDistribution.prototype.constructor = ExponentialDistribution;
@@ -30,7 +30,7 @@ while( qi < 1){
   ra.push(qi);
   ++i;
 }
-AbstractIntegerDistribution.EXPONENTIAL_SA_QI = ra;
+ExponentialDistribution.EXPONENTIAL_SA_QI = ra;
 
 function ExponentialDistribution(rng, mean, inverseCumAccuracy){
   var passedRNG;
@@ -38,7 +38,7 @@ function ExponentialDistribution(rng, mean, inverseCumAccuracy){
   if(arguments.length == 1){
     passedRNG = seedrandom();
     passedMean = rng;
-    this.solverAbsoluteAccuracy = AbstractIntegerDistribution.DEFAULT_INVERSE_ABSOLUTE_ACCURACY;
+    this.solverAbsoluteAccuracy = ExponentialDistribution.DEFAULT_INVERSE_ABSOLUTE_ACCURACY;
   }else if(arguments.length == 2){ //(mean, inverseCumAccuracy)
     passedRNG = seedrandom();
     passedMean = rng;
@@ -111,7 +111,7 @@ ExponentialDistribution.prototype.sample = function(){
 
 
 //@Override
-ExponentialDistribution.prototype.getSolverAbsoluteAccuracy = function(){ return solverAbsoluteAccuracy; };
+ExponentialDistribution.prototype.getSolverAbsoluteAccuracy = function(){ return this.solverAbsoluteAccuracy; };
 ExponentialDistribution.prototype.getNumericalMean = function(){ return this.getMean(); };
 ExponentialDistribution.prototype.getNumericalVariance = function(){
   var m = this.getMean();

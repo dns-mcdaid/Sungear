@@ -8,19 +8,22 @@ Translated from Ilyas Mounaime's Java code
 
 var ArithmeticUtils = require("../util/ArithmeticUtils");
 var AbstractIntegerDistribution = require("./AbstractIntegerDistribution");
-var Well19937c = require("../random/Well19937c");
+var seedrandom = require("seedrandom");
 var NotStrictlyPositiveException = require("../exception/NotStrictlyPositiveException");
 var LocalizedFormats = require("../exception/util/LocalizedFormats");
 var NormalDistribution = require("./NormalDistribution");
 var ExponentialDistribution = require("./ExponentialDistribution");
+var Gamma = require("../special/Gamma");
+var SaddlePointExpansion = require("./SaddlePointExpansion");
+var MathUtils = require("../util/MathUtils");
 
+//inheritance
 PoissonDistribution.prototype = Object.create(AbstractIntegerDistribution.prototype);
 PoissonDistribution.prototype.constructor = PoissonDistribution;
-var DEFAULT_MAX_ITERATIONS = 10000000;
-var DEFAULT_EPSILON = 1e-12;
-var mean;
-var normal; //NormalDistribution Object
-var exponential; //ExponentialDistribution object
+
+//static
+PoissonDistribution.DEFAULT_MAX_ITERATIONS = 10000000;
+PoissonDistribution.DEFAULT_EPSILON = 1e-12;
 
 //used for testing if parameter passed to constructor is int or float
 function is_int(mixed_var) {
@@ -49,25 +52,25 @@ function PoissonDistribution(rng, p, epsilon, maxIterations){
   var passedRNG;
   var passedP;
   if(arguments.length == 1){//(p)
-    passedRNG = new Well19937c();
+    passedRNG = seedrandom();
     passedP = rng;
-    this.epsilon = DEFAULT_EPSILON;
-    this.maxIterations = DEFAULT_MAX_ITERATIONS;
+    this.epsilon = PoissonDistribution.DEFAULT_EPSILON;
+    this.maxIterations = PoissonDistribution.DEFAULT_MAX_ITERATIONS;
   }else if(arguments.length == 2){//(p, double epsilon) or (p, int maxIterations)
-    passedRNG = new Well19937c();
+    passedRNG =seedrandom();
     passedP = rng;
 
     //second arg is variable based on whether it's a float or int
     var secondArg = arguments[1];
     if(is_int(secondArg)){ //the second arg is maxIterations
       this.epsilon = p;
-      this.maxIterations = DEFAULT_MAX_ITERATIONS;
+      this.maxIterations = PoissonDistribution.DEFAULT_MAX_ITERATIONS;
     }else{ //second arg is epsilon
-      this.epsilon = DEFAULT_EPSILON;
+      this.epsilon = PoissonDistribution.DEFAULT_EPSILON;
       this.maxIterations = p;
     }
   }else if(arguments.length == 3){//(p, epsilon, maxIterations)
-    passedRNG = new Well19937c();
+    passedRNG = seedrandom();
     passedP = rng;
     this.epsilon = p;
     this.maxIterations = epsilon;
@@ -78,9 +81,10 @@ function PoissonDistribution(rng, p, epsilon, maxIterations){
     this.maxIterations = maxIterations;
   }
   if (passedP <= 0) { throw new NotStrictlyPositiveException(LocalizedFormats.MEAN, passedP);}
+  this.mean = passedP;
   AbstractIntegerDistribution.call(this, passedRNG);
-  normal = new NormalDistribution(passedRNG, passedP, Math.sqrt(passedP),NormalDistribution.DEFAULT_INVERSE_ABSOLUTE_ACCURACY );
-  exponential = new ExponentialDistribution(passedRNG, 1, ExponentialDistribution.DEFAULT_INVERSE_ABSOLUTE_ACCURACY);
+  this.normal = new NormalDistribution(passedRNG, passedP, Math.sqrt(passedP), NormalDistribution.DEFAULT_INVERSE_ABSOLUTE_ACCURACY );
+  this.exponential = new ExponentialDistribution(passedRNG, 1, ExponentialDistribution.DEFAULT_INVERSE_ABSOLUTE_ACCURACY);
 
 }
 
@@ -88,7 +92,7 @@ function PoissonDistribution(rng, p, epsilon, maxIterations){
 
 
 
-PoissonDistribution.prototype.getMean = function() {return mean;};
+PoissonDistribution.prototype.getMean = function() {return this.mean;};
 
 
 PoissonDistribution.prototype.probability = function(x) {
@@ -96,10 +100,10 @@ PoissonDistribution.prototype.probability = function(x) {
   if (x < 0 || x == Number.MAX_VALUE) {
       ret = 0.0;
   } else if (x === 0) {
-      ret = Math.exp(-mean);
+      ret = Math.exp(-this.mean);
   } else {
       ret = Math.exp(-SaddlePointExpansion.getStirlingError(x) -
-            SaddlePointExpansion.getDeviancePart(x, mean)) /
+            SaddlePointExpansion.getDeviancePart(x, this.mean)) /
             Math.sqrt(MathUtils.TWO_PI * x);
   }
   return ret;
@@ -112,15 +116,14 @@ PoissonDistribution.prototype.cumulativeProbability = function(x) {
   if (x == Number.MAX_VALUE) {
       return 1;
   }
-  return Gamma.regularizedGammaQ(x + 1, mean, this.epsilon, this.maxIterations);
+  return Gamma.regularizedGammaQ(x + 1, this.mean, this.epsilon, this.maxIterations);
 };
-PoissonDistribution.prototype.normalApproximateProbability = function (x)  {return normal.cumulativeProbability(x + 0.5);};
+PoissonDistribution.prototype.normalApproximateProbability = function (x)  {return this.normal.cumulativeProbability(x + 0.5);};
 PoissonDistribution.prototype.getNumericalMean = function() {return this.getMean();};
 PoissonDistribution.prototype.getNumericalVariance = function() {return this.getMean();};
 PoissonDistribution.prototype.getSupportLowerBound = function() {return 0;};
 PoissonDistribution.prototype.getSupportUpperBound = function() {return Number.MAX_VALUE;};
 PoissonDistribution.prototype.isSupportConnected = function() {return true;};
-//@Override
 PoissonDistribution.prototype.sample = function() {
   return Math.min(this.nextPoisson(this.mean), Number.MAX_VALUE);
 
@@ -135,7 +138,7 @@ PoissonDistribution.prototype.nextPoisson = function(meanPoisson) {
       var rnd = 1.0;
 
       while (n < 1000 * meanPoisson) {
-          rnd = this.random.nextDouble();
+          rnd = this.random();
           r = r * rnd;
           if (r >= p) {
               n++;
@@ -155,10 +158,10 @@ PoissonDistribution.prototype.nextPoisson = function(meanPoisson) {
       }else{
         y2 = this.nextPoisson(lambdaFractional);
       }
-      var delta = Math.sqrt(lambda * Math.log(32 * lambda / FastMath.PI + 1));
+      var delta = Math.sqrt(lambda * Math.log(32 * lambda / Math.PI + 1));
       var halfDelta = delta / 2;
       var twolpd = 2 * lambda + delta;
-      var a1 = Math.sqrt(FastMath.PI * twolpd) * Math.exp(1 / 8 * lambda);
+      var a1 = Math.sqrt(Math.PI * twolpd) * Math.exp(1 / 8 * lambda);
       var a2 = (twolpd / delta) * Math.exp(-delta * (1 + delta) / twolpd);
       var aSum = a1 + a2 + 1;
       var p1 = a1 / aSum;
@@ -173,9 +176,9 @@ PoissonDistribution.prototype.nextPoisson = function(meanPoisson) {
       var qr = 0;
       var qa = 0;
       for (;;) {
-          var u = this.random.nextDouble();
+          var u = this.random();
           if (u <= p1) {
-              var n = this.random.nextGaussian();
+              var n = this.random();
               x = n * Math.sqrt(lambda + halfDelta) - 0.5;
               if (x > delta || x < -lambda) {
                   continue;
@@ -185,16 +188,16 @@ PoissonDistribution.prototype.nextPoisson = function(meanPoisson) {
               }else{
                 y = Math.ceil(x);
               }
-              var e = exponential.sample();
+              var e = this.exponential.sample();
               v = -e - (n * n / 2) + c1;
           } else {
               if (u > p1 + p2) {
                   y = lambda;
                   break;
               } else {
-                  x = delta + (twolpd / delta) * exponential.sample();
+                  x = delta + (twolpd / delta) * this.exponential.sample();
                   y = Math.ceil(x);
-                  v = -exponential.sample() - delta * (x + 1) / twolpd;
+                  v = -this.exponential.sample() - delta * (x + 1) / twolpd;
               }
           }
           if(x < 0){ a = 1;}

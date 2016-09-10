@@ -11,7 +11,7 @@ var LocalizedFormats = require("../exception/util/LocalizedFormats");
 var OutOfRangeException = require("../exception/OutOfRangeException");
 var AbstractIntegerDistribution = require("./AbstractIntegerDistribution");
 var NotStrictlyPositiveException = require("../exception/NotStrictlyPositiveException");
-var Well19937c = require("../random/Well19937c");
+var seedrandom = require("seedrandom");
 var Beta = require("../special/Beta");
 
 PascalDistribution.prototype = Object.create(AbstractIntegerDistribution.prototype);
@@ -22,7 +22,7 @@ function PascalDistribution(rng, r, p){
   var passedR;
   var passedP;
   if(arguments.length == 2){
-    passedRNG = new Well19937c();
+    passedRNG = seedrandom();
     passedR = rng;
     passedP = r;
   }else{
@@ -33,23 +33,21 @@ function PascalDistribution(rng, r, p){
   AbstractIntegerDistribution.call(this, passedRNG);
   if(r <= 0){throw new NotStrictlyPositiveException(LocalizedFormats.NUMBER_OF_SUCCESSES,r);}
   if(p < 0 || p > 1){throw new OutOfRangeException(p, 0, 1);}
-  numberOfSuccesses = r;
-  probabilityOfSuccess = p;
+  this.numberOfSuccesses = passedR;
+  this.probabilityOfSuccess = passedP;
 }
-PascalDistribution.numberOfSuccesses;
-PascalDistribution.probabilityOfSuccess;
 
-PascalDistribution.prototype.getNumberOfSuccesses = function() {return numberOfSuccesses;};
-PascalDistribution.prototype.getProbabilityOfSuccess = function() {return probabilityOfSuccess;};
+PascalDistribution.prototype.getNumberOfSuccesses = function() {return this.numberOfSuccesses;};
+PascalDistribution.prototype.getProbabilityOfSuccess = function() {return this.probabilityOfSuccess;};
 PascalDistribution.prototype.probability = function(x) {
   var ret;
   if (x < 0) {
       ret = 0.0;
   } else {
       ret = ArithmeticUtils.binomialCoefficientDouble(x +
-            numberOfSuccesses - 1, numberOfSuccesses - 1) *
-            Math.pow(probabilityOfSuccess, numberOfSuccesses) *
-            Math.pow(1.0 - probabilityOfSuccess, x);
+              this.numberOfSuccesses - 1, this.numberOfSuccesses - 1) *
+            Math.pow(this.probabilityOfSuccess, this.numberOfSuccesses) *
+            Math.pow(1.0 - this.probabilityOfSuccess, x);
   }
   return ret;
 };
@@ -59,8 +57,8 @@ PascalDistribution.prototype.cumulativeProbability = function(x) {
   if (x < 0) {
     ret = 0.0;
   } else {
-      ret = Beta.regularizedBeta(probabilityOfSuccess,
-        numberOfSuccesses, x + 1.0);
+      ret = Beta.regularizedBeta(this.probabilityOfSuccess,
+          this.numberOfSuccesses, x + 1.0);
   }
   return ret;
 };
