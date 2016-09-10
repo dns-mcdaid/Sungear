@@ -13,6 +13,8 @@ const GeneEvent = require('../genes/geneEvent');
 const Term = require('../genes/term');
 
 function GoTerm(genes, fd) {
+	this.debug = true;
+	
     this.genes = genes;     /** {GeneList} Temporary flag: set true to use only associated gene count in z-scores, false to use all genes */
     this.geneThresh = 1;    /** {number} Gene count threshold for inclusion in short list */
     this.multi = false;     /** {boolean} Multi-select operation indicator - true if in multi-select */
@@ -60,7 +62,7 @@ function GoTerm(genes, fd) {
     this.statusF = document.getElementById('goStatusF');    /** Status display field */
     this.copyB = document.getElementById('goCopyB');        /** Short list copy button */
     this.copyB.title = "Copy the current  selected categories to the clipboard";
-    this.sortB = document.getElementById('sortB');          /** Combo Box Term list sort pull-down */
+    this.sortB = document.getElementById('goSortB');          /** Combo Box Term list sort pull-down */
 
     // TODO: Figure out what's going on here.
     this.locateM = document.getElementById('locateM');  /** List of hierarchy terms matching list term */
@@ -450,6 +452,7 @@ GoTerm.prototype = {
         }
     },
     listUpdated : function(e) {
+    	if (typeof e !== 'undefined' && this.debug) return;
         switch (e.getType()) {
             case GeneEvent.NEW_SOURCE:
                 this.set(this.genes.getSource());

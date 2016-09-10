@@ -59,12 +59,14 @@ SearchResults.prototype = {
         }
     },
     selectTerms : function(t) {
-        const s = new SortedSet();
+        let s = new SortedSet();
         if (t !== null && typeof t !== 'undefined') {
             for (let i = 0; i < t.length; i++) {
-                s.union(t[i].getAllGenes());
+                s = s.union(t[i].getAllGenes().toArray());
             }
         }
         this.genes.setSelection(this, s);
     }
 };
+
+module.exports = SearchResults;
