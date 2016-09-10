@@ -5,7 +5,12 @@ Porting Sungear from Java to Javascript,
 Translated from Ilyas Mounaime's Java code
 
 */
-var Gamma = {
+var FastMath = require("../util/FastMath");
+var ContinuedFraction = require("../util/ContinuedFraction");
+var MaxCountExceededException = require("../exception/MaxCountExceededException");
+function Gamma(){}
+
+Gamma = {
 
 
  INV_GAMMA1P_M1_A0 : 0.611609510448141581788E-08,
@@ -122,6 +127,8 @@ var Gamma = {
  LANCZOS_G : 607.0 / 128.0,
 
  GAMMA : 0.577215664901532860606512090082,
+	C_LIMIT: 49,
+	S_LIMIT: 1E-5,
 
  LANCZOS : [
         0.99999999999999709182,
@@ -232,7 +239,7 @@ var Gamma = {
 		document.getElementById("output").innerHTML = "Throw Number is Too Large exception from logGamma1p function";
 	}
   console.log("Leaving logGamma1p");
-	return -FastMathLog1p(invGamma1pm1(x)); //FIXME!
+	return -FastMath.Log1p(invGamma1pm1(x)); //FIXME!
 
 },
 
@@ -271,7 +278,181 @@ var Gamma = {
 	}
 console.log("Leaving LogGamma");
 	return ret;
-}
+	},
+	regularizedGammaP: function(a, x, passedEpsilon, passedIterations){
+	    var epsilon;
+        var maxIterations;
+        if(arguments.length == 2){
+            epsilon = passedEpsilon;
+            maxIterations = passedIterations;
+        }
+        var ret;
+
+        if (isNaN(a) || isNaN(x) || (a <= 0.0) || (x < 0.0)) {
+            ret = Number.NaN;
+        } else if (x == 0.0) {
+            ret = 0.0;
+        } else if (x >= a + 1) {
+            // use regularizedGammaQ because it should converge faster in this
+            // case.
+            ret = 1.0 - Gamma.regularizedGammaQ(a, x, epsilon, maxIterations);
+        } else {
+            // calculate series
+            var n = 0.0; // current element index
+            var an = 1.0 / a; // n-th element in the series
+            var sum = an; // partial sum
+            while (Math.abs(an/sum) > epsilon &&
+            n < maxIterations &&
+            sum < Number.POSITIVE_INFINITY) {
+                // compute next element in the series
+                n = n + 1.0;
+                an = an * (x / (a + n));
+
+                // update partial sum
+                sum = sum + an;
+            }
+            if (n >= maxIterations) {
+                throw new MaxCountExceededException(maxIterations);
+            } else if (!isFinite(sum)) {
+                ret = 1.0;
+            } else {
+                ret = Math.exp(-x + (a * Math.log(x)) - Gamma.logGamma(a)) * sum;
+            }
+        }
+
+        return ret;
+
+
+	},
+	regularizedGammaQ: function(a, x, passedEpsilon, passedIterations){
+		var epsilon;
+		var maxIterations;
+		if(arguments.length == 2){
+			epsilon = Gamma.DEFAULT_EPSILON;
+			maxIterations = Number.MAX_VALUE;
+		}
+		var ret;
+
+		if (isNaN(a) || isNaN(x) || (a <= 0.0) || (x < 0.0)) {
+			ret = Number.NaN;
+		} else if (x == 0.0) {
+			ret = 1.0;
+		} else if (x < a + 1.0) {
+			// use regularizedGammaP because it should converge faster in this
+			// case.
+			ret = 1.0 - Gamma.regularizedGammaP(a, x, epsilon, maxIterations);
+		} else {
+			// create continued fraction
+			var fraction =  ContinuedFraction;
+			fraction.getA = function(n, x){
+			  return ((2.0 * n) + 1.0) - a + x;
+            };
+            fraction.getB = function(n, x){
+              return n * (a - n);
+            };
+
+			ret = 1.0 / cf.evaluate(x, epsilon, maxIterations);
+			ret = Math.exp(-x + (a * Math.log(x)) - Gamma.logGamma(a)) * ret;
+		}
+
+		return ret;
+	},
+	digamma: function(x){
+		if (x > 0 && x <= Gamma.S_LIMIT) {
+			// use method 5 from Bernardo AS103
+			// accurate to O(x)
+			return -Gamma.GAMMA - 1 / x;
+		}
+
+		if (x >= Gamma.C_LIMIT) {
+			// use method 4 (accurate to O(1/x^8)
+			var inv = 1 / (x * x);
+			//            1       1        1         1
+			// log(x) -  --- - ------ + ------- - -------
+			//           2 x   12 x^2   120 x^4   252 x^6
+			return Math.log(x) - 0.5 / x - inv * ((1.0 / 12) + inv * (1.0 / 120 - inv / 252));
+		}
+
+		return Gamma.digamma(x + 1) - 1 / x;
+	},
+	trigamma: function(x){
+		if (x > 0 && x <= Gamma.S_LIMIT) {
+			return 1 / (x * x);
+		}
+
+		if (x >= Gamma.C_LIMIT) {
+			var inv = 1 / (x * x);
+			//  1    1      1       1       1
+			//  - + ---- + ---- - ----- + -----
+			//  x      2      3       5       7
+			//      2 x    6 x    30 x    42 x
+			return 1 / x + inv / 2 + inv / x * (1.0 / 6 - inv * (1.0 / 30 + inv / 42));
+		}
+
+		return Gamma.trigamma(x + 1) + 1 / (x * x);
+	},
+	gamma: function(x){
+		if ((x == FastMath.rint(x)) && (x <= 0.0)) {
+			return Number.NaN;
+		}
+		var ret;
+		var absX = Math.abs(x);
+		if (absX <= 20.0) {
+			if (x >= 1.0) {
+				/*
+				 * From the recurrence relation
+				 * Gamma(x) = (x - 1) * ... * (x - n) * Gamma(x - n),
+				 * then
+				 * Gamma(t) = 1 / [1 + invGamma1pm1(t - 1)],
+				 * where t = x - n. This means that t must satisfy
+				 * -0.5 <= t - 1 <= 1.5.
+				 */
+				var prod = 1.0;
+				var t = x;
+				while (t > 2.5) {
+					t = t - 1.0;
+					prod *= t;
+				}
+				ret = prod / (1.0 + Gamma.invGamma1pm1(t - 1.0));
+			} else {
+				/*
+				 * From the recurrence relation
+				 * Gamma(x) = Gamma(x + n + 1) / [x * (x + 1) * ... * (x + n)]
+				 * then
+				 * Gamma(x + n + 1) = 1 / [1 + invGamma1pm1(x + n)],
+				 * which requires -0.5 <= x + n <= 1.5.
+				 */
+				var prod = x;
+				var t = x;
+				while (t < -0.5) {
+					t = t + 1.0;
+					prod *= t;
+				}
+				ret = 1.0 / (prod * (1.0 + Gamma.invGamma1pm1(t)));
+			}
+		} else {
+			var y = absX + Gamma.LANCZOS_G + 0.5;
+			var gammaAbs = Gamma.SQRT_TWO_PI / x *
+				Math.pow(y, absX + 0.5) *
+				FastMath.exp(-y) * Gamma.lanczos(absX);
+			if (x > 0.0) {
+				ret = gammaAbs;
+			} else {
+				/*
+				 * From the reflection formula
+				 * Gamma(x) * Gamma(1 - x) * sin(pi * x) = pi,
+				 * and the recurrence relation
+				 * Gamma(1 - x) = -x * Gamma(-x),
+				 * it is found
+				 * Gamma(x) = -pi / [x * sin(pi * x) * Gamma(-x)].
+				 */
+				ret = -Math.PI /
+					(x * Math.sin(Math.PI * x) * gammaAbs);
+			}
+		}
+		return ret;
+
+	}
 
 };
 

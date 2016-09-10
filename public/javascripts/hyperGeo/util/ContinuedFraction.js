@@ -10,25 +10,25 @@ var MaxCountExceededException = require("../exception/MaxCountExceededException"
 var LocalizedFormats = require("../exception/util/LocalizedFormats");
 var Precision = require("./Precision");
 
-var DEFAULT_EPSILON = 10e-9;
-
 function ContinuedFraction(){}
 
+ContinuedFraction.DEFAULT_EPSILON = 10e-9;
+
 ContinuedFraction.getA =  function(n,x){};
-ContinuedFraction.getB =  function(n, x){};
+ContinuedFraction.getB =  function(n,x){};
 ContinuedFraction.evaluate =  function(passedX, passedEpsilon, passedIterations){
         var x = passedX;
         var epsilon;
         var maxIterations;
         if(arguments.length == 1){
-            epsilon = DEFAULT_EPSILON;
+            epsilon = ContinuedFraction.DEFAULT_EPSILON;
             maxIterations = Number.MAX_VALUE;
         }else if(arguments.length == 2){
             if(passedEpsilon %1 != 0){ //not a whole number
                 epsilon = passedEpsilon;
                 maxIterations = NUMBER.MAX_VALUE;
             }else{
-                epsilon = DEFAULT_EPSILON;
+                epsilon = ContinuedFraction.DEFAULT_EPSILON;
                 maxIterations = passedEpsilon;
             }
         }else{
@@ -66,11 +66,11 @@ ContinuedFraction.evaluate =  function(passedX, passedEpsilon, passedIterations)
             var deltaN = cN * dN;
             hN = hPrev * deltaN;
 
-            if (!Number.isFinite(hN)) {
+            if (!isFinite(hN)) {
                 throw new ConvergenceException(LocalizedFormats.CONTINUED_FRACTION_INFINITY_DIVERGENCE,
                     x);
             }
-            if (Number.isNaN(hN)) {
+            if (isNaN(hN)) {
                 throw new ConvergenceException(LocalizedFormats.CONTINUED_FRACTION_NAN_DIVERGENCE,
                     x);
             }
@@ -91,5 +91,5 @@ ContinuedFraction.evaluate =  function(passedX, passedEpsilon, passedIterations)
         }
 
         return hN;
-    };
+};
 module.exports = ContinuedFraction;

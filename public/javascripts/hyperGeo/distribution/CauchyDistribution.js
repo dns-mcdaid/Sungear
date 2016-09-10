@@ -5,28 +5,33 @@ Porting Sungear from Java to Javascript,
 Translated from Ilyas Mounaime's Java code
 
 */
-var DEFAULT_INVERSE_ABSOLUTE_ACCURACY = 1e-9;
-var solverAbsoluteAccuracy;
+
+var seedrandom = require("seedrandom");
+var AbstractRealDistribution = require("./AbstractRealDistribution");
+var OutOfRangeException = require("../exception/OutOfRangeException");
 
 CauchyDistribution.prototype = Object.create(AbstractRealDistribution.prototype);
 CauchyDistribution.prototype.constructor = CauchyDistribution;
 
+CauchyDistribution.DEFAULT_INVERSE_ABSOLUTE_ACCURACY = 1e-9;
+CauchyDistribution.solverAbsoluteAccuracy;
+
 function CauchyDistribution(rng, median, scale, inverseCumAccuracy){
   var passedRNG;
   if(arguments.length === 0){ //(median = 0, scale = 1)
-    passedRNG = new Well19937c();
+    passedRNG = seedrandom();
     this.median = 0;
     this.scale = 1;
     this.inverseCumAccuracy = DEFAULT_INVERSE_ABSOLUTE_ACCURACY;
 
   }else if(arguments.length == 2){ //(median, scale)
-    pssedRNG = new Well19937c();
+    pssedRNG = seedrandom();
     this.median = rng;
     this.scale = median;
     this.inverseCumAccuracy = DEFAULT_INVERSE_ABSOLUTE_ACCURACY;
 
   }else if(arguments.length == 3){ //(median, scale, inverseCumAccuracy)
-    passedRNG = new Well19937c();
+    passedRNG = seedrandom();
     this.median = rng;
     this.scale = median;
     this.inverseCumAccuracy = scale;
@@ -42,11 +47,11 @@ function CauchyDistribution(rng, median, scale, inverseCumAccuracy){
 
 //GETTERS
 CauchyDistribution.prototype.getMedian = function(){ return this.median;};
-CauchyDistribution.prototype..getScale = function(){ return this.scale; };
+CauchyDistribution.prototype.getScale = function(){ return this.scale; };
 
 CauchyDistribution.prototype.density = function(x){
   var dev = x - this.median;
-  return (1/FastMathPI) * (this.scale/(dev * dev + this.scal * this.scale));
+  return (1/Math.PI) * (this.scale/(dev * dev + this.scale * this.scale));
 };
 
 //@Override
@@ -56,13 +61,13 @@ CauchyDistribution.prototype.inverseCumulativeProbability = function(p){
   else if(p === 0){ ret = Number.NEGATIVE_INFINITY; }
   else if(p === 1){ ret = Number.POSITIVE_INFINITY; }
   else{
-    ret = this.median + this.scale * Math.tan(FastMathPI * (p - 0.5));
+    ret = this.median + this.scale * Math.tan(Math.PI * (p - 0.5));
   }
   return ret;
 };
 
 CauchyDistribution.prototype.cumulativeProbability = function(x){
-  return 0.5 * (Math.atan((x - this.median)/this.scale)/ FastMathPI);
+  return 0.5 * (Math.atan((x - this.median)/this.scale)/ Math.PI);
 };
 
 //override
@@ -73,3 +78,5 @@ CauchyDistribution.prototype.getSupportUpperBound = function(){ return Number.PO
 CauchyDistribution.prototype.isSupportLowerBoundInclusive = function(){ return false;};
 CauchyDistribution.prototype.isSupportUpperBoundInclusive = function(){ return false;};
 CauchyDistribution.prototype.isSupportConnected = function(){ return true;};
+
+module.exports = CauchyDistribution;

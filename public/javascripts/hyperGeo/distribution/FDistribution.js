@@ -1,32 +1,33 @@
+/*
+ Radhika Mattoo, February 2016 N.Y.
+
+ Porting Sungear from Java to Javascript,
+ Translated from Ilyas Mounaime's Java code
+
+ */
+var seedrandom = require("seedrandom");
 var LocalizedFormats = require("../exception/util/LocalizedFormats.js");
 var AbstractIntegerDistribution = require("../distribution/AbstractIntegerDistribution");
-var Well19937 = require("../random/Well19937c");
 var Beta = require("../special/Beta");
-/*
-Radhika Mattoo, February 2016 N.Y.
-
-Porting Sungear from Java to Javascript,
-Translated from Ilyas Mounaime's Java code
-
-*/
-FDistribution.prototype = Object.create(AbstractIntegerDistribution.prototype);
-FDistribution.prototype.constructor = FDistribution;
 var NotStrictlyPositiveException = require("../exception/NotStrictlyPositiveException");
 
-var DEFAULT_INVERSE_ABSOLUTE_ACCURACY = 1e-9;
-var solverAbsoluteAccuracy;
+FDistribution.prototype = Object.create(AbstractIntegerDistribution.prototype);
+FDistribution.prototype.constructor = FDistribution;
+
+FDistribution.DEFAULT_INVERSE_ABSOLUTE_ACCURACY = 1e-9;
+FDistribution.solverAbsoluteAccuracy;
 
 function FDistribution(rng, numeratorDegreesOfFreedom, denominatorDegreesOfFreedom, inverseCumAccuracy){
   var passedRNG;
   var passedNum;
   var passedDenom;
   if(arguments.length == 2){//(numeratorDegreesOfFreedom, denominatorDegreesOfFreedom)
-    passedRNG = new Well19937c();
+    passedRNG = seedrandom();
     passedNum = rng;
     passedDenom = numeratorDegreesOfFreedom;
-    solverAbsoluteAccuracy = DEFAULT_INVERSE_ABSOLUTE_ACCURACY;
+    solverAbsoluteAccuracy = FDistribution.DEFAULT_INVERSE_ABSOLUTE_ACCURACY;
   }else if(arguments.length == 3){//(numeratorDegreesOfFreedom, denominatorDegreesOfFreedom, inverseCumAccuracy)
-    passedRNG = new Well19937();
+    passedRNG = seedrandom();
     passedNum = rng;
     passedDenom = this.numeratorDegreesOfFreedom;
     solverAbsoluteAccuracy = denominatorDegreesOfFreedom;
@@ -79,7 +80,7 @@ FDistribution.prototype.getNumeratorDegreesOfFreedom = function() {return this.n
 
 FDistribution.prototype.getDenominatorDegreesOfFreedom = function(){ return this.denominatorDegreesOfFreedom;};
 
-FDistribution.prototype.getSolverAbsoluteAccuracy = function(){ return solverAbsoluteAccuracy;};
+FDistribution.prototype.getSolverAbsoluteAccuracy = function(){ return FDistribution.solverAbsoluteAccuracy;};
 
 FDistribution.prototype.getNumericalMean = function() {
         var denominatorDF = this.getDenominatorDegreesOfFreedom();

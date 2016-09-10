@@ -77,3 +77,5 @@ NormalDistribution.prototype.isSupportLowerBoundInclusive = function() {return f
 NormalDistribution.prototype.isSupportUpperBoundInclusive = function() {return false;};
 NormalDistribution.prototype.isSupportConnected = function() {return true;};
 NormalDistribution.prototype.sample = function(){return this.standardDeviation * this.random.nextGaussian() + this.mean;};
+
+module.exports = NormalDistribution;

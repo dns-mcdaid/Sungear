@@ -9,32 +9,33 @@ var Gamma = require("../special/Gamma");
 var Beta = require("../special/Beta");
 var LocalizedFormats = require("../exception/util/LocalizedFormats");
 var AbstractRealDistribution = require("./AbstractRealDistribution");
+var NotStrictlyPositiveException = require("../exception/NotStrictlyPositiveException");
+var seedrandom = require("seedrandom");
 
 TDistribution.prototype = Object.create(AbstractRealDistribution.prototype);
 TDistribution.prototype.constructor = TDistribution;
 
 
-var DEFAULT_INVERSE_ABSOLUTE_ACCURACY = 1e-9;
-var solverAbsoluteAccuracy;
+TDistribution.DEFAULT_INVERSE_ABSOLUTE_ACCURACY = 1e-9;
 
 function TDistribution(rng, degreeOfFreedom, inverseCumAccuracy){
   var passedRNG;
   var passedDOF;
   if(arguments.length == 1){
-    passedRNG = new Well19937c();
+    passedRNG = seedrandom();
     passedDOF = rng;
-    solverAbsoluteAccuracy = DEFAULT_INVERSE_ABSOLUTE_ACCURACY;
+    this.solverAbsoluteAccuracy = TDistribution.DEFAULT_INVERSE_ABSOLUTE_ACCURACY;
   }else if(arguments.length == 2){//(DOF, inverseCumAccuracy)
-    passedRNG = new Well19937c();
+    passedRNG =seedrandom();
     passedDOG = rng;
-    solverAbsoluteAccuracy = degreeOfFreedom;
+      this.solverAbsoluteAccuracy = degreeOfFreedom;
   }else{//all 3
     passedRNG = rng;
     passedDOF = degreeOfFreedom;
-    solverAbsoluteAccuracy = inverseCumAccuracy;
+      this.solverAbsoluteAccuracy = inverseCumAccuracy;
   }
   AbstractRealDistribution.call(this, passedRNG);
-  if(passedDOF <= 0){throw new NotStrictlyPositiveException(LocalizedFormats.DEGREES_OF_FREEDOM,degreesOfFreedom);}
+  if(passedDOF <= 0){throw new NotStrictlyPositiveException(LocalizedFormats.DEGREES_OF_FREEDOM,passedDOF);}
   this.degreesOfFreedom = passedDOF;
 }
 
@@ -70,7 +71,7 @@ TDistribution.prototype.cumulativeProbability = function(x) {
 };
 
 //@Override
-TDistribution.prototype.getSolverAbsoluteAccuracy = function() {return solverAbsoluteAccuracy;};
+TDistribution.prototype.getSolverAbsoluteAccuracy = function() {return this.solverAbsoluteAccuracy;};
 TDistribution.prototype.getNumericalMean = function() {
   var df = this.getDegreesOfFreedom();
 
@@ -100,3 +101,5 @@ TDistribution.prototype.getSupportUpperBound = function(){ return Number.POSITIV
 TDistribution.prototype.isSupportLowerBoundInclusive = function(){ return false; };
 TDistribution.prototype.isSupportUpperBoundInclusive = function(){ return false; };
 TDistribution.prototype.isSupportConnected = function(){ return true; };
+
+module.exports = TDistribution;

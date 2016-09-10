@@ -5,16 +5,18 @@ Porting Sungear from Java to Javascript,
 Translated from Ilyas Mounaime's Java code
 
 */
-var DEFAULT_INVERSE_ABSOLUTE_ACCURACY = 1e-9;
 var AbstractRealDistribution = require("./AbstractRealDistribution");
 var Gamma = require("../special/Gamma");
+var seedrandom = require("seedrandom");
+var Beta = require("../special/Beta");
+var NumberIsTooSmallException = require("../exception/NumberIsTooSmallException");
+var LocalizedFormats = require("../exception/util/LocalizedFormats");
+var FastMath = require("../util/FastMath");
 
-BetaDistribution.prototype = Object.create(AbstractRealDistribution.prototype);
-BetaDistribution.prototype.constructor = BetaDistribution;
-
-var z;
-var solverAbsoluteAccuracy;
-
+//static variables
+BetaDistribution.z;
+BetaDistribution.solverAbsoluteAccuracy;
+BetaDistribution.DEFAULT_INVERSE_ABSOLUTE_ACCURACY = 1e-9;
 
 function BetaDistribution(rng, alpha, beta, inverseCumAccuracy){
   var passedRNG;
@@ -22,11 +24,11 @@ function BetaDistribution(rng, alpha, beta, inverseCumAccuracy){
     this.alpha = rng;
     this.beta = alpha;
     solverAbsoluteAccuracy = DEFAULT_INVERSE_ABSOLUTE_ACCURACY;
-    passedRNG = new Well19937c();
+    passedRNG = seedrandom();
 
   }
   else if(arguments.length == 3){ //(alpha, beta, inverseCumAccuracy)
-    passedRNG = new Well19937c();
+    passedRNG = seedrandom();
     this.alpha = rng;
     this.beta = alpha;
     solverAbsoluteAccuracy = beta;
@@ -39,9 +41,15 @@ function BetaDistribution(rng, alpha, beta, inverseCumAccuracy){
     this.beta = beta;
   }
   AbstractRealDistribution.call(this, passedRNG);
-  z = Number.NaN;
+  BetaDistribution.z = Number.NaN;
 
 }
+
+
+//inheritance
+BetaDistribution.prototype = Object.create(AbstractRealDistribution.prototype);
+BetaDistribution.prototype.constructor = BetaDistribution;
+
 
 BetaDistribution.prototype.getAlpha = function(){
   return this.alpha;
@@ -51,8 +59,8 @@ BetaDistribution.prototype.getBeta = function(){
 };
 
 BetaDistribution.prototype.recomputeZ= function(){
-  if(Number.isNan(z)){
-    z = Gamma.logGamma(alpha) + Gamma.logGamma(beta) - Gamma.logGamma(alpha + beta);
+  if(isNaN(z)){
+    BetaDistribution.z = Gamma.logGamma(this.alpha) + Gamma.logGamma(this.beta) - Gamma.logGamma(this.alpha +this.beta);
   }
 };
 
@@ -62,18 +70,18 @@ BetaDistribution.prototype.density = function(x){
     return 0;
   }else if(x === 0){
     if(alpha < 1){
-      throw new NumberIsTooSmallException(LocalizedFormats.CANNOT_COMPUTE_BETA_DENSITY_AT_0_FOR_SOME_ALPHA, alpha, 1, false);
+      throw new NumberIsTooSmallException(LocalizedFormats.CANNOT_COMPUTE_BETA_DENSITY_AT_0_FOR_SOME_ALPHA, this.alpha, 1, false);
     }
     return 0;
   }else if(x == 1){
-    if (beta < 1){
-      throw new NumberIsTooSmallException(LocalizedFormats.CANNOT_COMPUTE_BETA_DENSITY_AT_1_FOR_SOME_BETA, beta, 1, false);
+    if (this.beta < 1){
+      throw new NumberIsTooSmallException(LocalizedFormats.CANNOT_COMPUTE_BETA_DENSITY_AT_1_FOR_SOME_BETA, this.beta, 1, false);
     }
     return 0;
   }else{
-    var logX = FastMathLog(x);
-    var log1mX = FastMathLog1p(-x);
-    return FastMathExp((this.alpha-1) * logX + (this.beta-1) * log1mX - z);
+    var logX = Math.log(x);
+    var log1mX = FastMath.Log1p(-x);
+    return Math.exp((this.alpha-1) * logX + (this.beta-1) * log1mX - z);
   }
 };//function
 
@@ -93,13 +101,13 @@ function getSolverAbsoluteAccuracy(){
 }
 
 function getNumericalMean(){
-  var a = getAlpha();
-  return a/(a + getBeta());
+  var a = this.getAlpha();
+  return a/(a + this.getBeta());
 }
 
 function getNumericalVariance(){
-  var a = getAlpha();
-  var b = getbeta();
+  var a = this.getAlpha();
+  var b = this.getBeta();
   var alphabetasum = a+b;
   return (a * b) / ((alphabetasum * alphabetasum) * (alphabetasum + 1));
 }

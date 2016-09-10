@@ -11,12 +11,13 @@ var SaddlePointExpansion = require("./SaddlePointExpansion");
 var Beta = require("../special/Beta");
 var NotPositiveException = require("../exception/NotPositiveException");
 var OutOfRangeException = require("../exception/OutOfRangeException");
+var seedrandom = require("seedrandom");
 
 
 function BinonomialDistribution(rng, trials, p){
   var passedRNG;
   if(arguments.length == 2){
-    passedRNG = new Well19937c();
+    passedRNG = seedrandom();
     if(rng < 0){ throw new NotPositiveException(LocalizedFormats.NUMBER_OF_TRIALS, trials);}
     if(trials < 0 || trials > 1){throw new OutOfRangeException(p,0,1);}
     this.probabilityOfSuccess = trials;
@@ -54,7 +55,7 @@ BinonomialDistribution.prototype.cumulativeProbability = function(x){
   if(x < 0){ ret = 0.0; }
   else if(x >= this.numberOfTrials){ ret = 1.0; }
   else{
-    ret = 1.0 - Beta.regularizedBeta(this.probabilityOfSuccess, x + 1.0, numberOfTrials - x);
+    ret = 1.0 - Beta.regularizedBeta(this.probabilityOfSuccess, x + 1.0, this.numberOfTrials - x);
   }
   return ret;
 };

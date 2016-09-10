@@ -5,10 +5,17 @@ Porting Sungear from Java to Javascript,
 Translated from Ilyas Mounaime's Java code
 
 */
+var NumberIsTooLargeException = require("../exception/NumberIsTooLargeException");
+var OutOfRangeException = require("../exception/OutOfRangeException");
+var LocalizedFormats = require("../exception/util/LocalizedFormats");
+var seedrandom = require("seedrandom");
+var AbstractRealDistribution = require("./AbstractRealDistribution");
+var FastMath = require("../util/FastMath");
+
+//inheritance
 TriangularDistribution.prototype = Object.create(AbstractRealDistribution.prototype);
 TriangularDistribution.prototype.constructor = TriangularDistribution;
 
-var solverAbsoluteAccuracy;
 
 function TriangularDistribution(rng, a, c, b){
   var passedRNG;
@@ -17,7 +24,7 @@ function TriangularDistribution(rng, a, c, b){
   var passedC;
 
   if(arguments.length == 3){ //(a,c,b)
-    passedRNG = new Well19937c();
+    passedRNG = seedrandom();
     passedA = rng;
     passedC = a;
     passedB = b;
@@ -35,12 +42,11 @@ function TriangularDistribution(rng, a, c, b){
   this.a =  passedA;
   this.c = passedC;
   this.b = passedB;
-  solverAbsoluteAccuracy = Math.max(FastMathULP(a), FastMathULP(b));
+  this.solverAbsoluteAccuracy = Math.max(FastMath.ULP(a), FastMath.ULP(b));
 }
 
 TriangularDistribution.prototype.getMode = function(){ return this.c; };
-//@Overrided
-TriangularDistribution.prototype.getSolverAbsoluteAccuracy = function(){ return solverAbsoluteAccuracy;};
+TriangularDistribution.prototype.getSolverAbsoluteAccuracy = function(){ return this.solverAbsoluteAccuracy;};
 
 
 
@@ -100,13 +106,15 @@ TriangularDistribution.prototype.inverseCumulativeProbability = function(p){
             throw new OutOfRangeException(p, 0, 1);
         }
         if (p === 0) {
-            return a;
+            return this.a;
         }
         if (p === 1) {
-            return b;
+            return this.b;
         }
-        if (p < (c - a) / (b - a)) {
-            return a + FastMath.sqrt(p * (b - a) * (c - a));
+        if (p < (this.c - this.a) / (this.b - this.a)) {
+            return this.a + Math.sqrt(p * (this.b - this.a) * (this.c - this.a));
         }
-        return b - FastMath.sqrt((1 - p) * (b - a) * (b - c));
+        return this.b - Math.sqrt((1 - p) * (this.b - this.a) * (this.b - this.c));
 };
+
+module.exports = TriangularDistribution;

@@ -11,11 +11,6 @@ var AbstractWell = require("./AbstractWell");
   Well19937c.prototype = Object.create(AbstractWell.prototype);
   Well19937c.prototype.constructor = Well19937c;
 
-  var K = 19937;
-  var M1 = 70;
-  var M2 = 179;
-  var M3 = 449;
-
   function Well19937c(){
     if(arguments.length > 0){
       var seed = arguments[0];

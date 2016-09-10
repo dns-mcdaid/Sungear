@@ -9,18 +9,19 @@ Translated from Ilyas Mounaime's Java code
 //IMPLEMENT INHERITANCE
 var MultivariateRealDistribution = require('./MultivariateRealDistribution');
 var LocalizedFormats = require("../exception/util/LocalizedFormats");
+var seedrandom = require("seedrandom");
 var NotStrictlyPositiveException = require("../exception/NotStrictlyPositiveException");
 
+function AbstractMultivariateRealDistribution(rng, n){
+  this.random = rng; //RandomGenerator
+  this.dimension = n; //number of dimensions/columns in the multivaraite distribution
+}
 AbstractMultivariateRealDistribution.prototype = Object.create(MultivariateRealDistribution.prototype);
 AbstractMultivariateRealDistribution.prototype.constructor = AbstractMultivariateRealDistribution;
 
-function AbstractMultivariateRealDistribution(rng, n){
-  this.rng = rng; //RandomGenerator
-  this.dimension = n; //number of dimensions/columns in the multivaraite distribution
-}
 //overriding
 AbstractMultivariateRealDistribution.prototype.reseedRandomGenerator = function(seed){
-  this.rng.setSeed(seed); //FIXME: find online PRNG file
+  this.random = seedrandom(seed);
 };
 
 //overriding
@@ -30,10 +31,7 @@ AbstractMultivariateRealDistribution.prototype.getDimension = function(){
 
 //overriding
 AbstractMultivariateRealDistribution.prototype.sample = function(sampleSize){
-  if(arguments.length === 0){
-    return null;
-  }
-  else{
+
     if(sampleSize <= 0){
       throw new NotStrictlyPositiveException(LocalizedFormats.NUMBER_OF_SAMPLES,
                                                    sampleSize);
@@ -43,7 +41,6 @@ AbstractMultivariateRealDistribution.prototype.sample = function(sampleSize){
       out[i] = new Array(this.dimension);
     }
     return out;
-  }
 };
 
 module.exports = AbstractMultivariateRealDistribution;

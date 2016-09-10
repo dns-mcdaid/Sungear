@@ -5,6 +5,15 @@ Porting Sungear from Java to Javascript,
 Translated from Ilyas Mounaime's Java code
 
 */
+
+var ArithmeticUtils = require("../util/ArithmeticUtils");
+var AbstractIntegerDistribution = require("./AbstractIntegerDistribution");
+var Well19937c = require("../random/Well19937c");
+var NotStrictlyPositiveException = require("../exception/NotStrictlyPositiveException");
+var LocalizedFormats = require("../exception/util/LocalizedFormats");
+var NormalDistribution = require("./NormalDistribution");
+var ExponentialDistribution = require("./ExponentialDistribution");
+
 PoissonDistribution.prototype = Object.create(AbstractIntegerDistribution.prototype);
 PoissonDistribution.prototype.constructor = PoissonDistribution;
 var DEFAULT_MAX_ITERATIONS = 10000000;
@@ -212,3 +221,4 @@ PoissonDistribution.prototype.nextPoisson = function(meanPoisson) {
       return y2 + y;
   }
 };
+module.exports = PoissonDistribution;

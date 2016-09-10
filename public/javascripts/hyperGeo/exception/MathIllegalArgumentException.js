@@ -12,8 +12,6 @@ Translated from Ilyas Mounaime's Java code
 // hyperGeo.exception.util.ExceptionContext;
 // hyperGeo.exception.util.ExceptionContextProvider;
 
-var serialVersionUID = -6024911025449780478;
-
 
 function MathIllegalArgumentException(message, errorObject){
 	this.message = new Error(message);

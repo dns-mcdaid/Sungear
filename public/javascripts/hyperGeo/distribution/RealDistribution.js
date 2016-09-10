@@ -8,7 +8,7 @@ Translated from Ilyas Mounaime's Java code
 
 
 
-  function RealDistribution(){}
+function RealDistribution(){}
   RealDistribution.prototype.probability = function(x){};
   RealDistribution.prototype.density = function(x){};
   RealDistribution.prototype.cumulativeProbability = function(x){};

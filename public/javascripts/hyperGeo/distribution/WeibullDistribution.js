@@ -7,19 +7,12 @@
 var AbstractRealDistribution = require("./AbstractRealDistribution");
 var OutOfRangeException = require("../exception/OutOfRangeException");
 var Gamma = require("../special/Gamma");
-var Well19937c = require("../random/Well19937c");
+var seedrandom = require("seedrandom");
+var LocalizedFormats = require("../exception/util/LocalizedFormats");
 var NotStrictlyPositiveException = require("../exception/NotStrictlyPositiveException");
 
 
-var DEFAULT_INVERSE_ABSOLUTE_ACCURACY = 1e-9;
-var serialVersionUID = 8589540077390120676;
-var numericalMean = Number.NaN;
-var numericalMeanIsCalculated = false;
-var numericalVariance = Number.NaN;
-var numericalVarianceIsCalculated = false;
-var shape;
-var scale;
-var solverAbsoluteAccuracy;
+WeibullDistribution.DEFAULT_INVERSE_ABSOLUTE_ACCURACY = 1e-9;
 
 function WeibullDistribution(rng, alpha, beta, inverseCumAccuracy){
     var passedAlpha;
@@ -27,18 +20,18 @@ function WeibullDistribution(rng, alpha, beta, inverseCumAccuracy){
     if(arguments.length == 2){
         passedAlpha = rng;
         passedBeta = alpha;
-        solverAbsoluteAccuracy = DEFAULT_INVERSE_ABSOLUTE_ACCURACY;
-        AbstractRealDistribution.call(this, new Well19937c());
+        this.solverAbsoluteAccuracy = WeibullDistribution.DEFAULT_INVERSE_ABSOLUTE_ACCURACY;
+        AbstractRealDistribution.call(this, seedrandom());
     }else if(arguments.length == 3){
         passedAlpha = rng;
         passedBeta = alpha;
-        solverAbsoluteAccuracy = beta;
-        AbstractRealDistribution.call(this, new Well19937c());
+        this.solverAbsoluteAccuracy = beta;
+        AbstractRealDistribution.call(this, seedrandom());
     }else{
         AbstractRealDistribution.call(this, rng);
         passedBeta = beta;
         passedAlpha = alpha;
-        solverAbsoluteAccuracy = inverseCumAccuracy;
+        this.solverAbsoluteAccuracy = inverseCumAccuracy;
     }
     if(passedAlpha <= 0){
         throw new NotStrictlyPositiveException(LocalizedFormats.SHAPE, passedAlpha);
@@ -46,8 +39,12 @@ function WeibullDistribution(rng, alpha, beta, inverseCumAccuracy){
     if(passedBeta <= 0){
         throw new NotStrictlyPositiveException(LocalizedFormats.SCALE, passedBeta);
     }
-    scale = passedBeta;
-    shape = passedAlpha;
+    this.scale = passedBeta;
+    this.shape = passedAlpha;
+    this.numericalMean = Number.NaN;
+    this.numericalMeanIsCalculated = false;
+    this.numericalVariance = Number.NaN;
+    this.numericalVarianceIsCalculated = false;
 
 }
 
@@ -58,27 +55,27 @@ WeibullDistribution.prototype.constructor = WeibullDistribution;
  WeibullDistribution.prototype = {
     constructor: WeibullDistribution,
      getShape: function(){
-        return shape;
+        return this.shape;
      },
      getScale: function(){
-         return scale;
+         return this.scale;
      },
      density: function(x){
          if(x < 0){
              return 0;
          }
-         var xscale = x/scale;
-         var xscalepow = Math.pow(xscale, shape-1);
+         var xscale = x/this.scale;
+         var xscalepow = Math.pow(xscale, this.shape-1);
          var xscalepowshape = xscalepow * xscale;
 
-         return (shape/scale) * xscalepow * Math.exp(-xscalepowshape);
+         return (this.shape/this.scale) * xscalepow * Math.exp(-xscalepowshape);
      },
      cumulativeProbability: function(x){
          var ret;
          if(x <= 0.0){
              ret = 0.0;
          }else{
-             ret = 1.0 - Math.exp(- Math.pow((x/scale), shape));
+             ret = 1.0 - Math.exp(- Math.pow((x/this.scale), this.shape));
          }
          return ret;
      },
@@ -91,19 +88,19 @@ WeibullDistribution.prototype.constructor = WeibullDistribution;
          }else if(p == 1){
              ret = Number.POSITIVE_INFINITY;
          }else{
-             ret = scale * Math.pow(-Math.log(1.0-p), (1.0/shape));
+             ret = this.scale * Math.pow(-Math.log(1.0-p), (1.0/this.shape));
          }
          return ret;
      },
      getSolverAbsoluteAccuracy: function(){
-         return solverAbsoluteAccuracy;
+         return this.solverAbsoluteAccuracy;
      },
      getNumericalMean: function(){
-         if(!numericalMeanIsCalculated){
-            numericalMean = this.calculateNumericalMean();
-             numericalMeanIsCalculated = true;
+         if(!this.numericalMeanIsCalculated){
+             this.numericalMean = this.calculateNumericalMean();
+             this.numericalMeanIsCalculated = true;
          }
-         return numericalMean;
+         return this.numericalMean;
      },
      calculateNumericalMean: function () {
          var sh = this.getShape();
@@ -111,11 +108,11 @@ WeibullDistribution.prototype.constructor = WeibullDistribution;
          return sc * Math.exp(Gamma.logGamma(1 + (1 / sh)));
      },
      getNumericalVariance: function(){
-         if(!numericalVarianceIsCalculated){
-             numericalVariance = this.calculateNumericalVariance();
-             numericalVarianceIsCalculated = true;
+         if(!this.numericalVarianceIsCalculated){
+             this.numericalVariance = this.calculateNumericalVariance();
+             this.numericalVarianceIsCalculated = true;
          }
-         return numericalVariance;
+         return this.numericalVariance;
      },
      calculateNumericalVariance: function(){
          var sh = this.getShape();
@@ -136,7 +133,7 @@ WeibullDistribution.prototype.constructor = WeibullDistribution;
          return false;
      },
      isSupportConnected: function(){
-         true;
+         return true;
      }
  };
 

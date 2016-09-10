@@ -7,25 +7,25 @@ Translated from Ilyas Mounaime's Java code
 */
 var seedrandom = require("seedrandom");
 var IntegerDistribution = require("./IntegerDistribution");
-var Well19937c = require("../random/Well19937c");
 var LocalizedFormats = require("../exception/util/LocalizedFormats");
 var OutOfRangeException = require("../exception/OutOfRangeException");
 var NumberIsTooLargeException = require("../exception/NumberIsTooLargeException");
 var NotStrictlyPositiveException = require("../exception/NotStrictlyPositiveException");
 
-	var serialVersionUID = -1146319659338487221;
-	var random = new seedrandom();
+	//CONSTRUCTOR
+	function AbstractIntegerDistribution(rng){
+		if(arguments.length == 1){
+			this.random = rng;
+		}else{
+			this.random = null;
+		}
+	}
 
 	AbstractIntegerDistribution.prototype = Object.create(IntegerDistribution.prototype);
 	AbstractIntegerDistribution.prototype.constructor = AbstractIntegerDistribution;
 
 
-	//CONSTRUCTOR
-	function AbstractIntegerDistribution(rng){
-		this.rng = rng;
-	}
-
-	AbstractIntegerDistribution.prototype.cumulativeProbability = function(x0, x1){ //throws NumberIsTooLargeException
+AbstractIntegerDistribution.prototype.cumulativeProbability = function(x0, x1){ //throws NumberIsTooLargeException
 		if(x1 < x0){
 			throw NumberIsTooLargeException(LocalizedFormats.LOWER_ENDPOINT_ABOVE_UPPER_ENDPOINT, x0, x1, true);
 		}
@@ -119,9 +119,8 @@ var NotStrictlyPositiveException = require("../exception/NotStrictlyPositiveExce
 		return out;
 	};
 
-	//FIXME
 	AbstractIntegerDistribution.prototype.reseedRandomGenerator = function(seed){
-		this.rng.setSeed(seed);
+		this.random = seedrandom(seed);
 	};
 
 module.exports = AbstractIntegerDistribution;

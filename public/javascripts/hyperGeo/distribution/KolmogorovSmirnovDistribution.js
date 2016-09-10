@@ -6,11 +6,16 @@ Translated from Ilyas Mounaime's Java code
 
 */
 
-//TODO: FINISIH THIS FILE
+var NotStrictlyPositiveException = require("../exception/NotStrictlyPositiveException");
+var LocalizedFormats = require("../exception/util/LocalizedFormats");
+var seedrandom = require("seedrandom");
 
 function KolmogorovSmirnovDistribution(n){
-  if(n <= 0 ){throw new NotStrictlyPositiveException(LocalizedFormats.NOT_POSITIVE_NUMBER_OF_SAMPLES, n);}
-  this.n = n;
+    if(n <= 0 ){throw new NotStrictlyPositiveException(LocalizedFormats.NOT_POSITIVE_NUMBER_OF_SAMPLES, n);}
+    this.n = n;
+    this.scale;
+    this.shape;
+    this.solverAbsoluteAccuracy;
 }
 
 KolmogorovSmirnovDistribution.prototype.cdf = function(d, passedExact){
@@ -29,7 +34,7 @@ KolmogorovSmirnovDistribution.prototype.cdf = function(d, passedExact){
     var f = 2 * d - ninv;
 
     for(var i = 1; i <= this.n; ++i){
-      rest *= i * f;
+      res *= i * f;
     }
   }
   else if(1 - ninv <= d && d < 1){ return 1 - 2 * Math.pow(1 - d, n); }

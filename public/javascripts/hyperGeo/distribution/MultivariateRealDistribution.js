@@ -16,3 +16,5 @@ MultivariateRealDistribution.prototype.density = function (x){};
 MultivariateRealDistribution.prototype.reseedRandomGenerator = function (seed){};
 MultivariateRealDistribution.prototype.getDimension = function (){};
 MultivariateRealDistribution.prototype.sample = function (sampleSize){};
+
+module.exports = MultivariateRealDistribution;

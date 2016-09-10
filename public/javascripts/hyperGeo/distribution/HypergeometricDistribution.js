@@ -8,18 +8,16 @@ Translated from Ilyas Mounaime's Java code
 
 var SaddlePointExpansion = require("./SaddlePointExpansion");
 var AbstractIntegerDistribution = require("./AbstractIntegerDistribution");
-var Well19937c = require("../random/Well19937c");
+var seedrandom = require("seedrandom");
 var LocalizedFormats = require("../exception/util/LocalizedFormats");
 var NotStrictlyPositiveException = require("../exception/NotStrictlyPositiveException");
 var NotPositiveException = require("../exception/NotPositiveException");
 var NumberIsTooLargeException = require("../exception/NumberIsTooLargeException");
 
 //class vars
-var numericalVarianceIsCalculated = false;
-var numericalVariance = Math.NaN;
+HypergeometricDistribution.numericalVarianceIsCalculated = false;
+HypergeometricDistribution.numericalVariance = Math.NaN;
 
-
-	var serialVersionUID = -436928820673516179;
 	//IMPLEMENT INHERITANCE
 	HypergeometricDistribution.prototype = Object.create(AbstractIntegerDistribution.prototype);
 	HypergeometricDistribution.prototype.constructor = HypergeometricDistribution;
@@ -27,11 +25,11 @@ var numericalVariance = Math.NaN;
 	function HypergeometricDistribution(populationSize, numberOfSuccesses, sampleSize, rng){
 		var passedRNG;
 		//ok so it doesn't really use the rng, just for calling the super class
-        // if(arguments.length < 4){
-		// 	passedRNG= new Well19937c();
-		// }else{
-		// 	passedRNG = rng;
-		// }
+        if(arguments.length < 4){
+			passedRNG= seedrandom();
+		}else{
+			passedRNG = rng;
+		}
 
 		if (populationSize <= 0) {
 			throw NotStrictlyPositiveException(LocalizedFormats.POPULATION_SIZE,populationSize);
@@ -53,7 +51,7 @@ var numericalVariance = Math.NaN;
 			this.populationSize = populationSize;
 			this.sampleSize = sampleSize;
 		}
-		// AbstractIntegerDistribution.call(this, passedRNG);
+		AbstractIntegerDistribution.call(this, passedRNG);
 	}
 
 	//GETTERS AND HELPERS
@@ -151,11 +149,11 @@ var numericalVariance = Math.NaN;
 
 
 	HypergeometricDistribution.prototype.getNumericalVariance = function(){
-		if(!numericalVarianceIsCalculated){
-			numericalVariance = this.calculateNumericalVariance();
-			numericalVarianceIsCalculated = true;
+		if(!HypergeometricDistribution.numericalVarianceIsCalculated){
+			HypergeometricDistribution.numericalVariance = this.calculateNumericalVariance();
+			HypergeometricDistribution.numericalVarianceIsCalculated = true;
 		}
-		return numericalVariance;
+		return HypergeometricDistribution.numericalVariance;
 	};
 
 

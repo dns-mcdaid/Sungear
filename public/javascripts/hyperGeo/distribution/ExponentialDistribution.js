@@ -5,43 +5,48 @@ Porting Sungear from Java to Javascript,
 Translated from Ilyas Mounaime's Java code
 
 */
+var AbstractIntegerDistribution = require("./AbstractIntegerDistribution");
+var ArithmeticUtils = require("../util/ArithmeticUtils");
+var OutOfRangeException = require("../exception/OutOfRangeException");
+var NotStrictlyPositiveException = require("../exception/NotStrictlyPositiveException");
+var LocalizedFormats = require("../exception/util/LocalizedFormats");
+var seedrandom = require("seedrandom");
+
+AbstractIntegerDistribution.DEFAULT_INVERSE_ABSOLUTE_ACCURACY= 1e-9;
+AbstractIntegerDistribution.EXPONENTIAL_SA_QI = [];
+
 ExponentialDistribution.prototype = Object.create(AbstractIntegerDistribution.prototype);
 ExponentialDistribution.prototype.constructor = ExponentialDistribution;
-var DEFAULT_INVERSE_ABSOLUTE_ACCURACY = 1e-9;
-var EXPONENTIAL_SA_QI;
-var solverAbsoluteAccuracy;
-
 
 /*Initialize Tables when file is loaded */
 var LN2 = Math.log(2);
 var qi = 0.0;
 var i = 1;
 
-//from ArithmeticUtils.js
-var ra = ResizableDoubleArray(20);
+var ra = [];
 
 while( qi < 1){
-  qi += Math.power(LN2, i)/ArithmeticUtils.factorial(i);
-  ra.addElement(qi);
+  qi += Math.pow(LN2, i)/ArithmeticUtils.factorial(i);
+  ra.push(qi);
   ++i;
 }
-EXPONENTIAL_SA_QI = ra.getElements();
+AbstractIntegerDistribution.EXPONENTIAL_SA_QI = ra;
 
 function ExponentialDistribution(rng, mean, inverseCumAccuracy){
   var passedRNG;
   var passedMean;
   if(arguments.length == 1){
-    passedRNG = new Well19937c();
+    passedRNG = seedrandom();
     passedMean = rng;
-    solverAbsoluteAccuracy = DEFAULT_INVERSE_ABSOLUTE_ACCURACY;
+    this.solverAbsoluteAccuracy = AbstractIntegerDistribution.DEFAULT_INVERSE_ABSOLUTE_ACCURACY;
   }else if(arguments.length == 2){ //(mean, inverseCumAccuracy)
-    passedRNG = new Well19937c();
+    passedRNG = seedrandom();
     passedMean = rng;
-    solverAbsoluteAccuracy = mean;
+    this.solverAbsoluteAccuracy = mean;
   }else{//all 3 given
     passedRNG = rng;
     passedMean = mean;
-    solverAbsoluteAccuracy = inverseCumAccuracy;
+    this.solverAbsoluteAccuracy = inverseCumAccuracy;
   }
   AbstractIntegerDistribution.call(this, passedRNG);
   if(passedMean <= 0){ throw new NotStrictlyPositiveException(LocalizedFormats.MEAN, mean); }
@@ -79,28 +84,28 @@ ExponentialDistribution.prototype.inverseCumulativeProbability = function(p){
 */
 ExponentialDistribution.prototype.sample = function(){
   var a = 0;
-  var u = this.random.nextDouble(); //FIXME; inherited from AbstrctRealDistribution, need to set up prng in JS
+  var u = this.random();
 
   while(u < 0.5){
-    a += EXPONENTIAL_SA_QI[0];
+    a += ExponentialDistribution.EXPONENTIAL_SA_QI[0];
     u *= 2;
   }
    u += u -1;
 
-   if(u <= EXPONENTIAL_SA_QI[0]){
+   if(u <= ExponentialDistribution.EXPONENTIAL_SA_QI[0]){
      return this.mean * (a + u);
    }
    var i = 0;
-   var u2 = random.nextDouble(); //FIXME
+   var u2 = this.random();
    var umin = u2;
    do{
      ++i;
-     u2 = random.nextDouble();
+     u2 = this.random();
 
      if(u2 < umin){ umin = u2;}
-   }while(u > EXPONENTIAL_SA_QI[0]);
+   }while(u > ExponentialDistribution.EXPONENTIAL_SA_QI[0]);
 
-   return this.mean * (a + umin * EXPONENTIAL_SA_QI[0]);
+   return this.mean * (a + umin * ExponentialDistribution.EXPONENTIAL_SA_QI[0]);
 };
 
 
@@ -117,3 +122,5 @@ ExponentialDistribution.prototype.getSupportUpperBound = function(){ return Numb
 ExponentialDistribution.prototype.isSupportLowerBoundInclusive = function(){ return true; };
 ExponentialDistribution.prototype.isSupportUpperBoundInclusive = function(){ return false; };
 ExponentialDistribution.prototype.isSupportConnected = function(){ return true; };
+
+module.exports = ExponentialDistribution;

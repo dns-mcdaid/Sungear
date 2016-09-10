@@ -7,18 +7,13 @@ Translated from Ilyas Mounaime's Java code
 */
 
 //implements RealDistribution
+var seedrandom = require("seedrandom");
 var RealDistribution = require("./RealDistribution");
 var LocalizedFormats = require("../exception/util/LocalizedFormats");
 var OutOfRangeException = require('../exception/OutOfRangeException');
 var UnivariateSolverUtils = require("../analysis/solvers/UnivariateSolverUtils");
 var UnivariateFunction = require("../analysis/UnivariateFunction");
 var NumberIsTooLargeException = require('../exception/NumberIsTooLargeException');
-
-  AbstractRealDistribution.prototype = Object.create(RealDistribution.prototype);
-  AbstractRealDistribution.prototype.constructor = AbstractRealDistribution;
-
-  var SOLVER_DEFAULT_ABSOLUTE_ACCURACY = 1e-6;
-  var solverAbsoluteAccuracy = SOLVER_DEFAULT_ABSOLUTE_ACCURACY;
 
   function AbstractRealDistribution (rng){
 
@@ -27,12 +22,20 @@ var NumberIsTooLargeException = require('../exception/NumberIsTooLargeException'
     }
     else this.random = null;
   }
+
+AbstractRealDistribution.SOLVER_DEFAULT_ABSOLUTE_ACCURACY = 1e-6;
+AbstractRealDistribution.solverAbsoluteAccuracy = AbstractRealDistribution.SOLVER_DEFAULT_ABSOLUTE_ACCURACY;
+
+AbstractRealDistribution.prototype = Object.create(RealDistribution.prototype);
+AbstractRealDistribution.prototype.constructor = AbstractRealDistribution;
+
   AbstractRealDistribution.prototype.cumulativeProbability = function(x0, x1){
     return this.probability(x0, x1);
 
   };
 
   AbstractRealDistribution.prototype.probability = function (x0, x1){
+      if(arguments.length == 1){ return 0.0;}
     if(x0 > x1){
       throw new NumberIsTooLargeException(LocalizedFormats.LOWER_ENDPOINT_ABOVE_UPPER_ENDPOINT,
                                                   x0, x1, true);
@@ -96,8 +99,19 @@ var NumberIsTooLargeException = require('../exception/NumberIsTooLargeException'
     return solverAbsoluteAccuracy;
   };
 
-  //FIXME
   AbstractRealDistribution.prototype.reseedRandomGenerator = function(seed){
+    this.random = seedrandom(seed);
+  };
+AbstractRealDistribution.prototype.sample = function(sampleSize){
+  if(arguments.length == 0){
+      return this.inverseCumulativeProbability(this.random());
+  }else{
+      var out = [];
+      for (var i = 0; i < sampleSize; i++) {
+          out[i] = this.sample();
+      }
+      return out;
   }
+};
 
 module.exports = AbstractRealDistribution;

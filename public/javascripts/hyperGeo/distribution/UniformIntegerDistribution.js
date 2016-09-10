@@ -5,6 +5,12 @@ Porting Sungear from Java to Javascript,
 Translated from Ilyas Mounaime's Java code
 
 */
+var NumberIsTooLargeException = require("../exception/NumberIsTooLargeException");
+var LocalizedFormats = require("../exception/util/LocalizedFormats");
+var AbstractIntegerDistribution = require("./AbstractIntegerDistribution");
+var seedrandom = require("seedrandom");
+
+//inheritance
 UniformIntegerDistribution.prototype = Object.create(AbstractIntegerDistribution.prototype);
 UniformIntegerDistribution.prototype.constructor = UniformIntegerDistribution;
 
@@ -13,7 +19,7 @@ function UniformIntegerDistribution(rng, lower, upper){
   var passedLower;
   var passedUpper;
   if(arguments.length == 2){
-    passedRNG = new Well19937c();
+    passedRNG = seedrandom();
     passedLower = rng;
     passedUpper = lower;
   }else if (arguments.length == 3){
@@ -50,7 +56,9 @@ UniformIntegerDistribution.prototype.getSupportLowerBound = function(){ return t
 UniformIntegerDistribution.prototype.getSupportUpperBound = function(){ return this.upper;};
 UniformIntegerDistribution.prototype.isSupportConnected = function(){ return true;};
 UniformIntegerDistribution.prototype.sample = function(){
-  var r = this.random.nextDouble();
+  var r = this.random();
   var scale = r * this.upper + (1-r) * this.lower + r;
-  return Math.floor(scaled);
+  return Math.floor(scale);
 };
+
+module.exports = UniformIntegerDistribution;

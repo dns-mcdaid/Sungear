@@ -5,40 +5,41 @@ Porting Sungear from Java to Javascript,
 Translated from Ilyas Mounaime's Java code
 
 */
-define(function(){
+    function FastMath(){}
 
+    FastMath.E = 2850325.0 / 1048576.0 + 8.254840070411028747e-8;
 
-	var RECOMPUTE_TABLES_AT_RUNTIME = false;
+	FastMath.RECOMPUTE_TABLES_AT_RUNTIME  = false;
 
-	var EXP_INT_TABLE_MAX_INDEX = 750;
+	FastMath.EXP_INT_TABLE_MAX_INDEX  = 750;
 
-	var EXP_INT_TABLE_LEN = EXP_INT_TABLE_MAX_INDEX * 2;
+	FastMath.EXP_INT_TABLE_LEN = EXP_INT_TABLE_MAX_INDEX * 2;
 
-	var LN_MANT_LEN = 1024;
+	FastMath.LN_MANT_LEN = 1024;
 
-	var EXP_FRAC_TABLE_LEN = 1025;
+	FastMath.EXP_FRAC_TABLE_LEN = 1025;
 
-	var TWO_POWER_52 = 4503599627370496.0;
+	FastMath.TWO_POWER_52 = 4503599627370496.0;
 
-	var TWO_POWER_53 = 2 * TWO_POWER_52;
+	FastMath.TWO_POWER_53 = 2 * TWO_POWER_52;
 
-	var F_1_2 = 1/2;
+	FastMath.F_1_2 = 1/2;
 
-	var F_1_3 = 1/3;
+	FastMath.F_1_3 = 1/3;
 
-	var HEX_40000000 = 0x40000000;
+	FastMath.HEX_40000000 = 0x40000000;
 
-	var LN_2_A = 0.693147063255310059;
+	FastMath.LN_2_A = 0.693147063255310059;
 
-	var LN_2_B = 1.17304635250823482e-7;
+	FastMath.LN_2_B = 1.17304635250823482e-7;
 
-	var LN_MANT;
+	FastMath.LN_MANT;
 
-	var EXP_INT_TABLE_A;
+	FastMath.EXP_INT_TABLE_A;
 
-	var EXP_INT_TABLE_B;
+	FastMath.EXP_INT_TABLE_B;
 
-	var LN_QUICK_COEF = [
+	FastMath.LN_QUICK_COEF = [
 		[1.0, 5.669184079525E-24],
 		[-0.25, -0.25],
 		[0.3333333134651184, 1.986821492305628E-8],
@@ -50,7 +51,7 @@ define(function(){
 		[0.11113807559013367, 9.219544613762692E-9],
 	];
 
-	var LN_HI_PREC_COEF = [
+	FastMath.LN_HI_PREC_COEF = [
 		[1.0, -6.032174644509064E-23],
 		[-0.25, -0.25],
 		[0.3333333134651184, 1.9868161777724352E-8],
@@ -58,7 +59,6 @@ define(function(){
 		[0.19999954104423523, 1.5830993332061267E-10],
 		[-0.16624879837036133, -2.6033824355191673E-8]
 	];
-	var FastMath = {
 
 	// 	lnMant: function(){
 	// 	// 	if (RECOMPUTE_TABLES_AT_RUNTIME) {
@@ -106,35 +106,36 @@ define(function(){
 	//
 	//
 	// },
-		Min: function(a, b){
+
+FastMath.min = function(a, b){
 			if(a <= b){ return a;}
 			else return b;
 
-		},
+		};
 
-		 Max: function(a, b){
+FastMath.max = function(a, b){
 			if(a <= b){ return b;}
 			else return a;
 
-		},
+		};
 
 
-		Exp: function(x, extra, hiPrec){
+FastMath.exp = function(x, extra, hiPrec){
 			return Math.exp(x);
-		},
+		};
 
-		Log: function(x, hiPrec){
+FastMath.Log = function(x, hiPrec){
 			return Math.log(x);
-		},
+		};
 
 
 
-		Abs: function(x){
+FastMath.abs = function(x){
 			if(x < 0){return -x;}
 			return x;
-		},
+		};
 
-		 Floor: function(x){
+FastMath.Floor = function(x){
 			if(isNaN(x)){
 				return x;
 			}
@@ -144,9 +145,9 @@ define(function(){
 			return Math.floor(x);
 
 
-		},
+		};
 
-		 Log1p:function(x){ //needed in Gamma.js
+FastMath.Log1p = function(x){ //needed in Gamma.js
 			if(x == -1){
 				return Number.NEGATIVE_INFINITY;
 			}
@@ -169,13 +170,13 @@ define(function(){
 					var y = (x * F_1_3 - F_1_2) * x + 1;
 					return y * x;
 			}
-		},
+		};
 
 
 		//CODE TAKEN FROM
 		//https://gist.github.com/Yaffle/4654250
 		//I DO NOT OWN
-		NextUp: function(x) {
+FastMath.NextUp = function(x) {
 		    x = Number(x);
 		    if (x !== x) {
 		      return x;
@@ -212,9 +213,30 @@ define(function(){
 		      y = c;
 		    }
 		    return y === 0 ? -0 : y;
-		  },
+        };
 
-		ULP: function(x) { x = Number(x); return x < 0 ? NextUp(x) - x : x - (-NextUp(-x)); }
-	};
-	return FastMath;
-});
+FastMath.ULP = function(x) {
+		  	x = Number(x);
+			return x < 0 ? NextUp(x) - x : x - (-NextUp(-x));
+		};
+FastMath.rint = function(x){
+    var y = Math.floor(x);
+    var d = x - y;
+    if (d > 0.5) {
+        if (y == -1.0) {
+            return -0.0; // Preserve sign of operand
+        }
+        return y+1.0;
+    }
+    if (d < 0.5) {
+        return y;
+    }
+
+    if(y % 2 == 0){
+        return y;
+    }else{
+        return y + 1.0;
+    }
+};
+
+	module.exports = FastMath;
