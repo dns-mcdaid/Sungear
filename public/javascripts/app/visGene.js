@@ -5,7 +5,6 @@
  *
  * @author RajahBimmy
  */
-const path = require('path');
 
 const Signal = require('./signal');
 
@@ -23,8 +22,6 @@ const SunGear = require('../gui/sunGear');
 
 const Controls = require('../gui/controls');
 const CollapsibleList = require('../gui/collapsibleList');
-
-const Gene = require('../genes/gene');
 
 /**
  * @param u {URL}
@@ -63,7 +60,7 @@ function VisGene(u, w, pn, dataDir) {
     this.go = null;         /** {GoTerm} */
     this.export = null;     /** {ExportList} */
 
-    // TODO: @Dennis ensure that plugin is unnecessary
+    // TODO: Ensure that plugin is unnecessary
     this.plugin = [];       /** {Vector<SungearPlugin>} */
     this.topFrame = null;   /** {Frame} */
     this.pluginName = [];   /** {String[]} */
@@ -99,7 +96,6 @@ VisGene.prototype = {
      * It is not totally complete, however most of it should work.
      */
     init : function() {
-        console.log("Made it to VisGene.init!");
         // RIP lines 144 - 206
         console.log(this.extAttrib);
         if (this.dataDir === null) {
@@ -115,28 +111,28 @@ VisGene.prototype = {
         this.geneList = new GeneList();
 
         // build GUI
-        var loadI = document.getElementById('nav-load');
-        var screenI = document.getElementById('screenshot');
+        const loadI = document.getElementById('nav-load');
+        const screenI = document.getElementById('screenshot');
+	    
+	    
         // REPLACING OLD SUNGEAR ExperimentList implementation with new js version.
         // loadI.addEventListener("click", this.loadExperiments.bind(this));
-
-
+	    
         // TODO: Uncommment this!!!!
         // this.exp = new ExperimentList(new URL("exper.txt", this.dataU), new URL("species.txt", this.dataU), this.dataU, loadBody);
 
-        var openB = document.getElementById('openB');
-        openB.addEventListener('click', this.loadExperiment.bind(this));
+        const openB = document.getElementById('openB');
+        openB.addEventListener('click', this.loadExperiment.bind(this), false);
 
-        screenI.addEventListener("click", this.requestScreenshot.bind(this));
+        screenI.addEventListener("click", this.requestScreenshot.bind(this), false);
         this.geneF = document.getElementById("geneF");
         this.l1 = new CollapsibleList(this.geneList);
-        // TODO: Attach l1 to geneF
         this.sungearF = document.getElementById("sungearF");
-        const statsF = null;
+        const statsF = document.getElementById("statsF");
         this.gear = new SunGear(this.geneList, statsF);
-        // TODO: @Dennis implement resultsF (333-335)
-        var resultsF = null;
+        const resultsF = document.getElementById("resultsF");
         this.go = new GoTerm(this.geneList, resultsF);
+	    this.gear.setGo(this.go);
         // control panel component
         this.controlF = document.getElementById("controlF");
         this.export = new ExportList(this.geneList, this.context);
@@ -144,8 +140,8 @@ VisGene.prototype = {
         
         
         // Picking up from 388
-        var helpI = document.getElementById('helpI');
-        var infoI = document.getElementById('infoI');
+        const helpI = document.getElementById('helpI');
+        const infoI = document.getElementById('infoI');
         helpI.addEventListener("click", this.showAbout.bind(this));
         infoI.addEventListener("click", this.showInfo.bind(this));
 
@@ -164,13 +160,10 @@ VisGene.prototype = {
         this.collectPasssedData(function() {
             this.run();
         }.bind(this));
-
-
     },
     run : function() {
         this.geneList.setSource(this.src);
         this.geneList.update();
-        // console.log(this.geneList);
     },
     /**
      * TODO: Ensure this works. It probably doesn't.
@@ -433,42 +426,38 @@ VisGene.usage = function(){
  * @param args {String[]}
  */
 VisGene.main = function(args) {
-    // try {
-        var i = 0;
-        var warn = true;
-        var plugin = [];
-        var dataDir = null;
-        while (i < args.length && args[i][0] == "-" || args[i] == "demo") {
-            if (args[i].localeCompare("--version")) {
-                console.log(VisGene.VERSION);
-            } else if (args[i] == "--usage" || args[i] == "--help") {
-                this.usage();
-            } else if (args[i] == "demo" || args[i] == "-nowarn") {
-                warn = false;
-                i++;
-            } else if (args[i] == "-plugin") {
-                var f = args[i+1].split(",");
-                for (var s = 0; s < f.length; s++) {
-                    plugin.push(f[s]);
-                }
-                i += 2;
-            } else if (args[i] == "-data_dir") {
-                dataDir = args[i+1];
-                i += 2;
-            } else {
-                console.log("ERROR: Unkown argument " + args[i]);
-                this.usage();
+    let i = 0;
+    let warn = true;
+    const plugin = [];
+    let dataDir = null;
+    while (i < args.length && args[i][0] == "-" || args[i] == "demo") {
+        if (args[i].localeCompare("--version")) {
+            console.log(VisGene.VERSION);
+        } else if (args[i] == "--usage" || args[i] == "--help") {
+            this.usage();
+        } else if (args[i] == "demo" || args[i] == "-nowarn") {
+            warn = false;
+            i++;
+        } else if (args[i] == "-plugin") {
+            var f = args[i+1].split(",");
+            for (var s = 0; s < f.length; s++) {
+                plugin.push(f[s]);
             }
+            i += 2;
+        } else if (args[i] == "-data_dir") {
+            dataDir = args[i+1];
+            i += 2;
+        } else {
+            console.log("ERROR: Unkown argument " + args[i]);
+            this.usage();
         }
-        for (var j = i; j < args.length; j++) {
-            plugin.push(args[j]);
-        }
-        var vis = new VisGene(new URL("file:./"), warn, plugin, dataDir);
-        vis.init();
-        return vis;
-    // } catch(mu) {
-    //     console.error(mu);
-    // }
+    }
+    for (let j = i; j < args.length; j++) {
+        plugin.push(args[j]);
+    }
+    const vis = new VisGene(new URL("file:./"), warn, plugin, dataDir);
+    vis.init();
+    return vis;
 };
 
 module.exports = VisGene;

@@ -24,24 +24,18 @@ function ExportList(g, context) {
     this.exportB = document.getElementById('exportB');
     this.exportB.title = "Send the selected sets of items to an external program";
 
-    let that = this;    // TODO: Refactor
-    this.removeB.addEventListener("click", function() {
-        that.model.deleteSelected();
-    });
-    this.exportB.addEventListener("click", function() {
-        console.log("List size: " + that.model.getList().length);
-        for (let i = 0; i < that.model.getList().length; i++) {
-            const l = that.model.getList()[i];
-            console.log(l.name + " (" + l.genes.length + ")"); // TODO: @Dennis check back to make sure it should be genes.length
-        }
-        that.exportGeneList();
+    this.removeB.addEventListener("click", () => this.model.deleteSelected(), false);
+    this.exportB.addEventListener("click", () => {
+        console.log("List size: " + this.model.getList().length);
+        this.model.getList().forEach((entry) => {
+            console.log(entry.name + " (" + entry.genes.length + ")");
+        });
+        this.exportGeneList();
     });
     document.getElementById('controlFtableHeader').addEventListener("click", function() {
         // Lines 115 - 119 allow the header rows to be manipulated
     });
-    document.getElementById('controlFtableAdd').addEventListener("click", function() {
-        that.selectAll();
-    });
+    document.getElementById('controlFtableAdd').addEventListener("click", () => this.selectAll(), false);
     g.addGeneListener(this);
 }
 
@@ -221,11 +215,10 @@ ExportList.prototype = {
         const modelList = this.model.getList();
         const groups = [];
         const genes = [];
-        let that = this;    // TODO: refactor. Watch egghead.io's tutorial on es6
         modelList.forEach((e) => {
             if (e.selected) {
                 groups.push(e.name);
-                genes.push(e.name + "=" + that.separate(e.genes, "|", true));
+                genes.push(e.name + "=" + this.separate(e.genes, "|", true));
             }
         });
         this.addPair(nvp, "groups", this.separate(groups, "|", false));
@@ -298,6 +291,31 @@ ExportList.prototype = {
             default:
                 break;
         }
+    },
+    selectAll : function() {
+        const list = this.model.getList();
+        let all = true;
+        list.forEach((entry) => {
+            all = entry.selected && all;
+        });
+        list.forEach((entry) => {
+            entry.selected = !all;
+        });
+        this.model.fireTableDataChanged();
+    },
+    /**
+     * Adds a new group, with a default name, to the export list.
+     */
+    addGroup : function() {
+        const s = new SortedSet(this.genes.getActiveSet());
+        return this.model.addGroup("group"+this.groupCnt++, s);
+    },
+    addExtra : function(key, value) {
+        this.model.curr.extra.set(key, value);
+    },
+    getExtra : function(key) {
+        const value = this.model.curre.extra.get(key);
+        return typeof value !== 'undefined' ? value : null;
     }
 };
 
@@ -308,17 +326,51 @@ function getPasswordAuthentication() {
     // TODO: Implement
 }
 
+function GoIcon() {
+    this.p = {
+        x : [ 0, 0, GoIcon.W-1 ],
+        y : [ 0, GoIcon.H-1, GoIcon.H/2 ]
+    }
+}
+
+GoIcon.W = 10;
+GoIcon.H = 9;
+
+GoIcon.prototype = {
+    constructor : GoIcon,
+    getIconWidth : function() {
+        return GoIcon.W;
+    },
+    getIconHeight : function() {
+        return GoIcon.H;
+    },
+    paintIcon : function(c, p5, x, y) {
+        p5.push();
+        p5.setStroke("#000000");
+        p5.translate(x, y);
+        p5.triangle(this.p.x[0], this.p.y[0],
+        this.p.x[1], this.p.y[1], this.p.x[2], this.p.y[2]);
+        p5.pop();
+    }
+};
+
+/**
+ * @param name {String}
+ * @param genes {SortedSet} of Genes
+ * @param parent {ListEntry}
+ * @constructor
+ */
 function ListEntry(name, genes, parent) {
-    this.name = name;       /** {String} */
-    this.genes = genes;     /** {SortedSet<Gene>} */
-    this.parent = parent;   /** {ListEntry} */
-    this.selected = false;  /** {boolean} */
-    this.children = [];     /** {Vector<ListEntry>} */
+    this.name = name;
+    this.genes = genes;
+    this.parent = parent;
+    this.selected = false;
+    this.children = [];     /** {Array} of ListEntry objects */
     if (this.parent !== null) {
         parent.addChild(this);
     }
-    this.indent = (this.parent === null ? 0 : this.parent.indent+1);    /** {int} */
-    this.extra = {};        /** {Hashtable<Object, Object>} */
+    this.indent = (this.parent === null ? 0 : this.parent.indent+1);    /** {Number} */
+    this.extra = new Map();        /** {Hashtable<Object, Object>} */
 }
 
 ListEntry.prototype = {
@@ -327,7 +379,7 @@ ListEntry.prototype = {
         this.children.push(c);
     },
     removeChild : function(c) {
-        var index = this.children.indexOf(c);
+        const index = this.children.indexOf(c);
         if (index > -1) {
             this.children.splice(index, 1);
         }
@@ -336,7 +388,7 @@ ListEntry.prototype = {
 
 function ExportModel() {
     this.titles = [ "+/-", "Name", "", "", "", "", "" ];
-    this.setType("Items");
+    this.setType("items");
     this.goI = document.createElement('span');
     this.goI.className = "glyphicon glyphicon-play";
     this.unI = document.createElement('span');
@@ -373,8 +425,9 @@ ExportModel.prototype = {
     getColumnClass : function(c) {
         if (c > 2) {
             // TODO: @Dennis Implement
+            console.log("No idea what this function does, but c is greater than 2");
         } else {
-
+            console.log("No idea what this function does, but c is less than 2");
         }
     },
     getValueAt : function(row, col) {
@@ -408,12 +461,12 @@ ExportModel.prototype = {
         }
     },
     buildListRec : function(r) {
-        if (r != root) {
+        if (r != this.root) {
             this.exportList.push(r);
         }
-        for (var i = 0; i < r.children.length; i++) {
-            this.buildListRec(r.children[i]);
-        }
+        r.children.forEach((child) => {
+            this.buildListRec(child);
+        });
     },
     buildList : function() {
         this.exportList = [];
@@ -423,22 +476,21 @@ ExportModel.prototype = {
     clear : function() {
         // TODO: Ensure this function works.
         this.resetCurrent();
-        var q = [];
-        var r = [];
+        const q = [];
+        const r = [];
         q.push(this.root);
         while(q.length > 0) {
-            var e = q[0];
+            let e = q[0];
             q.splice(0, 1);
             r.unshift(e);
-            for (var i = 0; i < q.length; i++) {
+            for (let i = 0; i < q.length; i++) {
                 q.push(e[i]);
             }
         }
-        for (var it = 0; it < r.length; i++) {
-            var e = r[it];
+        r.forEach((e) => {
             e.children = [];
             e.parent = null;
-        }
+        });
         this.buildList();
     },
     setCurrent : function(e) {
@@ -448,14 +500,14 @@ ExportModel.prototype = {
         this.curr = this.root;
     },
     addGroup : function(name, s) {
-        var e = new ListEntry(name, s, this.curr);
+        const e = new ListEntry(name, s, this.curr);
         this.buildList();
         this.scrollTo(e);
         this.setCurrent(e);
         return e;
     },
     scrollTo : function(e) {
-        var row = this.exportList.indexOf(e);
+        const row = this.exportList.indexOf(e);
         // TODO: @Dennis implement line 606 (scroll to in table)
     },
     /**
@@ -464,19 +516,14 @@ ExportModel.prototype = {
      */
     deleteSelected : function() {
         // find hierarchy roots
-        var rootList = [];
-        var l = null;
-        var it = 0;
-        var i = 0;
-        for (it = 0; it < this.exportList.length; it++) {
-            l = this.exportList[it];
-            if (l.parent == this.root) {
-                rootList.push(l);
-            }
-        }
+        const rootList = [];
+        this.exportList.forEach((item) => {
+            if (item.parent == this.root) rootList.push(l);
+        });
+
         // get current entry and parents
-        var currList = [];
-        var tmp = this.curr;
+        const currList = [];
+        let tmp = this.curr;
         do {
             currList.push(tmp);
             tmp = tmp.parent;
@@ -485,83 +532,69 @@ ExportModel.prototype = {
         //   if marked for deletion && not in currList
         //     recursively add node and all children to delete list
         //   else add children to queue, progress to next node
-        var delList = [];
-        var noDelList = [];
-        var queue = [];
-        for (i = 0; i < rootList.length; i++) {
-            queue.push(rootList[i]);
-        }
+        const delList = [];
+        const noDelList = [];
+        const queue = [];
+        rootList.forEach( item => queue.push(item) );
         while (queue.length > 0) {
-            l = queue[0];
+            const l = queue[0];
             queue.splice(0, 1);
-            var c = l;
-            var del = l.selected;
+            let c = l;
+            let del = l.selected;
             while(c.parent != this.root) {
                 c = c.parent;
                 del |= c.selected;
             }
             if (del && currList.indexOf(l) < 0) {
-                var p = delList.length;
+                let p = delList.length;
                 delList.push(l);
                 while (p < delList.length) {
-                    var d = delList[p];
-                    for (i = 0; j < d.children.length; i++) {
-                        delList.push(d[i]);
-                    }
+                    const d = delList[p];
+                    d.children.forEach( child => delList.push(child) );
                     p++;
                 }
             } else {
-                if (del) {
-                    noDelList.push(l);
-                }
-                for (i = 0; i < l.children.length; i++) {
-                    queue.push(l[i]);
-                }
+                if (del) noDelList.push(l);
+                l.children.forEach( child => queue.push(child) );
             }
         }
         if (!(delList.length < 1 && noDelList.length < 1)) {
-            var msg = "";
+            let msg = "";
             if (delList.length > 0) {
                 msg += "Deleting the following groups (selected groups and their child groups):\n";
-                for (it = 0; it < delList.length; i++) {
-                    l = delList[it];
-                    for (i = 0; i < l.indent; i++) {
+                delList.forEach((entry) => {
+                    for (let i = 0; i < entry.indent; i++) {
                         msg += "\t";
                     }
-                    msg += l.name + "\n";
-                }
+                    msg += entry.name +"\n";
+                });
             }
             if (noDelList.length > 0) {
                 msg += "Could not delete the following groups (current group and parent groups):\n";
-                for (it = 0; it < noDelList.length; it++) {
-                    l = noDelList[it];
-                    for (i = 0; i < l.indent; i++) {
+                noDelList.forEach((entry) => {
+                    for (let i = 0; i < entry.indent; i++) {
                         msg += "\t";
                     }
-                    msg += l.name + "\n";
-                }
+                    msg += entry.name + "\n";
+                });
             }
-            var status = 0; // FIXME: @Dennis implement lines 673 & 674
-            if (status == OK_OPTION) {
-                for (it = 0; it < delList.length; it++) {
-                    l = delList[it];
-                    var idx = l.parent.children.indexOf(l);
-                    if (idx > -1) {
-                        l.parent.children.splice(idx, 1);
-                    }
-                    l.parent = null;
-                    l.children = [];
-                }
+            let status = document.getElementById('deleteGroupOption'); // FIXME: @Dennis implement lines 673 & 674
+            if (status.value == true) {
+                delList.forEach((entry) => {
+                    const idx = entry.parent.children.indexOf(entry);
+                    if (idx > -1) entry.parent.children.splice(idx, 1);
+                    entry.parent = null;
+                    entry.children = [];
+                });
                 this.buildList();
             }
         }
     },
     getList : function() {
         return this.exportList;
-    },
-    listUpdated : function(e) {
-        // console.log("Export list updated!");
     }
 };
+
+// TODO: Implement IndentRenderer, IconRenderer, and IndentEditor?
 
 module.exports = ExportList;

@@ -26,6 +26,7 @@ const VesselDisplay = require('./sungear/vesselDisplay');
  * @constructor
  */
 function SunGear(genes, thresh, statsF) {
+    // TODO: statsF can likely be removed.
     if (typeof statsF === 'undefined') {
         statsF = thresh;
         thresh = NaN;

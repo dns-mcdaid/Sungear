@@ -4,23 +4,11 @@
  * @author RajahBimmy
  * I will laugh if this works.
  */
-
-const assert = require('assert');
-const http = require('http');
-const fs = require('fs');
-const zlib = require('zlib');
-const url = require('url');
-const request = require('request');
 const SortedSet = require("collections/sorted-set");
-
-require('javascript.util');
-const TreeSet = javascript.util.TreeSet;
-
-const ParseException = require('./parseException');
 
 const Anchor = require('../genes/anchor');
 const Gene = require('../genes/gene');
-const Term = require('../genes/term');
+const Term = require('../genes/noHypeTerm');
 const Vessel = require('../genes/vessel');
 
 /**
@@ -31,6 +19,7 @@ const Vessel = require('../genes/vessel');
 function DataReader(attrib) {
     this.attrib = attrib;
     this.clear();
+	this.debug = false;
 }
 
 DataReader.SEP = "|";
@@ -39,14 +28,13 @@ DataReader.NVSEP = "=";
 
 DataReader.prototype = {
     constructor : DataReader,
-
     clear : function() {
-        this.allGenes = new Map();
-        this.terms = {};
-        this.roots = [];
-        this.geneToGo = {};
-        this.anchors = [];
-        this.expGenes = [];
+        this.allGenes = null;
+        this.terms = null;
+        this.roots = null;
+        this.geneToGo = null;
+        this.anchors = null;
+        this.expGenes = null;
     },
     /**
      * @param attrib {Attributes}
@@ -54,303 +42,99 @@ DataReader.prototype = {
     setAttrib : function(attrib) {
         this.attrib = attrib;
     },
-    /**
-     * @param geneU {URL}
-     * @param listU {URL}
-     * @param hierU {URL}
-     * @param assocU {URL}
-     * @param sungearU {URL}
-     */
-    readAll : function(geneU, listU, hierU, assocU, sungearU) {
-        this.readGenes(geneU, function() {
-            console.log("read genes.");
-        });
-        this.readTerms(listU, function() {
-            console.log("read terms.");
-        });
-        this.readHierarchy(hierU, function() {
-            console.log("read hierarchies.");
-        });
-        this.readGeneToGo(assocU, function() {
-            console.log("read genes to go");
-        });
-        this.readSungear(sungearU, function() {
-            console.log("read sungear.");
-        });
-    },
-    /**
-     * @param geneU {URL}
-     * @param genes {Map} of String to Gene
-     * @param a {Attributes}
-     */
-    readGenes : function(geneU, callback, genes, a) {
-        if (typeof a == 'undefined') {
-            this.allGenes = new Map();
-            this.readGenes(geneU, callback, this.allGenes, this.attrib);
-        } else {
-            console.log("In readGenes!");
-            DataReader.openURL(geneU, function(response) {
-                DataReader.parseHeader(response, a, "items");
-                const lines = response.split("\n");
-                for (var i = 0; i < lines.length; i++) {
-                    const line = lines[i];
-                    try {
-                        const s = DataReader.trimAll(line.split(DataReader.SEP));
-                        const pub = s[0];
-                        const desc = s[1];
-                        const g = new Gene(pub, desc);
-                        genes.put(pub.toLowerCase(), g);
-                    } catch (e) {
-                        console.log("Offending line: " + line);
-                        throw new ParseException("parse error at line: " + i + " of " + geneU, line, e);
-                    }
-                }
-                callback();
-            });
-        }
-    },
-    /**
-     * @param listU {URL}
-     * @param terms {Hashtable<String, Term>}
-     * @param a {Attributes}
-     */
-    readTerms : function(listU, callback, terms, a) {
-        if (typeof a == 'undefined') {
-            this.terms = {};
-            this.readTerms(listU, callback, this.terms, this.attrib);
-        } else {
-            DataReader.openURL(listU, function(response) {
-                DataReader.parseHeader(response, a, "categories");
-                var lines = response.split("\n");
-                for (var i = 0; i < lines.length; i++) {
-                    var line = lines[i];
-                    try {
-                        var f = DataReader.trimAll(line.split(DataReader.SEP));
-                        if (f.length > 1) {
-                            terms[f[0]] = new Term(f[0], f[1]);
-                        }
-                        if (i == lines.length-1) {
-                            callback();
-                        }
-                    } catch (e) {
-                        console.log("Offending line: " + line);
-                        throw new ParseException("parse error at line " + i + " of " + listU, line, e);
-                    }
-                }
-
-            });
-        }
-    },
-    /**
-     * @param hierU {URL}
-     * @param terms {Hashtable<String, Term>}
-     * @param rootsV {Vector<Term>}
-     * @param a {Attributes}
-     */
-    readHierarchy : function(hierU, callback, terms, rootsV, a) {
-        if (typeof terms == 'undefined') {
-            this.roots = [];
-            this.readHierarchy(hierU, callback, this.terms, this.roots, this.attrib);
-        } else {
-            console.log("In the second part!");
-            var rootsT = new SortedSet();
-            // parse term parent/child relationships
-            for (var key in terms) {
-                rootsT.push(terms[key]);
-            }
-            DataReader.openURL(hierU, function(response) {
-                DataReader.parseHeader(response, a, "hierarchy");
-                var lines = response.split("\n");
-                for (var i = 0; i < lines.length; i++) {
-                    var line = lines[i];
-                    if (line.length < 6) {
-                        continue;
-                    }
-                    try {
-                        var f = DataReader.trimAll(line.split(DataReader.SEP));
-                        var s = DataReader.trimAll(f[1].split(DataReader.FSEP));
-                        var t = terms[f[0]];
-                        for (var j = 0; j < s.length; j++) {
-                            var c = terms[s[j]];
-                            if (c !== null && typeof c != 'undefined') {
-                                t.addChild(c);
-                                t.addParent(t);
-                                rootsT.remove(c);
-                            }
-                        }
-                    } catch (e) {
-                        throw new ParseException("parse error at line " + i + " of " + hierU, line, e);
-                    }
-                }
-                var rootsTArray = rootsT.toArray();
-                for (var k = 0; k < rootsTArray.length; k++) {
-                    rootsV.push(rootsTArray[k]);
-                }
-                callback();
-            });
-        }
-    },
-    /**
-     * @param assocU {URL}
-     * @param genes {Hashtable<String, Gene>}
-     * @param terms {Hashtable<String, Term>}
-     * @param geneToGo {Hashtable<Gene, Vector<Term>>}
-     * @param a {Attributes}
-     */
-    readGeneToGo : function(assocU, callback, genes, terms, geneToGo, a) {
-        if (typeof genes == 'undefined') {
-            this.geneToGo = {};
-            this.readGeneToGo(assocU, callback, this.allGenes, this.terms, this.geneToGo, this.attrib);
-        } else {
-            DataReader.openURL(assocU, function(response) {
-                // parse GO / gene correspondence
-                var missingGene = new SortedSet();
-                var missingTerm = new SortedSet();
-                var lines = response.split("\n");
-                DataReader.parseHeader(response, a, "correspondence");
-                for (var i = 0; i < lines.length; i++) {
-                    var line = lines[i];
-                    console.log(i + "/" + lines.length);
-                    if (line.length < 1) {
-                        continue;
-                    }
-                    // try {
-                        var f = line.split(DataReader.SEP);
-                        var s = f.length < 3 ? [] : f[2].trim().split(DataReader.FSEP);
-                        var tn = f[0].trim();
-                        var t = terms[tn];
-
-                        if (t == null || typeof t == 'undefined') {
-                            missingTerm.push(tn);
-                            continue;
-                        }
-                        var p_t = Number(f[1].trim());
-                        t.setRatio(p_t);
-                        for (var k = 0; k < s.length; k++) {
-                            var gn = s[k].trim();
-                            var g = genes.get(gn.toLowerCase());
-                            if (g === null || typeof g === 'undefined') {
-                                missingGene.push(gn);
-                            } else {
-                                var genev = geneToGo[g];
-                                if (genev === null || typeof genev === 'undefined') {
-                                    genev = [];
-                                }
-                                // console.log("Genev: " + i + ": " + k + "/" + s.length + ": " + genev);
-                                genev.push(t);
-                                t.addGene(g);
-                                geneToGo[g] = genev;
-                            }
-                        }
-                    // } catch (e) {
-                    //     console.log("Offending line: " + line);
-                    //     console.log(e);
-                    //     throw new ParseException("parse error at line" + i + " of " + assocU, line, e);
-                    // }
-                }
-                callback();
-            });
-        }
-    },
-    /**
-     * @param sungearU {URL}
-     * @param genes {Hashtable<String, Gene>}
-     * @param anchors {Array} of anchors
-     * @param expGenes {SortedSet<Gene>}
-     * @param missingGenes {SortedSet<String>}
-     * @param dupGenes {SortedSet<Gene>}
-     * @param a {Attributes}
-     */
-    readSungear : function(sungearU, callback, genes, anchors, expGenes, missingGenes, dupGenes, a) {
-        if (typeof genes == 'undefined') {
-            this.anchors = [];
-            this.expGenes = new TreeSet();
-            this.missingGenes = new TreeSet();
-            this.dupGenes = new TreeSet();
-            this.readSungear(sungearU, callback, this.allGenes, this.anchors, this.expGenes, this.missingGenes, this.dupGenes, this.attrib);
-        } else {
-            DataReader.openURL(sungearU, function(response) {
-                DataReader.parseHeader(response, a, "sungear");
-                // title line
-                var lines = response.split('\n');
-                var line = lines[0];
-                var f = DataReader.trimAll(line.split(DataReader.SEP));
-                var i = 0;
-                for (i = 0; i < f.length-1; i++) {
-                    anchors.push(new Anchor(f[i]));
-                }
-                var exp = [];
-                for (i = 1; i < lines.length; i++) {
-                    line = lines[i];
-                    try {
-                        if (line == "") {
-                            continue;
-                        }
-                        f = DataReader.trimAll(line.split(DataReader.SEP));
-                        // find current gene
-                        var gn = f[anchors.length];
-                        var g = genes.get(gn.toLowerCase());
-                        if (g === null || typeof g === 'undefined') {
-                            missingGenes.add(gn);
-                        } else if (expGenes.contains(g)) {
-                            dupGenes.add(g);
-                        } else {
-                            expGenes.add(g);    // TODO: Ensure this is supposed to happen
-                            // Gene does not yet exist in experiment set
-                            for (var j = 0; j < anchors.length; j++) {
-                                exp[j] = Number(f[j]);
-                            }
-                            g.setExp(exp);
-                        }
-                    } catch (e) {
-                        console.log("offending line: " + line);
-                        throw new ParseException("parse error at line " + i + " of " + sungearU, line, e);
-                    }
-                }
-                callback();
-            });
-        }
-    },
-
-    getResource : function(s) {
-        // TODO: @Dennis Implement
-    },
 
     addPassedData : function(reader) {
+    	
+    	this.allGenes = new Map();
+	    this.terms = new Map();
+	    this.roots = [];
+	    this.geneToGo = new Map();
+	    this.anchors = [];
+	    this.expGenes = new SortedSet();
+	    
+	    const rootsMap = new Map();
 
-        // TODO: @Dennis actually get all genes?
-        var passedAnchors = reader.anchors;
-        var passedItems = reader.items;
-        var passedCategories = reader.categories;
-        var passedSets = reader.expSets;
+        // TODO: actually get all genes?
+        const passedAnchors = reader.anchors;
+        const passedItems = reader.items;
+        const passedCategories = reader.categories;
+        const passedSets = reader.expSets;
 
         passedAnchors.sort(function(a, b) {
             return a.name.localeCompare(b.name);
         });
-
-        for (let i = 0; i < passedAnchors.length; i++) {
-            var anchor = passedAnchors[i];
-            this.anchors.push(new Anchor(anchor.name));
-        }
-        
-        for (let i = 0 ; i < passedItems.length; i++) {
-            var expGene = passedItems[i];
-            var expToAdd = new Gene(expGene.id, expGene.description);
-            var exp = [];
-            for (let j = 0; j < this.anchors.length; j++) {
-                if (passedSets[this.anchors[j].name].indexOf(expGene.id) > -1) {
-                    exp[j] = 1;
-                } else {
-                    exp[j] = 0;
-                }
-            }
-            expToAdd.setExp(exp);
-            this.expGenes.push(expToAdd);
-            this.allGenes.set(expGene.id.toLowerCase(), expToAdd);
-        }
-
-        for (let i = 0; i < passedCategories.length; i++) {
-        }
+	    
+	    passedAnchors.forEach((anchor) => {
+	    	this.anchors.push(new Anchor(anchor.name));
+	    });
+	    
+	    passedItems.forEach((gene) => {
+	    	const exp = [];
+		    const expGene = new Gene(gene.id, gene.description);
+		    this.anchors.forEach((anchor, i) => {
+		    	if (passedSets[anchor.name].indexOf(gene.id) > -1) {
+		    		exp[i] = 1;
+			    } else {
+			    	exp[i] = 0;
+			    }
+		    });
+		    expGene.setExp(exp);
+		    this.expGenes.push(expGene);
+		    this.allGenes.set(gene.id.toLowerCase(), expGene);
+	    });
+	    
+	    passedCategories.forEach((category) => {
+	    	const newTerm = new Term(category.id, category.description);
+		    this.terms.set(category.id, newTerm);
+		    rootsMap.set(category.id, newTerm);
+	    });
+	    
+	    passedCategories.forEach((category) => {
+	    	if (this.terms.has(category.id)) {
+	    		const thisTerm = this.terms.get(category.id);
+		        category.children.forEach((child) => {
+		            if (this.terms.has(child)) {
+		                const c = this.terms.get(child);
+					    thisTerm.addChild(c);
+					    c.addParent(thisTerm);
+			            rootsMap.delete(c.getId());
+				    }
+			    });
+			    if (category.zScore === null) {
+			    	// TODO: Something? Maybe remove?
+			    } else {
+			    	thisTerm.setRatio(category.zScore);
+			    }
+			    category.items.forEach((item) => {
+			    	const gName = item.toLowerCase();
+				    if (this.allGenes.has(gName)) {
+				    	const thisGene = this.allGenes.get(gName);
+					    let geneArray = null;
+					    if (!this.geneToGo.has(thisGene)) {
+					    	geneArray = [];
+					    } else {
+					    	geneArray = this.geneToGo.get(thisGene);
+					    }
+					    geneArray.push(thisTerm);
+					    thisTerm.addGene(thisGene);
+					    this.geneToGo.set(thisGene, geneArray);
+				    }
+			    });
+		    }
+	    });
+	    rootsMap.forEach((value, key) => {
+	    	this.roots.push(value);
+	    });
+	    if (this.debug) {
+		    console.log("ROOTS:");
+		    console.log(this.roots);
+		
+		    console.log("TERMS TIME:");
+		    console.log(this.terms);
+		
+		    console.log("GENE TO GO TIME");
+		    console.log(this.geneToGo);
+	    }
     }
 };
 
@@ -424,116 +208,6 @@ DataReader.chop = function(b) {
     return b.toString().split("\n");
 };
 
-DataReader.openURL = function(u, callback) {
-    if (u.indexOf('http') < 0 || u.indexOf('txt.gz') < 0) {
-        DataReader.readURL(u, function(response) {
-            callback(response);
-        });
-    } else {
-        console.log("Opening: " + u);
-        u.url = u.href;
-        u.encoding = null;
-        var req = request.get(u);
-        req.on('response', function(res) {
-            var chunks = [];
-            res.on('data', function(chunk) {
-                console.log("Pushing data");
-                chunks.push(chunk);
-            });
-            res.on('end', function() {
-                console.log("Finished!");
-                var buffer = Buffer.concat(chunks);
-                console.log(res.headers);
-                var encoding = res.headers['content-encoding'];
-                if (typeof encoding === 'undefined') {
-                    encoding = res.headers['content-type'];
-                }
-                if (encoding.indexOf('gzip') > -1) {
-                    console.log("Unzipping...");
-                    DataReader.openGz(buffer, function(response) {
-                        callback(response);
-                    })
-                } else {
-                    callback(chunks.toString());
-                }
-            });
-        });
-        req.on('error', function(err) {
-            console.log("error :(");
-            console.log(err);
-            callback();
-        });
-    }
-};
-/**
- * Reads the entire text contents of a URL into a StringBuffer.
- * @param u {URL}
- * @param callback {function}
- * @return
- * @throws IOException
- */
-DataReader.readURL = function(u, callback) {
-    if (u.indexOf('http') > -1) {
-        DataReader.openURL(u, function(response) {
-            callback(response);
-        });
-    } else {
-        DataReader.openLocal(u, function(response) {
-            callback(response);
-        });
-    }
-};
-
-DataReader.openLocal = function(u, callback) {
-    console.log("reading: " + u + " in openLocal");
-
-    var buf = new Buffer(5242880); // 5 MB - Lord hear our prayer.
-    fs.open(u, 'r', function (err, fd) {
-        if (err) {
-            console.log(err);
-        }
-        console.log("File opened successfully!");
-        console.log("Going to read the file");
-        fs.read(fd, buf, 0, buf.length, 0, function (err, bytes) {
-            if (err) {
-                console.log(err);
-            }
-            console.log(bytes + " bytes read");
-
-            // Print only read bytes to avoid junk.
-            if (bytes > 0) {
-                if (u.indexOf('.gz') > -1) {
-                    DataReader.openGz(buf.slice(0,bytes), function(response){
-                        callback(response);
-                    });
-                } else {
-                    callback(buf.slice(0, bytes).toString());
-                }
-            }
-        });
-    });
-};
-
-DataReader.openGz = function(buffer, callback) {
-    console.log("In openGz!");
-    zlib.gunzip(buffer, function(err, decoded) {
-        if (err) {
-        } else {
-            let raw = decoded.toString();
-            callback(raw);
-        }
-    });
-};
-
-/**
- * Reads the header of a file into a StringBuffer.
- * @param u the URL of the file to read
- * @return the read text
- */
-DataReader.readHeader = function(u) {
-    // TODO: Implement?
-};
-
 /**
  * @param base {URL}
  * @param s {String}
@@ -552,41 +226,6 @@ DataReader.makeURL = function(base, s) {
         }
     }
     return u;
-};
-
-DataReader.parseHeader = function(raw, a, commentPrefix) {
-    if (typeof commentPrefix === 'undefined') {
-        commentPrefix = null;
-    }
-    var comment = "";
-    var lines = raw.split('\n');
-    for (var i = 0; i < lines.length; i++) {
-        // This next line is probably redundant.
-        var line = lines[i];
-        if (line === null) {
-            break;
-        }
-        if (line[0] == "#") {
-            comment += lines[i] + "\n";
-            continue;
-        } else if (line == "") {
-            continue;
-        } else if (line[0] == "{" && line[lines.length-1] == "}") {
-            var l = line.indexOf(DataReader.NVSEP);
-            if (l == -1) {
-                throw new ParseException("parse error at line " + i + ": invalid name=value pair in header", line);
-            }
-            var n = line.substr(1, l).trim();
-            var v = line.substr(l+1, line.length).trim();
-            console.log(n + " = " + v);
-            a.put(n, v);
-        } else {
-            break;
-        }
-    }
-    if (commentPrefix !== null && comment !== "") {
-        a.put("comment-" + commentPrefix, comment);
-    }
 };
 
 module.exports = DataReader;

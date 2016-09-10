@@ -75,16 +75,25 @@ Term.Total;
 Term.prototype = {
     constructor : Term,
     cleanup : function() {
-        for (var it = this.children.iterator(); it.hasNext(); ) {
-            it.next().cleanup();
-        }
-        this.children = new TreeSet();
-        this.parents = new TreeSet();
-        this.allGenes = new TreeSet();
-        this.localGenes = new TreeSet();
+	    const childIt = this.children.iterate();
+	    let next = childIt.next();
+	    while (!next.done) {
+		    next.value.cleanup();
+		    next = childIt.next();
+	    }
+        this.children.clear();
+        this.parents.clear();
+        this.allGenes.clear();
+        this.localGenes.clear();
     },
+	/**
+	 * Sets the ratio of the number of genes associated with this term to
+	 * the total number of genes in an experiment set.
+	 * @param p_t {Number} the fraction of terms represented by this term
+	 */
     setRatio : function(p_t) {
         this.p_t = p_t;
+		// TODO: Change Standard Deviation?
     },
     addChild : function(c) {
         this.children.push(c);
@@ -102,7 +111,7 @@ Term.prototype = {
         this.localGenes.push(g);
     },
     isRoot : function() {
-        return this.parents.size() == 0;
+        return this.parents.length == 0;
     },
     setActive : function() {
         this.active = b;
@@ -119,28 +128,41 @@ Term.prototype = {
     getName : function() {
         return this.name;
     },
+	/**
+	 * Calculates the number of genes at this node and its descendents
+	 * that are in the intersection with the given set (usually the current
+	 * selected set). Unlike {@link #getStoredCount()}, this number
+	 * is calculated every time the function is called and not stored.
+	 * It is intended for use in a GUI where a small number of terms
+	 * are displayed.  Beware of calling it for every term!!
+	 * @return {Number} the number of selected genes
+	 */
     getIntersectCount : function(iSet) {
-        if (this.allGenes === null) {
-            return 0;
-        } else {
-            var s = new SortedSet();
-            var setArray = iSet.toArray();
-            for (var i = 0; i < setArray.length; i++) {
-                if (this.allGenes.contains(setArray[i])) {
-                    s.push(setArray[i]);
-                }
-            }
-            return s.size();
-        }
+	    if (this.allGenes === null) {
+		    return 0;
+	    } else {
+		    let s = new SortedSet(this.allGenes);
+		    //noinspection JSUnresolvedFunction
+		    s = s.intersection(iSet.toArray());
+		    return s.length;
+	    }
     },
-    compare : function(t) {
-        return this.name.localeCompare(t.name);
-    },
-    compareTo : function(t) {
-        return this.name.localeCompare(t.name);
-    },
+	/**
+	 * Yields the default sort order, case-insensitive by term name.
+	 */
+	compare : function(t) {
+		return this.name.toLowerCase().localeCompare(t.name.toLowerCase());
+	},
+	/**
+	 * See above
+	 * @param t {Term}
+	 * @returns {number}
+	 */
+	compareTo : function(t) {
+		return this.name.toLowerCase().localeCompare(t.name.toLowerCase());
+	},
     toString : function() {
-       var Dig = 100000;
+    	var Dig = 100000;
         Term.Hyp = (Term.Hyp * Dig)/Dig;
         var v = (!Number.isFinite(Term.Hyp) || Number.isNaN(Term.Hyp)) ? Number.toString(Term.Hyp) : Term.Hyp + "";
         return "(" + v + " ; " + this.getStoredCount() + " ) " + this.name;
@@ -156,18 +178,16 @@ Term.prototype = {
     },
     updateStoredCount : function(aSet) {
         if (this.storedCount == -1) {
-            var it = this.children.iterator();
-            while (it.hasNext()) {
-                it.next().updateStoredCount(aSet);
-            }
-            var s = new SortedSet();
-            var aSetArr = aSet.toArray();
-            for (var i = 0; i < aSetArr.length; i++) {
-                if (this.allGenes.contains(aSetArr[i])) {
-                    s.push(aSetArr[i]);
-                }
-            }
-            this.storedCount = s.size();
+	        const it = this.children.iterate();
+	        let next = it.next();
+	        while (!next.done) {
+		        next.value.updateStoredCount(aSet);
+		        next = it.next();
+	        }
+	        let s = new SortedSet(this.allGenes);
+	        //noinspection JSUnresolvedFunction
+	        s = s.intersection(aSet.toArray());
+	        this.storedCount = s.length;
             this.updateHyp(aSet.size());
         }
     },
@@ -176,28 +196,16 @@ Term.prototype = {
     },
     findUnion : function(global) {
         if (this.allGenes == null) {
-            this.allGenes = new SortedSet();
-            var locArray = this.localGenes.toArray();
-            for (var i = 0; i < locArray.length; i++) {
-                this.allGenes.push(locArray[i]);
-            }
-            var it = this.children.iterator();
-            while (it.hasNext()) {
-                var ch = it.next();
-                ch.findUnion(global);
-                var chAll = ch.allGenes.toArray();
-                for (var j = 0; j < chAll.length; j++) {
-                    this.allGenes.push(chAll[j]);
-                }
-            }
-            var allArray = this.allGenes.toArray();
-            var s = new SortedSet();
-            for (var k = 0; k < allArray.length; k++) {
-                if (global.contains(allArray[k])) {
-                    s.push(allArray[k])
-                }
-            }
-            this.allGenes = s;
+	        this.allGenes = new SortedSet();
+	        this.allGenes = this.allGenes.union(this.localGenes);
+	        const it = this.children.iterate();
+	        let next = it.next();
+	        while (!next.done) {
+		        const ch = next.value;
+		        ch.findUnion(global);
+		        this.allGenes = this.allGenes.union(ch.allGenes);
+	        }
+	        this.allGenes = this.allGenes.intersection(global);
         }
     },
     updateHyp: function(Q){
@@ -216,6 +224,10 @@ Term.prototype = {
         return H.upperCumulativeProbability(Q_t);
 
     },
+	/**
+	 * Must be called for every term before {@link #updateSelectedState(SortedSet)}
+	 * is called for any term.
+	 */
     initSelectedState : function() {
         this.selectedState = Term.STATE_UNKNOWN;
     },
@@ -231,26 +243,23 @@ Term.prototype = {
         if (!this.active) {
             this.selectedState = Term.STATE_UNSELECTED;
         } else {
-            const childrenArray = this.children.toArray();
-            for (let it = 0; it < childrenArray.length; it++) {
-                let t = childrenArray[it];
-                if (t.selectedState == Term.STATE_UNKNOWN && t.active) {
-                    t.updateSelectedState(s);
-                }
-                if (t.selectedState == Term.STATE_SELECTED) {
-                    this.selectedState = Term.STATE_SELECTED;
-                }
-            }
-            if (this.selectedState = Term.STATE_UNKNOWN) {
-                const x = new SortedSet();
-                const allArr = this.allGenes.toArray();
-                for (let i = 0; i < allArr.length; i++) {
-                    if (s.contains(allArr[i])) {
-                        x.push(allArr[i]);
-                    }
-                }
-                this.selectedState = x.size() == 0 ? Term.STATE_UNSELECTED : Term.STATE_SELECTED;
-            }
+	        const it = this.children.iterate();
+	        let next = it.next();
+	        while (!next.done) {
+		        const t = next.value;
+		        if (t.selectedState == Term.STATE_UNKNOWN && t.active)
+			        t.updateSelectedState(s);
+		        if (t.selectedState == Term.STATE_SELECTED)
+			        this.selectedState = Term.STATE_SELECTED;
+		        next = it.next();
+	        }
+	
+	        if (this.selectedState = Term.STATE_UNKNOWN) {
+		        let x = new SortedSet(this.allGenes);
+		        //noinspection JSUnresolvedFunction
+		        x = x.intersection(s);
+		        this.selectedState = x.length == 0 ? Term.STATE_UNSELECTED : Term.STATE_SELECTED;
+	        }
         }
     },
     /**
@@ -260,15 +269,6 @@ Term.prototype = {
      */
     getSelectedState : function() {
         return this.selectedState;
-    },
-    addChildren : function(c) {
-        this.children.addEach(c);
-    },
-    addParents : function(p) {
-        this.parents.addEach(p);
-    },
-    addGenes : function(g) {
-        this.localGenes.addEach(g);
     }
 };
 

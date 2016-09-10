@@ -111,7 +111,7 @@ Attributes.prototype = {
             const o = this.attrib.get(key);
             return (typeof o === 'undefined' ? defaultValue : o);
         }
-        return typeof this.attrib.get(key) !== 'undefined' ? this.attrib.get(key) : null;
+        return this.attrib.has(key) ? this.attrib.get(key) : null;
     },
     /**
      * Returns all the attribute keys.

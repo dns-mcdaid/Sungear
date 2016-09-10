@@ -72,6 +72,7 @@ function Controls(gn, el) {
 
 Controls.ENABLED = "btn btn-primary";
 Controls.DISABLED = "btn btn-primary disabled";
+Controls.DROPDOWN = "dropdown-toggle";
 
 Controls.prototype = {
     constructor : Controls,
@@ -84,7 +85,7 @@ Controls.prototype = {
     },
     setCoolState : function() {
         if (this.cool === null) {
-            this.coolB.className = Controls.ENABLED;
+            this.coolB.className = Controls.ENABLED + " " + Controls.DROPDOWN;
             this.coolB.innerHTML = "Find Cool";
             this.coolB.title = "Search for highly over-represented vessels";
         } else if (this.cool.length == 0) {
@@ -92,16 +93,16 @@ Controls.prototype = {
             this.coolB.innerHTML = "Nothing Cool";
             this.coolB.title = "No cool vessels";
         } else {
-            this.coolB.className = Controls.ENABLED;
+            this.coolB.className = Controls.ENABLED + " " + Controls.DROPDOWN;
             this.coolB.innerHTML = "Show Cool";
             this.coolB.title = "Show the list of highly over-represented vessels";
         }
     },
     getCachedCool : function() {
         // FIXME: Temporary workaround
-        return null;
+        return [];
 
-        var v = this.export.get().getExtra(this); // TODO: Ensure this works.
+        var v = this.export.getExtra(this); // TODO: Ensure this works.
         var cc = null;
         if (v !== null && v.length > this.coolMethod) {
             cc = v[this.coolMethod];
@@ -120,7 +121,7 @@ Controls.prototype = {
         this.export.get().addExtra(this, v);
     },
     /**
-     * @param m {int}
+     * @param m {number}
      */
     setCoolMethod : function(m) {
         this.coolMethod = m;
@@ -133,13 +134,13 @@ Controls.prototype = {
             if (this.cool === null && load) {
                 switch(this.coolMethod) {
                     case 1:
-                        this.cool = this.gear.get().getCool(3, -1000, 1);
+                        this.cool = this.gear.getCool(3, -1000, 1);
                         break;
                     case 2:
-                        this.cool = this.gear.get().getCool(3, 5, 1);
+                        this.cool = this.gear.getCool(3, 5, 1);
                         break;
                     default:
-                        this.cool = this.gear.get().getCool(3, 10, 0);
+                        this.cool = this.gear.getCool(3, 10, 0);
                 }
                 this.addCachedCool();
             }
@@ -238,8 +239,8 @@ Controls.prototype = {
         if (this.cool === null) {
             this.updateCool(true);
         }
-        if (this.cool.length <= 0) {
-            var errMsg = document.createElement("li");
+        if (this.cool.length == 0) {
+            const errMsg = document.createElement("li");
             errMsg.innerHTML = "No cool vessels found - try narrowing or restarting.";
             this.coolM.appendChild(errMsg);
         }
