@@ -1,26 +1,37 @@
+"use strict";
 /**
  * TODO: Implement
  * @author RajahBimmy
  */
+const SortedSet = require('collections/sorted-set');
 
 
-function TreeModel(root) {
-
+function TreeModel(root = null) {
+	if (root === null) {
+		this.root = null;
+	} else {
+		this.root = new TreeNode(root);
+	}
 }
+
+TreeModel.prototype = {
+	constructor : TreeModel,
+	
+};
 
 
 function TreeNode(data) {
     this.data = data;
-    this.children = [];
+    this.children = new SortedSet();
 }
 
 TreeNode.prototype = {
     constructor : TreeNode,
-    add : function(node) {
-
+    addChild : function(node) {
+    	this.children.push(node);
     },
     contains : function(node) {
-
+    	return this.children.contains(node);
     }
 };
 

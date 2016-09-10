@@ -24,7 +24,7 @@ function GoTerm(genes, fd) {
     this.all = new SortedSet();         /** {SortedSet} of Terms. All GO terms in DAG, both direct and indirect */
     this.assocGenes = new SortedSet();  /** {SortedSet} of Genes. All genes w/ GO term assocations */
 
-    this.treeModel = new TreeModel(null);           /** {TreeModel} Tree data model - same model is used over entire life of tree */
+    this.treeModel = new TreeModel();           /** {TreeModel} Tree data model - same model is used over entire life of tree */
 
     this.listModel = new GOListModel();      /** {GOListModel} List data model - used over entire life of tree */
 
@@ -78,8 +78,7 @@ function GoTerm(genes, fd) {
 	this.findB.addEventListener('click', this.findA.bind(this), false);
 	// TODO: Add findA to findF
 	// TODO: Refactor next two lines
-	this.isCollapsed = false;
-	this.collapseT.addEventListener('click', this.setCollapsed.bind(this, !this.isCollapsed), false);
+	this.collapseT.addEventListener('click', this.setCollapsed.bind(this), false);
 	this.listLeafT.addEventListener('click', this.updateShortList.bind(this), false);
 	this.listAllT.addEventListener('click', this.updateShortList.bind(this), false);
 	// TODO: Update copyB's value based on selected Terms
@@ -380,7 +379,7 @@ GoTerm.prototype = {
 	 * @param b {boolean} true to collapse list, otherwise false
 	 */
 	setCollapsed : function(b) {
-		this.collapsed = b;
+		this.collapsed = !this.collapsed;
 		this.updateShortList();
 	},
 	/**
@@ -456,7 +455,7 @@ GoTerm.prototype = {
                 this.set(this.genes.getSource());
                 break;
             case GeneEvent.NEW_LIST:
-                // TODO: this.findD shouldn't be visible.
+	            $("#findD").modal('hide');
                 this.findGeneUnions();
                 this.updateGeneTerms();
                 this.updateActiveGeneCounts();
@@ -466,9 +465,8 @@ GoTerm.prototype = {
                 this.updateGUI();
                 break;
             case GeneEvent.RESTART:
-                break;
             case GeneEvent.NARROW:
-                // TODO: this.findD shouldn't be visible.
+	            $("#findD").modal('hide');
                 this.highTerm = null;
                 this.updateActiveGeneCounts();
                 this.makeTree();
