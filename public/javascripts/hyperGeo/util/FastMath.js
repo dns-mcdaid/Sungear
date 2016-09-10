@@ -238,5 +238,23 @@ FastMath.rint = function(x){
         return y + 1.0;
     }
 };
+FastMath.nextAfter = function(d, direction){
+    if(isNaN(d) || isNaN(direction)){
+        return Number.NaN;
+    }else if( d === direction){
+        return direction;
+    }else if(!isFinite(d)){
+        return (d < 0) ? -Number.MAX_VALUE : Number.MAX_VALUE;
+    }else if(d === 0){
+        return (direction < 0) ? -Number.MIN_VALUE : Number.MIN_VALUE;
+    }
+    var bits = (d >>> 0).toString(2);
+    var sign = bits & 0x8000000000000000;
+    if((direction < d) ^ (sign == 0)){
+        return (sign |((bits & 0x7fffffffffffffff) + 1));
+    }else{
+        return (sign |((bits & 0x7fffffffffffffff) - 1));
+    }
+};
 
 	module.exports = FastMath;

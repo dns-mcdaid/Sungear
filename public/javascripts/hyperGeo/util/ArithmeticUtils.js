@@ -9,6 +9,7 @@ var MathArithmeticException = require("../exception/MathArithmeticException");
 var NotPositiveException = require("../exception/NotPositiveException");
 var NumberIsTooLargeException = require("../exception/NumberIsTooLargeException");
 var LocalizedFormats = require("../exception/util/LocalizedFormats");
+var Localizable = require("../exception/util/Localizable");
 
 
 var FACTORIALS = {
@@ -430,9 +431,9 @@ function numberOfTrailingZeros(i) {
 
 function makeArray(w, h, val) {
     var arr = [];
-    for(i = 0; i < h; i++) {
+    for(var i = 0; i < h; i++) {
         arr[i] = [];
-        for(j = 0; j < w; j++) {
+        for(var j  = 0; j < w; j++) {
             arr[i][j] = val;
         }
     }
