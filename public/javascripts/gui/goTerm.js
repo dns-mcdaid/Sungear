@@ -160,13 +160,14 @@ GoTerm.prototype = {
      */
     updateActiveGeneCounts : function() {
         this.assocGenes.clear();
-        let trm = this.terms.keys();
-        for (let i = 0; i < trm.length; i++) {
-            const t = this.terms[trm[i]];
-            t.resetStoredCount();
-            //noinspection JSUnresolvedFunction
-	        this.assocGenes = this.assocGenes.union(t.getAllGenes().toArray());
-        }
+        const trm = this.terms.values();
+	    let nextTerm = trm.next();
+	    while (!nextTerm.done) {
+	    	const t = nextTerm.value;
+		    t.resetStoredCount();
+		    this.assocGenes = this.assocGenes.union(t.getAllGenes().toArray());
+		    nextTerm = trm.next();
+	    }
         //noinspection JSUnresolvedFunction
 	    this.assocGenes = this.assocGenes.intersection(this.genes.getActiveSet().toArray());
 	    const rootsIterator = this.roots.iterate();
@@ -202,7 +203,7 @@ GoTerm.prototype = {
         this.geneToGoIndir.clear();
         const trm = this.terms.values();
         let cnt = 0;
-	    let next = trm.next;
+	    let next = trm.next();
 	    while (!next.done) {
 	    	const t = next.value;
 		    const gi = t.getAllGenes().toArray();
@@ -213,6 +214,7 @@ GoTerm.prototype = {
 			    this.geneToGoIndir.set(gene, gv);
 		    });
 		    cnt += t.getAllGenes().length;
+		    next = trm.next();
 	    }
         console.log("total item <==> category associations: " + cnt);
     },
@@ -336,10 +338,10 @@ GoTerm.prototype = {
 	trimDAG : function (s) {
 		// deselect all terms
 		const e = this.terms.values();
-		let nextTerm = e.next;
+		let nextTerm = e.next();
 		while (!nextTerm.done) {
-			nextTerm.values.setActive(false);
-			nextTerm = e.next;
+			nextTerm.value.setActive(false);
+			nextTerm = e.next();
 		}
 		const gi = s.iterate();
 		this.uniq.clear();
@@ -358,6 +360,7 @@ GoTerm.prototype = {
 					this.traceParent(term);
 				});
 			}
+			next = gi.next();
 		}
 	},
 	/**
@@ -454,12 +457,16 @@ GoTerm.prototype = {
     listUpdated : function(e) {
         switch (e.getType()) {
             case GeneEvent.NEW_SOURCE:
+            	console.log("New source!");
                 this.set(this.genes.getSource());
                 break;
             case GeneEvent.NEW_LIST:
-	            $("#findD").modal('hide');
+            	console.log("New list!");
+	            // $("#findD").modal('hide');
                 this.findGeneUnions();
+	            console.log("Found gene unions!");
                 this.updateGeneTerms();
+	            console.log("updated gene terms!");
                 this.updateActiveGeneCounts();
                 console.log("associated terms: " + this.assocGenes.length);
                 this.makeTreeFromDAG();
@@ -468,7 +475,7 @@ GoTerm.prototype = {
                 break;
             case GeneEvent.RESTART:
             case GeneEvent.NARROW:
-	            $("#findD").modal('hide');
+	            // $("#findD").modal('hide');
                 this.highTerm = null;
                 this.updateActiveGeneCounts();
                 this.makeTree();
