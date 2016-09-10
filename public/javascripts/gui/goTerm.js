@@ -10,7 +10,7 @@ const SearchResults = require('./go/searchResults');
 const TreeModel = require('./go/treeModel');
 
 const GeneEvent = require('../genes/geneEvent');
-const Term = require('../genes/term');
+const Term = require('../genes/noHypeTerm');
 
 function GoTerm(genes, fd) {
 	this.debug = true;
@@ -188,7 +188,7 @@ GoTerm.prototype = {
         const trm = this.terms.values();
 	    let next = trm.next();
 	    while(!next.done) {
-	    	next.initUnion();
+	    	next.value.initUnion();
 		    next = trm.next();
 	    }
 	    const rootsIt = this.roots.iterate();
@@ -452,7 +452,6 @@ GoTerm.prototype = {
         }
     },
     listUpdated : function(e) {
-    	if (typeof e !== 'undefined' && this.debug) return;
         switch (e.getType()) {
             case GeneEvent.NEW_SOURCE:
                 this.set(this.genes.getSource());

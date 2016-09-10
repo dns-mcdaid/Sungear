@@ -68,7 +68,6 @@ Term.STATE_SELECTED = 1;
 /** Selected state flag: term not selected */
 Term.STATE_UNSELECTED = 2;
 
-// TODO: @Radhika implement with Hypergeo.
 Term.prototype = {
 	constructor : Term,
 	cleanup : function() {
