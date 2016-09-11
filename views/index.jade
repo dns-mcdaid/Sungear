@@ -134,7 +134,7 @@ block content
                     a(class='btn btn-primary', id='goExpandB', role='button', data-toggle='tooltip') Expand
                     a(class='btn btn-primary', id='goCollapseB', role='button', data-toggle='tooltip') Collapse
                 div(id='goHierarchy', class='img-rounded')
-                    ul(id='goHier')
+                    ul(id='goTree')
 
                 div(id='goZscore', class='img-rounded')
                     ul(id='goList')
@@ -153,9 +153,9 @@ block content
                     ul(class='dropdown-menu', id='threshM')
 
                 p(id='goStatusF') GO Terms: ####
-                a(class='btn btn-primary', id='goCopyB', role='button') Copy
+                a(class='btn btn-primary', id='goCopyB', data-clipboard-action="copy", role='button', data-toggle='tooltip') Copy
                 select(id='goSortB')
-                    option(disabled, selected, value) --select a sort option--
+                    //option(disabled, selected, value) --select a sort option--
                     option(value='zScore') Sort by Z-Score
                     option(value='name') Sort by Name
                     option(value='count') Sort by Count

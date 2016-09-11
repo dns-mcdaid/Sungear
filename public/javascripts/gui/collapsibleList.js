@@ -5,7 +5,7 @@
  */
 
 const SortedSet = require('collections/sorted-set');
-const Clipboard = require('clipboard');
+// const Clipboard = require('clipboard');
 
 const GeneEvent = require('../genes/geneEvent');
 
@@ -55,11 +55,11 @@ function CollapsibleList(g) {
     this.populateTable();
 
     // The Clipboard will copy all selected genes and their descriptions to the clipboard.
-    const clipboard = new Clipboard(this.copyB, {
-        text : function(trigger) {
-            return trigger.getAttribute('value');
-        }
-    });
+    // const clipboard = new Clipboard(this.copyB, {
+    //     text : function(trigger) {
+    //         return trigger.getAttribute('value');
+    //     }
+    // });
 }
 
 CollapsibleList.prototype = {

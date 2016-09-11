@@ -119,7 +119,7 @@ router.get('/', function(req, res, next) {
                             "GOT:004", "GOT:005",
                             "GOT:006", "GOT:007",
                             "GOT:008", "GOT:009",
-                            "GOT:010",
+                            "GOT:010"
                         ],
                         "species": "game of thrones"
                     },

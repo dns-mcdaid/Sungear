@@ -126,6 +126,27 @@ TreeNode.prototype = {
 			newChild.setParent(this);
 			this.children.push(newChild);
 		}
+	},
+	/**
+	 * Returns the path from the root, to get to this node. The last element in the path is this node.
+	 * @returns {Array.<*>}
+	 */
+	getPath : function() {
+		const path = [];
+		let parent = this;
+		while (parent !== null) {
+			path.push(parent);
+			parent = parent.getParent();
+		}
+		return path.reverse();
+	},
+	postorderEnumeration : function() {
+		let myStack = [];
+		myStack.push(this);
+		this.children.forEach((child) => {
+			myStack = myStack.concat(child.postorderEnumeration());
+		});
+		return myStack.reverse();
 	}
 };
 
