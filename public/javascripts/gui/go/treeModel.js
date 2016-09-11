@@ -58,20 +58,91 @@ TreeModel.prototype = {
 	 * @returns {boolean}
 	 */
 	isLeaf : function(node) {
-		return node.children.length == 0;
+		return node.isLeaf();
+	},
+	valueForPathChanged : function(path, newValue) {
+		
+	},
+	addTreeModelListener : function(l) {
+		
+	},
+	removeTreeModelListener : function(l) {
+		
 	},
 	/**
-	 * "Invoked this to insert newChild at location index in parents children.
+	 * Returns the index of child in parent.
+	 * If either parent or child is null, returns -1.
+	 * If either parent or child don't belong to this tree model, returns -1.
+	 *
+	 * @param parent {TreeNode}
+	 * @param child {TreeNode}
+	 * @returns {Number}
+	 */
+	getIndexOfChild : function(parent, child) {
+		return parent.getIndex(child);
+	},
+	
+	/**
+	 * Invoked this to insert newChild at location index in parents children.
 	 * This will then message nodesWereInserted to create the appropriate event.
-	 * This is the preferred way to add children as it will create the appropriate event."
-	 * -Oracle (what a bunch of scrubs)
+	 * This is the preferred way to add children as it will create the appropriate event.
 	 *
 	 * @param newChild {TreeNode}
 	 * @param parent {TreeNode}
 	 * @param index {Number}
 	 */
 	insertNodeInto : function(newChild, parent, index) {
+		parent.insert(newChild, index);
+		this.nodesWereInserted(parent, [ index ]);
+	},
+	/**
+	 * Message this to remove node from its parent.
+	 * This will message nodesWereRemoved to create the appropriate event.
+	 * This is the preferred way to remove a node as it handles the event creation for you.
+	 *
+	 * @param node {TreeNode}
+	 */
+	removeNodeFromParent : function(node) {
+		const parentInfo = node.removeFromParent();
+		this.nodesWereRemoved(parentInfo.parent, [ parentInfo.index ], [ node ]);
+	},
+	/**
+	 * Invoke this method after you've changed how node is to be represented in the tree.
+	 * @param node {TreeNode}
+	 */
+	nodeChanged : function(node) {
+		// TODO: Implement me.
+	},
+	/**
+	 * Invoke this method if you've modified the TreeNodes upon which this model depends.
+	 * The model will notify all of its listeners that the model has changed below the given node.
+	 * @param node {TreeNode}
+	 */
+	reload : function(node) {
+		// TODO: Implement me.
+	},
+	nodesWereInserted : function(node, childIndices) {
+		// TODO: Implement me.
+	},
+	/**
+	 * Invoke this method after you've removed some TreeNodes from node.
+	 * childIndices should be the index of the removed elements and must be sorted in ascending order.
+	 * And removedChildren should be the array of the children objects that were
+	 *
+	 * @param node {TreeNode}
+	 * @param childIndices {Array} of Numbers
+	 * @param removedChildren {Array} of Objects
+	 */
+	nodesWereRemoved : function(node, childIndices, removedChildren) {
 		
+	},
+	/**
+	 * Sets the root to root.
+	 * This will throw an * IllegalArgumentException if root is null.
+	 * @param aRoot {TreeNode}
+	 */
+	setRoot : function(aRoot) {
+		this.root = aRoot;
 	}
 };
 

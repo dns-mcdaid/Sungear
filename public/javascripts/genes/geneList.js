@@ -17,7 +17,6 @@
 
 const SortedSet = require("collections/sorted-set");
 
-const DataSource = require('../data/dataSource');
 const ParseException = require('../data/parseException');
 const GeneEvent = require('./geneEvent');
 const MultiSelectable = require('./multiSelectable');
@@ -45,14 +44,20 @@ GeneList.prototype = {
      * Frees up memory resources for garbage collection.
      */
     cleanup : function() {
-        this.master = null;
-        this.genesS = null;
-        this.activeS = null;
-        this.selectionS = null;
-        this.highlightS = null;
-        this.listeners = null;
-        this.multiSelectable = null;
+        this.master.clear();
+        this.genesS.clear();
+        this.activeS.clear();
+        this.selectionS.clear();
+        this.highlightS.clear();
+        this.listeners = [];
+        this.multiSelectable = [];
         this.hist.clear();
+	    
+        this.genesS = this.activeS = this.selectionS = this.highlightS = null;
+	    this.master = null;
+	    this.listeners = null;
+	    this.multiSelectable = null;
+	    this.hist = null;
     },
     /**
      * Associates this gene list with a data source; called when the master data is (re)read.
@@ -75,16 +80,19 @@ GeneList.prototype = {
             throw new ParseException("data source not initialized.");
         } else {
             this.genesS.clear();
-            this.genesS = new SortedSet(this.source.getReader().expGenes);
+            this.genesS = new SortedSet();
+	        //noinspection JSUnresolvedFunction
+	        this.genesS.addEach(this.source.getReader().expGenes);
             const iL = this.source.getAttributes().get("itemsLabel", "items");
             if (this.genesS.length < 1) {
                 throw new ParseException("no ", iL, " in data set");
             } else {
                 this.activeS.clear();
-                this.activeS = new SortedSet(this.genesS);
+	            //noinspection JSUnresolvedFunction
+	            this.activeS.addEach(this.genesS);
                 this.selectionS.clear();
-                this.selectionS = new SortedSet(this.genesS);
-
+	            //noinspection JSUnresolvedFunction
+	            this.selectionS.addEach(this.genesS);
                 this.hist.clear();
                 this.hist.add(this.selectionS);
                 console.log("working items: " + this.genesS.length);
@@ -108,17 +116,8 @@ GeneList.prototype = {
      * @return {SortedSet} full gene set
      */
     getAllGenes : function() {
-        const valuesIt = this.master.values();
-        const valuesSet = new SortedSet();
-        while(true) {
-            const nextItem = valuesIt.next();
-            if (nextItem.done) {
-                break;
-            } else {
-                valuesSet.push(nextItem.value);
-            }
-        }
-        return valuesSet;
+	    const genesSet = new SortedSet();
+	    this.master.forEach(value => genesSet.push(value));
     },
     /**
      * Gets the full set of genes for this experiment.
@@ -147,7 +146,7 @@ GeneList.prototype = {
      * @return {boolean} true if selected, otherwise false
      */
     isSelected : function(g) {
-        return this.selectionS.contains(g);
+        return this.selectionS.has(g);
     },
     /**
      * Sets the current selected set.
@@ -159,11 +158,11 @@ GeneList.prototype = {
     setSelection : function(src, sel, sendEvent = true, addHist = true) {
         // this.selectionS.clear();
         this.selectionS = new SortedSet(sel);
-        this.selectionS = this.selectionS.intersection(this.activeS);
+        //noinspection JSUnresolvedFunction
+	    this.selectionS = this.selectionS.intersection(this.activeS);
 
-        if (addHist) {
-            this.hist.add(this.selectionS);
-        }
+        if (addHist)
+        	this.hist.add(this.selectionS);
         if (sendEvent) {
             const e = new GeneEvent(this, src, GeneEvent.SELECT);
             this.notifyGeneListeners(e);
@@ -195,7 +194,8 @@ GeneList.prototype = {
     setActive : function(src, s, sendEvent = true) {
         this.activeS.clear();
 
-        this.activeS = this.activeS.union(s);
+        //noinspection JSUnresolvedFunction
+	    this.activeS.addEach(s);
 
         this.hist.clear();
         this.setSelection(this, this.activeS, false, true);
@@ -208,7 +208,7 @@ GeneList.prototype = {
     /**
      * Finds the gene whose name matches the passed name.
      * @param pub the name to match
-     * @return the matching gene, or null if no match found
+     * @return the matching gene, or undefined if no match found
      */
     find : function(pub) {
         return this.master.get(pub.toLowerCase());
@@ -231,11 +231,10 @@ GeneList.prototype = {
     setMulti : function(b, source) {
         if (this.multi != b) {
             let e = null;
-            if (b) {
-                e = new GeneEvent(this, source, GeneEvent.MULTI_START);
-            } else {
-                e = new GeneEvent(this, source, GeneEvent.MULTI_FINISH);
-            }
+            if (b)
+            	e = new GeneEvent(this, source, GeneEvent.MULTI_START);
+            else
+            	e = new GeneEvent(this, source, GeneEvent.MULTI_FINISH);
             this.notifyGeneListeners(e);
             this.multi = b;
         }
@@ -254,20 +253,26 @@ GeneList.prototype = {
      * @param operation one of the {@link MultiSelectable} operations (currently union or intersect)
      */
     finishMultiSelect : function(source, operation) {
-        let s = new SortedSet();
+        const s = new SortedSet();
         if (operation == MultiSelectable.INTERSECT) {
-            s.union(this.selectionS);
+        	//noinspection JSUnresolvedFunction
+	        s.addEach(this.selectionS);
         }
-        for (let i = 0; ii < this.multiSelectable.length; i++) {
-            const g = this.multiSelectable[i].getMultiSelection(operation);
-            if (g !== null && typeof g !== 'undefined') {
-                if (operation == MultiSelectable.UNION) {
-                    s.union(g);
-                } else {
-                    s = s.intersection(g);
-                }
-            }
-        }
+        this.multiSelectable.forEach((multi) => {
+        	const g = multi.getMultiSelection(operation);
+	        if (g !== null) {
+	        	if (operation == MultiSelectable.UNION) {
+			        //noinspection JSUnresolvedFunction
+			        s.addEach(g);
+		        } else {
+			        //noinspection JSUnresolvedFunction
+			        s.forEach((gene) => {
+				        if (!g.has(gene))
+					        s.delete(gene);
+			        });
+		        }
+	        }
+        });
         this.setMulti(false, source);
         this.setSelection(source, s);
     },
@@ -276,12 +281,11 @@ GeneList.prototype = {
 
     /**
      * Registers a regular {@link GeneEvent} listener.
-     * @param l {GeneListener} the object to register
+     * @param l {Object} a GeneListener. the object to register
      */
     addGeneListener : function(l) {
-        if (this.listeners.indexOf(l) < 0) {
+        if (this.listeners.indexOf(l) < 0)
             this.listeners.push(l);
-        }
     },
     /**
      * Removes an object from the list of {@link GeneEvent} listeners.
@@ -289,18 +293,16 @@ GeneList.prototype = {
      */
     removeGeneListener : function(l) {
         const idx = this.listeners.indexOf(l);
-        if (idx > -1) {
+        if (idx > -1)
             this.listeners.splice(idx, 1);
-        }
     },
     /**
-     * Notifies all registered {@link GeneListener}s of a new gene event.
+     * Notifies all registered GeneListeners of a new gene event.
      * @param e the gene event
      */
     notifyGeneListeners : function(e) {
-        for (let i = 0; i < this.listeners.length; i++) {
-            this.listeners[i].listUpdated(e);
-        }
+    	//noinspection JSUnresolvedFunction
+	    this.listeners.forEach((listener) => listener.listUpdated(e));
     },
 
     // BROWSING HISTORY
@@ -326,9 +328,8 @@ GeneList.prototype = {
      */
     forward : function(src) {
         const s = this.hist.forward();
-        if (s !== null) {
-            this.setSelection(src, s, true, false);
-        }
+        if (s !== null)
+        	this.setSelection(src, s, true, false);
     },
     /**
      * Moves back one selection in the browsing history,
@@ -337,9 +338,8 @@ GeneList.prototype = {
      */
     back : function(src) {
         const s = this.hist.back();
-        if (s !== null) {
-            this.setSelection(src, s, true, false);
-        }
+        if (s !== null)
+        	this.setSelection(src, s, true, false);
     }
 };
 
@@ -350,7 +350,6 @@ GeneList.prototype = {
  */
 function History() {
     this.past = []; /** The list of sets in the history */
-    this.curr = 0;  /** Index of the current set */
     this.clear();
 }
 
@@ -363,7 +362,7 @@ History.prototype = {
      */
     clear : function() {
         this.past = [];
-        this.curr = -1;
+        this.curr = -1; /** Index of the current set */
     },
     /**
      * Indicates whether or not a previous set exists.
@@ -414,16 +413,15 @@ History.prototype = {
         if (this.curr == History.MAX-1) {
             this.past.splice(0,1);
         } else {
-            // TODO: @Dennis try implementing this alternative.
-            /**
-             * var numOfElements = this.past.length - this.curr - 1;
-             * this.past.splice(curr+1, numOfElements);
-             */
-            for (let i = this.past.length; i > this.curr; i--) {
-                this.past.pop();
-            }
+            // for (let i = this.past.length; i > this.curr; i--) {
+            //     this.past.pop();
+            // }
+	        const numOfElements = this.past.length - this.curr - 1;
+	        this.past.splice(this.curr+1, numOfElements);
         }
-        const t = new SortedSet(s);
+        const t = new SortedSet();
+	    //noinspection JSUnresolvedFunction
+	    t.addEach(s);
         this.past.push(t);
         this.curr++;
     }

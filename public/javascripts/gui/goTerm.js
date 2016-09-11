@@ -8,6 +8,7 @@ const CompareName = require('./go/compareName');
 const CompareCount = require('./go/compareCount');
 const SearchResults = require('./go/searchResults');
 const TreeModel = require('./go/treeModel');
+const TreeNode = require('./go/treeNode')
 
 const GeneEvent = require('../genes/geneEvent');
 const Term = require('../genes/noHypeTerm');
@@ -318,10 +319,11 @@ GoTerm.prototype = {
 		// TODO: Figure this out
 	},
 	makeTree : function() {
-		const t = new SortedSet(this.genes.getSelectedSet());
-		// TODO: Figure out these next two lines
+		const t = new SortedSet();
+		//noinspection JSUnresolvedFunction
+		t.addEach(this.genes.getSelectedSet());
 		this.trimDAG(t);
-		this.synchronizeTreeToDAG(this.treeModel.getRoot(), roots);
+		this.synchronizeTreeToDAG(this.treeModel.getRoot(), this.roots);
 		this.updateShortList();
 	},
 	/**
@@ -436,22 +438,62 @@ GoTerm.prototype = {
 	 * Synchronizes the hierarchy with the active nodes in the DAG.
 	 * The parent parameter's children are synchronized with the passed collection,
 	 * and this process is continued recursively for the children.
-	 * @param parent {Object} the parent node at which to start synchronizing
+	 *
+	 * @param parent {TreeNode} the parent node at which to start synchronizing
 	 * @param terms {SortedSet} the list of nodes with which the parent's children will be synchronized
 	 */
 	synchronizeTreeToDAG : function(parent, terms) {
-		// TODO: Implement me.
+		const tit = terms.iterate();
+		let idx = 0;
+		let next = tit.next();
+		while (!next.done) {
+			const t = next.value;
+			if (t.isActive()) {
+				if (idx >= parent.getChildCount() || t != parent.getChildAt(idx).getUserObject())
+					this.treeModel.insertNodeInto(new TreeNode(t), parent, idx);
+				idx++;
+			} else {
+				if (idx < parent.getChildCount() && t == parent.getChildAt(idx).getUserObject())
+					this.treeModel.removeNodeFromParent(parent.getChildAt(idx));
+			}
+			next = tit.next();
+		}
+		for (let i = 0; i < parent.getChildCount(); i++) {
+			const n = parent.getChildAt(i);
+			this.synchronizeTreeToDAG(n, n.getUserObject().getChildren());
+		}
 	},
 	/**
 	 * Builds the displayed tree from the DAG.  Nodes with multiple
 	 * parents are represented as repeated sub-graphs in the tree.
 	 */
 	makeTreeFromDAG : function() {
-		// TODO: Implement me.
+		const t = new SortedSet();
+		//noinspection JSUnresolvedFunction
+		t.addEach(this.genes.getSelectedSet());
+		this.trimDAG(t);
+		const cL = this.genes.getSource().getAttributes().get("categoriesLabel", "categories");
+		const root = new TreeNode(this.capFirst(cL));
+		this.nodes = [];
+		const rt = this.roots.iterate();
+		let next = rt.next();
+		while (!next.done) {
+			this.addNodes(root, next.value);
+			next = rt.next();
+		}
+		this.treeModel.setRoot(root);
 	},
     addNodes : function(r, n) {
         if (n.isActive()) {
-            // TODO: Figure out jsTree
+        	const curr = new TreeNode(n);
+	        r.add(curr);
+	        this.nodes.push(curr);
+	        const it = n.getChildren().iterate();
+	        let next = it.next();
+	        while (!next.done) {
+	        	this.addNodes(curr, next.value);
+		        next = it.next();
+	        }
         }
     },
     listUpdated : function(e) {
@@ -461,21 +503,17 @@ GoTerm.prototype = {
                 this.set(this.genes.getSource());
                 break;
             case GeneEvent.NEW_LIST:
-            	console.log("New list!");
-	            // $("#findD").modal('hide');
+	            $("#findD").modal('hide');
                 this.findGeneUnions();
-	            console.log("Found gene unions!");
                 this.updateGeneTerms();
-	            console.log("updated gene terms!");
                 this.updateActiveGeneCounts();
-                console.log("associated terms: " + this.assocGenes.length);
                 this.makeTreeFromDAG();
                 this.makeTree();
                 this.updateGUI();
                 break;
             case GeneEvent.RESTART:
             case GeneEvent.NARROW:
-	            // $("#findD").modal('hide');
+	            $("#findD").modal('hide');
                 this.highTerm = null;
                 this.updateActiveGeneCounts();
                 this.makeTree();
@@ -550,6 +588,15 @@ GoTerm.prototype = {
             this.shortList.appendChild(row);
         });
     },
+	capFirst : function(s) {
+		if (s.length > 1) {
+			return s[0].toUpperCase();
+		} else if (s.length == 1) {
+			return s.toUpperCase();
+		} else {
+			return s;
+		}
+	},
     clearSelectionRecursive : function(el) {
         el.childNodes.forEach((child) => {
             if (child.childNodes.length > 0) {

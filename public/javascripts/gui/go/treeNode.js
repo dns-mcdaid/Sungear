@@ -1,26 +1,72 @@
 "use strict";
 /**
- * New Implementation of Java's MutableTreeNode
+ * New Implementation of Java's DefaultMutableTreeNode
  *
  * @author RajahBimmy
  */
 
-function TreeNode(data) {
-	this.parent = null;
-	this.data = data;
+function TreeNode(object = null, allowsChildren = true) {
+	this.allowsChildren = allowsChildren;
+	//noinspection JSUnresolvedVariable
 	this.children = []; /** {Array} */
+	this.userObject = object;
+	this.parent = null;
 }
 
 TreeNode.prototype = {
 	constructor : TreeNode,
 	/**
+	 * Returns the child at the specified index in this node's child array.
+	 * @param index {Number} an index into this node's child array
+	 * @returns {object} the TreeNode in this node's child array at the specified index
+	 */
+	getChildAt : function(index) {
+		return this.children[index];
+	},
+	/**
+	 * @returns {Number} Returns the number of children TreeNodes the receiver contains.
+	 */
+	getChildCount : function() {
+		return this.children.length;
+	},
+	/**
+	 * Returns the parent TreeNode of the receiver.
+	 * @returns {null|object}
+	 */
+	getParent : function() {
+		return this.parent;
+	},
+	/**
+	 * Returns the index of node in the receivers children.
+	 * If the receiver does not contain node, -1 will be returned.
+	 * @param node {TreeNode}
+	 * @returns {Number}
+	 */
+	getIndex : function(node) {
+		return this.children.indexOf(node);
+	},
+	/**
+	 * Returns true if the receiver allows children.
+	 * @returns {boolean}
+	 */
+	getAllowsChildren : function() {
+		return this.allowsChildren;
+	},
+	/**
+	 * Returns true if the receiver is a leaf.
+	 * @returns {boolean}
+	 */
+	isLeaf : function() {
+		return this.children.length == 0;
+	},
+	/**
 	 * Adds child to the receiver at index.
 	 * child will be messaged with setParent.
 	 *
 	 * @param child {object}
-	 * @param index {number} optional
+	 * @param index {Number} optional
 	 */
-	push : function(child, index) {
+	insert : function(child, index) {
 		if (typeof index === 'undefined') {
 			this.children.push(child);
 		} else {
@@ -47,6 +93,9 @@ TreeNode.prototype = {
 			this.children.splice(index, 1);
 		}
 	},
+	getUserObject : function() {
+		return this.userObject;
+	},
 	/**
 	 * Resets the user object of the receiver to object.
 	 *
@@ -57,10 +106,26 @@ TreeNode.prototype = {
 		console.log("Hello! This function is useless.");
 	},
 	removeFromParent : function() {
+		const oldParent = this.parent;
+		const index = this.parent.indexOf(this);
 		this.parent = null;
+		return {
+			parent : oldParent,
+			index : index
+		};
 	},
 	setParent : function(newParent) {
 		this.parent = newParent;
+	},
+	/**
+	 * Removes newChild from its parent and makes it a child of this node by adding it to the end of this node's child array.
+	 * @param newChild {TreeNode}
+	 */
+	add : function(newChild) {
+		if (newChild !== null) {
+			newChild.setParent(this);
+			this.children.push(newChild);
+		}
 	}
 };
 

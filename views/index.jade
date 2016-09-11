@@ -135,12 +135,6 @@ block content
                     a(class='btn btn-primary', id='goCollapseB', role='button', data-toggle='tooltip') Collapse
                 div(id='goHierarchy', class='img-rounded')
                     ul(id='goHier')
-                        li
-                            span(class='glyphicon glyphicon-chevron-right')
-                            p Test
-                        li
-                            span(class='glyphicon glyphicon-chevron-right')
-                            p Test2
 
                 div(id='goZscore', class='img-rounded')
                     ul(id='goList')
@@ -158,7 +152,7 @@ block content
                         span(class='glyphicon glyphicon-th-list')
                     ul(class='dropdown-menu', id='threshM')
 
-                p(id='goCount') GO Terms: ####
+                p(id='goStatusF') GO Terms: ####
                 a(class='btn btn-primary', id='goCopyB', role='button') Copy
                 select(id='goSortB')
                     option(disabled, selected, value) --select a sort option--
@@ -251,7 +245,7 @@ block content
 
     input(type='hidden', id='vis' value=JSON.stringify(data))
 
-    script(src='/javscripts/lib/clipboard.min.js')
+    script(src='/javascripts/lib/clipboard.min.js')
     script(src='/javascripts/lib/jquery-2.2.4.min.js')
     script(src='/javascripts/lib/bootstrap.min.js')
 
