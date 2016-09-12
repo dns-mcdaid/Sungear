@@ -41,7 +41,7 @@ GoBrowser.prototype = {
  */
 function BrowserPanel(base, annot, hier) {
     // read data
-    this.terms = {};    /** {Hashtable<String,Term>} */
+    this.terms = new Map();    /** {Hashtable<String,Term>} */
     var attrib = new Attributes();
     var tempReader = new DataReader();
     tempReader.readTerms(tempReader.makeURL(base, annot), this.terms, attrib);
@@ -50,10 +50,9 @@ function BrowserPanel(base, annot, hier) {
     // build tree
     this.tree = document.createElement("div");  /** {JTree} */
     // TODO: @Dennis implement lines 118 - 120
-    var keys = Object.keys(this.terms);
-    for (var i = 0; i < keys.length; i++) {
-        terms[keys[i]].setActive(true);
-    }
+    this.terms.forEach((value, key) => {
+    	value.setActive(true);
+    });
     // TODO: @Dennis implement lines 126 - 173
     // Add Event Listeners
 }
