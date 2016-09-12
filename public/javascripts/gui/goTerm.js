@@ -251,6 +251,9 @@ GoTerm.prototype = {
             }
             this.genes.setSelection(this, r);
         } else {
+	        $('#goList li').each(function() {
+		        this.className = "list-group-item list-group-item-action";
+	        });
             s = new SortedSet(t.getAllGenes());
             //noinspection JSUnresolvedFunction
 	        s.forEach((gene) => {
@@ -497,6 +500,8 @@ GoTerm.prototype = {
 			const n = parent.getChildAt(i);
 			this.synchronizeTreeToDAG(n, n.getUserObject().getChildren());
 		}
+		
+		this.populateTreeRecursive(this.treeModel);
 	},
 	/**
 	 * Builds the displayed tree from the DAG.  Nodes with multiple
@@ -593,6 +598,10 @@ GoTerm.prototype = {
 		}
 		$("#findD").modal('show');
 	},
+	
+	populateTreeRecursive : function(node) {
+		
+	},
 
     setShortListListeners : function() {
 	    while (this.shortList.hasChildNodes()) {
@@ -622,11 +631,8 @@ GoTerm.prototype = {
                                 });
                                 this.genes.setSelection(this, s);
                             } else {
-	                            $('#goList li').each(function() {
-		                            this.className = "list-group-item list-group-item-action";
-	                            });
-	                            li.className = "list-group-item active";
                                 this.selectTerm(item, window.event.ctrlKey || window.event.metaKey);
+	                            li.className = "list-group-item active";
                             }
                         }
                         if (!window.event.shiftKey) this.lastRowList = i;

@@ -126,7 +126,7 @@ router.get('/', function(req, res, next) {
                     {
                         "id": "GOT:002",
                         "description": "commoner",
-                        "zScore": 0.06451612903,
+                        "zScore": 0.09677419354,
                         "items": [],
                         "parents": [],
                         "children": [
@@ -232,9 +232,10 @@ router.get('/', function(req, res, next) {
                     {
                         "id": "GOT:011",
                         "description": "westerosi",
-                        "zScore": 0.03225806451,
+                        "zScore": 0.06451612903,
                         "items": [
-                            "littlefin"
+                            "littlefin",
+	                        "jorahmorm"
                         ],
                         "parents": [],
                         "children": [],

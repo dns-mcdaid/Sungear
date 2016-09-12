@@ -219,6 +219,15 @@ tr {
 
 }
 
+#goHierarchy ul {
+    padding-left: 20px;
+    /*list-style-position: inside;*/
+}
+
+ul {
+    cursor: pointer;
+}
+
 /*#goHier {*/
     /*list-style-type: none;*/
 /*}*/
