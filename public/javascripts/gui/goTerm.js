@@ -290,7 +290,6 @@ GoTerm.prototype = {
 	    });
         this.listModel.setListData(test);
         this.statusF.innerHTML = this.genes.getSource().getAttributes().get('categoriesLabel', 'categories') + ": " + this.listModel.getSize();
-	    this.setShortListListeners();
     },
     findTermMatches : function() {
 	    const pattern = ".*" + this.findF.value + ".*";
@@ -445,9 +444,8 @@ GoTerm.prototype = {
 	 * Updates the display when the selected set changes.
 	 */
 	updateSelect : function() {
-		// TODO: Implement
-		// shortList repaint?
-		// tree repaint?
+		this.setShortListListeners();
+		this.populateTreeRecursive(this.treeModel.getRoot(), this.tree);
 	},
 	lostOwnership : function(c, t) { },
 	copyTerms : function() {
@@ -500,8 +498,6 @@ GoTerm.prototype = {
 			const n = parent.getChildAt(i);
 			this.synchronizeTreeToDAG(n, n.getUserObject().getChildren());
 		}
-		
-		this.populateTreeRecursive(this.treeModel);
 	},
 	/**
 	 * Builds the displayed tree from the DAG.  Nodes with multiple
@@ -552,6 +548,7 @@ GoTerm.prototype = {
                 this.updateGUI();
 	            this.copyTerms();
 	            this.setShortListListeners();
+	            this.populateTreeRecursive(this.treeModel.getRoot(), this.tree);
                 break;
             case GeneEvent.RESTART:
             case GeneEvent.NARROW:
@@ -599,8 +596,22 @@ GoTerm.prototype = {
 		$("#findD").modal('show');
 	},
 	
-	populateTreeRecursive : function(node) {
-		
+	populateTreeRecursive : function(node, element) {
+		while (element.hasChildNodes()) {
+			element.removeChild(this.tree.firstChild);
+		}
+		node.children.forEach((child) => {
+			const li = document.createElement('li');
+			const term = child.getUserObject();
+			li.innerHTML = term.toString();
+			li.className = (term.isActive() ? 'selected' : '');
+			element.appendChild(li);
+			if (child.children.length > 0) {
+				const ul = document.createElement('ul');
+				this.populateTreeRecursive(child, ul);
+				element.appendChild(ul);
+			}
+		});
 	},
 
     setShortListListeners : function() {
