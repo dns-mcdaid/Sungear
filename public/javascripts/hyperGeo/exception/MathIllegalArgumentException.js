@@ -11,14 +11,17 @@ Translated from Ilyas Mounaime's Java code
 //uses:
 // hyperGeo.exception.util.ExceptionContext;
 // hyperGeo.exception.util.ExceptionContextProvider;
+var ExceptionContext = require("./util/ExceptionContext");
 
-
-function MathIllegalArgumentException(message, errorObject){
-	this.message = new Error(message);
-	this.errorObject = errorObject;
+function MathIllegalArgumentException(message, args){
+	this.context = new ExceptionContext(this);
+	this.context.addMessage(pattern, args)
 }
 MathIllegalArgumentException.prototype = {
 	getMessage: function(){
+		return this.context.getMessage();
+	},
+	getContext: function(){
 		return this.context;
 	}
 };

@@ -6,5 +6,23 @@ Translated from Ilyas Mounaime's Java code
 
 */
 
-function MaxCountExceededException(){}
-MaxCountExceededException.max;
+function MaxCountExceededException(specific, max, args){
+    if(arguments.length ==1){
+        this.getContext().addMessage(LocalizedFormats.MAX_COUNT_EXCEEDED, max);
+        this.max = specific;
+    }else{
+        this.getContext().addMessage(specific, max, args);
+        this.max = max;
+    }
+}
+
+MaxCountExceededException.prototype = {
+  getMax: function(){
+      return this.max;
+  }
+};
+
+MaxCountExceededException.prototype = Object.create(MathIllegalStateException.prototype);
+MaxCountExceededException.prototype.constructor = MaxCountExceededException;
+
+module.exports = MaxCountExceededException;

@@ -5,3 +5,6 @@ Porting Sungear from Java to Javascript,
 Translated from Ilyas Mounaime's Java code
 
 */
+function ExceptionContextProvider(){}
+ExceptionContextProvider.prototype.getContext = function(){};
+module.exports = ExceptionContextProvider;

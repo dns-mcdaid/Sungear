@@ -15,7 +15,7 @@ function NumberIsTooSmallException(specific, wrong, min, boundIsAllowed){
 	var format;
 	var passedWrong;
 	if(arguments.length == 3){
-		format = boundIsAllowed ? LocalizedFormats.NUMBER_TOO_SMALL : LocalizedFormats.NUMBER_TOO_SMALL_BOUND_EXCLUDED;
+		format = min ? LocalizedFormats.NUMBER_TOO_SMALL : LocalizedFormats.NUMBER_TOO_SMALL_BOUND_EXCLUDED;
 		this.min = wrong;
 		this.boundIsAllowed = min;
 		passedWrong = specific;
@@ -26,7 +26,7 @@ function NumberIsTooSmallException(specific, wrong, min, boundIsAllowed){
 		this.boundIsAllowed = boundIsAllowed;
 	}
 
-	MathIllegalNumberException.call(this, format, this);
+	MathIllegalNumberException.call(this, format, passedWrong, this.min);
 }
 
 NumberIsTooSmallException.prototype = {

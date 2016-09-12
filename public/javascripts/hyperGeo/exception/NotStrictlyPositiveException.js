@@ -8,14 +8,17 @@ Translated from Ilyas Mounaime's Java code
 
 //extends NumberIsTooSmallException
 
-var serialVersionUID = -7824848630829852237;
 var NumberIsTooSmallException = require('./NumberIsTooSmallException');
 
 NotStrictlyPositiveException.prototype = Object.create(NumberIsTooSmallException.prototype);
 NotStrictlyPositiveException.prototype.constructor = NotStrictlyPositiveException;
 
-function NotStrictlyPositiveException(value){
-	NumberIsTooSmallException.call(this, "NotStrictlyPositiveException", value);
+function NotStrictlyPositiveException(specific, value){
+	if(arguments.length == 1){
+		NumberIsTooSmallException.call(this, specific, 0, false);
+	}else{
+		NumberIsTooSmallException.call(this, specific, value, 0, false);
+	}
 }
 
 module.exports = NotStrictlyPositiveException;

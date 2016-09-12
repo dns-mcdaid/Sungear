@@ -11,7 +11,6 @@ Translated from Ilyas Mounaime's Java code
 //extends NumberIsTooSmallException
 
 
-var serialVersionUID = -2250556892093726375;
 var NumberIsTooSmallException = require("./NumberIsTooSmallException");
 //create inheritance via .prototype
 NotPositiveException.prototype = Object.create(NumberIsTooSmallException.prototype);
