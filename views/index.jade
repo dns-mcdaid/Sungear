@@ -137,7 +137,7 @@ block content
                     ul(id='goTree')
 
                 div(id='goZscore', class='img-rounded')
-                    ul(id='goList')
+                    ul(id='goList', class="list-group")
 
                 input(type='text', name='zSearch', id='goFindF')
                 button(class='btn btn-primary', id='goFindB', role='button', data-toggle='tooltip') Find
@@ -230,7 +230,7 @@ block content
                     button(type='button', class='btn btn-primary', id='statsFSubmit', data-dismiss='modal') OK
 
     // Results Dialog
-    div(class='modal fade', id='resultsF', tabindex='-1', role='dialog', aria-labelledby='statsFLabel')
+    div(class='modal fade', id='resultsF', tabindex='-1', role='dialog', aria-labelledby='resultsFLabel')
         div(class='modal-dialog', role='document')
             div(class='modal-content')
                 div(class='modal-header')
@@ -242,6 +242,19 @@ block content
                 div(class='modal-footer')
                     button(type='button', class='btn btn-default', data-dismiss='modal') Cancel
                     button(type='button', class='btn btn-primary', id='resultsFSubmit', data-dismiss='modal') OK
+
+    div(class='modal fade', id='findD', tabindex='-1', role='dialog', aria-labelledby='findD')
+        div(class='modal-dialog', role='document')
+            div(class='modal-content')
+                div(class='modal-header')
+                    button(type='button', class='close', data-dismiss='modal', aria-label='Close')
+                        span(aria-hidden='true') &times;
+                    h4(class='modal-title', id='findDLabel') Results
+                // TODO: Finish implementation
+
+                div(class='modal-footer')
+                    button(type='button', class='btn btn-default', data-dismiss='modal') Cancel
+                    button(type='button', class='btn btn-primary', id='findDSubmit', data-dismiss='modal') OK
 
     input(type='hidden', id='vis' value=JSON.stringify(data))
 

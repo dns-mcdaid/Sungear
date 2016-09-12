@@ -171,12 +171,12 @@ router.get('/', function(req, res, next) {
                         "id": "GOT:006",
                         "description": "greyjoy",
                         "zScore": 0.09677419354,
-                        "items": [],
-                        "parents": [],
-                        "children": [
+                        "items": [
                             "theongrey", "yaragreyj",
                             "eurongrey"
                         ],
+                        "parents": [],
+                        "children": [],
                         "species": "game of thrones"
                     },
                     {

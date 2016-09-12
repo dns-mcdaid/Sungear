@@ -287,6 +287,7 @@ GoTerm.prototype = {
 	    });
         this.listModel.setListData(test);
         this.statusF.innerHTML = this.genes.getSource().getAttributes().get('categoriesLabel', 'categories') + ": " + this.listModel.getSize();
+	    this.setShortListListeners();
     },
     findTermMatches : function() {
 	    const pattern = ".*" + this.findF.value + ".*";
@@ -300,7 +301,7 @@ GoTerm.prototype = {
 		    	v.push(t);
 		    it = shortTermIt.next();
 	    }
-	    this.setResults(v);
+	    this.results.setResults(v);
     },
     findNodeMatches : function() {
 	    const pattern = ".*" + this.findF.value + ".*";
@@ -545,6 +546,7 @@ GoTerm.prototype = {
                 this.makeTree();
                 this.updateGUI();
 	            this.copyTerms();
+	            this.setShortListListeners();
                 break;
             case GeneEvent.RESTART:
             case GeneEvent.NARROW:
@@ -589,41 +591,50 @@ GoTerm.prototype = {
 			const cL = this.genes.getSource().getAttributes().get("categoriesLabel", "categories");
 			alert("No matching " + cL + " found");
 		}
-		// TODO: tree.repaint?
 		$("#findD").modal('show');
 	},
 
     setShortListListeners : function() {
-        this.listModel.data.forEach((item, i) => {
-            const row = document.createElement('li');
-            row.innerHTML = item.name;
+	    while (this.shortList.hasChildNodes()) {
+		    this.shortList.removeChild(this.shortList.firstChild);
+	    }
+	    let i = 0;
+        this.listModel.data.forEach((item) => {
+            const li = document.createElement('li');
+            li.innerHTML = item.toString();
+	        li.className = "list-group-item list-group-item-action";
 
-            row.addEventListener('click', () => {
+            li.addEventListener('click', () => {
                 if (!this.multi && i > -1) {
+	                li.className = "list-group-item active";
                     if (false) {
                         // if it is a popup trigger
                     } else {
                         if (window.event.altKey) {
                             this.genes.startMultiSelect(this);
-                            row.className = "selected";
                         } else {
                             if (this.lastRowList != -1 && window.event.shiftKey) {
                                 let s = new SortedSet();
                                 const sublist = this.listModel.data.splice(Math.min(i, this.lastRowList), Math.max(i, this.lastRowList)+1);
                                 sublist.forEach((item) => {
                                     //noinspection JSUnresolvedFunction
-                                    s = s.union(item.getAllGenes());
+                                    s.addEach(item.getAllGenes());
                                 });
                                 this.genes.setSelection(this, s);
                             } else {
-                                this.selectTerm(this.listModel.data[i], window.event.ctrlKey || window.event.metaKey);
+	                            $('#goList li').each(function() {
+		                            this.className = "list-group-item list-group-item-action";
+	                            });
+	                            li.className = "list-group-item active";
+                                this.selectTerm(item, window.event.ctrlKey || window.event.metaKey);
                             }
                         }
                         if (!window.event.shiftKey) this.lastRowList = i;
                     }
                 }
             }, false);
-            this.shortList.appendChild(row);
+            this.shortList.appendChild(li);
+	        i++;
         });
     },
 	capFirst : function(s) {

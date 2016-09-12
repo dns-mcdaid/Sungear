@@ -158,8 +158,8 @@ Term.prototype = {
 		return this.name.toLowerCase().localeCompare(t.name.toLowerCase());
 	},
 	toString : function() {
-		const v = this.zScore;
-		return "(" + v + ";" + this.getStoredCount() + ")" + this.name;
+		let v = this.zScore;
+		return "(" + v.toFixed(2) + ";" + this.getStoredCount() + ") " + this.name;
 	},
 	/**
 	 * Gives this term's z-score.
