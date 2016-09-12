@@ -6,11 +6,7 @@ Translated from Ilyas Mounaime's Java code
 
 */
 var UnivariateFunction = require("../UnivariateFunction");
-var MaxCountExceededException = require("../../exception/MaxCountExceededException");
-var NoBracketingException = require("../../exception/NoBracketingException");
 var TooManyEvaluationsException = require("../../exception/TooManyEvaluationsException");
-var NumberIsTooLargeException = require("../../exception/NumberIsTooLargeException");
-var NullArgumentException = require("../../exception/NullArgumentException");
 var MathUtils = require("../../util/MathUtils");
 var Incrementor = require("../../util/Incrementor");
 var UnivariateSolverUtils = require("./UnivariateSolverUtils");
@@ -91,9 +87,7 @@ BaseAbstractUnivariateSolver.prototype = {
         return this.doSolve();
 
     },
-    doSolve: function(){
-
-    },
+    doSolve: function(){},
     isBracketing: function(lower, upper){
         return UnivariateSolverUtils.isBracketing(this.function, lower, upper);
     },
@@ -112,6 +106,9 @@ BaseAbstractUnivariateSolver.prototype = {
         } catch (e) {
             throw new TooManyEvaluationsException(e.getMax());
         }
+    },
+    verifySequence: function(lower, initial, upper){
+        UnivariateSolverUtils.verifySequence(lower, initial, upper);
     }
 };
 

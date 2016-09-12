@@ -5,6 +5,7 @@ Porting Sungear from Java to Javascript,
 Translated from Ilyas Mounaime's Java code
 
 */
+var Incrementor = require("../../util/Incrementor");
 BaseUnivariateSolver.DEFAULT_RELATIVE_ACCURACY = 1e-14;
 BaseUnivariateSolver.DEFAULT_FUNCTION_VALUE_ACCURACY = 1e-15;
 
@@ -34,7 +35,7 @@ BaseUnivariateSolver.prototype = {
         return this.evaluations.getMaximalCount();
     },
     getEvaluations: function(){
-        return this.evaluation.getCount();
+        return this.evaluations.getCount();
     },
     getMin: function(){
         return this.searchMin;
