@@ -163,7 +163,7 @@ tr {
     margin-bottom: 10px;
 }
 
-#goCount, #geneCount {
+#goStatusF, #geneCount {
     padding-top: 10px;
     /*color: #F3EFE0;*/
     color: #DDDDDD;
@@ -216,7 +216,16 @@ tr {
 }
 
 .selected {
+    color : #0a6aa1;
+}
 
+#goHierarchy ul {
+    padding-left: 20px;
+    /*list-style-position: inside;*/
+}
+
+ul {
+    cursor: pointer;
 }
 
 /*#goHier {*/

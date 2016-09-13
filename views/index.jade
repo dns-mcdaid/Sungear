@@ -134,16 +134,24 @@ block content
                     a(class='btn btn-primary', id='goExpandB', role='button', data-toggle='tooltip') Expand
                     a(class='btn btn-primary', id='goCollapseB', role='button', data-toggle='tooltip') Collapse
                 div(id='goHierarchy', class='img-rounded')
-                    ul(id='goHier')
-                        li
-                            span(class='glyphicon glyphicon-chevron-right')
-                            p Test
-                        li
-                            span(class='glyphicon glyphicon-chevron-right')
-                            p Test2
+                    ul(id='goTree')
+                        //li Potato
+                        //li Tomato
+                        //ul
+                        //    li Risotto
+                        //    ul
+                        //        li Christianity
+                        //        ul
+                        //            li Jesus
+                        //            ul
+                        //                li Disciples
+                        //        li Judaism
+                        //        li Islam
+                        //    li Penne
+                        //li Chocolate
 
                 div(id='goZscore', class='img-rounded')
-                    ul(id='goList')
+                    ul(id='goList', class="list-group")
 
                 input(type='text', name='zSearch', id='goFindF')
                 button(class='btn btn-primary', id='goFindB', role='button', data-toggle='tooltip') Find
@@ -158,10 +166,10 @@ block content
                         span(class='glyphicon glyphicon-th-list')
                     ul(class='dropdown-menu', id='threshM')
 
-                p(id='goCount') GO Terms: ####
-                a(class='btn btn-primary', id='goCopyB', role='button') Copy
+                p(id='goStatusF') GO Terms: ####
+                a(class='btn btn-primary', id='goCopyB', data-clipboard-action="copy", role='button', data-toggle='tooltip') Copy
                 select(id='goSortB')
-                    option(disabled, selected, value) --select a sort option--
+                    //option(disabled, selected, value) --select a sort option--
                     option(value='zScore') Sort by Z-Score
                     option(value='name') Sort by Name
                     option(value='count') Sort by Count
@@ -236,7 +244,7 @@ block content
                     button(type='button', class='btn btn-primary', id='statsFSubmit', data-dismiss='modal') OK
 
     // Results Dialog
-    div(class='modal fade', id='resultsF', tabindex='-1', role='dialog', aria-labelledby='statsFLabel')
+    div(class='modal fade', id='resultsF', tabindex='-1', role='dialog', aria-labelledby='resultsFLabel')
         div(class='modal-dialog', role='document')
             div(class='modal-content')
                 div(class='modal-header')
@@ -249,9 +257,22 @@ block content
                     button(type='button', class='btn btn-default', data-dismiss='modal') Cancel
                     button(type='button', class='btn btn-primary', id='resultsFSubmit', data-dismiss='modal') OK
 
+    div(class='modal fade', id='findD', tabindex='-1', role='dialog', aria-labelledby='findD')
+        div(class='modal-dialog', role='document')
+            div(class='modal-content')
+                div(class='modal-header')
+                    button(type='button', class='close', data-dismiss='modal', aria-label='Close')
+                        span(aria-hidden='true') &times;
+                    h4(class='modal-title', id='findDLabel') Results
+                // TODO: Finish implementation
+
+                div(class='modal-footer')
+                    button(type='button', class='btn btn-default', data-dismiss='modal') Cancel
+                    button(type='button', class='btn btn-primary', id='findDSubmit', data-dismiss='modal') OK
+
     input(type='hidden', id='vis' value=JSON.stringify(data))
 
-    script(src='/javscripts/lib/clipboard.min.js')
+    script(src='/javascripts/lib/clipboard.min.js')
     script(src='/javascripts/lib/jquery-2.2.4.min.js')
     script(src='/javascripts/lib/bootstrap.min.js')
 

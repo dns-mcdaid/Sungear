@@ -125,16 +125,6 @@ DataReader.prototype = {
 	    rootsMap.forEach((value, key) => {
 	    	this.roots.push(value);
 	    });
-	    if (this.debug) {
-		    console.log("ROOTS:");
-		    console.log(this.roots);
-		
-		    console.log("TERMS TIME:");
-		    console.log(this.terms);
-		
-		    console.log("GENE TO GO TIME");
-		    console.log(this.geneToGo);
-	    }
     }
 };
 

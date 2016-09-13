@@ -5,6 +5,7 @@
  *
  * @author RajahBimmy
  */
+const Clipboard = require('clipboard');
 
 const Signal = require('./signal');
 
@@ -160,6 +161,20 @@ VisGene.prototype = {
         this.collectPasssedData(function() {
             this.run();
         }.bind(this));
+	    
+	    
+	    const geneCopy = document.getElementById('copyB');
+	    const goCopy = document.getElementById('goCopyB');
+	    new Clipboard(geneCopy, {
+		    text : function(trigger) {
+			    return trigger.getAttribute('value');
+		    }
+	    });
+	    new Clipboard(goCopy, {
+		    text : function(trigger) {
+			    return trigger.getAttribute('value');
+		    }
+	    });
     },
     run : function() {
         this.geneList.setSource(this.src);

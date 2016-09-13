@@ -6,6 +6,7 @@
 
 /** @param name {String} */
 function Anchor(name) {
+    //noinspection JSUnresolvedVariable
     this.name = name;   /** {String} */
 }
 

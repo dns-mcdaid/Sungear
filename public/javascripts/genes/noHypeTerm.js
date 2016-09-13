@@ -109,7 +109,7 @@ Term.prototype = {
 	isRoot : function() {
 		return this.parents.length == 0;
 	},
-	setActive : function() {
+	setActive : function(b) {
 		this.active = b;
 	},
 	isActive : function() {
@@ -158,8 +158,8 @@ Term.prototype = {
 		return this.name.toLowerCase().localeCompare(t.name.toLowerCase());
 	},
 	toString : function() {
-		const v = this.zScore;
-		return "(" + v + ";" + this.getStoredCount() + ")" + this.name;
+		let v = this.zScore;
+		return "(" + v.toFixed(2) + ";" + this.getStoredCount() + ") " + this.name;
 	},
 	/**
 	 * Gives this term's z-score.
@@ -228,14 +228,14 @@ Term.prototype = {
 	 */
 	findUnion : function(global) {
 		if (this.allGenes === null) {
-			this.allGenes = new SortedSet();
-			this.allGenes = this.allGenes.union(this.localGenes);
+			this.allGenes = new SortedSet(this.localGenes);
 			const it = this.children.iterate();
 			let next = it.next();
 			while (!next.done) {
 				const ch = next.value;
 				ch.findUnion(global);
 				this.allGenes = this.allGenes.union(ch.allGenes);
+				next = it.next();
 			}
 			this.allGenes = this.allGenes.intersection(global);
 		}
