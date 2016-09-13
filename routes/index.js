@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const mongodb = require('mongodb');
 
-// require('../public/javascripts/test/HyperGeoTest').test();
+require('../public/javascripts/test/HyperGeoTest').test();
 const VisGene = require('../lib/visGene');
 const SortedSet = require('collections/sorted-set');
 

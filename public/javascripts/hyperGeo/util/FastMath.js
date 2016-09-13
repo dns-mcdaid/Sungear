@@ -13,7 +13,7 @@ Translated from Ilyas Mounaime's Java code
 
 	FastMath.EXP_INT_TABLE_MAX_INDEX  = 750;
 
-	FastMath.EXP_INT_TABLE_LEN = EXP_INT_TABLE_MAX_INDEX * 2;
+	FastMath.EXP_INT_TABLE_LEN = FastMath.EXP_INT_TABLE_MAX_INDEX * 2;
 
 	FastMath.LN_MANT_LEN = 1024;
 
@@ -21,7 +21,7 @@ Translated from Ilyas Mounaime's Java code
 
 	FastMath.TWO_POWER_52 = 4503599627370496.0;
 
-	FastMath.TWO_POWER_53 = 2 * TWO_POWER_52;
+	FastMath.TWO_POWER_53 = 2 * FastMath.TWO_POWER_52;
 
 	FastMath.F_1_2 = 1/2;
 

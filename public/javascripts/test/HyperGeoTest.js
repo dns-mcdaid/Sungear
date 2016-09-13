@@ -8,10 +8,10 @@ Test JS function, adapted from Ilyas' Java code
 var HypergeometricDistribution = require('../hyperGeo/distribution/HypergeometricDistribution');
 module.exports = {
    test: function(){
-       var population = 200;
-       var successNumber = 20;
-       var sampleSize = 16;
-       var successPerSample = 10;
+       var population = 30;
+       var successNumber = 15;
+       var sampleSize = 4;
+       var successPerSample = 12;
        var h = new HypergeometricDistribution(population, successNumber, sampleSize);
        var outputString = "";
        outputString += "The mean is = " + h.getNumericalMean() + "\n";

@@ -25,7 +25,7 @@ MathUtils = {
             throw new NullArgumentException();
         }
     },
-    checkFinite(val){
+    checkFinite: function(val){
         if(x instanceof Number){
             if(!isFinite(val) || isNaN(val)){
                 throw new NotFiniteNumberException(x);
@@ -39,7 +39,7 @@ MathUtils = {
             }
         }
     },
-    copySign(magnitude, sign){
+    copySign: function(magnitude, sign){
         if ((magnitude >= 0 && sign >= 0) ||
             (magnitude < 0 && sign < 0)) { // Sign is OK.
             return magnitude;

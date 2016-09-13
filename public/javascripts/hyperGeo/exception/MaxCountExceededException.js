@@ -5,7 +5,7 @@ Porting Sungear from Java to Javascript,
 Translated from Ilyas Mounaime's Java code
 
 */
-
+var MathIllegalStateException = require("./MathIllegalStateException");
 function MaxCountExceededException(specific, max, args){
     if(arguments.length ==1){
         this.getContext().addMessage(LocalizedFormats.MAX_COUNT_EXCEEDED, max);
