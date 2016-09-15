@@ -3,7 +3,7 @@
  * Interface to be implemented by all components that can participate
  * in a multiple select operation.
  *
- * @author crispy
+ * @author RajahBimmy
  */
 
 function MultiSelectable() {

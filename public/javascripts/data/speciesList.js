@@ -1,6 +1,11 @@
+/**
+ * @author RajahBimmy
+ */
+
 const DataReader = require('./dataReader');
 const ParseException = require('./parseException');
 
+// TODO: Refactor this.
 function SpeciesList(file, base) {
     this.parseSpecies(file, base);
 }

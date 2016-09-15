@@ -23,10 +23,10 @@ const MultiSelectable = require('./multiSelectable');
 
 /**
  * Constructs a new gene list.  The list is useless until
- * {@link #setSource(data.DataSource)} is called.
+ * {DataSource} is called.
  */
 function GeneList() {
-    this.master = new Map();                   /** Master table of all genes in this species */
+    this.master = new Map();            /** Master table of all genes in this species */
     this.genesS = new SortedSet();      /** List of all genes in the current experiment */
     this.activeS = new SortedSet();     /** List of genes in the current active set */
     this.selectionS = new SortedSet();  /** List of the current selected genes */
@@ -53,7 +53,10 @@ GeneList.prototype = {
         this.multiSelectable = [];
         this.hist.clear();
 	    
-        this.genesS = this.activeS = this.selectionS = this.highlightS = null;
+        this.genesS = null;
+        this.activeS = null;
+	    this.selectionS = null;
+	    this.highlightS = null;
 	    this.master = null;
 	    this.listeners = null;
 	    this.multiSelectable = null;
@@ -123,31 +126,23 @@ GeneList.prototype = {
      * Gets the full set of genes for this experiment.
      * @return {SortedSet} the gene set, as a set
      */
-    getGenesSet : function() {
-        return this.genesS;
-    },
+    getGenesSet : function() { return this.genesS; },
     /**
      * Gets the current active gene set.
      * @return {SortedSet} the active set
      */
-    getActiveSet : function() {
-        return this.activeS;
-    },
+    getActiveSet : function() { return this.activeS; },
     /**
      * Gets the currently selected gene set.
      * @return {SortedSet} the current selection, as a set
      */
-    getSelectedSet : function() {
-        return this.selectionS;
-    },
+    getSelectedSet : function() { return this.selectionS; },
     /**
      * Determines if a gene is in the current selection.
      * @param g the gene to test
      * @return {boolean} true if selected, otherwise false
      */
-    isSelected : function(g) {
-        return this.selectionS.has(g);
-    },
+    isSelected : function(g) { return this.selectionS.has(g); },
     /**
      * Sets the current selected set.
      * @param src the source of the selection change
@@ -172,9 +167,7 @@ GeneList.prototype = {
      * Performs a Narrow operation: updates the active set by setting to all currently selected genes.
      * @param src {Object} the object that generated the Narrow operation
      */
-    narrow : function(src) {
-        this.setActive(src, this.selectionS);
-    },
+    narrow : function(src) { this.setActive(src, this.selectionS); },
     /**
      * Performs a Restart operation: returns all sets to their condition immediately after initial load.
      * @param src {Object} the source of the Restart operation
@@ -210,9 +203,7 @@ GeneList.prototype = {
      * @param pub the name to match
      * @return the matching gene, or undefined if no match found
      */
-    find : function(pub) {
-        return this.master.get(pub.toLowerCase());
-    },
+    find : function(pub) { return this.master.get(pub.toLowerCase()); },
 
     // MULTI-SELECT (UNION, INTERSECT) STUFF
 
@@ -220,9 +211,7 @@ GeneList.prototype = {
      * Registers a multi-select event listener.
      * @param comp the object to register
      */
-    addMultiSelect : function(comp) {
-        this.multiSelectable.push(comp);
-    },
+    addMultiSelect : function(comp) { this.multiSelectable.push(comp); },
     /**
      * Sets the state of the multi-select indicator.
      * @param b true if performing a multiple select, otherwise false
@@ -243,9 +232,7 @@ GeneList.prototype = {
      * Starts a multiple select operation.
      * @param source the object initiating the multi-select
      */
-    startMultiSelect : function(source) {
-        this.setMulti(true, source);
-    },
+    startMultiSelect : function(source) { this.setMulti(true, source); },
     /**
      * Finalizes a multiple select operation - gathers the selected genes from all components
      * and performs the appropriate set operation on the sets.
@@ -308,23 +295,19 @@ GeneList.prototype = {
     // BROWSING HISTORY
 
     /**
-     * Determines if there is a &quot;previous&quot; selection in the browsing history.
+     * Determines if there is a "previous" selection in the browsing history.
      * @return true if such a set exists, otherwise false
      */
-    hasPrev : function() {
-        return this.hist.hasPrev();
-    },
+    hasPrev : function() { return this.hist.hasPrev(); },
     /**
-     * Determines if there is a &quot;next&quot; selection in the browsing history.
+     * Determines if there is a "next" selection in the browsing history.
      * @return true if such a set exists, otherwise false
      */
-    hasNext : function() {
-        return this.hist.hasNext();
-    },
+    hasNext : function() { return this.hist.hasNext(); },
     /**
      * Moves forward one selection in the browsing history,
      * and updates the current selection.
-     * @param src the source of the selection change
+     * @param src {SortedSet} the source of the selection change
      */
     forward : function(src) {
         const s = this.hist.forward();
@@ -334,7 +317,7 @@ GeneList.prototype = {
     /**
      * Moves back one selection in the browsing history,
      * and updates the current selection.
-     * @param src the source of the selection change
+     * @param src {SortedSet} the source of the selection change
      */
     back : function(src) {
         const s = this.hist.back();
@@ -346,7 +329,7 @@ GeneList.prototype = {
 /**
  * Provides a web-browser-like &quot;history&quot; of
  * selected sets.
- * @author crispy
+ * @author RajahBimmy
  */
 function History() {
     this.past = []; /** The list of sets in the history */
@@ -368,16 +351,12 @@ History.prototype = {
      * Indicates whether or not a previous set exists.
      * @return {boolean} true if there is a previous set, otherwise false
      */
-    hasPrev : function() {
-        return this.curr > 0;
-    },
+    hasPrev : function() { return this.curr > 0; },
     /**
      * Indicates whether or not a next set exists.
      * @return {boolean} true if there is a next set, otherwise false
      */
-    hasNext : function() {
-        return this.curr < this.past.length - 1;
-    },
+    hasNext : function() { return this.curr < this.past.length - 1; },
     /**
      * Returns the previous set in this history, and updates
      * the current set index.
@@ -407,7 +386,7 @@ History.prototype = {
     /**
      * Adds a set to the browsing history, eliminating the oldest
      * set if capacity has been reached.
-     * @param s the set to add { SortedSet<Gene> }
+     * @param s {SortedSet} the set to add
      */
     add : function(s) {
         if (this.curr == History.MAX-1) {

@@ -1,7 +1,6 @@
 "use strict";
 /**
- * @author crispy
- * @author Rajah_Bimmy
+ * @author RajahBimmy
  */
 
 const SortedSet = require('collections/sorted-set');

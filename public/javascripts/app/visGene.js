@@ -12,7 +12,6 @@ const Signal = require('./signal');
 const Attributes = require('../data/attributes');
 const DataReader = require('../data/dataReader');
 const DataSource = require('../data/dataSource');
-const ParseException = require('../data/parseException');
 
 const GeneList = require('../genes/geneList');
 
@@ -399,25 +398,11 @@ function LoadThread(attrib, status) {
 LoadThread.prototype = {
     constructor : LoadThread,
     run : function(parent) {
-        try {
-            parent.src.set(this.attrib, this.status);
-            this.status.updateStatus("Preparing Sungear Display", 4);
-            parent.geneList.setSource(parent.src);
-            parent.geneList.update();
-            this.status.updateStatus("Done", 5);
-        } catch (oo) {
-            if (typeof oo !== ParseException) {
-                console.error("Out of memory?");
-                this.status.updateStatus("ERROR: Out of memory", 5);
-                // this.status.setModal(false);
-                parent.src.getReader().clear();
-                this.ex = new ParseException("Out of memory");
-            } else {
-                this.ex = oo;
-            }
-        }
-        // this.status.setVisible(false);
-        // this.status.dispose();
+        parent.src.set(this.attrib, this.status);
+        this.status.updateStatus("Preparing Sungear Display", 4);
+        parent.geneList.setSource(parent.src);
+        parent.geneList.update();
+        this.status.updateStatus("Done", 5);
     },
     getException : function() {
         return this.ex;

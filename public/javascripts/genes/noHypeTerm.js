@@ -205,7 +205,7 @@ Term.prototype = {
 			}
 			let s = new SortedSet(this.allGenes);
 			//noinspection JSUnresolvedFunction
-			s = s.intersection(aSet.toArray());
+			s = s.intersection(aSet);
 			this.storedCount = s.length;
 			this.updateScore(aSet.length);
 		}
@@ -246,6 +246,7 @@ Term.prototype = {
 	 */
 	updateScore : function(total) {
 		this.zScore = this.calcScore(this.getStoredCount(), total);
+		console.log(this.zScore);
 	},
 	/**
 	 * Calculates the z-score of this term.
@@ -255,6 +256,8 @@ Term.prototype = {
 	 */
 	calcScore : function(count, total) {
 		const f_t = count / total;
+		console.log("PT: " + this.p_t);
+		console.log("STD DEV: " + this.stdev);
 		// 100% of genes selected for term w/ 100% of genes associated ==> z-score = 0
 		return (f_t-this.p_t && this.stdev == 0) ? 0 : (f_t - this.p_t) * Math.sqrt(total) / this.stdev;
 	},

@@ -2,8 +2,8 @@
 /**
  * Created 2016.07.07
  * @author RajahBimmy
- * I will laugh if this works.
  */
+const url = require('url');
 const SortedSet = require("collections/sorted-set");
 
 const Anchor = require('../genes/anchor');
@@ -22,10 +22,6 @@ function DataReader(attrib) {
 	this.debug = false;
 }
 
-DataReader.SEP = "|";
-DataReader.FSEP = " ";
-DataReader.NVSEP = "=";
-
 DataReader.prototype = {
     constructor : DataReader,
     clear : function() {
@@ -42,8 +38,15 @@ DataReader.prototype = {
     setAttrib : function(attrib) {
         this.attrib = attrib;
     },
-
-    addPassedData : function(reader) {
+	/**
+	 * In the original SunGear, there were quite a few methods called for opening Gene, Category, Hierarchy, Relationship, and Experiment files.
+	 * When Dennis said "Hey Dennis (referencing me, other Dennis), why don't you port SunGear to JavaScript?" I figured we'd replicate the file reading methods.
+	 * Oh boy was I wrong. So now we just pass a data object to the page, and once loaded, this method literally just plucks values from that data object
+	 * to build all the Anchors, Vessels, Genes, and Terms we need for this app.
+	 *
+	 * @param data {Object}
+	 */
+    addPassedData : function(data) {
     	
     	this.allGenes = new Map();
 	    this.terms = new Map();
@@ -53,12 +56,11 @@ DataReader.prototype = {
 	    this.expGenes = new SortedSet();
 	    
 	    const rootsMap = new Map();
-
-        // TODO: actually get all genes?
-        const passedAnchors = reader.anchors;
-        const passedItems = reader.items;
-        const passedCategories = reader.categories;
-        const passedSets = reader.expSets;
+		
+        const passedAnchors = data.anchors;
+        const passedItems = data.items;
+        const passedCategories = data.categories;
+        const passedSets = data.expSets;
 
         passedAnchors.sort(function(a, b) {
             return a.name.localeCompare(b.name);
@@ -122,13 +124,9 @@ DataReader.prototype = {
 			    });
 		    }
 	    });
-	    rootsMap.forEach((value, key) => {
-	    	this.roots.push(value);
-	    });
+	    rootsMap.forEach(value => { this.roots.push(value) });
     }
 };
-
-// STATIC AREA:
 
 /**
  * Updates vessel membership based on the provided threshold value.
@@ -143,38 +141,29 @@ DataReader.setThreshold = function(t, expGenes, anchors, vessels) {
     const vh = new Map();
     let curr = null;
     //noinspection JSUnresolvedFunction
-    const expGenesArray = expGenes.toArray();
-    for (let i = 0; i < expGenesArray.length; i++) {
-        m = "";
-        const g = expGenesArray[i];
-        const e = g.getExp();
-        for (let j = 0; j < e.length; j++) {
-            if (e[j] < t) {
-                m += "0";
-            } else {
-                m += "1";
-            }
-        }
-        const sig = m;
-        if (m != last) {
-            curr = vh.get(sig);
-            if (typeof curr === 'undefined') {
-                const va = [];
-                for (let j = 0; j < sig.length; j++) {
-                    if (sig[j] == "1") {
-                        va.push(anchors[j]);
-                    }
-                }
-                curr = new Vessel(va);
-                vessels.push(curr);
-                vh.set(sig, curr);
-            }
-            last = sig;
-        }
-        curr.addGene(g);
-    }
+	expGenes.forEach((g) => {
+		m = "";
+		const e = g.getExp();
+		e.forEach(idx => (idx < t) ? m += "0" : m+= 1);
+		const sig = m;
+		if (m != last) {
+			curr = vh.get(sig);
+			if (typeof curr === 'undefined') {
+				const va = [];
+				for (let j = 0; j < sig.length; j++) {
+					if (sig[j] == "1") {
+						va.push(anchors[j]);
+					}
+				}
+				curr = new Vessel(va);
+				vessels.push(curr);
+				vh.set(sig, curr);
+			}
+			last = sig;
+		}
+		curr.addGene(g);
+	});
 };
-
 /**
  * Trims all the elements of an array of Strings, and returns the result.
  * The original array's contents are not modified.
@@ -188,23 +177,19 @@ DataReader.trimAll = function(s) {
     }
     return r;
 };
-
 /**
  * Chops a StringBuffer into an array of lines.
  * @param b the data to separate into lines
  * @return Array array of separated lines
  */
-DataReader.chop = function(b) {
-    return b.toString().split("\n");
-};
-
+DataReader.chop = function(b) { return b.toString().split("\n"); };
 /**
- * @param base {URL}
+ * @param base {String}
  * @param s {String}
  * @return {URL}
  */
 DataReader.makeURL = function(base, s) {
-    var u;
+    let u;
     try {
         u = new URL(s);
     } catch(mu) {
