@@ -1,7 +1,6 @@
 "use strict";
 /**
- * @author crispy & Rajah_Bimmy
- * Copyright Chris Poultney 2004.
+ * @author RajahBimmy
  */
 
 /** @param name {String} */
@@ -13,9 +12,7 @@ function Anchor(name) {
 Anchor.prototype = {
     constructor : Anchor,
 
-    cleanup : function() {
-        console.log("Cleaning up Anchor");
-    },
+    cleanup : function() { console.log("Cleaning up Anchor"); },
 
     compare : function(a) {
         const str1 = this.name.toLowerCase();

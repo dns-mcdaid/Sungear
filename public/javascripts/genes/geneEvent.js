@@ -1,15 +1,14 @@
 "use strict";
 /**
  * Encapsulates all events affecting the master {@link GeneList}.
- * Sungear creates one {@link GeneList} object and one {@link DataSource} object in
- * {@link app.VisGene}, and maintains them throughout the life of the application.
+ * SunGear creates one {@link GeneList} object and one {@link DataSource} object in
+ * VisGene, and maintains them throughout the life of the application.
  * Note that this class can be extended with new event types.
- * @author crispy
- * Copyright Chris Poultney 2004.
+ * @author RajahBimmy
  */
 
 /**
- * Build a new event object describing a Sungear event.
+ * Build a new event object describing a SunGear event.
  * @param list the list this event pertains to
  * @param source the object that generated the event
  * @param type the type of event
@@ -35,23 +34,17 @@ GeneEvent.prototype = {
      * Public get method for the event's gene list.
      * @return the gene list this event pertains to
      */
-    getGeneList : function() {
-        return this.list;
-    },
+    getGeneList : function() { return this.list; },
     /**
      * Public get method for the event's source object.
      * @return the object that generated this event
      */
-    getSource : function() {
-        return this.source;
-    },
+    getSource : function() { return this.source; },
     /**
      * Public get method for the event's type.
      * @return an integer describing the event type, chosen from the public final static ints declared above
      */
-    getType : function() {
-        return this.type;
-    }
+    getType : function() { return this.type; }
 };
 
 module.exports = GeneEvent;

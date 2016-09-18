@@ -1,13 +1,8 @@
 "use strict";
 /**
- * Created on Nov 9, 2004
- * Copyright Chris Poultney 2004.
- * Updated by Dennis McDaid 2016.
- *
  * Encapsulates information about a gene, the basic unit
  * of all Virtual Plant operations.
- * @author crispy
- * @author Rajah_Bimmy
+ * @author RajahBimmy
  */
 
 /**
@@ -16,9 +11,9 @@
  * @param desc {String} the gene description.
  */
 function Gene(name, desc) {
-    this.name = name; /** {String} Gene PUB name */
-    this.desc = desc; /** {String} Gene description. */
-    this.exp = [];    /** {float[]} Gene expression values */
+    this.name = name;   /** {String} Gene PUB name */
+    this.desc = desc;   /** {String} Gene description. */
+    this.exp = [];      /** {float[]} Gene expression values */
     this.terms = [];
 }
 
@@ -26,21 +21,17 @@ Gene.prototype = {
     constructor : Gene,
     /**
      * Gets the gene name.
-     * @return the gene name (String)
+     * @return {String} the gene name
      */
-    getName : function() {
-        return this.name;
-    },
+    getName : function() { return this.name; },
     /**
      * Gets the gene description.
-     * @return the gene description (String)
+     * @return {String} the gene description
      */
-    getDesc : function() {
-        return this.desc;
-    },
+    getDesc : function() { return this.desc; },
     /**
      * Sets the expression values for this gene.
-     * @param e the expression values (float[])
+     * @param e {Array} the expression values
      */
     setExp : function(e) {
         this.exp = [];
@@ -48,11 +39,9 @@ Gene.prototype = {
     },
     /**
      * Gets the expression values for this gene.
-     * @return the expression values (float[])
+     * @return {Array} the expression values
      */
-    getExp : function(){
-        return this.exp;
-    },
+    getExp : function(){ return this.exp; },
     /**
      * @param g {Gene}
      * @returns {number}
