@@ -17,7 +17,6 @@
 
 const SortedSet = require("collections/sorted-set");
 
-const ParseException = require('../data/parseException');
 const GeneEvent = require('./geneEvent');
 const MultiSelectable = require('./multiSelectable');
 
@@ -80,7 +79,7 @@ GeneList.prototype = {
      */
     update : function() {
         if (this.source === null) {
-            throw new ParseException("data source not initialized.");
+            console.log("data source not initialized.");
         } else {
             this.genesS.clear();
             this.genesS = new SortedSet();
@@ -88,7 +87,7 @@ GeneList.prototype = {
 	        this.genesS.addEach(this.source.getReader().expGenes);
             const iL = this.source.getAttributes().get("itemsLabel", "items");
             if (this.genesS.length < 1) {
-                throw new ParseException("no ", iL, " in data set");
+                console.log("no ", iL, " in data set");
             } else {
                 this.activeS.clear();
 	            //noinspection JSUnresolvedFunction

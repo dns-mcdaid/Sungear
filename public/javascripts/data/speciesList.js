@@ -3,7 +3,6 @@
  */
 
 const DataReader = require('./dataReader');
-const ParseException = require('./parseException');
 
 // TODO: Refactor this.
 function SpeciesList(file, base) {
@@ -19,7 +18,7 @@ SpeciesList.prototype = {
                 return sp;
             }
         }
-        throw new ParseException('Unknown species: "' + s + '"');
+        console.log('Unknown species: "' + s + '"');
     },
     getAllSpecies : function() {
         return this.species;
