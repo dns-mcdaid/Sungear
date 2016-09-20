@@ -4,6 +4,8 @@
  * @author RajahBimmy
  */
 
+// TODO: Refactor all of this using react.js
+
 const SortedSet = require('collections/sorted-set');
 // const Clipboard = require('clipboard');
 
@@ -17,7 +19,6 @@ function CollapsibleList(g) {
     this.genes = g;
     this.lastRow = -1;
     this.model = new GeneModel(new SortedSet());
-    // RIP lines 89 - 99
     this.statusF = document.getElementById('statusF');
 
     this.findSelectB = document.getElementById('findSelectB');
@@ -70,20 +71,16 @@ CollapsibleList.prototype = {
         this.model = null;
         this.table = null;
     },
-    lostOwnership : function(c, t) {
-        console.log("Why is this function even here?");
-    },
     queryGenes : function() {
         const v = this.queryA.value;
         if (v !== null) {
             const s = new SortedSet();
-            const gene = v.split("\n");
-            for (var i = 0; i < gene.length; i++) {
-                const g = this.genes.find(gene[i]);
-                if (g !== null && typeof g !== 'undefined') {
-                    s.push(g);
-                }
-            }
+            const geneStrings = v.split("\n");
+            geneStrings.forEach((geneString) => {
+            	const g = this.genes.find(geneString);
+	            if (typeof g !== 'undefined')
+	            	s.push(g);
+            });
             this.genes.setSelection(this, s);
         }
     },
@@ -105,19 +102,19 @@ CollapsibleList.prototype = {
         }
     },
     updateList : function() {
-        let t = new SortedSet();
-        if (this.collapsed) {
-            t = t.union(this.genes.getSelectedSet().toArray());
-        } else {
-            t = t.union(this.genes.getActiveSet().toArray());
-        }
+        const t = new SortedSet();
+	    //noinspection JSUnresolvedFunction
+	    t.addEach(this.collapsed ? this.genes.getSelectedSet() : this.genes.getActiveSet());
         const prevData = this.model.getData();
         this.model.setGenes(t, this.genes.getSource().getAttributes().get("idLabel", "ID"));
+	    // Perform a check to ensure the amount of data we're working with hasn't changed.
+	    // In the event of a change, update the table cells.
         if (this.model.getData().length !== prevData) {
             this.populateTable();
         }
         this.updateSelect();
     },
+	// TODO: Cut these next two functions down using react
     updateSelect : function() {
         this.updateStatus();
         const selGenes = this.genes.getSelectedSet().toArray();
@@ -149,6 +146,7 @@ CollapsibleList.prototype = {
     processSelect : function() {
         // TODO: Implement me.
     },
+	
     updateGUI : function() {
         const iL = this.genes.getSource().getAttributes().get("itemsLabel", "items");
         this.findSelectB.title = "Select all " + iL + " matching the search text";
@@ -164,13 +162,10 @@ CollapsibleList.prototype = {
         const found = new SortedSet();
         const pattern = ".*" + this.findF.value + ".*";
         const p = new RegExp(pattern, "i");
-        const activeArray = this.genes.getActiveSet().toArray();
-        for (let i = 0; i < activeArray.length; i++) {
-            const g = activeArray[i];
-            if (p.test(g.getName()) || p.test(g.getDesc())) {
-                found.push(g);
-            }
-        }
+	    this.genes.getActiveSet().forEach((gene) => {
+	    	if (p.test(gene.getName()) || p.test(gene.getDesc()))
+	    		found.push(gene);
+	    });
         this.genes.setSelection(this, found);
     },
     /**
@@ -206,11 +201,13 @@ CollapsibleList.prototype = {
         }
     },
     getMultiSelection : function(operation) {
-        // TODO: Implement me
+        // TODO: Implement me. Very similar to handle select.
     },
     updateStatus : function() {
         this.statusF.innerHTML = this.genes.getSelectedSet().length + " / " + this.genes.getActiveSet().length;
     },
+	
+	// TODO: Refactor these next two functions with react.js
     populateTable : function() {
         while (this.geneTBody.hasChildNodes()) {
             this.geneTBody.removeChild(this.geneTBody.firstChild);
@@ -246,9 +243,6 @@ CollapsibleList.prototype = {
             this.geneTBody.appendChild(row);
             row.addEventListener('click', this.rowSelected.bind(this, row));
         }
-        // $('#geneTBody tr').on('click', function(event) {
-        //     $(this).addClass('highlight').siblings().removeClass('highlight');
-        // });
     },
     rowSelected : function(cell) {
         const row = cell.rowIndex-1;
@@ -305,7 +299,7 @@ CollapsibleList.compareDesc = function(o1, o2) {
  */
 function GeneModel(data) {
     this.titles = [ "ID", "Description" ];
-    this.colComp = [];  /** {Vector<Comparator<Gene>>} */
+    this.colComp = [];  /** {Array} of Comparison functions */
     this.colComp.push(CollapsibleList.compareName);
     this.colComp.push(CollapsibleList.compareDesc);
     this.setGenes(data, "ID");

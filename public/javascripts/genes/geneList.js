@@ -307,7 +307,7 @@ GeneList.prototype = {
     /**
      * Moves forward one selection in the browsing history,
      * and updates the current selection.
-     * @param src {SortedSet} the source of the selection change
+     * @param src {Object} the source of the selection change
      */
     forward : function(src) {
         const s = this.hist.forward();
@@ -317,7 +317,7 @@ GeneList.prototype = {
     /**
      * Moves back one selection in the browsing history,
      * and updates the current selection.
-     * @param src {SortedSet} the source of the selection change
+     * @param src {Object} the source of the selection change
      */
     back : function(src) {
         const s = this.hist.back();
