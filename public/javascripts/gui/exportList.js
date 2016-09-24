@@ -314,7 +314,7 @@ ExportList.prototype = {
         this.model.curr.extra.set(key, value);
     },
     getExtra : function(key) {
-        const value = this.model.curre.extra.get(key);
+        const value = this.model.curr.extra.get(key);
         return typeof value !== 'undefined' ? value : null;
     }
 };

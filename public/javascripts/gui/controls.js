@@ -102,11 +102,10 @@ Controls.prototype = {
         // FIXME: Temporary workaround
         return [];
 
-        var v = this.export.getExtra(this); // TODO: Ensure this works.
-        var cc = null;
-        if (v !== null && v.length > this.coolMethod) {
+        const v = this.export.getExtra(this); // TODO: Ensure this works.
+        let cc = null;
+        if (v !== null && v.length > this.coolMethod)
             cc = v[this.coolMethod];
-        }
         return cc;
     },
     addCachedCool : function() {
