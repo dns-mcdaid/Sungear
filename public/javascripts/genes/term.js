@@ -67,11 +67,12 @@ Term.STATE_SELECTED = 1;
 /** Selected state flag: term not selected */
 Term.STATE_UNSELECTED = 2;
 
+
+
 Term.H;
 Term.Hyp;
 Term.Total;
 
-// TODO: @Radhika implement with Hypergeo.
 Term.prototype = {
     constructor : Term,
     cleanup : function() {
@@ -93,7 +94,6 @@ Term.prototype = {
 	 */
     setRatio : function(p_t) {
         this.p_t = p_t;
-		// TODO: Change Standard Deviation?
     },
     addChild : function(c) {
         this.children.push(c);
