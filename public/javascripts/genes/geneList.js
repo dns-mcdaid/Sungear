@@ -51,7 +51,7 @@ GeneList.prototype = {
         this.listeners = [];
         this.multiSelectable = [];
         this.hist.clear();
-	    
+
         this.genesS = null;
         this.activeS = null;
 	    this.selectionS = null;
@@ -155,8 +155,9 @@ GeneList.prototype = {
         //noinspection JSUnresolvedFunction
 	    this.selectionS = this.selectionS.intersection(this.activeS);
 
-        if (addHist)
+        if (addHist){
         	this.hist.add(this.selectionS);
+        }
         if (sendEvent) {
             const e = new GeneEvent(this, src, GeneEvent.SELECT);
             this.notifyGeneListeners(e);
@@ -309,6 +310,7 @@ GeneList.prototype = {
      * @param src {Object} the source of the selection change
      */
     forward : function(src) {
+      console.log("Forward!");
         const s = this.hist.forward();
         if (s !== null)
         	this.setSelection(src, s, true, false);

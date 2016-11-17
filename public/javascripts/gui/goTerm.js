@@ -1,3 +1,7 @@
+/**
+* goTerm corresponds to GO Term Frame
+* @author RajahBimmy, modified by radhikamattoo
+**/
 "use strict";
 
 const SortedSet = require('collections/sorted-set');
@@ -13,11 +17,11 @@ const TreeNode = require('./go/treeNode');
 const TreePath = require('./go/treePath');
 
 const GeneEvent = require('../genes/geneEvent');
-const Term = require('../genes/noHypeTerm');
+const Term = require('../genes/term');
 
 function GoTerm(genes, fd) {
 	this.debug = true;
-	
+
     this.genes = genes;     /** {GeneList} Temporary flag: set true to use only associated gene count in z-scores, false to use all genes */
     this.geneThresh = 1;    /** {number} Gene count threshold for inclusion in short list */
     this.multi = false;     /** {boolean} Multi-select operation indicator - true if in multi-select */
@@ -32,7 +36,7 @@ function GoTerm(genes, fd) {
     this.treeModel = new TreeModel();           /** {TreeModel} Tree data model - same model is used over entire life of tree */
 
     this.listModel = new GOListModel();      /** {GOListModel} List data model - used over entire life of tree */
-    
+
     this.tree = document.getElementById('goTree');              /** GO term hierarchy display component */
     this.shortList = document.getElementById('goList');         /** GO term list display component */
 
@@ -91,7 +95,7 @@ function GoTerm(genes, fd) {
 	// 		return trigger.getAttribute('value');
 	// 	}
 	// });
-	
+
 	this.genes.addGeneListener(this);
 	this.genes.addMultiSelect(this);
 
@@ -114,7 +118,7 @@ GoTerm.prototype = {
 	    	it.value.cleanup();
 		    next = it.next();
 	    }
-	    
+
 	    this.roots.clear();
         this.terms.clear();
         this.geneToGo.clear();
@@ -279,10 +283,10 @@ GoTerm.prototype = {
         // depends on uniq, which is calculated in trimDAG
 	    const comparator = GoTerm.sortComp[this.sortB.selectedIndex];
         const test = new SortedSet(null,null,comparator);
-	    
+
         if (this.collapsed)
         	this.updateSelectedState();
-	    
+
         const shortTermArray = this.getShortTerm();
 	    shortTermArray.forEach((t) => {
 		    if (t.getStoredCount() >= this.geneThresh && (!this.collapse || t.getSelectedState() == Term.STATE_SELECTED))
@@ -358,6 +362,7 @@ GoTerm.prototype = {
 	expandTree : function(expand) {
 		const rt = this.treeModel.getRoot();
 		const e = rt.postorderEnumeration();
+		const items = this.tree.getElementsByTagName("li");
 		e.forEach((n) => {
 			if (expand) {
 				// TODO: Something
@@ -367,6 +372,7 @@ GoTerm.prototype = {
 				}
 			}
 		});
+
 	},
 	/**
 	 * Determines the active terms in the GO term DAG based on the current
@@ -586,16 +592,16 @@ GoTerm.prototype = {
             // TODO: Implement
         }
     },
-	
+
 	findA : function() {
-    	this.findTermMatches();
+    this.findTermMatches();
 		if (this.results.getMatchCount() == 0) {
 			const cL = this.genes.getSource().getAttributes().get("categoriesLabel", "categories");
 			alert("No matching " + cL + " found");
 		}
 		$("#findD").modal('show');
 	},
-	
+
 	populateTreeRecursive : function(node, element) {
 		while (element.hasChildNodes()) {
 			element.removeChild(this.tree.firstChild);

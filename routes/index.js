@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const mongodb = require('mongodb');
 
-require('../public/javascripts/test/HyperGeoTest').test();
 const VisGene = require('../lib/visGene');
 const SortedSet = require('collections/sorted-set');
 
@@ -280,7 +279,7 @@ router.get('/', function(req, res, next) {
     };
 
     // VisGene.main(args, function(response){
-    //     res.render('index', { title: 'Sungear', data: response});
+    //     res.render('index', { title: 'Sungear', data: testing});
     // });
     res.render('index', { title: 'Sungear', data: testing});
 });

@@ -146,7 +146,7 @@ CollapsibleList.prototype = {
     processSelect : function() {
         // TODO: Implement me.
     },
-	
+
     updateGUI : function() {
         const iL = this.genes.getSource().getAttributes().get("itemsLabel", "items");
         this.findSelectB.title = "Select all " + iL + " matching the search text";
@@ -206,7 +206,7 @@ CollapsibleList.prototype = {
     updateStatus : function() {
         this.statusF.innerHTML = this.genes.getSelectedSet().length + " / " + this.genes.getActiveSet().length;
     },
-	
+
 	// TODO: Refactor these next two functions with react.js
     populateTable : function() {
         while (this.geneTBody.hasChildNodes()) {
@@ -218,7 +218,7 @@ CollapsibleList.prototype = {
             var row = document.createElement('tr');
             var idCell = row.insertCell(0);
             var descCell = row.insertCell(1);
-            
+
             var descDiv = document.createElement('div');
             var descContent = document.createElement('div');
             var spaceDiv = document.createElement('div');

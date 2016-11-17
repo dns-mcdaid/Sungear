@@ -264,7 +264,14 @@ block content
                     button(type='button', class='close', data-dismiss='modal', aria-label='Close')
                         span(aria-hidden='true') &times;
                     h4(class='modal-title', id='findDLabel') Results
-                // TODO: Finish implementation
+                    div(class='findL')
+                div(class='modal-body')
+                    table(id='findLTable' class='table-striped')
+                        thead
+                            tr
+                                th ID
+                                th Name
+                        tbody(id='findLTBody')
 
                 div(class='modal-footer')
                     button(type='button', class='btn btn-default', data-dismiss='modal') Cancel

@@ -53,7 +53,7 @@ function VisGene(u, w, pn, dataDir) {
     this.controlM = null;   /** {JCheckBoxMenuItem} */
     this.goM = null;        /** {JCheckBoxMenuItem} */
     this.pluginM = [];      /** {Vector<JCheckBoxMenuItem>} */
-    
+
     this.l1 = null;         /** {CollapsibleList} */
     this.control = null;    /** {Controls} */
     this.gear = null;       /** {SunGear} */
@@ -113,11 +113,11 @@ VisGene.prototype = {
         // build GUI
         const loadI = document.getElementById('nav-load');
         const screenI = document.getElementById('screenshot');
-	    
-	    
+
+
         // REPLACING OLD SUNGEAR ExperimentList implementation with new js version.
         // loadI.addEventListener("click", this.loadExperiments.bind(this));
-	    
+
         // TODO: Uncommment this!!!!
         // this.exp = new ExperimentList(new URL("exper.txt", this.dataU), new URL("species.txt", this.dataU), this.dataU, loadBody);
 
@@ -137,8 +137,8 @@ VisGene.prototype = {
         this.controlF = document.getElementById("controlF");
         this.export = new ExportList(this.geneList, this.context);
         this.control = new Controls(this.geneList, this.export);
-        
-        
+
+
         // Picking up from 388
         const helpI = document.getElementById('helpI');
         const infoI = document.getElementById('infoI');
@@ -160,8 +160,8 @@ VisGene.prototype = {
         this.collectPasssedData(function() {
             this.run();
         }.bind(this));
-	    
-	    
+
+
 	    const geneCopy = document.getElementById('copyB');
 	    const goCopy = document.getElementById('goCopyB');
 	    new Clipboard(geneCopy, {

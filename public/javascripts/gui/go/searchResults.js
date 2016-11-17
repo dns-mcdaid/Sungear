@@ -15,6 +15,7 @@ function SearchResults(genes, g) {
     this.go = g;        /** {WeakReference<GoTerm>} Main GO term display component */
     // TODO: Check this bad boy:
     this.findL = document.getElementById('findL');          /** {JList} Search results list */
+    this.findLTBody = document.getElementById('findLTBody');
     this.statusF = document.getElementById('goStatusF');    /** {JTextField} Results status field */
     this.sortB = document.getElementById('goSortB');        /** {JComboBox} Sort order options */
     this.selectC = document.getElementById('selectC');      /** {JCheckBox} Select on click checkbox */
@@ -35,6 +36,7 @@ SearchResults.prototype = {
         this.results = results;
         this.statusF.innerHTML = "Matches: " + results.length;
         this.updateList();
+        this.selectTerms();
     },
     /**
      * Gets the search result set size
@@ -47,7 +49,22 @@ SearchResults.prototype = {
      * Updates the results display, including sort order.
      */
     updateList : function() {
-        // TODO: Implement me.
+      while(this.findLTBody.hasChildNodes()){
+          this.findLTBody.removeChild(this.findLTBody.firstChild);
+        }
+        for(var i = 0; i < this.results.length; i++){
+          const elementData = this.results[i];
+
+          const row = document.createElement('tr');
+          const val1 = row.insertCell(0);
+          val1.innerHTML = elementData.getId();
+          const val2 = row.insertCell(1);
+          val2.innerHTML = elementData.getName();
+
+          this.findLTBody.appendChild(row);
+        }
+
+
     },
     /**
      * Updates the highlighted term in the main GO term list.
@@ -58,14 +75,23 @@ SearchResults.prototype = {
             this.go.showTerm(t);
         }
     },
+    /**
+    * Compare list of Term objects (this.results) to universal Gene set (this.genes) and find matches between them
+    * Descriptions in Gene objects match Names in Term objects
+    *
+    */
     selectTerms : function(t) {
-        let s = new SortedSet();
-        if (t !== null && typeof t !== 'undefined') {
-            for (let i = 0; i < t.length; i++) {
-                s = s.union(t[i].getAllGenes().toArray());
+      console.log("AYOOOO");
+        let found = new SortedSet();
+        this.genes.getActiveSet().forEach((gene) => {
+  	    	this.results.forEach((term) => {
+            console.log(term.getName().toLowerCase() +  " vs. " + gene.getDesc().toLowerCase());
+            if( gene.getDesc().toLowerCase().includes(term.getName().toLowerCase()) ){
+              found.push(gene);
             }
-        }
-        this.genes.setSelection(this, s);
+          });
+  	    });
+        this.genes.setSelection(this, found);
     }
 };
 

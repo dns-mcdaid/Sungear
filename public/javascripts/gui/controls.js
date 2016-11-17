@@ -50,7 +50,7 @@ function Controls(gn, el) {
     this.narrowB.title = "Restrict the active set to the current selected set";
     this.narrowB.addEventListener("click", this.runNarrow.bind(this));
     this.narrowB.className = Controls.ENABLED;
-    
+
     this.unionB = document.getElementById('unionB');
     this.unionB.title = "Set the selected set to the union of all selected items";
     this.unionB.addEventListener("click", this.runUnion.bind(this));

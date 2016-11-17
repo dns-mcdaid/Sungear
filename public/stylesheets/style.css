@@ -175,7 +175,7 @@ tr {
     width: 65%;
 }
 
-#statsTable {
+#statsTable,#findLTable{
     width: 100%;
 }
 
