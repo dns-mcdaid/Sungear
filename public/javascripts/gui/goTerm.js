@@ -290,6 +290,7 @@ GoTerm.prototype = {
      * #trimDAG(SortedSet), and the collapsed state.
      */
     updateShortList : function() {
+			console.log("updating short list");
         // depends on uniq, which is calculated in trimDAG
 	    const comparator = GoTerm.sortComp[this.sortB.selectedIndex];
       const test = new SortedSet(null,null,comparator);
@@ -297,11 +298,12 @@ GoTerm.prototype = {
         if (this.collapsed){
         	this.updateSelectedState();
 				}
-
         const shortTermArray = this.getShortTerm();
+				console.log("looping through short list sorted set to compare to genes");
 	    shortTermArray.forEach((t) => {
 		    if (t.getStoredCount() >= this.geneThresh && (!this.collapse || t.getSelectedState() == Term.STATE_SELECTED))
-			    test.push(t);
+					console.log(t);
+					test.push(t);
 	    });
         this.listModel.setListData(test);
         this.statusF.innerHTML = this.genes.getSource().getAttributes().get('categoriesLabel', 'categories') + ": " + this.listModel.getSize();
