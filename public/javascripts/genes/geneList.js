@@ -153,8 +153,11 @@ GeneList.prototype = {
         // this.selectionS.clear();
         this.selectionS = new SortedSet(sel);
         //noinspection JSUnresolvedFunction
-	       this.selectionS = this.selectionS.intersection(this.activeS);
-
+	      this.selectionS = this.selectionS.intersection(this.activeS);
+        console.log("Updated selected set! new set: ");
+        this.selectionS.forEach((gene) =>{
+          console.log(gene);
+        });
         if (addHist){
         	this.hist.add(this.selectionS);
         }

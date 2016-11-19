@@ -273,15 +273,8 @@ GoTerm.prototype = {
      */
     setGeneThreshold : function(t) {
         this.geneThresh = t;
-        this.updateShortList();
-				this.setShortListListeners();
-
-				//update the selected set
-				var newSelection = new SortedSet();
-				this.listModel.data.forEach((term)=>{
-					newSelection.addEach(term.allGenes);
-				});
-				this.genes.setSelection(this, newSelection);
+				this.updateShortList();
+				this.updateSelect();
 
     },
     /**
@@ -299,10 +292,9 @@ GoTerm.prototype = {
         	this.updateSelectedState();
 				}
         const shortTermArray = this.getShortTerm();
-				console.log("looping through short list sorted set to compare to genes");
+
 	    shortTermArray.forEach((t) => {
 		    if (t.getStoredCount() >= this.geneThresh && (!this.collapse || t.getSelectedState() == Term.STATE_SELECTED))
-					console.log(t);
 					test.push(t);
 	    });
         this.listModel.setListData(test);
@@ -310,9 +302,13 @@ GoTerm.prototype = {
 
     },
     findTermMatches : function() {
-	    const pattern = ".*" + this.findF.value + ".*";
+			const v = [];
+			if(this.findF.value === ""){
+				this.results.setResults(v);
+				return;
+			}
+			const pattern = ".*" + this.findF.value + ".*";
 	    const p = new RegExp(pattern, "i");
-	    const v = [];
 	    const shortTermIt = this.getShortTerm().iterator();
 	    let it = shortTermIt.next();
 	    while (!it.done) {
@@ -591,8 +587,7 @@ GoTerm.prototype = {
 	            	this.copyTerms();
                 break;
             case GeneEvent.SELECT:
-                if (this.collapsed) this.updateShortList();
-								// this.setGeneThreshold(this.geneThresh);
+                this.updateShortList();
                 this.updateSelect();
 	            	this.copyTerms();
                 break;
@@ -624,8 +619,9 @@ GoTerm.prototype = {
 		if (this.results.getMatchCount() == 0) {
 			const cL = this.genes.getSource().getAttributes().get("categoriesLabel", "categories");
 			alert("No matching " + cL + " found");
+		}else{
+			$("#findD").modal('show');
 		}
-		$("#findD").modal('show');
 	},
 
 	populateTreeRecursive : function(node, element) {
@@ -656,7 +652,7 @@ GoTerm.prototype = {
             li.innerHTML = item.toString();
 	        li.className = "list-group-item list-group-item-action";
 
-            li.addEventListener('click', function({
+            li.addEventListener('click', () => {
                 if (!this.multi && i > -1) {
 	                li.className = "list-group-item active";
                     if (false) {

@@ -35,8 +35,10 @@ SearchResults.prototype = {
     setResults : function(results) {
         this.results = results;
         this.statusF.innerHTML = "Matches: " + results.length;
-        this.updateList();
-        this.selectTerms();
+        if(results.length !== 0){
+          this.updateList();
+          this.selectTerms();
+        }
     },
     /**
      * Gets the search result set size
