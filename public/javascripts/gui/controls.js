@@ -247,6 +247,9 @@ Controls.prototype = {
     coolL : function(s) {
         var idx = Number(s.substr(0, s.indexOf(':'))) - 1;
         this.genes.setSelection(this, this.cool[idx].vessel.activeGenes);
+    },
+    updateGenes: function(){
+
     }
 };
 

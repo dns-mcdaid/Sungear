@@ -77,6 +77,7 @@ function GoTerm(genes, fd) {
     this.results = new SearchResults(genes, this);      /** {SearchResults} search results display component */
 
     // TODO: Right now it wipes all selections, should wipe all but the one clicked.
+		//FIXME: apply event listeners to all rows within the shortList instead of the shortList overall
     // this.tree.addEventListener('click', this.clearSelectionRecursive.bind(this.tree), false);
     // this.shortList.addEventListener('click', this.clearSelectionRecursive.bind(this.shortList), false);
 
@@ -273,6 +274,15 @@ GoTerm.prototype = {
     setGeneThreshold : function(t) {
         this.geneThresh = t;
         this.updateShortList();
+				this.setShortListListeners();
+
+				//update the selected set
+				var newSelection = new SortedSet();
+				this.listModel.data.forEach((term)=>{
+					newSelection.addEach(term.allGenes);
+				});
+				this.genes.setSelection(this, newSelection);
+
     },
     /**
      * Updates the short list content and sort order.  Depends
@@ -282,10 +292,11 @@ GoTerm.prototype = {
     updateShortList : function() {
         // depends on uniq, which is calculated in trimDAG
 	    const comparator = GoTerm.sortComp[this.sortB.selectedIndex];
-        const test = new SortedSet(null,null,comparator);
+      const test = new SortedSet(null,null,comparator);
 
-        if (this.collapsed)
+        if (this.collapsed){
         	this.updateSelectedState();
+				}
 
         const shortTermArray = this.getShortTerm();
 	    shortTermArray.forEach((t) => {
@@ -294,6 +305,7 @@ GoTerm.prototype = {
 	    });
         this.listModel.setListData(test);
         this.statusF.innerHTML = this.genes.getSource().getAttributes().get('categoriesLabel', 'categories') + ": " + this.listModel.getSize();
+
     },
     findTermMatches : function() {
 	    const pattern = ".*" + this.findF.value + ".*";
@@ -429,6 +441,8 @@ GoTerm.prototype = {
 	 */
 	setCollapsed : function(b) {
 		this.collapsed = !this.collapsed;
+		this.findF.value = "";
+
 		this.updateShortList();
 	},
 	/**
@@ -552,23 +566,33 @@ GoTerm.prototype = {
                 this.makeTreeFromDAG();
                 this.makeTree();
                 this.updateGUI();
-	            this.copyTerms();
-	            this.setShortListListeners();
-	            this.populateTreeRecursive(this.treeModel.getRoot(), this.tree);
+	            	this.copyTerms();
+	            	this.setShortListListeners();
+	            	this.populateTreeRecursive(this.treeModel.getRoot(), this.tree);
                 break;
             case GeneEvent.RESTART:
+							this.findGeneUnions();
+							this.updateGeneTerms();
+							this.updateActiveGeneCounts();
+							this.makeTreeFromDAG();
+							this.makeTree();
+							this.updateGUI();
+							this.copyTerms();
+							this.setGeneThreshold(1);
+							this.populateTreeRecursive(this.treeModel.getRoot(), this.tree);
             case GeneEvent.NARROW:
 	            $("#findD").modal('hide');
                 this.highTerm = null;
                 this.updateActiveGeneCounts();
                 this.makeTree();
                 this.updateSelect();
-	            this.copyTerms();
+	            	this.copyTerms();
                 break;
             case GeneEvent.SELECT:
                 if (this.collapsed) this.updateShortList();
+								// this.setGeneThreshold(this.geneThresh);
                 this.updateSelect();
-	            this.copyTerms();
+	            	this.copyTerms();
                 break;
             case GeneEvent.MULTI_START:
                 this.setMulti(true);
@@ -630,7 +654,7 @@ GoTerm.prototype = {
             li.innerHTML = item.toString();
 	        li.className = "list-group-item list-group-item-action";
 
-            li.addEventListener('click', () => {
+            li.addEventListener('click', function({
                 if (!this.multi && i > -1) {
 	                li.className = "list-group-item active";
                     if (false) {

@@ -153,7 +153,7 @@ GeneList.prototype = {
         // this.selectionS.clear();
         this.selectionS = new SortedSet(sel);
         //noinspection JSUnresolvedFunction
-	    this.selectionS = this.selectionS.intersection(this.activeS);
+	       this.selectionS = this.selectionS.intersection(this.activeS);
 
         if (addHist){
         	this.hist.add(this.selectionS);
@@ -310,10 +310,11 @@ GeneList.prototype = {
      * @param src {Object} the source of the selection change
      */
     forward : function(src) {
-      console.log("Forward!");
         const s = this.hist.forward();
-        if (s !== null)
+        if (s !== null){
+          console.log("Forward, setting selection");
         	this.setSelection(src, s, true, false);
+        }
     },
     /**
      * Moves back one selection in the browsing history,
@@ -322,8 +323,10 @@ GeneList.prototype = {
      */
     back : function(src) {
         const s = this.hist.back();
-        if (s !== null)
+        if (s !== null){
+          console.log("Backwards, setting selection");
         	this.setSelection(src, s, true, false);
+        }
     }
 };
 
@@ -365,9 +368,11 @@ History.prototype = {
      */
     back : function() {
         if (!this.hasPrev()) {
+            console.log("backwards failed");
             return null;
         } else {
             this.curr--;
+            console.log("index is now: " + this.curr);
             return this.past[this.curr];
         }
     },
@@ -378,6 +383,7 @@ History.prototype = {
      */
     forward : function() {
         if (!this.hasNext()) {
+            console.log("Forward failed");
             return null;
         } else {
             this.curr++;
@@ -390,6 +396,8 @@ History.prototype = {
      * @param s {SortedSet} the set to add
      */
     add : function(s) {
+      console.log("Trying to add set to history");
+
         if (this.curr == History.MAX-1) {
             this.past.splice(0,1);
         } else {
@@ -401,7 +409,7 @@ History.prototype = {
         }
         const t = new SortedSet();
 	    //noinspection JSUnresolvedFunction
-	    t.addEach(s);
+	      t.addEach(s);
         this.past.push(t);
         this.curr++;
     }

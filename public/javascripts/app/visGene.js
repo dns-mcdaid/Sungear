@@ -132,7 +132,7 @@ VisGene.prototype = {
         this.gear = new SunGear(this.geneList, statsF);
         const resultsF = document.getElementById("resultsF");
         this.go = new GoTerm(this.geneList, resultsF);
-	    this.gear.setGo(this.go);
+	      this.gear.setGo(this.go);
         // control panel component
         this.controlF = document.getElementById("controlF");
         this.export = new ExportList(this.geneList, this.context);

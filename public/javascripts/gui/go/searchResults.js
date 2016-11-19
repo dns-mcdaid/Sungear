@@ -81,11 +81,9 @@ SearchResults.prototype = {
     *
     */
     selectTerms : function(t) {
-      console.log("AYOOOO");
         let found = new SortedSet();
         this.genes.getActiveSet().forEach((gene) => {
   	    	this.results.forEach((term) => {
-            console.log(term.getName().toLowerCase() +  " vs. " + gene.getDesc().toLowerCase());
             if( gene.getDesc().toLowerCase().includes(term.getName().toLowerCase()) ){
               found.push(gene);
             }
