@@ -120,7 +120,7 @@ GoTerm.prototype = {
 		    next = it.next();
 	    }
 
-	    	this.roots.clear();
+	    this.roots.clear();
         this.terms.clear();
         this.geneToGo.clear();
         this.uniq.clear();
@@ -288,13 +288,13 @@ GoTerm.prototype = {
 	    const comparator = GoTerm.sortComp[this.sortB.selectedIndex];
       const test = new SortedSet(null,null,comparator);
 
-        // if (this.collapsed){
+        if (this.collapsed){
         	this.updateSelectedState();
-				// }
+				}
         const shortTermArray = this.getShortTerm();
-	    	shortTermArray.forEach((t) => {
-		    if (t.getStoredCount() >= this.geneThresh && (!this.collapsed || t.getSelectedState() == Term.STATE_SELECTED))
-					console.log(t.getSelectedState());
+
+	    shortTermArray.forEach((t) => {
+		    if (t.getStoredCount() >= this.geneThresh && (!this.collapse || t.getSelectedState() == Term.STATE_SELECTED))
 					test.push(t);
 	    });
         this.listModel.setListData(test);
@@ -457,7 +457,6 @@ GoTerm.prototype = {
 		this.roots.forEach((root) => {
 			root.updateSelectedState(this.genes.getSelectedSet());
 		});
-
 	},
 	/**
 	 * Updates the display when the selected set changes.
