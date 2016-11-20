@@ -1,6 +1,6 @@
 "use strict";
 const SortedSet = require('collections/sorted-set');
-
+const request = require('request');
 const GeneEvent = require('../genes/geneEvent');
 
 /**
@@ -56,7 +56,24 @@ ExportList.prototype = {
      * @throws IOException
      */
     post : function(cgi, data) {
-        // TODO: Implement.
+        JSON.stringify(data);
+        var options = {
+          uri : cgi,
+          method : 'POST',
+          headers:{
+            'content-type' : 'application/json',
+          },
+          body : data
+        };
+        request.post(options, function(err, response, body){
+          if(err){
+            alert('Export Error. Please open your browser console to inspect error. ');
+            console.log(err);
+          }else{
+            return response.toString();
+          }
+        });
+
     },
     /**
      * TODO: @Dennis figure this out to be less stupid.
@@ -151,7 +168,6 @@ ExportList.prototype = {
                 }
             }
         } catch (e) {
-            alert('Export Error');
             console.log(e);
         }
     },
@@ -200,10 +216,11 @@ ExportList.prototype = {
      * @return {String} the gene list form data
      */
     getExportsGeneList : function() {
+        console.log("getting export data/export_url");
         const nvp = [];
         const attrib = this.genes.getSource().getAttributes();
         const exportRegex = new RegExp("export_", "i");
-        const keys = attrib.keys();
+        const keys = attrib.attrib.keys();
         let next = keys.next();
         while(!next.done) {
             const k = next.value;
@@ -248,7 +265,7 @@ ExportList.prototype = {
      * @param value {string}
      */
     addPair : function(nvp, name, value) {
-        nvp.push(name + "=" + value);
+        nvp.push( "{" + name + ":" + value + "}" );
     },
     /**
      * @param c {Object}

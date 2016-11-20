@@ -113,7 +113,7 @@ Term.prototype = {
     isRoot : function() {
         return this.parents.length == 0;
     },
-    setActive : function() {
+    setActive : function(b) {
         this.active = b;
     },
     isActive : function() {
@@ -247,13 +247,15 @@ Term.prototype = {
 	        let next = it.next();
 	        while (!next.done) {
 		        const t = next.value;
-		        if (t.selectedState == Term.STATE_UNKNOWN && t.active)
+		        if (t.selectedState == Term.STATE_UNKNOWN && t.active){
 			        t.updateSelectedState(s);
-		        if (t.selectedState == Term.STATE_SELECTED)
+            }
+		        if (t.selectedState == Term.STATE_SELECTED){
 			        this.selectedState = Term.STATE_SELECTED;
+            }
 		        next = it.next();
 	        }
-	
+
 	        if (this.selectedState = Term.STATE_UNKNOWN) {
 		        let x = new SortedSet(this.allGenes);
 		        //noinspection JSUnresolvedFunction

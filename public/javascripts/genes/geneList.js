@@ -154,10 +154,7 @@ GeneList.prototype = {
         this.selectionS = new SortedSet(sel);
         //noinspection JSUnresolvedFunction
 	      this.selectionS = this.selectionS.intersection(this.activeS);
-        console.log("Updated selected set! new set: ");
-        this.selectionS.forEach((gene) =>{
-          console.log(gene);
-        });
+        console.log("Updated selected set! About to trigger events.");
         if (addHist){
         	this.hist.add(this.selectionS);
         }
