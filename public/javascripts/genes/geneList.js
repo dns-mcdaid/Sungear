@@ -365,7 +365,7 @@ GeneList.prototype = {
         const s = this.hist.forward();
         if (s !== null){
           console.log("Forward, setting selection");
-        	this.setSelection(src, s, true, false);
+        	this.setSelection(this, s, true, false);
         }
     },
     /**
@@ -377,7 +377,7 @@ GeneList.prototype = {
         const s = this.hist.back();
         if (s !== null){
           console.log("Backwards, setting selection");
-        	this.setSelection(src, s, true, false);
+        	this.setSelection(this, s, true, false);
         }
     }
 };

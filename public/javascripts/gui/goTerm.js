@@ -6,7 +6,7 @@
 
 const SortedSet = require('collections/sorted-set');
 // const Clipboard = require('clipboard');
-
+const Controls = require("./controls");
 const CompareScore = require('./go/compareScore');
 const CompareName = require('./go/compareName');
 const CompareCount = require('./go/compareCount');
@@ -623,17 +623,35 @@ GoTerm.prototype = {
                 break;
             case GeneEvent.SELECT:
 							if(e.getSource() !== this){
-									this.updateActiveGeneCounts();
-									console.log("Event source isn't go term!");
-									this.selectedTerms.clear();
-									this.collapsed = false;
-									this.terms.forEach((term)=>{
-										term.initSelectedState();
-									});
-                	this.updateShortList();
-									this.setActiveTerms();
-                	this.updateSelect();
-	            		this.copyTerms();
+								this.updateActiveGeneCounts();
+									if(e.getSource() instanceof Controls){
+										console.log("Controls event!");
+										//TODO: When you get to hierarchy of GO Terms, fix this!
+										// this.findGeneUnions();
+										this.updateGeneTerms();
+										// this.makeTreeFromDAG();
+										// this.makeTree();
+										this.updateGUI();
+										this.copyTerms();
+										this.setGeneThreshold(1);
+										this.collapsed = false;
+										this.selectedTerms.clear();
+										// this.updateShortList();
+										this.setShortListListeners();
+										// this.populateTreeRecursive(this.treeModel.getRoot(), this.tree);
+									}else{
+										console.log("Event source isn't go term or controls!");
+										this.selectedTerms.clear();
+										this.collapsed = false;
+										this.terms.forEach((term)=>{
+											term.initSelectedState();
+										});
+										this.updateShortList();
+										this.setActiveTerms();
+										this.updateSelect();
+										this.copyTerms();
+									}
+
 							}
                 break;
             case GeneEvent.MULTI_START:
@@ -651,6 +669,14 @@ GoTerm.prototype = {
 		*
 		*/
 		setActiveTerms : function(){
+			//if the active and selected set are the same, then the back button was clicked back to the original set when Sungear was first loaded.
+			var active = this.genes.getActiveSet().size;
+			var selected = this.genes.getSelectedSet().size;
+			if(active == selected){
+					this.selectedTerms.clear();
+					console.log("SIKE");
+					return;
+			}
 			console.log("Setting up active terms");
 			this.listModel.data.forEach((term) =>{
 				if(term.getSelectedState() == Term.STATE_SELECTED){
@@ -658,6 +684,7 @@ GoTerm.prototype = {
 				}
 				this.recursiveGeneCheck(term);
 			});
+
 		},
 
 		recursiveGeneCheck : function(term){
