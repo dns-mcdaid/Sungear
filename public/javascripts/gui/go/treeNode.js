@@ -107,7 +107,7 @@ TreeNode.prototype = {
 	},
 	removeFromParent : function() {
 		const oldParent = this.parent;
-		const index = this.parent.indexOf(this);
+		const index = this.parent.children.indexOf(this);
 		this.parent = null;
 		return {
 			parent : oldParent,

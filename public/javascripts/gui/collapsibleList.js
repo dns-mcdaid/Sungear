@@ -116,7 +116,6 @@ CollapsibleList.prototype = {
     },
 	// TODO: Cut these next two functions down using react
     updateSelect : function() {
-      console.log("Update select in collapsableList!");
         this.updateStatus();
         const selGenes = this.genes.getSelectedSet().toArray();
 
@@ -246,7 +245,6 @@ CollapsibleList.prototype = {
         }
     },
     rowSelected : function(cell) {
-      console.log("Row selected!");
         const row = cell.rowIndex-1;
         if (row != -1 && !this.multi) {
             if (window.event.altKey) {
@@ -281,6 +279,9 @@ CollapsibleList.prototype = {
     },
     tableChanged : function() {
         this.lastRow = -1;
+    },
+    geneIsSelected : function(g){
+      return this.selectionS.has(g);
     }
 };
 

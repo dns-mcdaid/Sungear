@@ -109,7 +109,7 @@ tr {
     height: 10px;
 }
 
-.table-striped tbody tr.highlight td {
+.table-striped tbody tr.highlight td, #goList .highlight {
     background-color: #2288EE;
     /*color: #F3EFE0;*/
     color: #FFFFFF;

@@ -157,7 +157,6 @@ GeneList.prototype = {
         this.selectionS = new SortedSet(sel);
         //noinspection JSUnresolvedFunction
 	      this.selectionS = this.selectionS.intersection(this.activeS);
-        console.log("Updated selected set! About to trigger events.");
         if (addHist){
         	this.hist.add(this.selectionS);
         }
@@ -189,13 +188,32 @@ GeneList.prototype = {
           });
         });
         if(geneEquals === curCount){ //they're the same set
-          console.log("No event!!");
+          console.log("No event, same set!");
           return true;
         }else{
           return false;
         }
       }//end count if
       return false;
+
+      // var testCount = testSet.size;
+      // var curCount = this.selectionS.size;
+      // if(testCount === curCount){
+      //   var geneEquals = 0; //if they're the same set, then this number will equal the size of the two sets
+      //   var testIterator = testSet.iterate();
+      //   var currentIterator = this.selectionS.iterate();
+      //   var firstTest = testIterator.next();
+      //   var currentTest = currentIterator.next();
+      //   while(!firstTest.done || !currentTest.done){
+      //     if(firstTest.toString() != currentTest.toString()){ //if they're not equal, return false
+      //       return false;
+      //     }
+      //     firstTest = testIterator.next();
+      //     currentTest = currentIterator.next();
+      //   }
+      //   return true;
+      //   }
+      //   return true;
     },
     /**
      * Performs a Narrow operation: updates the active set by setting to all currently selected genes.
