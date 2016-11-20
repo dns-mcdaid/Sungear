@@ -241,10 +241,10 @@ GoTerm.prototype = {
 				var s;
 				if(goEvent){
 					 s = new SortedSet(t.getAllGenes());
-			    s.forEach((gene) => { //parse through genes that are  related to this term
-			    	if (!this.genes.getSelectedSet().contains(gene)) //if the gene is not in the selected set, delete it.
-			    		s.delete(gene);
-			    });
+			    // s.forEach((gene) => { //parse through genes that are  related to this term
+			    // 	if (!this.genes.getSelectedSet().contains(gene)) //if the gene is not in the selected set, delete it.
+			    // 		s.delete(gene);
+			    // });
 				}else{
 					s = this.genes.getSelectedSet();
 				}
@@ -282,10 +282,10 @@ GoTerm.prototype = {
 
             //noinspection JSUnresolvedFunction
 						if(goEvent){
-			        s.forEach((gene) => {
-			        	if (!this.genes.getActiveSet().has(gene))
-			        		s.delete(gene);
-			        });
+			        // s.forEach((gene) => {
+			        // 	if (!this.genes.getActiveSet().has(gene))
+			        // 		s.delete(gene);
+			        // });
 		            this.genes.setSelection(this, s);
 						}
         }
@@ -735,11 +735,11 @@ GoTerm.prototype = {
     },
 
 		recursiveActivate : function(item){
-			if(item.parents.size > 0){
-				item.parents.forEach((parent) =>{
-					parent.setActive(true);
-					this.selectedTerms.add(this.findHtmlElement(parent));
-					this.recursiveActivate(parent); //now activate all of its parents.
+			if(item.children.size > 0){
+				item.children.forEach((child) =>{
+					child.setActive(true);
+					this.selectedTerms.add(this.findHtmlElement(child));
+					this.recursiveActivate(child); //now activate all of its children.
 				});
 			}
 			return;
