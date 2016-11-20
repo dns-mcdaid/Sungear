@@ -246,18 +246,20 @@ GoTerm.prototype = {
 				}
         if (ctrl) {
 						console.log("Ay multi select!");
-            const r = new SortedSet(this.genes.getSelectedSet());
-            if (s.length > 0) {
-            	//noinspection JSUnresolvedFunction
-	            r.forEach((gene) => {
-	            	if (!s.has(gene)){
-	            		r.delete(gene);
-								}
-	            });
-            } else {
-                //noinspection JSUnresolvedFunction
-	            r.addEach(t.getAllGenes());
-            }
+						//get all selected term objects and set the new selected set to their included genes/child term genes.
+            const r = new SortedSet();
+
+						//TODO: add if goEvent statement
+						//loop through currently selected set
+            this.listModel.data.forEach((term) => {
+							if(term.getSelectedState() === Term.STATE_SELECTED){
+								//add all genes associated with the selected term to the set
+								const allGenes = term.getAllGenes();
+								allGenes.forEach((gene) =>{
+									r.add(gene);
+								});
+							}
+						});
 
 						$(li).addClass('highlight', true);
 
@@ -282,6 +284,7 @@ GoTerm.prototype = {
 						}
         }
     },
+
     /**
      * @param t {Number} int
      */
@@ -707,10 +710,12 @@ GoTerm.prototype = {
 																console.log("Just finished li event listener");
 
 																//reset!
-																this.selectedTerms.clear();
-																this.terms.forEach((term) =>{
-																	term.initSelectedState();
-																});
+																if(!window.event.ctrlKey && !window.event.metaKey){
+																	this.selectedTerms.clear();
+																	this.terms.forEach((term) =>{
+																		term.initSelectedState();
+																	});
+																}
 																item.selectedState = Term.STATE_SELECTED;
 																this.recursiveActivate(item);
 
