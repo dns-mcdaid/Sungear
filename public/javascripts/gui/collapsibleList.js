@@ -242,7 +242,7 @@ CollapsibleList.prototype = {
             row.id = 'gene-' + g.getName();
 
             this.geneTBody.appendChild(row);
-            row.addEventListener('click', this.rowSelected.bind(this, row));
+            row.addEventListener('click', this.rowSelected.bind(this, row),false);
         }
     },
     rowSelected : function(cell) {

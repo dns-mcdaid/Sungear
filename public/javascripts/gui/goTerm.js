@@ -275,7 +275,6 @@ GoTerm.prototype = {
         this.geneThresh = t;
 				this.updateShortList();
 				this.updateSelect();
-
     },
     /**
      * Updates the short list content and sort order.  Depends
@@ -462,7 +461,10 @@ GoTerm.prototype = {
 	 * Updates the display when the selected set changes.
 	 */
 	updateSelect : function() {
+		//set up new short list
 		this.setShortListListeners();
+
+		//set up new hierarchy list
 		this.populateTreeRecursive(this.treeModel.getRoot(), this.tree);
 	},
 	lostOwnership : function(c, t) { },
@@ -642,7 +644,8 @@ GoTerm.prototype = {
 		});
 	},
 
-    setShortListListeners : function() {
+	//FIXME: event listeners are not working.
+  setShortListListeners : function() {
 	    while (this.shortList.hasChildNodes()) {
 		    this.shortList.removeChild(this.shortList.firstChild);
 	    }
@@ -650,18 +653,22 @@ GoTerm.prototype = {
         this.listModel.data.forEach((item) => {
             const li = document.createElement('li');
             li.innerHTML = item.toString();
-	        li.className = "list-group-item list-group-item-action";
+	        	li.className = "list-group-item list-group-item-action";
 
             li.addEventListener('click', () => {
+								console.log("Inside GO Term evt listener!");
                 if (!this.multi && i > -1) {
+									console.log("Inside if!");
 	                li.className = "list-group-item active";
                     if (false) {
                         // if it is a popup trigger
                     } else {
                         if (window.event.altKey) {
+														console.log("Alt key!");
                             this.genes.startMultiSelect(this);
                         } else {
                             if (this.lastRowList != -1 && window.event.shiftKey) {
+																console.log("Inside actual action!");
                                 let s = new SortedSet();
                                 const sublist = this.listModel.data.splice(Math.min(i, this.lastRowList), Math.max(i, this.lastRowList)+1);
                                 sublist.forEach((item) => {

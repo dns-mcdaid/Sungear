@@ -150,6 +150,7 @@ GeneList.prototype = {
      * @param addHist true to update browsing history, otherwise false
      */
     setSelection : function(src, sel, sendEvent = true, addHist = true) {
+        console.log("Selection coming from source: " + src.toString());
         // this.selectionS.clear();
         this.selectionS = new SortedSet(sel);
         //noinspection JSUnresolvedFunction
