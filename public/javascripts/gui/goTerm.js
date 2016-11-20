@@ -241,10 +241,6 @@ GoTerm.prototype = {
 				var s;
 				if(goEvent){
 					 s = new SortedSet(t.getAllGenes());
-			    // s.forEach((gene) => { //parse through genes that are  related to this term
-			    // 	if (!this.genes.getSelectedSet().contains(gene)) //if the gene is not in the selected set, delete it.
-			    // 		s.delete(gene);
-			    // });
 				}else{
 					s = this.genes.getSelectedSet();
 				}
@@ -282,10 +278,6 @@ GoTerm.prototype = {
 
             //noinspection JSUnresolvedFunction
 						if(goEvent){
-			        // s.forEach((gene) => {
-			        // 	if (!this.genes.getActiveSet().has(gene))
-			        // 		s.delete(gene);
-			        // });
 		            this.genes.setSelection(this, s);
 						}
         }
@@ -310,22 +302,18 @@ GoTerm.prototype = {
 	    const comparator = GoTerm.sortComp[this.sortB.selectedIndex];
       var test = new SortedSet(null,null,comparator);
 
-        if (this.collapsed){
-        	this.updateSelectedState();
-				}
+        // if (this.collapsed){
+        // 	this.updateSelectedState();
+				// }
         const shortTermArray = this.getShortTerm();
 
 	    	shortTermArray.forEach((t) => {
-			    if (t.getStoredCount() >= this.geneThresh && ((t.getSelectedState() == Term.STATE_SELECTED && this.collapsed) || !this.collapsed)){
+			    if (t.getStoredCount() >= this.geneThresh && ((t.getSelectedState() == Term.STATE_SELECTED && this.collapsed) || this.collapsed === false)){
 						test.push(t);
 					}
 	    	});
 				// this.selectedTerms = new Set();
-				test.forEach((item) =>{ //these are the terms that will be highlighted!
-					console.log(item);
-				});
         this.listModel.setListData(test); //this sets what Terms will show up visually
-
 
         this.statusF.innerHTML = this.genes.getSource().getAttributes().get('categoriesLabel', 'categories') + ": " + this.listModel.getSize();
 
@@ -470,9 +458,11 @@ GoTerm.prototype = {
 	 */
 	setCollapsed : function(b) {
 		this.collapsed = !this.collapsed;
+		console.log("Collapsed is now: " + this.collapsed);
 		this.findF.value = "";
 
 		this.updateShortList();
+		this.setShortListListeners();
 	},
 	/**
 	 * Updates the selected state of all the GO terms.
@@ -689,7 +679,7 @@ GoTerm.prototype = {
         this.listModel.data.forEach((item) => {
             const li = document.createElement('li');
             li.innerHTML = item.toString();
-						if(item.getSelectedState == Term.STATE_SELECTED){
+						if(item.getSelectedState() == Term.STATE_SELECTED && !this.collapsed){
 							li.className = "list-group-item highlight";
 						}else{
 							li.className = "list-group-item";
@@ -707,7 +697,7 @@ GoTerm.prototype = {
                                 let s = new SortedSet();
                                 const sublist = this.listModel.data.splice(Math.min(i, this.lastRowList), Math.max(i, this.lastRowList)+1);
                                 sublist.forEach((item) => {
-																		item.setActive(true);
+																		item.selectedState = Term.STATE_SELECTED;
 																		this.selectedTerms.add(li);
                                     //noinspection JSUnresolvedFunction
                                     s.addEach(item.getAllGenes());
@@ -715,8 +705,13 @@ GoTerm.prototype = {
                                 this.genes.setSelection(this, s);
                             } else {
 																console.log("Just finished li event listener");
+
+																//reset!
 																this.selectedTerms.clear();
-																item.setActive(true);
+																this.terms.forEach((term) =>{
+																	term.initSelectedState();
+																});
+																item.selectedState = Term.STATE_SELECTED;
 																this.recursiveActivate(item);
 
 																var li = this.findHtmlElement(item);
@@ -737,7 +732,7 @@ GoTerm.prototype = {
 		recursiveActivate : function(item){
 			if(item.children.size > 0){
 				item.children.forEach((child) =>{
-					child.setActive(true);
+					child.selectedState = Term.STATE_SELECTED;
 					this.selectedTerms.add(this.findHtmlElement(child));
 					this.recursiveActivate(child); //now activate all of its children.
 				});

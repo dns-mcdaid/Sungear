@@ -114,6 +114,7 @@ Term.prototype = {
         return this.parents.length == 0;
     },
     setActive : function(b) {
+        console.log("Woo setting active!");
         this.active = b;
         this.children.forEach((term) =>{
           term.setActive(b);
