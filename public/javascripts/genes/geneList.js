@@ -150,8 +150,10 @@ GeneList.prototype = {
      * @param addHist true to update browsing history, otherwise false
      */
     setSelection : function(src, sel, sendEvent = true, addHist = true) {
-        console.log("Selection coming from source: " + src.toString());
         // this.selectionS.clear();
+        if( this.notNewSelection(new SortedSet(sel)) ){
+          return;
+        }
         this.selectionS = new SortedSet(sel);
         //noinspection JSUnresolvedFunction
 	      this.selectionS = this.selectionS.intersection(this.activeS);
@@ -163,6 +165,37 @@ GeneList.prototype = {
             const e = new GeneEvent(this, src, GeneEvent.SELECT);
             this.notifyGeneListeners(e);
         }
+    },
+    /**
+    * Note by @radhikamattoo: You have to make sure there's been an actual change.
+    * I noticed weird behavior where I click on the window anywhere (even whitespace)
+    * and a 'click' event listener from other programs (like AdBlocker and p5) would end up
+    * triggering setSelection. So, to make sure we don't add a million groups in the table under the controls,
+    * I'm making sure there's actually a difference between the new set and the current set
+    *
+    * @param testSet the new set passed to setSelection
+    * @return {boolean} true if the same EXACT set, false if not
+    */
+    notNewSelection : function(testSet){
+      var testCount = testSet.size;
+      var curCount = this.selectionS.size;
+      if(testCount === curCount){
+        var geneEquals = 0; //if they're the same set, then this number will equal the size of the two sets
+        testSet.forEach((gene) =>{
+          this.selectionS.forEach((selGene)=>{
+            if(gene.compareTo(selGene) === 0){ //i.e. if they're the same gene
+              geneEquals++;
+            }
+          });
+        });
+        if(geneEquals === curCount){ //they're the same set
+          console.log("No event!!");
+          return true;
+        }else{
+          return false;
+        }
+      }//end count if
+      return false;
     },
     /**
      * Performs a Narrow operation: updates the active set by setting to all currently selected genes.

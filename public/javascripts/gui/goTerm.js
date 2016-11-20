@@ -656,6 +656,7 @@ GoTerm.prototype = {
 	        	li.className = "list-group-item list-group-item-action";
 
             li.addEventListener('click', () => {
+								this.selectTerm(item, false);
 								console.log("Inside GO Term evt listener!");
                 if (!this.multi && i > -1) {
 									console.log("Inside if!");
