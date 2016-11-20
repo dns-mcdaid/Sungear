@@ -243,7 +243,7 @@ GeneList.prototype = {
 	    this.activeS.addEach(s);
 
         this.hist.clear();
-        this.setSelection(this, this.activeS, false, true);
+        this.setSelection(src, this.activeS, false, true);
         if (sendEvent) {
             const e = new GeneEvent(this, src, GeneEvent.NARROW);
             this.notifyGeneListeners(e);

@@ -84,7 +84,7 @@ function GoTerm(genes, fd) {
 
     this.expandB.addEventListener('click', this.expandTree.bind(this, true), false);
     this.collapseB.addEventListener('click', this.expandTree.bind(this, false), false);
-	this.sortB.addEventListener('change', this.updateShortList.bind(this), false);
+	this.sortB.addEventListener('change', this.updateSort.bind(this), false);
 	this.findB.addEventListener('click', this.findA.bind(this), false);
 	// TODO: Add findA to findF
 	// TODO: Refactor next two lines
@@ -293,6 +293,10 @@ GoTerm.prototype = {
 				this.updateShortList();
 				this.updateSelect();
     },
+		updateSort : function(){
+			this.updateShortList();
+			this.updateSelect();
+		},
     /**
      * Updates the short list content and sort order.  Depends
      * on the unique terms list, which is compiled in
@@ -311,13 +315,13 @@ GoTerm.prototype = {
         const shortTermArray = this.getShortTerm();
 
 	    	shortTermArray.forEach((t) => {
+					console.log(t.getName() + " " + t.getSelectedState());
 			    if (t.getStoredCount() >= this.geneThresh && ((t.getSelectedState() == Term.STATE_SELECTED && this.collapsed) || this.collapsed === false)){
 						test.push(t);
 					}
 	    	});
 				// this.selectedTerms = new Set();
         this.listModel.setListData(test); //this sets what Terms will show up visually
-
         this.statusF.innerHTML = this.genes.getSource().getAttributes().get('categoriesLabel', 'categories') + ": " + this.listModel.getSize();
 
     },
@@ -464,8 +468,9 @@ GoTerm.prototype = {
 		console.log("Collapsed is now: " + this.collapsed);
 		this.findF.value = "";
 
+		this.setActiveTerms();
 		this.updateShortList();
-		this.setShortListListeners();
+		this.updateSelect();
 	},
 	/**
 	 * Updates the selected state of all the GO terms.
@@ -618,7 +623,15 @@ GoTerm.prototype = {
                 break;
             case GeneEvent.SELECT:
 							if(e.getSource() !== this){
+									this.updateActiveGeneCounts();
+									console.log("Event source isn't go term!");
+									this.selectedTerms.clear();
+									this.collapsed = false;
+									this.terms.forEach((term)=>{
+										term.initSelectedState();
+									});
                 	this.updateShortList();
+									this.setActiveTerms();
                 	this.updateSelect();
 	            		this.copyTerms();
 							}
@@ -632,6 +645,35 @@ GoTerm.prototype = {
                 break;
         }
     },
+		/**
+		* Sets the selected terms based on currently selected gene.
+		* This is only called when a select event is triggered by something other than an item in the GO Term container
+		*
+		*/
+		setActiveTerms : function(){
+			console.log("Setting up active terms");
+			this.listModel.data.forEach((term) =>{
+				if(term.getSelectedState() == Term.STATE_SELECTED){
+					return;
+				}
+				this.recursiveGeneCheck(term);
+			});
+		},
+
+		recursiveGeneCheck : function(term){
+			this.genes.getSelectedSet().forEach((gene) =>{
+				if(term.localGenes.has(gene)){
+					term.selectedState = Term.STATE_SELECTED;
+					this.selectedTerms.add(this.findHtmlElement(term));
+					this.recursiveActivate(term);
+					return;
+				}else if(term.getAllGenes().has(gene)){
+					term.children.forEach((child) =>{
+						this.recursiveGeneCheck(child);
+					});
+				}
+			});
+		},
 
     getMultiSelection : function(operation) {
         // TODO: Implement.
@@ -712,12 +754,14 @@ GoTerm.prototype = {
 																//reset!
 																if(!window.event.ctrlKey && !window.event.metaKey){
 																	this.selectedTerms.clear();
+																	//TODO: @RADHIKA : refactor with updateSelectedState? look into
 																	this.terms.forEach((term) =>{
 																		term.initSelectedState();
 																	});
 																}
 																item.selectedState = Term.STATE_SELECTED;
 																this.recursiveActivate(item);
+																this.updateActiveGeneCounts();
 
 																var li = this.findHtmlElement(item);
 																this.selectedTerms.add(li);
