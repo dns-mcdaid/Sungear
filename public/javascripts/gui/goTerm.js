@@ -660,7 +660,7 @@ GoTerm.prototype = {
 									if(e.getSource() instanceof Controls){
 										console.log("Controls event!");
 										//TODO: When you get to hierarchy of GO Terms, fix this!
-										// this.findGeneUnions();
+										this.findGeneUnions();
 										this.updateGeneTerms();
 										// this.makeTreeFromDAG();
 										// this.makeTree();
@@ -674,6 +674,8 @@ GoTerm.prototype = {
 										// this.populateTreeRecursive(this.treeModel.getRoot(), this.tree);
 									}else{
 										console.log("Event source isn't go term or controls!");
+										this.findGeneUnions();
+										this.updateGeneTerms();
 										this.selectedTerms.clear();
 										this.collapsed = false;
 										this.terms.forEach((term)=>{
