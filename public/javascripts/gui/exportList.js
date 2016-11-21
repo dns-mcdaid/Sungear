@@ -2,6 +2,7 @@
 const SortedSet = require('collections/sorted-set');
 const request = require('request');
 const GeneEvent = require('../genes/geneEvent');
+const Map = require("collections/map");
 
 /**
  * This entire class should offer to write up a gene set to the database.

@@ -47,16 +47,16 @@ DataReader.prototype = {
 	 * @param data {Object}
 	 */
     addPassedData : function(data) {
-    	
+
     	this.allGenes = new Map();
 	    this.terms = new Map();
 	    this.roots = [];
 	    this.geneToGo = new Map();
 	    this.anchors = [];
 	    this.expGenes = new SortedSet();
-	    
+
 	    const rootsMap = new Map();
-		
+
         const passedAnchors = data.anchors;
         const passedItems = data.items;
         const passedCategories = data.categories;
@@ -65,11 +65,11 @@ DataReader.prototype = {
         passedAnchors.sort(function(a, b) {
             return a.name.localeCompare(b.name);
         });
-	    
+
 	    passedAnchors.forEach((anchor) => {
 	    	this.anchors.push(new Anchor(anchor.name));
 	    });
-	    
+
 	    passedItems.forEach((gene) => {
 	    	const exp = [];
 		    const expGene = new Gene(gene.id, gene.description);
@@ -84,13 +84,13 @@ DataReader.prototype = {
 		    this.expGenes.push(expGene);
 		    this.allGenes.set(gene.id.toLowerCase(), expGene);
 	    });
-	    
+
 	    passedCategories.forEach((category) => {
 	    	const newTerm = new Term(category.id, category.description);
 		    this.terms.set(category.id, newTerm);
 		    rootsMap.set(category.id, newTerm);
 	    });
-	    
+
 	    passedCategories.forEach((category) => {
 	    	if (this.terms.has(category.id)) {
 	    		const thisTerm = this.terms.get(category.id);

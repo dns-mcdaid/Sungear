@@ -77,29 +77,27 @@ function GoTerm(genes, fd) {
     this.findD = fd;                                    /** dialog for find results */
     this.results = new SearchResults(genes, this);      /** {SearchResults} search results display component */
 
-    // TODO: Right now it wipes all selections, should wipe all but the one clicked.
-		//FIXME: apply event listeners to all rows within the shortList instead of the shortList overall
     // this.tree.addEventListener('click', this.clearSelectionRecursive.bind(this.tree), false);
     // this.shortList.addEventListener('click', this.clearSelectionRecursive.bind(this.shortList), false);
 
     this.expandB.addEventListener('click', this.expandTree.bind(this, true), false);
     this.collapseB.addEventListener('click', this.expandTree.bind(this, false), false);
-	this.sortB.addEventListener('change', this.updateSort.bind(this), false);
-	this.findB.addEventListener('click', this.findA.bind(this), false);
+		this.sortB.addEventListener('change', this.updateSort.bind(this), false);
+		this.findB.addEventListener('click', this.findA.bind(this), false);
 	// TODO: Add findA to findF
 	// TODO: Refactor next two lines
-	this.collapseT.addEventListener('click', this.setCollapsed.bind(this), false);
-	this.listLeafT.addEventListener('click', this.updateShortList.bind(this), false);
-	this.listAllT.addEventListener('click', this.updateShortList.bind(this), false);
-	// TODO: Update copyB's value based on selected Terms
-	// const clipboard = new Clipboard(this.copyB, {
-	// 	text : function(trigger) {
-	// 		return trigger.getAttribute('value');
-	// 	}
-	// });
+		this.collapseT.addEventListener('click', this.setCollapsed.bind(this), false);
+		this.listLeafT.addEventListener('click', this.updateShortList.bind(this), false);
+		this.listAllT.addEventListener('click', this.updateShortList.bind(this), false);
+		// TODO: Update copyB's value based on selected Terms
+		// const clipboard = new Clipboard(this.copyB, {
+		// 	text : function(trigger) {
+		// 		return trigger.getAttribute('value');
+		// 	}
+		// });
 
-	this.genes.addGeneListener(this);
-	this.genes.addMultiSelect(this);
+		this.genes.addGeneListener(this);
+		this.genes.addMultiSelect(this);
 
     this.geneToGo = new Map();         /** Gene => Array of Terms. GO term lookup by gene, for direct associations */
     this.geneToGoIndir = new Map();    /** Gene => Array of Terms. GO term lookup by gene, for direct and indirect associations */
@@ -238,6 +236,7 @@ GoTerm.prototype = {
     selectTerm : function(t, ctrl, li, goEvent) {
         // s = s.intersection(this.genes.getSelectedSet().toArray());
 	    //noinspection JSUnresolvedFunction
+			console.log("selecting term");
 				var s;
 				if(goEvent){
 					 s = new SortedSet(t.getAllGenes());
@@ -249,7 +248,6 @@ GoTerm.prototype = {
 						//get all selected term objects and set the new selected set to their included genes/child term genes.
             const r = new SortedSet();
 
-						//TODO: add if goEvent statement
 						//loop through currently selected set
             this.listModel.data.forEach((term) => {
 							if(term.getSelectedState() === Term.STATE_SELECTED){
@@ -284,6 +282,33 @@ GoTerm.prototype = {
 						}
         }
     },
+		deselectTerm : function(term, li){
+			//remove the term's associated genes from the current set and
+			var selected = new SortedSet(this.genes.getSelectedSet());
+			var current = term.getAllGenes();
+			current.forEach((gene) =>{
+				if(selected.has(gene)){
+					selected.delete(gene);
+				}
+			});
+
+			//remove this term and all its children from the selected group and unhighlight them
+			console.log("removing highlight");
+			const thisLI = this.findHtmlElement(term);
+			thisLI.className = "list-group-item";
+			this.selectedTerms.delete(thisLI);
+
+			term.children.forEach((childTerm) =>{
+				var html = this.findHtmlElement(childTerm);
+				html.className = "list-group-item";
+				this.selectedTerms.delete(html);
+
+			});
+
+			//set the new selected set
+			this.genes.setSelection(this, selected);
+
+		},
 
     /**
      * @param t {Number} int
@@ -293,6 +318,10 @@ GoTerm.prototype = {
 				this.updateShortList();
 				this.updateSelect();
     },
+		/**
+		* Event handler for changing the sort method in GO Terms.
+		* Restructures the GO Term short list based on whatever method is selected
+		*/
 		updateSort : function(){
 			this.updateShortList();
 			this.updateSelect();
@@ -618,6 +647,10 @@ GoTerm.prototype = {
                 this.highTerm = null;
                 this.updateActiveGeneCounts();
                 this.makeTree();
+								this.updateGeneTerms();
+								this.setGeneThreshold(1);
+								this.selectedTerms.clear();
+								this.updateShortList();
                 this.updateSelect();
 	            	this.copyTerms();
                 break;
@@ -762,6 +795,8 @@ GoTerm.prototype = {
                     // if (false) {
                     //     // if it is a popup trigger
                     // } else {
+											var li = this.findHtmlElement(item);
+
                         if (window.event.altKey) {
                             this.genes.startMultiSelect(this); //notifies all gene listeners for MULTI_START
                         } else {
@@ -776,28 +811,36 @@ GoTerm.prototype = {
                                 });
                                 this.genes.setSelection(this, s);
                             } else {
-																console.log("Just finished li event listener");
+																console.log("Inside li event listener");
 
-																//reset!
-																if(!window.event.ctrlKey && !window.event.metaKey){
-																	this.selectedTerms.clear();
-																	//TODO: @RADHIKA : refactor with updateSelectedState? look into
-																	this.terms.forEach((term) =>{
-																		term.initSelectedState();
-																	});
+																if(this.selectedTerms.has(li)){ //deselect this and all of its children
+																	console.log("unselecting!");
+																	li.selectedState = Term.STATE_UNKNOWN;
+																	this.recursiveDeactivate(li);
+																	this.deselectTerm(item, li);
+																}else{ //SELECT this term and all its children
+																	//reset!
+																	console.log("selecting!");
+																	if(!window.event.ctrlKey && !window.event.metaKey){
+																		this.selectedTerms.clear();
+																		//TODO: @RADHIKA : refactor with updateSelectedState? look into
+																		this.terms.forEach((term) =>{
+																			term.initSelectedState();
+																		});
+																	}
+																	item.selectedState = Term.STATE_SELECTED;
+																	this.recursiveActivate(item);
+																	this.updateActiveGeneCounts();
+
+																	this.selectedTerms.add(li);
+
+																	this.selectTerm(item, window.event.ctrlKey || window.event.metaKey, li, true);
+
 																}
-																item.selectedState = Term.STATE_SELECTED;
-																this.recursiveActivate(item);
-																this.updateActiveGeneCounts();
 
-																var li = this.findHtmlElement(item);
-																this.selectedTerms.add(li);
-
-                                this.selectTerm(item, window.event.ctrlKey || window.event.metaKey, li, true);
-                            }
                         }
                         if (!window.event.shiftKey) this.lastRowList = i;
-                    // }
+                    }
                 // }
             }, false);
             this.shortList.appendChild(li);
@@ -809,6 +852,16 @@ GoTerm.prototype = {
 			if(item.children.size > 0){
 				item.children.forEach((child) =>{
 					child.selectedState = Term.STATE_SELECTED;
+					this.selectedTerms.add(this.findHtmlElement(child));
+					this.recursiveActivate(child); //now activate all of its children.
+				});
+			}
+			return;
+		},
+		recursiveDeactivate : function(item){
+			if(item.children.size > 0){
+				item.children.forEach((child) =>{
+					child.selectedState = Term.STATE_UNKNOWN;
 					this.selectedTerms.add(this.findHtmlElement(child));
 					this.recursiveActivate(child); //now activate all of its children.
 				});

@@ -181,6 +181,8 @@ Term.prototype = {
         this.storedCount = -1;
     },
     updateStoredCount : function(aSet) {
+      console.log("updating hyp");
+
         if (this.storedCount == -1) {
 	        const it = this.children.iterate();
 	        let next = it.next();
@@ -192,7 +194,7 @@ Term.prototype = {
 	        //noinspection JSUnresolvedFunction
 	        s = s.intersection(aSet.toArray());
 	        this.storedCount = s.length;
-            this.updateHyp(aSet.size());
+          this.updateHyp(aSet.size());
         }
     },
     initUnion : function() {
@@ -225,6 +227,7 @@ Term.prototype = {
       var A = this.getTotal();
         var A_t = this.p_t * A;
         Term.H = new HypergeometricDistribution(A, A_t, Q);
+        console.log(H.upperCumulativeProbability(Q_t));
         return H.upperCumulativeProbability(Q_t);
 
     },

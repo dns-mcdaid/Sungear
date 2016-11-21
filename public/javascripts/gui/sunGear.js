@@ -54,7 +54,7 @@ function SunGear(genes, thresh, statsF) {
     this.statsB = new Icons.StatsIcon();
     this.showArrowB = new Icons.ShowArrowIcon(true);
     this.minSizeB = new Icons.VesselMinIcon(this.minRad.length, 2, 0);
-    
+
     this.WIDTH = document.getElementById('sungearGui').offsetWidth;
     this.HEIGHT = document.getElementById('sungearGui').offsetHeight;
 
@@ -312,7 +312,7 @@ SunGear.prototype = {
                         cnt2.add(preCnt2[j]);
                     }
                 }
-                let z = t.calcScore(cnt.size(), cnt2.size());
+                let z = t.calcHyp(cnt.size(), cnt2.size());
                 if (z >= minScore) {
                     ct.push(new CoolTerm(z, cnt.size()));
                 }
@@ -778,6 +778,7 @@ SunGear.prototype = {
             if (this.multi) {
                 if (p5.keyIsPressed) {
                     if (p5.keyCode == p5.CONTROL) {
+                        console.log("aight");
                         a.setSelect(!a.getSelect());
                     }
                 } else {

@@ -8,6 +8,7 @@ const SortedSet = require('collections/sorted-set');
 
 const GeneEvent = require('../genes/geneEvent');
 const MultiSelectable = require('../genes/multiSelectable');
+const CoolVessel = require("./sungear/comp").CoolVessel;
 
 /**
  * @param gn {GeneList}
@@ -19,7 +20,7 @@ function Controls(gn, el) {
     this.gear = null;
     this.export = el;
     this.coolMethod = 0;
-    this.cool = []; /** {Comp.CoolVessel[]} */
+    this.cool = new CoolVessel();
 
     this.restartB = document.getElementById('restartB');
     this.restartB.title = "Work with the original active set";
@@ -99,14 +100,12 @@ Controls.prototype = {
         }
     },
     getCachedCool : function() {
-        // FIXME: Temporary workaround
-        return [];
-
-        const v = this.export.getExtra(this); // TODO: Ensure this works.
+        var v = this.export.getExtra(this); // TODO: Ensure this works.
         let cc = null;
-        if (v !== null && v.length > this.coolMethod)
-            cc = v[this.coolMethod];
-        return cc;
+        if(v != null && v.size > this.coolMethod){
+          cc = v.elementAt(this.coolMethod);
+        }
+        return cc; 
     },
     addCachedCool : function() {
         var v = this.export.get().getExtra(this);
@@ -237,12 +236,16 @@ Controls.prototype = {
     runCool : function() {
         if (this.cool === null) {
             this.updateCool(true);
+            if (this.cool.length === 0) {
+                const errMsg = document.createElement("li");
+                errMsg.innerHTML = "No cool vessels found - try narrowing or restarting.";
+                this.coolM.appendChild(errMsg);
+            }
         }
-        if (this.cool.length == 0) {
-            const errMsg = document.createElement("li");
-            errMsg.innerHTML = "No cool vessels found - try narrowing or restarting.";
-            this.coolM.appendChild(errMsg);
+        if(cool.length > 0){
+            //show the cool options with dropdown menu
         }
+
     },
     coolL : function(s) {
         var idx = Number(s.substr(0, s.indexOf(':'))) - 1;
