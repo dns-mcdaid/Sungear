@@ -240,7 +240,7 @@ GeneList.prototype = {
         this.activeS.clear();
 
         //noinspection JSUnresolvedFunction
-	    this.activeS.addEach(s);
+	       this.activeS.addEach(s);
 
         this.hist.clear();
         this.setSelection(src, this.activeS, false, true);

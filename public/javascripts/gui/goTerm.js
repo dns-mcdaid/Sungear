@@ -229,6 +229,15 @@ GoTerm.prototype = {
 	    }
         console.log("total item <==> category associations: " + cnt);
     },
+		// updateListModel : function(){
+		// 	var active = this.genes.getActiveSet();
+		// 	var newModel = new SortedSet();
+		// 	this.terms.forEach((term) =>{
+		// 		var associated = term.localGenes;
+		// 		if()
+		// 	});
+		// 	this.listModel.setListData(this.genes.getActiveSet());
+		// },
     /**
 		 * Highlights the term visually, and sets the new selected set based on this.
      * @param t {Term} object to select
@@ -262,8 +271,8 @@ GoTerm.prototype = {
 							});
 						}
 					});
-
 	        this.genes.setSelection(this, r);
+
 	    } else {
 				//highlight the term object and all of its children
 				var associatedTerms = this.terms;
@@ -668,13 +677,14 @@ GoTerm.prototype = {
 							this.setGeneThreshold(1);
 							this.populateTreeRecursive(this.treeModel.getRoot(), this.tree);
             case GeneEvent.NARROW:
-	            $("#findD").modal('hide');
+	            	$("#findD").modal('hide');
                 this.highTerm = null;
                 this.updateActiveGeneCounts();
                 // this.makeTree();
 								this.findGeneUnions();
 								this.updateGeneTerms();
-								this.collapsed = false;
+
+								//reset all terms
 								this.terms.forEach((term) =>{
 									this.recursiveDeactivate(term);
 								});
@@ -700,8 +710,6 @@ GoTerm.prototype = {
 										console.log("Event source isn't go term or controls!");
 										this.setActiveTerms();
 										this.setGeneThreshold(1);
-										// this.updateShortList();
-										// this.updateSelect();
 										this.copyTerms();
 									}
 
@@ -722,6 +730,7 @@ GoTerm.prototype = {
 		*/
 		setActiveTerms : function(){
 			//if the active and selected set are the same, then the back button was clicked back to the original set when Sungear was first loaded.
+			console.log(this.selectedTerms);
 			var active = this.genes.getActiveSet();
 			var selected = this.genes.getSelectedSet();
 			var same = true;
@@ -737,7 +746,9 @@ GoTerm.prototype = {
 					console.log("SIKE");
 					return;
 			}
-			this.listModel.data.forEach((term) =>{
+
+			//otherwise update the set via the list model
+			this.terms.forEach((term) =>{
 				if(term.getSelectedState() == Term.STATE_SELECTED){
 					return;
 				}
@@ -750,7 +761,10 @@ GoTerm.prototype = {
 			}
 			this.genes.getSelectedSet().forEach((selected) =>{
 				if(term.localGenes.has(selected)){
+					console.log("Setting active!");
+					console.log(term);
 					term.selectedState = Term.STATE_SELECTED;
+					this.selectedTerms.add(this.findHtmlElement(term));
 					this.recursiveActivate(term);
 				}else{
 					term.children.forEach((child) =>{
@@ -906,6 +920,8 @@ GoTerm.prototype = {
 				if(this.listModel.data.has(child)){
 					var element = this.findHtmlElement(child);
 					if(!this.selectedTerms.has(element)){
+						console.log("Active terms don't have my child:");
+						console.log(element);
 						activate = false;
 					}
 				}

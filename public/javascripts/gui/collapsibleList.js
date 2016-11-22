@@ -118,7 +118,6 @@ CollapsibleList.prototype = {
     updateSelect : function() {
         this.updateStatus();
         const selGenes = this.genes.getSelectedSet().toArray();
-
         if (selGenes.length !== this.model.getData().length) {
             for (let i = 1; i < this.geneFTable.rows.length; i++) {
                 this.geneFTable.rows[i].className = "faded";
@@ -249,12 +248,13 @@ CollapsibleList.prototype = {
         if (row != -1 && !this.multi) {
             if (window.event.altKey) {
                 this.genes.startMultiSelect(this);
+
                 // TODO: Maybe keep track of this gene?
             } else {
                 const g = this.model.getData()[row];
                 let s = new SortedSet(this.genes.getSelectedSet());
                 if (window.event.ctrlKey || window.event.metaKey) {
-                    if (s.contains(g)) {
+                    if (s.contains(g) ) {
                         s.remove(g);
                     } else {
                         s.push(g);
