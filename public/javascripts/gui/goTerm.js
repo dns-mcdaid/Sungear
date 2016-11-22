@@ -33,7 +33,7 @@ function GoTerm(genes, fd) {
     this.uniq = new SortedSet();        /** {SortedSet} of Terms. Unique GO terms in DAG - currently terms w/ direct gene associations only */
     this.all = new SortedSet();         /** {SortedSet} of Terms. All GO terms in DAG, both direct and indirect */
     this.assocGenes = new SortedSet();  /** {SortedSet} of Genes. All genes w/ GO term assocations */
-		this.selectedTerms = new Set();			 /** {Set} of Term objects. When a Gene or Vessel or GO Term is selected, this set is updated to reflect which Terms are selected*/
+		this.selectedTerms = new Set();			 /** {Set} of Term HTML li objects. When a Gene or Vessel or GO Term is selected, this set is updated to reflect which Terms are selected*/
     this.treeModel = new TreeModel();           /** {TreeModel} Tree data model - same model is used over entire life of tree */
 
     this.listModel = new GOListModel();      /** {GOListModel} List data model - used over entire life of tree */
@@ -230,58 +230,62 @@ GoTerm.prototype = {
         console.log("total item <==> category associations: " + cnt);
     },
     /**
-     * @param t {Term}
-     * @param ctrl {boolean}
+		 * Highlights the term visually, and sets the new selected set based on this.
+     * @param t {Term} object to select
+     * @param ctrl {Boolean} multiselect or not
+		 * @param li {HTMl} element to highlight
      */
-    selectTerm : function(t, ctrl, li, goEvent) {
-        // s = s.intersection(this.genes.getSelectedSet().toArray());
-	    //noinspection JSUnresolvedFunction
+    selectTerm : function(t, ctrl, li) {
 			console.log("selecting term");
-				var s;
-				if(goEvent){
-					 s = new SortedSet(t.getAllGenes());
-				}else{
-					s = this.genes.getSelectedSet();
-				}
-        if (ctrl) {
-						console.log("Ay multi select!");
-						//get all selected term objects and set the new selected set to their included genes/child term genes.
-            const r = new SortedSet();
 
-						//loop through currently selected set
-            this.listModel.data.forEach((term) => {
-							if(term.getSelectedState() === Term.STATE_SELECTED){
-								//add all genes associated with the selected term to the set
-								const allGenes = term.getAllGenes();
-								allGenes.forEach((gene) =>{
-									r.add(gene);
-								});
-							}
-						});
+			var s = new SortedSet(t.getAllGenes());
+			var selectedTerms = this.selectedTerms;
 
-						$(li).addClass('highlight', true);
-
-            this.genes.setSelection(this, r);
-        } else {
-					//highlight the term object and all of its children
-					console.log("Changing CSS");
-					var associatedTerms = this.terms;
-					var selectedTerms = this.selectedTerms;
-	        $('#goList li').each(function(index, obj) {
-						if(obj != li && !selectedTerms.has(obj)){
-							$(obj).removeClass('highlight', false);
+	    if (ctrl) {
+					console.log("Ay multi select!");
+	        const r = new SortedSet();
+					$(li).addClass('highlight', true);
+					//highlight all of its children too
+					$('#goList li').each(function(index, obj) {
+						if(selectedTerms.has(obj)){
+							$(obj).addClass("highlight");
 						}
-	        });
-					this.selectedTerms.forEach((li) =>{
-						$(li).addClass('highlight', true);
 					});
 
-            //noinspection JSUnresolvedFunction
-						if(goEvent){
-		            this.genes.setSelection(this, s);
+					//get all selected term objects and set the new selected set to their included genes/child term genes.
+	        this.listModel.data.forEach((term) => {
+						if(term.getSelectedState() === Term.STATE_SELECTED){
+							//add all genes associated with the selected term to the set
+							const allGenes = term.getAllGenes();
+							allGenes.forEach((gene) =>{
+								r.add(gene);
+							});
 						}
-        }
+					});
+
+	        this.genes.setSelection(this, r);
+	    } else {
+				//highlight the term object and all of its children
+				var associatedTerms = this.terms;
+
+	      $('#goList li').each(function(index, obj) {
+					if(obj != li && !selectedTerms.has(obj)){
+						$(obj).removeClass('highlight', false);
+					}
+	      });
+				this.selectedTerms.forEach((li) =>{
+					$(li).addClass('highlight', true);
+				});
+
+	      this.genes.setSelection(this, s);
+	    }
+			this.updateActiveGeneCounts();
     },
+		/**
+		* Un-highlights the term visually, and sets the new selected set based on the selected terms left (if any)
+		* @param term {Term} object to visually unhighlight (along with all of its children)
+		* @para li {HTML} object to unhighlight
+		*/
 		deselectTerm : function(term, li){
 			//remove the term's associated genes from the current set and
 			var selected = new SortedSet(this.genes.getSelectedSet());
@@ -293,20 +297,44 @@ GoTerm.prototype = {
 			});
 
 			//remove this term and all its children from the selected group and unhighlight them
-			console.log("removing highlight");
+
 			const thisLI = this.findHtmlElement(term);
 			thisLI.className = "list-group-item";
-			this.selectedTerms.delete(thisLI);
 
-			term.children.forEach((childTerm) =>{
-				var html = this.findHtmlElement(childTerm);
-				html.className = "list-group-item";
-				this.selectedTerms.delete(html);
-
-			});
+			this.recursiveChildUnhighlight(term);
+			this.recursiveParentUnhighlight(term);
 
 			//set the new selected set
 			this.genes.setSelection(this, selected);
+
+		},
+		/**
+		* Recursively removes CSS highlight from a child HTML element
+		*
+		* @param term {Term} object to unhighlight
+		*/
+		recursiveChildUnhighlight : function(term){
+			term.children.forEach((childTerm) =>{
+				if(this.listModel.data.has(childTerm)){
+					var html = this.findHtmlElement(childTerm);
+					html.className = "list-group-item";
+					this.recursiveChildUnhighlight(childTerm);
+				}
+			});
+		},
+		/**
+		* Recursively removes CSS highlight from a parent HTML element
+		*
+		* @param term {Term} object to unhighlight
+		*/
+		recursiveParentUnhighlight : function(term){
+			term.parents.forEach((parentTerm) =>{
+				if(this.listModel.data.has(parentTerm)){
+					var html = this.findHtmlElement(parentTerm);
+					html.className = "list-group-item";
+					this.recursiveParentUnhighlight(parentTerm);
+				}
+			});
 
 		},
 
@@ -349,7 +377,6 @@ GoTerm.prototype = {
 						test.push(t);
 					}
 	    	});
-				// this.selectedTerms = new Set();
         this.listModel.setListData(test); //this sets what Terms will show up visually
         this.statusF.innerHTML = this.genes.getSource().getAttributes().get('categoriesLabel', 'categories') + ": " + this.listModel.getSize();
 
@@ -497,7 +524,7 @@ GoTerm.prototype = {
 		console.log("Collapsed is now: " + this.collapsed);
 		this.findF.value = "";
 
-		this.setActiveTerms();
+		// this.setActiveTerms();
 		this.updateShortList();
 		this.updateSelect();
 	},
@@ -637,53 +664,44 @@ GoTerm.prototype = {
 							this.makeTree();
 							this.updateGUI();
 							this.copyTerms();
-							this.setGeneThreshold(1);
 							this.selectedTerms.clear();
-							this.updateShortList();
-							this.setShortListListeners();
+							this.setGeneThreshold(1);
 							this.populateTreeRecursive(this.treeModel.getRoot(), this.tree);
-            case GeneEvent.NARROW:
+            case GeneEvent.NARROW: //the new set is already the selected set.
 	            $("#findD").modal('hide');
                 this.highTerm = null;
                 this.updateActiveGeneCounts();
-                this.makeTree();
+                // this.makeTree();
+								this.findGeneUnions();
 								this.updateGeneTerms();
+								this.collapsed = false;
+								this.terms.forEach((term) =>{
+									this.recursiveDeactivate(term);
+								});
 								this.setGeneThreshold(1);
-								this.selectedTerms.clear();
-								this.updateShortList();
-                this.updateSelect();
 	            	this.copyTerms();
                 break;
             case GeneEvent.SELECT:
 							if(e.getSource() !== this){
+								this.findGeneUnions();
+								this.updateGeneTerms();
 								this.updateActiveGeneCounts();
+								this.selectedTerms.clear();
+								this.collapsed = false;
 									if(e.getSource() instanceof Controls){
 										console.log("Controls event!");
-										//TODO: When you get to hierarchy of GO Terms, fix this!
-										this.findGeneUnions();
-										this.updateGeneTerms();
 										// this.makeTreeFromDAG();
 										// this.makeTree();
 										this.updateGUI();
 										this.copyTerms();
 										this.setGeneThreshold(1);
-										this.collapsed = false;
-										this.selectedTerms.clear();
-										// this.updateShortList();
-										this.setShortListListeners();
 										// this.populateTreeRecursive(this.treeModel.getRoot(), this.tree);
 									}else{
 										console.log("Event source isn't go term or controls!");
-										this.findGeneUnions();
-										this.updateGeneTerms();
-										this.selectedTerms.clear();
-										this.collapsed = false;
-										this.terms.forEach((term)=>{
-											term.initSelectedState();
-										});
-										this.updateShortList();
 										this.setActiveTerms();
-										this.updateSelect();
+										this.setGeneThreshold(1);
+										// this.updateShortList();
+										// this.updateSelect();
 										this.copyTerms();
 									}
 
@@ -699,39 +717,44 @@ GoTerm.prototype = {
         }
     },
 		/**
-		* Sets the selected terms based on currently selected gene.
+		* Sets the selected terms based on currently selected genes.
 		* This is only called when a select event is triggered by something other than an item in the GO Term container
-		*
 		*/
 		setActiveTerms : function(){
 			//if the active and selected set are the same, then the back button was clicked back to the original set when Sungear was first loaded.
-			var active = this.genes.getActiveSet().size;
-			var selected = this.genes.getSelectedSet().size;
-			if(active == selected){
+			var active = this.genes.getActiveSet();
+			var selected = this.genes.getSelectedSet();
+			var same = true;
+			active.forEach((activated) =>{
+				selected.forEach((select) =>{
+					if(activated.compareTo(select) != 0){
+						same = false;
+					}
+				});
+			});
+			if(same){
 					this.selectedTerms.clear();
 					console.log("SIKE");
 					return;
 			}
-			console.log("Setting up active terms");
 			this.listModel.data.forEach((term) =>{
 				if(term.getSelectedState() == Term.STATE_SELECTED){
 					return;
 				}
-				this.recursiveGeneCheck(term);
+				this.recursiveSet(term);
 			});
-
 		},
-
-		recursiveGeneCheck : function(term){
-			this.genes.getSelectedSet().forEach((gene) =>{
-				if(term.localGenes.has(gene)){
+		recursiveSet : function(term){
+			if(term.selectedState == Term.STATE_SELECTED){
+				return;
+			}
+			this.genes.getSelectedSet().forEach((selected) =>{
+				if(term.localGenes.has(selected)){
 					term.selectedState = Term.STATE_SELECTED;
-					this.selectedTerms.add(this.findHtmlElement(term));
 					this.recursiveActivate(term);
-					return;
-				}else if(term.getAllGenes().has(gene)){
+				}else{
 					term.children.forEach((child) =>{
-						this.recursiveGeneCheck(child);
+						this.recursiveSet(child);
 					});
 				}
 			});
@@ -818,26 +841,26 @@ GoTerm.prototype = {
 																if(this.selectedTerms.has(li)){ //deselect this and all of its children
 																	console.log("unselecting!");
 																	li.selectedState = Term.STATE_UNKNOWN;
-																	this.recursiveDeactivate(li);
+																	if(this.selectedTerms.has(li)){
+																		this.selectedTerms.delete(li);
+																	}
+																	this.recursiveDeactivate(item);
 																	this.deselectTerm(item, li);
+
 																}else{ //SELECT this term and all its children
-																	//reset!
 																	console.log("selecting!");
+
+																	//reset all highlights!
 																	if(!window.event.ctrlKey && !window.event.metaKey){
 																		this.selectedTerms.clear();
-																		//TODO: @RADHIKA : refactor with updateSelectedState? look into
 																		this.terms.forEach((term) =>{
 																			term.initSelectedState();
 																		});
 																	}
 																	item.selectedState = Term.STATE_SELECTED;
-																	this.recursiveActivate(item);
-																	this.updateActiveGeneCounts();
-
 																	this.selectedTerms.add(li);
-
-																	this.selectTerm(item, window.event.ctrlKey || window.event.metaKey, li, true);
-
+																	this.recursiveActivate(item); //set the selected state of its children and add to selected terms set
+																	this.selectTerm(item, window.event.ctrlKey || window.event.metaKey, li);
 																}
 
                         }
@@ -849,26 +872,70 @@ GoTerm.prototype = {
 	        i++;
         });
     },
-
+		/**
+		* Sets the term's selected state to SELECTED, adds its HTML element to the selected set,
+		* and recursively does the same for all the term's children
+		* @param item {Term} object to select
+		*
+		*/
 		recursiveActivate : function(item){
 			if(item.children.size > 0){
 				item.children.forEach((child) =>{
-					child.selectedState = Term.STATE_SELECTED;
-					this.selectedTerms.add(this.findHtmlElement(child));
-					this.recursiveActivate(child); //now activate all of its children.
+					if(this.listModel.data.has(child)){
+						child.selectedState = Term.STATE_SELECTED;
+						this.selectedTerms.add(this.findHtmlElement(child));
+						this.recursiveActivate(child); //now activate all of its children.
+					}
 				});
 			}
 			return;
 		},
+		/**
+		* Sets the term's selected state to UNKOWN, removes its HTML element from the selected set,
+		* and recursively does the same for all the term's children.
+		* @param item {Term} object to deselect
+		*/
 		recursiveDeactivate : function(item){
 			if(item.children.size > 0){
 				item.children.forEach((child) =>{
-					child.selectedState = Term.STATE_UNKNOWN;
-					this.selectedTerms.add(this.findHtmlElement(child));
-					this.recursiveActivate(child); //now activate all of its children.
+					if(this.listModel.data.has(child)){
+						child.selectedState = Term.STATE_UNKNOWN;
+						var childElement = this.findHtmlElement(child);
+						if(this.selectedTerms.has(childElement)){
+							this.selectedTerms.delete(childElement);
+						}
+						this.recursiveDeactivate(child); //now deactivate all of its children.
+					}
+
+				});
+			}
+			if(item.parents.size > 0){ //also have to deactivate its parents
+				console.log("I have a parent! Need to deactivate it");
+				item.parents.forEach((parent) =>{
+					this.recursiveDeactivateParent(parent);
 				});
 			}
 			return;
+		},
+		/**
+		* This function deactivates a parent term and all its respective parent terms.
+		* This is used when someone deselects a child term, so we have to deselect its parent terms as well, because its not all-inclusive anymore
+		* @param parent {Term} parent object to recursively deselect
+		*
+		*/
+		recursiveDeactivateParent : function(parent){
+			parent.selectedState = Term.STATE_UNKNOWN;
+			if(this.listModel.data.has(parent)){
+				var parentElement = this.findHtmlElement(parent);
+				if(this.selectedTerms.has(parentElement)){
+					this.selectedTerms.delete(parentElement);
+				}
+			}
+			if(parent.parents.size > 0){
+				parent.parents.forEach((superParent) =>{
+					this.recursiveDeactivateParent(superParent);
+				});
+			}
 		},
 		/**
 		* Finds html LI element for a term object.

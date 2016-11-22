@@ -248,6 +248,7 @@ Term.prototype = {
      */
     updateSelectedState : function(s) {
         if (!this.active) {
+            console.log("unselected");
             this.selectedState = Term.STATE_UNSELECTED;
         } else {
 	        const it = this.children.iterate();
