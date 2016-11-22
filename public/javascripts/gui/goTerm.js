@@ -524,7 +524,7 @@ GoTerm.prototype = {
 		console.log("Collapsed is now: " + this.collapsed);
 		this.findF.value = "";
 
-		// this.setActiveTerms();
+		this.setActiveTerms();
 		this.updateShortList();
 		this.updateSelect();
 	},
@@ -667,7 +667,7 @@ GoTerm.prototype = {
 							this.selectedTerms.clear();
 							this.setGeneThreshold(1);
 							this.populateTreeRecursive(this.treeModel.getRoot(), this.tree);
-            case GeneEvent.NARROW: //the new set is already the selected set.
+            case GeneEvent.NARROW:
 	            $("#findD").modal('hide');
                 this.highTerm = null;
                 this.updateActiveGeneCounts();
@@ -839,7 +839,7 @@ GoTerm.prototype = {
 																console.log("Inside li event listener");
 
 																if(this.selectedTerms.has(li)){ //deselect this and all of its children
-																	console.log("unselecting!");
+																	console.log("Unselecting!");
 																	li.selectedState = Term.STATE_UNKNOWN;
 																	if(this.selectedTerms.has(li)){
 																		this.selectedTerms.delete(li);
@@ -848,7 +848,7 @@ GoTerm.prototype = {
 																	this.deselectTerm(item, li);
 
 																}else{ //SELECT this term and all its children
-																	console.log("selecting!");
+																	console.log("Selecting!");
 
 																	//reset all highlights!
 																	if(!window.event.ctrlKey && !window.event.metaKey){
@@ -888,7 +888,42 @@ GoTerm.prototype = {
 					}
 				});
 			}
+			if(item.parents.size > 0){
+				item.parents.forEach((parent) =>{
+					this.recursiveActivateParent(parent);
+				});
+			}
 			return;
+		},
+		/**
+		* If all a parent term's children are selected select the parent term too.
+		*
+		* @param parent {Term} node to check if we have to activate
+		*/
+		recursiveActivateParent : function(parent){
+			var activate = true;
+			parent.children.forEach((child) =>{
+				if(this.listModel.data.has(child)){
+					var element = this.findHtmlElement(child);
+					if(!this.selectedTerms.has(element)){
+						activate = false;
+					}
+				}
+			});
+
+			//if all of its children are selected, then the parent should be selected
+			//and we should check if any of its parents need to be selected too
+			if(activate){
+				parent.selectedState = Term.STATE_SELECTED;
+				this.selectedTerms.add(this.findHtmlElement(parent));
+				if(parent.parents.size > 0){
+					parent.parents.forEach((superParent) =>{
+						this.recursiveActivateParent(superParent);
+					});
+				}
+			}
+			return;
+
 		},
 		/**
 		* Sets the term's selected state to UNKOWN, removes its HTML element from the selected set,
@@ -910,7 +945,6 @@ GoTerm.prototype = {
 				});
 			}
 			if(item.parents.size > 0){ //also have to deactivate its parents
-				console.log("I have a parent! Need to deactivate it");
 				item.parents.forEach((parent) =>{
 					this.recursiveDeactivateParent(parent);
 				});
