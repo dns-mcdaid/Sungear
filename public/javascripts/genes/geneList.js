@@ -188,7 +188,6 @@ GeneList.prototype = {
           });
         });
         if(geneEquals === curCount){ //they're the same set
-          console.log("No event, same set!");
           return true;
         }else{
           return false;
@@ -364,7 +363,6 @@ GeneList.prototype = {
     forward : function(src) {
         const s = this.hist.forward();
         if (s !== null){
-          console.log("Forward, setting selection");
         	this.setSelection(this, s, true, false);
         }
     },
@@ -376,7 +374,6 @@ GeneList.prototype = {
     back : function(src) {
         const s = this.hist.back();
         if (s !== null){
-          console.log("Backwards, setting selection");
         	this.setSelection(this, s, true, false);
         }
     }
@@ -420,11 +417,9 @@ History.prototype = {
      */
     back : function() {
         if (!this.hasPrev()) {
-            console.log("backwards failed");
             return null;
         } else {
             this.curr--;
-            console.log("index is now: " + this.curr);
             return this.past[this.curr];
         }
     },
@@ -435,7 +430,6 @@ History.prototype = {
      */
     forward : function() {
         if (!this.hasNext()) {
-            console.log("Forward failed");
             return null;
         } else {
             this.curr++;
@@ -448,8 +442,6 @@ History.prototype = {
      * @param s {SortedSet} the set to add
      */
     add : function(s) {
-      console.log("Trying to add set to history");
-
         if (this.curr == History.MAX-1) {
             this.past.splice(0,1);
         } else {

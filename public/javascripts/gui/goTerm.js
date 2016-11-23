@@ -28,6 +28,7 @@ function GoTerm(genes, fd) {
     this.multi = false;     /** {boolean} Multi-select operation indicator - true if in multi-select */
     this.collapsed = false; /** {boolean} GO term list collapse flag */
     this.lastRowList = -1;  /** {number} Last row click in GO term list, for range select */
+		this.justNarrowed = false;
 
     this.terms = new Map();             /** {Map} String => Term All DAG nodes */
     this.uniq = new SortedSet();        /** {SortedSet} of Terms. Unique GO terms in DAG - currently terms w/ direct gene associations only */
@@ -229,15 +230,6 @@ GoTerm.prototype = {
 	    }
         console.log("total item <==> category associations: " + cnt);
     },
-		// updateListModel : function(){
-		// 	var active = this.genes.getActiveSet();
-		// 	var newModel = new SortedSet();
-		// 	this.terms.forEach((term) =>{
-		// 		var associated = term.localGenes;
-		// 		if()
-		// 	});
-		// 	this.listModel.setListData(this.genes.getActiveSet());
-		// },
     /**
 		 * Highlights the term visually, and sets the new selected set based on this.
      * @param t {Term} object to select
@@ -245,13 +237,11 @@ GoTerm.prototype = {
 		 * @param li {HTMl} element to highlight
      */
     selectTerm : function(t, ctrl, li) {
-			console.log("selecting term");
 
 			var s = new SortedSet(t.getAllGenes());
 			var selectedTerms = this.selectedTerms;
 
 	    if (ctrl) {
-					console.log("Ay multi select!");
 	        const r = new SortedSet();
 					$(li).addClass('highlight', true);
 					//highlight all of its children too
@@ -369,8 +359,6 @@ GoTerm.prototype = {
      * #trimDAG(SortedSet), and the collapsed state.
      */
     updateShortList : function() {
-			console.log("updating short list");
-
         // depends on uniq, which is calculated in trimDAG
 	    const comparator = GoTerm.sortComp[this.sortB.selectedIndex];
       var test = new SortedSet(null,null,comparator);
@@ -379,10 +367,8 @@ GoTerm.prototype = {
         // 	this.updateSelectedState();
 				// }
         const shortTermArray = this.getShortTerm();
-
 	    	shortTermArray.forEach((t) => {
-					console.log(t.getName() + " " + t.getSelectedState());
-			    if (t.getStoredCount() >= this.geneThresh && ((t.getSelectedState() == Term.STATE_SELECTED && this.collapsed) || this.collapsed === false)){
+					if (t.getStoredCount() >= this.geneThresh && ((t.getSelectedState() == Term.STATE_SELECTED && this.collapsed) || this.collapsed === false)){
 						test.push(t);
 					}
 	    	});
@@ -530,7 +516,6 @@ GoTerm.prototype = {
 	 */
 	setCollapsed : function(b) {
 		this.collapsed = !this.collapsed;
-		console.log("Collapsed is now: " + this.collapsed);
 		this.findF.value = "";
 
 		this.setActiveTerms();
@@ -583,7 +568,6 @@ GoTerm.prototype = {
 			nextTest = testIt.next();
 		}
 		this.copyB.value = b;
-		// console.log(this.copyB.value);
 	},
 	/**
 	 * Synchronizes the hierarchy with the active nodes in the DAG.
@@ -655,6 +639,7 @@ GoTerm.prototype = {
                 break;
             case GeneEvent.NEW_LIST:
 	            $("#findD").modal('hide');
+								this.justNarrowed = false;
                 this.findGeneUnions();
                 this.updateGeneTerms();
                 this.updateActiveGeneCounts();
@@ -677,6 +662,7 @@ GoTerm.prototype = {
 							this.setGeneThreshold(1);
 							this.populateTreeRecursive(this.treeModel.getRoot(), this.tree);
             case GeneEvent.NARROW:
+								this.justNarrowed = true;
 	            	$("#findD").modal('hide');
                 this.highTerm = null;
                 this.updateActiveGeneCounts();
@@ -697,13 +683,13 @@ GoTerm.prototype = {
 								this.updateGeneTerms();
 								this.updateActiveGeneCounts();
 								this.selectedTerms.clear();
-								this.collapsed = false;
 									if(e.getSource() instanceof Controls){
 										console.log("Controls event!");
 										// this.makeTreeFromDAG();
 										// this.makeTree();
 										this.updateGUI();
 										this.copyTerms();
+										this.setActiveTerms();
 										this.setGeneThreshold(1);
 										// this.populateTreeRecursive(this.treeModel.getRoot(), this.tree);
 									}else{
@@ -729,25 +715,14 @@ GoTerm.prototype = {
 		* This is only called when a select event is triggered by something other than an item in the GO Term container
 		*/
 		setActiveTerms : function(){
-			//if the active and selected set are the same, then the back button was clicked back to the original set when Sungear was first loaded.
-			console.log(this.selectedTerms);
-			var active = this.genes.getActiveSet();
-			var selected = this.genes.getSelectedSet();
-			var same = true;
-			active.forEach((activated) =>{
-				selected.forEach((select) =>{
-					if(activated.compareTo(select) != 0){
-						same = false;
-					}
-				});
-			});
-			if(same){
-					this.selectedTerms.clear();
-					console.log("SIKE");
-					return;
+			//this is when the back arrow is pressed all the way back to the original set. in this case, we don't highlight anything
+			if(!this.genes.hasPrev() && !this.justNarrowed){
+				this.collapsed = false;
+				this.selectedTerms.clear();
+				return;
 			}
 
-			//otherwise update the set via the list model
+			//otherwise figure out which terms should be selected
 			this.terms.forEach((term) =>{
 				if(term.getSelectedState() == Term.STATE_SELECTED){
 					return;
@@ -761,8 +736,6 @@ GoTerm.prototype = {
 			}
 			this.genes.getSelectedSet().forEach((selected) =>{
 				if(term.localGenes.has(selected)){
-					console.log("Setting active!");
-					console.log(term);
 					term.selectedState = Term.STATE_SELECTED;
 					this.selectedTerms.add(this.findHtmlElement(term));
 					this.recursiveActivate(term);
@@ -850,7 +823,6 @@ GoTerm.prototype = {
                                 });
                                 this.genes.setSelection(this, s);
                             } else {
-																console.log("Inside li event listener");
 
 																if(this.selectedTerms.has(li)){ //deselect this and all of its children
 																	console.log("Unselecting!");
@@ -920,8 +892,6 @@ GoTerm.prototype = {
 				if(this.listModel.data.has(child)){
 					var element = this.findHtmlElement(child);
 					if(!this.selectedTerms.has(element)){
-						console.log("Active terms don't have my child:");
-						console.log(element);
 						activate = false;
 					}
 				}
