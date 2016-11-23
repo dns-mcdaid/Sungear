@@ -50,7 +50,7 @@ SearchResults.prototype = {
     /**
      * Updates the results display, including sort order.
      */
-    updateList : function() {
+    updateList : function() { //FIXME
       while(this.findLTBody.hasChildNodes()){
           this.findLTBody.removeChild(this.findLTBody.firstChild);
         }

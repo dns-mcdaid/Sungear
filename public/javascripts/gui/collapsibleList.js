@@ -158,14 +158,19 @@ CollapsibleList.prototype = {
      * in the search field.
      */
     findSelectGenes : function() {
+      if(this.findF.value != ""){
         const found = new SortedSet();
         const pattern = ".*" + this.findF.value + ".*";
         const p = new RegExp(pattern, "i");
-	    this.genes.getActiveSet().forEach((gene) => {
-	    	if (p.test(gene.getName()) || p.test(gene.getDesc()))
-	    		found.push(gene);
-	    });
+      this.genes.getActiveSet().forEach((gene) => {
+        if (p.test(gene.getName()) || p.test(gene.getDesc()))
+          found.push(gene);
+      });
         this.genes.setSelection(this, found);
+      }else{
+        this.genes.setSelection(this, this.genes.getActiveSet());
+      }
+
     },
     /**
      * @param e {GeneEvent}

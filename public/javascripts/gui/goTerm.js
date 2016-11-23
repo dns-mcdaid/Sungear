@@ -717,13 +717,17 @@ GoTerm.prototype = {
 		*/
 		setActiveTerms : function(){
 			//this is when the back arrow is pressed all the way back to the original set. in this case, we don't highlight anything
-			if(!this.genes.hasPrev() && !this.justNarrowed){
+			var selected = this.genes.getSelectedSet().size;
+			var active = this.genes.getActiveSet().size;
+
+			if((!this.genes.hasPrev() && !this.justNarrowed) || (selected == active)){
 				this.collapsed = false;
 				this.selectedShortTerms.clear();
 				return;
 			}
+
 			if(this.justNarrowed == true){
-				this.justNarrowed = false; 
+				this.justNarrowed = false;
 			}
 			//otherwise figure out which terms should be selected
 			this.terms.forEach((term) =>{

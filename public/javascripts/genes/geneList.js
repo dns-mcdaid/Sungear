@@ -188,6 +188,7 @@ GeneList.prototype = {
           });
         });
         if(geneEquals === curCount){ //they're the same set
+          console.log("No event, same set!");
           return true;
         }else{
           return false;

@@ -105,7 +105,7 @@ Controls.prototype = {
         if(v != null && v.size > this.coolMethod){
           cc = v.elementAt(this.coolMethod);
         }
-        return cc; 
+        return cc;
     },
     addCachedCool : function() {
         var v = this.export.get().getExtra(this);
@@ -228,10 +228,14 @@ Controls.prototype = {
         this.genes.narrow(this);
     },
     runUnion : function() {
-        this.genes.finishMultiSelect(this, MultiSelectable.UNION);
+        if(this.unionB.className == Controls.ENABLED){
+          this.genes.finishMultiSelect(this, MultiSelectable.UNION);
+        }
     },
     runIntersect : function() {
-        this.genes.finishMultiSelect(this, MultiSelectable.INTERSECT);
+        if(this.intersectB.className == Controls.ENABLED){
+          this.genes.finishMultiSelect(this, MultiSelectable.INTERSECT);
+        }
     },
     runCool : function() {
         if (this.cool === null) {
