@@ -242,7 +242,7 @@ GoTerm.prototype = {
 			var selectedTerms = this.selectedShortTerms;
 
 	    if (ctrl) {
-	        const r = new SortedSet();
+	        const r = new SortedSet(this.genes.getSelectedSet());
 					$(li).addClass('highlight', true);
 					//highlight all of its children too
 					$('#goList li').each(function(index, obj) {
@@ -250,17 +250,7 @@ GoTerm.prototype = {
 							$(obj).addClass("highlight");
 						}
 					});
-
-					//get all selected term objects and set the new selected set to their included genes/child term genes.
-	        this.listModel.data.forEach((term) => {
-						if(term.getSelectedState() === Term.STATE_SELECTED){
-							//add all genes associated with the selected term to the set
-							const allGenes = term.getAllGenes();
-							allGenes.forEach((gene) =>{
-								r.add(gene);
-							});
-						}
-					});
+					r.addEach(s);
 	        this.genes.setSelection(this, r);
 
 	    } else {
@@ -675,6 +665,7 @@ GoTerm.prototype = {
 								this.terms.forEach((term) =>{
 									this.recursiveDeactivate(term);
 								});
+								this.selectedShortTerms.clear();
 								this.setGeneThreshold(1);
 	            	this.copyTerms();
                 break;
@@ -894,27 +885,15 @@ GoTerm.prototype = {
 		* @param parent {Term} node to check if we have to activate
 		*/
 		recursiveActivateParent : function(parent){
-			var activate = true;
-			parent.children.forEach((child) =>{
-				if(this.listModel.data.has(child)){
-					var element = this.findHtmlElement(child);
-					if(!this.selectedShortTerms.has(element)){
-						activate = false;
-					}
-				}
-			});
 
-			//if all of its children are selected, then the parent should be selected
-			//and we should check if any of its parents need to be selected too
-			if(activate){
-				parent.selectedState = Term.STATE_SELECTED;
-				this.selectedShortTerms.add(this.findHtmlElement(parent));
-				if(parent.parents.size > 0){
-					parent.parents.forEach((superParent) =>{
-						this.recursiveActivateParent(superParent);
-					});
-				}
+			parent.selectedState = Term.STATE_SELECTED;
+			this.selectedShortTerms.add(this.findHtmlElement(parent));
+			if(parent.parents.size > 0){
+				parent.parents.forEach((superParent) =>{
+					this.recursiveActivateParent(superParent);
+				});
 			}
+
 			return;
 
 		},
