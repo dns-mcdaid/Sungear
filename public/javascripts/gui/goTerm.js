@@ -686,6 +686,9 @@ GoTerm.prototype = {
 										// this.populateTreeRecursive(this.treeModel.getRoot(), this.tree);
 									}else{
 										console.log("Event source isn't go term or controls!");
+										this.terms.forEach((term) =>{
+											term.setActive(false);
+										});
 										this.setActiveTerms();
 										this.setGeneThreshold(1);
 										this.copyTerms();
@@ -734,6 +737,9 @@ GoTerm.prototype = {
 			}
 			this.genes.getSelectedSet().forEach((selected) =>{
 				if(term.localGenes.has(selected)){
+					console.log("Setting term active: ");
+					console.log(term);
+					term.setActive(true);
 					term.selectedState = Term.STATE_SELECTED;
 					this.selectedShortTerms.add(this.findHtmlElement(term));
 					this.recursiveActivate(term);
@@ -769,6 +775,7 @@ GoTerm.prototype = {
 	},
 
 	populateTreeRecursive : function(node, element) {
+		console.log("populateTreeRecursive");
 		while (element.hasChildNodes()) {
 			element.removeChild(this.tree.firstChild);
 		}
@@ -777,6 +784,9 @@ GoTerm.prototype = {
 			const term = child.getUserObject();
 			li.innerHTML = term.toString();
 			li.className = (term.isActive() ? 'selected' : '');
+			console.log("Element: ");
+			console.log(term);
+			console.log("is : " + term.isActive());
 			element.appendChild(li);
 			if (child.children.length > 0) {
 				const ul = document.createElement('ul');
@@ -806,6 +816,9 @@ GoTerm.prototype = {
                     //     // if it is a popup trigger
                     // } else {
 											var li = this.findHtmlElement(item);
+											this.terms.forEach((term) =>{
+												term.setActive(false);
+											});
 
                         if (window.event.altKey) {
                             this.genes.startMultiSelect(this); //notifies all gene listeners for MULTI_START
@@ -866,6 +879,9 @@ GoTerm.prototype = {
 			if(item.children.size > 0){
 				item.children.forEach((child) =>{
 					if(this.listModel.data.has(child)){
+						console.log("Setting term active: ");
+						console.log(child);
+						child.setActive(true);
 						child.selectedState = Term.STATE_SELECTED;
 						this.selectedShortTerms.add(this.findHtmlElement(child));
 						this.recursiveActivate(child); //now activate all of its children.
@@ -885,7 +901,9 @@ GoTerm.prototype = {
 		* @param parent {Term} node to check if we have to activate
 		*/
 		recursiveActivateParent : function(parent){
-
+			console.log("Setting parent active: ");
+			console.log(parent);
+			parent.setActive(true);
 			parent.selectedState = Term.STATE_SELECTED;
 			this.selectedShortTerms.add(this.findHtmlElement(parent));
 			if(parent.parents.size > 0){
@@ -906,6 +924,7 @@ GoTerm.prototype = {
 			if(item.children.size > 0){
 				item.children.forEach((child) =>{
 					if(this.listModel.data.has(child)){
+						child.setActive(false);
 						child.selectedState = Term.STATE_UNKNOWN;
 						var childElement = this.findHtmlElement(child);
 						if(this.selectedShortTerms.has(childElement)){
@@ -930,6 +949,7 @@ GoTerm.prototype = {
 		*
 		*/
 		recursiveDeactivateParent : function(parent){
+			parent.setActive(false);
 			parent.selectedState = Term.STATE_UNKNOWN;
 			if(this.listModel.data.has(parent)){
 				var parentElement = this.findHtmlElement(parent);

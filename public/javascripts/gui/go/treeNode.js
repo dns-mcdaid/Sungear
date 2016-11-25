@@ -57,7 +57,7 @@ TreeNode.prototype = {
 	 * @returns {boolean}
 	 */
 	isLeaf : function() {
-		return this.children.length == 0;
+		return this.children.length === 0;
 	},
 	/**
 	 * Adds child to the receiver at index.
