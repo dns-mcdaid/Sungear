@@ -236,6 +236,7 @@ GeneList.prototype = {
      * @param sendEvent {boolean} true to generate a {@link GeneEvent} on set change, otherwise false
      */
     setActive : function(src, s, sendEvent = true) {
+
         this.activeS.clear();
 
         //noinspection JSUnresolvedFunction

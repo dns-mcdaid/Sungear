@@ -242,7 +242,6 @@ GoTerm.prototype = {
 			var selectedTerms = this.selectedShortTerms;
 
 	    if (ctrl) {
-					console.log("multiselect in selectterm GO");
 	        const r = new SortedSet(this.genes.getSelectedSet());
 					$(li).addClass('highlight', true);
 					//highlight all of its children too
@@ -361,7 +360,7 @@ GoTerm.prototype = {
     /**
      * @param t {Number} int
      */
-    setGeneThreshold : function(t) {
+    setGeneThreshold : function(t = this.geneThresh) {
         this.geneThresh = t;
 				this.updateShortList();
 				this.updateSelect();
@@ -387,7 +386,7 @@ GoTerm.prototype = {
         // if (this.collapsed){
         // 	this.updateSelectedState();
 				// }
-        const shortTermArray = this.getShortTerm();
+        const shortTermArray = this.terms;
 	    	shortTermArray.forEach((t) => {
 					if (t.getStoredCount() >= this.geneThresh && ((t.getSelectedState() == Term.STATE_SELECTED && this.collapsed) || this.collapsed === false)){
 						test.push(t);
@@ -461,8 +460,12 @@ GoTerm.prototype = {
 		//noinspection JSUnresolvedFunction
 		t.addEach(this.genes.getSelectedSet());
 		this.trimDAG(t);
+		console.log("Synchronizing tree to DAG with root: ");
+		console.log(this.treeModel.getRoot());
+		console.log("and this set of terms to populate it with: ");
+		console.log(this.roots);
 		this.synchronizeTreeToDAG(this.treeModel.getRoot(), this.roots);
-		this.updateShortList();
+		// this.updateShortList();
 	},
 	/**
 	 * @param expand {boolean}
@@ -474,18 +477,12 @@ GoTerm.prototype = {
 		const cL = this.genes.getSource().getAttributes().get("categoriesLabel", "categories");
 		const rootMatcher = this.capFirst(cL);
 		if(expand){
-			this.synchronizeTreeToDAG(this.treeModel.getRoot(), this.roots);
+			this.makeTreeFromDAG();
+			this.makeTree();
+			this.populateTreeRecursive(this.treeModel.getRoot(), this.tree);
 		}else{
-			const set = new SortedSet();
-			e.forEach((n) => {
-				if(n.parent != null && n.parent.userObject != null){
-					if(n.parent.userObject === rootMatcher){
-						//this is a root, need to pass a sorted Set of roots
-						set.add(n);
-					}
-				}
-			});
-			this.populateTreeRecursive(this.treeModel.getRoot(), set);
+			this.makeCollapsedTreeFromDAG();
+			this.populateTreeRecursive(this.treeModel.getRoot(), this.tree);
 		}
 
 
@@ -612,14 +609,16 @@ GoTerm.prototype = {
 		let next = tit.next();
 		while (!next.done) {
 			const t = next.value;
-			if (t.isActive()) {
+			// if (t.isActive()) {
 				if (idx >= parent.getChildCount() || t != parent.getChildAt(idx).getUserObject())
 					this.treeModel.insertNodeInto(new TreeNode(t), parent, idx);
 				idx++;
-			} else {
-				if (idx < parent.getChildCount() && t == parent.getChildAt(idx).getUserObject())
-					this.treeModel.removeNodeFromParent(parent.getChildAt(idx));
-			}
+			// }
+			// } else {
+			// 	if (idx < parent.getChildCount() && t == parent.getChildAt(idx).getUserObject())
+			// 		console.log("Am i ever used or...");
+			// 		this.treeModel.removeNodeFromParent(parent.getChildAt(idx));
+			// }
 			next = tit.next();
 		}
 		for (let i = 0; i < parent.getChildCount(); i++) {
@@ -647,104 +646,160 @@ GoTerm.prototype = {
 		}
 		this.treeModel.setRoot(root);
 	},
-    addNodes : function(r, n) {
-        if (n.isActive()) {
-        	const curr = new TreeNode(n);
-	        r.add(curr);
-	        this.nodes.push(curr);
-	        const it = n.getChildren().iterate();
-	        let next = it.next();
-	        while (!next.done) {
-	        	this.addNodes(curr, next.value);
-		        next = it.next();
-	        }
-        }
-    },
-    listUpdated : function(e) {
-        switch (e.getType()) {
-            case GeneEvent.NEW_SOURCE:
-            	console.log("New source!");
-                this.set(this.genes.getSource());
-                break;
-            case GeneEvent.NEW_LIST:
-	            $("#findD").modal('hide');
-								this.justNarrowed = false;
-                this.findGeneUnions();
-                this.updateGeneTerms();
-                this.updateActiveGeneCounts();
-                this.makeTreeFromDAG();
-                this.makeTree();
-                this.updateGUI();
-	            	this.copyTerms();
-	            	this.setShortListListeners();
-	            	this.populateTreeRecursive(this.treeModel.getRoot(), this.tree);
-                break;
-            case GeneEvent.RESTART:
+	makeCollapsedTreeFromDAG : function(){
+		const t = new SortedSet();
+		const cL = this.genes.getSource().getAttributes().get("categoriesLabel", "categories");
+		const root = new TreeNode(this.capFirst(cL));
+		this.nodes = [];
+		const rt = this.roots.iterate();
+		let next = rt.next();
+		//add just the roots and don't iterate through children
+		while (!next.done) {
+			const curr = new TreeNode(next.value);
+			root.add(curr);
+			this.nodes.push(curr);
+			next = rt.next();
+		}
+		this.treeModel.setRoot(root);
+
+	},
+	//only called when a narrow operation occurs
+	//only keeps terms in the hierarchy that the active set has
+	makeTreeFromNarrow : function(){
+		const newSet = new SortedSet();
+		const cL = this.genes.getSource().getAttributes().get("categoriesLabel", "categories");
+		const root = new TreeNode(this.capFirst(cL));
+		this.nodes = [];
+		const rt = this.roots.iterate();
+		let next = rt.next();
+		while (!next.done) {
+			this.addNarrowNodes(root, next.value);
+			next = rt.next();
+		}
+		this.treeModel.setRoot(root);
+
+	},
+	addNarrowNodes : function(r, n){
+		const termGenes = n.getAllGenes();
+		const active = this.genes.getActiveSet();
+		var has = false;
+		termGenes.forEach((gene) =>{
+			if(active.has(gene)){
+				has = true;
+			}
+		});
+		if(has){
+			const curr = new TreeNode(n);
+			r.add(curr);
+			this.nodes.push(curr);
+			const it = n.getChildren().iterate();
+			let next = it.next();
+			while (!next.done) {
+				this.addNarrowNodes(curr, next.value);
+				next = it.next();
+			}
+		}
+	},
+  addNodes : function(r, n) {
+    if (n.isActive()) {
+    	const curr = new TreeNode(n);
+      r.add(curr);
+      this.nodes.push(curr);
+      const it = n.getChildren().iterate();
+      let next = it.next();
+      while (!next.done) {
+      	this.addNodes(curr, next.value);
+        next = it.next();
+      }
+    }
+  },
+  listUpdated : function(e) {
+      switch (e.getType()) {
+          case GeneEvent.NEW_SOURCE:
+          	console.log("New source!");
+              this.set(this.genes.getSource());
+              break;
+          case GeneEvent.NEW_LIST:
+            $("#findD").modal('hide');
 							this.justNarrowed = false;
+              this.findGeneUnions();
+              this.updateGeneTerms();
+              this.updateActiveGeneCounts();
+              this.makeTreeFromDAG();
+              this.makeTree();
+              this.updateGUI();
+            	this.copyTerms();
+							this.setGeneThreshold(1);
+            	this.setShortListListeners();
+            	this.populateTreeRecursive(this.treeModel.getRoot(), this.tree);
+              break;
+          case GeneEvent.RESTART:
+						this.justNarrowed = false;
+						this.findGeneUnions();
+						this.updateGeneTerms();
+						this.updateActiveGeneCounts();
+						this.makeTreeFromDAG();
+						this.makeTree();
+						this.updateGUI();
+						this.copyTerms();
+						this.selectedShortTerms.clear();
+						this.setGeneThreshold(1);
+						this.populateTreeRecursive(this.treeModel.getRoot(), this.tree);
+						break;
+          case GeneEvent.NARROW:
+							console.log("NARROW GO TERM EVT");
+							this.justNarrowed = true;
+            	$("#findD").modal('hide');
+              this.highTerm = null;
 							this.findGeneUnions();
 							this.updateGeneTerms();
-							this.updateActiveGeneCounts();
-							this.makeTreeFromDAG();
-							this.makeTree();
-							this.updateGUI();
-							this.copyTerms();
-							this.selectedShortTerms.clear();
-							this.setGeneThreshold(1);
-							this.populateTreeRecursive(this.treeModel.getRoot(), this.tree);
-            case GeneEvent.NARROW:
-								this.justNarrowed = true;
-	            	$("#findD").modal('hide');
-                this.highTerm = null;
-								this.findGeneUnions();
-								this.updateGeneTerms();
-                this.updateActiveGeneCounts();
+              this.updateActiveGeneCounts();
 
-								//reset all terms
-								this.terms.forEach((term) =>{
-									this.recursiveDeactivate(term);
-								});
-								this.selectedShortTerms.clear();
-								this.makeTreeFromDAG();
-								this.makeTree();
-								this.setGeneThreshold(1);
-	            	this.copyTerms();
-                break;
-            case GeneEvent.SELECT:
-							if(e.getSource() !== this){
-								this.findGeneUnions();
-								this.updateGeneTerms();
-								this.updateActiveGeneCounts();
-								this.selectedShortTerms.clear();
-									if(e.getSource() instanceof Controls){
-										console.log("Controls event!");
-										this.terms.forEach((term) =>{
-											term.setActive(false);
-										});
-										// this.makeTreeFromDAG();
-										// this.makeTree();
-										this.updateGUI();
-										this.setActiveTerms();
-										this.setGeneThreshold(1);
-										this.copyTerms();
-										// this.populateTreeRecursive(this.treeModel.getRoot(), this.tree);
-									}else{
-										console.log("Event source isn't go term or controls!");
-										this.terms.forEach((term) =>{
-											term.setActive(false);
-										});
-										this.setActiveTerms();
-										this.setGeneThreshold(1);
-										this.copyTerms();
-									}
-							}
-                break;
-            case GeneEvent.MULTI_START:
-                this.setMulti(true);
-                break;
-            case GeneEvent.MULTI_FINISH:
-                this.setMulti(false);
-	            this.copyTerms();
-                break;
+							//reset all terms
+							this.terms.forEach((term) =>{
+								this.recursiveDeactivate(term);
+							});
+							this.selectedShortTerms.clear();
+							this.makeTreeFromNarrow();
+							this.populateTreeRecursive(this.treeModel.getRoot(), this.tree);
+							this.setGeneThreshold(1);
+            	this.copyTerms();
+              break;
+          case GeneEvent.SELECT:
+						console.log("SELECT GO TERM EVT");
+						if(e.getSource() !== this){
+							// this.findGeneUnions();
+							// this.updateGeneTerms();
+							this.selectedShortTerms.clear();
+								if(e.getSource() instanceof Controls){
+									console.log("Controls event!");
+									this.terms.forEach((term) =>{
+										term.setActive(false);
+									});
+									this.updateGUI();
+									this.setActiveTerms();
+									this.updateActiveGeneCounts();
+									this.setGeneThreshold();
+									this.copyTerms();
+								}else{
+									console.log("Event source isn't go term or controls!");
+									this.terms.forEach((term) =>{
+										term.setActive(false);
+									});
+									this.setActiveTerms();
+									this.updateActiveGeneCounts();
+									this.setGeneThreshold();
+									this.copyTerms();
+								}
+						}
+              break;
+          case GeneEvent.MULTI_START:
+              this.setMulti(true);
+              break;
+          case GeneEvent.MULTI_FINISH:
+              this.setMulti(false);
+            this.copyTerms();
+              break;
         }
     },
 		/**
@@ -779,8 +834,6 @@ GoTerm.prototype = {
 			}
 			this.genes.getSelectedSet().forEach((selected) =>{
 				if(term.localGenes.has(selected)){
-					console.log("Setting term active: ");
-					console.log(term);
 					term.setActive(true);
 					term.selectedState = Term.STATE_SELECTED;
 					this.selectedShortTerms.add(this.findHtmlElement(term));
@@ -824,8 +877,12 @@ GoTerm.prototype = {
 			const li = document.createElement('li');
 			const term = child.getUserObject();
 			li.innerHTML = term.toString();
-			if(term.isActive() || this.selectedShortTerms.has(this.findHtmlElement(term))){
+			console.log(this.findHtmlElement(term));
+			console.log(this.selectedShortTerms.has(this.findHtmlElement(term)));
+			if(term.isActive() || this.findHtmlElement(term).className.includes("highlight")){
 				li.className = 'selected';
+			}else{
+				li.className = '';
 			}
 			element.appendChild(li);
 			if (child.children.length > 0) {
@@ -885,7 +942,6 @@ GoTerm.prototype = {
 																	this.deselectTerm(item,window.event.ctrlKey || window.event.metaKey, li);
 
 																}else{ //SELECT this term and all its children
-																	console.log("Selecting!");
 
 																	//reset all highlights!
 																	if(!window.event.ctrlKey && !window.event.metaKey){
@@ -894,12 +950,13 @@ GoTerm.prototype = {
 																			term.initSelectedState();
 																		});
 																	}
-																	item.setActive(true);
 																	item.selectedState = Term.STATE_SELECTED;
 																	this.selectedShortTerms.add(li);
+																	item.setActive(true);
 																	this.recursiveActivate(item); //set the selected state of its children and add to selected terms set
 																	this.selectTerm(item, window.event.ctrlKey || window.event.metaKey, li);
 																}
+																console.log(this.selectedShortTerms);
 																this.populateTreeRecursive(this.treeModel.getRoot(), this.tree);
                         }
                         if (!window.event.shiftKey) this.lastRowList = i;
@@ -920,8 +977,7 @@ GoTerm.prototype = {
 			if(item.children.size > 0){
 				item.children.forEach((child) =>{
 					if(this.listModel.data.has(child)){
-						console.log("Setting term active: ");
-						console.log(child);
+
 						child.setActive(true);
 						child.selectedState = Term.STATE_SELECTED;
 						this.selectedShortTerms.add(this.findHtmlElement(child));
@@ -942,8 +998,7 @@ GoTerm.prototype = {
 		* @param parent {Term} node to check if we have to activate
 		*/
 		recursiveActivateParent : function(parent){
-			console.log("Setting parent active: ");
-			console.log(parent);
+
 			parent.setActive(true);
 			parent.selectedState = Term.STATE_SELECTED;
 			this.selectedShortTerms.add(this.findHtmlElement(parent));
@@ -962,6 +1017,8 @@ GoTerm.prototype = {
 		* @param item {Term} object to deselect
 		*/
 		recursiveDeactivate : function(item){
+			item.setActive(false);
+			item.selectedState = Term.STATE_UNKNOWN;
 			if(item.children.size > 0){
 				item.children.forEach((child) =>{
 					if(this.listModel.data.has(child)){
