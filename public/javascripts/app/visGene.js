@@ -268,7 +268,7 @@ VisGene.prototype = {
         msg += "<p>NYU-Courant:</p><p>Dennis Shasha</p><br />";
         msg += "<p>Additional Collaborators:</p><p>Bradford Paley (<a href='http://www.didi.com/'>Didi, Inc.</a>)</p><br />";
         msg += "<p>This work has been partly supported by the U.S. National Science Foundation under grants NSF IIS-9988345, N2010-0115586, and MCB-0209754. This support is greatly appreciated.</p><br />";
-        msg += "<p>For more information visit: <a href='http://virtualplant.bio.nyu.edu/'>http://virtualplant.bio.nyu.edu/</a></p><br />";
+        msg += "<p>For more information visit: <a href='http://virtualplant.bio.nyu.edu/cgi-bin/vpweb/'>http://virtualplant.bio.nyu.edu/cgi-bin/vpweb/</a></p><br />";
         msg += "<p>Copyright 2005-2016, New York University</p>";
         this.aboutDBody.innerHTML = msg;
     },

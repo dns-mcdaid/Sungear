@@ -471,17 +471,23 @@ GoTerm.prototype = {
 		const rt = this.treeModel.getRoot();
 		const e = rt.postorderEnumeration();
 		const items = this.tree.getElementsByTagName("li");
-		e.forEach((n) => {
-			if (expand) {
-				// TODO: Something
-				console.log("Need to expand!");
-			} else {
-				if (n != rt) {
-					console.log("need to collapse!");
-					// TODO: Something
+		const cL = this.genes.getSource().getAttributes().get("categoriesLabel", "categories");
+		const rootMatcher = this.capFirst(cL);
+		if(expand){
+			this.synchronizeTreeToDAG(this.treeModel.getRoot(), this.roots);
+		}else{
+			const set = new SortedSet();
+			e.forEach((n) => {
+				if(n.parent != null && n.parent.userObject != null){
+					if(n.parent.userObject === rootMatcher){
+						//this is a root, need to pass a sorted Set of roots
+						set.add(n);
+					}
 				}
-			}
-		});
+			});
+			this.populateTreeRecursive(this.treeModel.getRoot(), set);
+		}
+
 
 	},
 	/**
