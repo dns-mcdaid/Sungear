@@ -474,8 +474,10 @@ GoTerm.prototype = {
 		e.forEach((n) => {
 			if (expand) {
 				// TODO: Something
+				console.log("Need to expand!");
 			} else {
 				if (n != rt) {
+					console.log("need to collapse!");
 					// TODO: Something
 				}
 			}
