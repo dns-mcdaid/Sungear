@@ -904,7 +904,7 @@ GoTerm.prototype = {
 		}
 	},
 
-	populateTreeRecursive : function(node, element) {
+	populateTreeRecursive : function(node, element) { //(treenode, its corresponding html LI element)
 		while (element.hasChildNodes()) {
 			element.removeChild(this.tree.firstChild);
 		}
@@ -926,7 +926,7 @@ GoTerm.prototype = {
 					li.className = '';
 				}
 			}
-
+			this.setHierarchyListeners(child,li, term);
 			element.appendChild(li);
 			if (child.children.length > 0) {
 				const ul = document.createElement('ul');
@@ -935,6 +935,41 @@ GoTerm.prototype = {
 				element.appendChild(ul);
 			}
 		});
+	},
+	setHierarchyListeners : function(child,li,term){
+		li.addEventListener('dblclick', () => {
+			console.log("Double click to select for " + term.getName());
+
+			//select this node and all of its children, and its parents
+
+			//reset all highlights!
+			if(!window.event.ctrlKey && !window.event.metaKey){
+				this.selectedShortTerms.clear();
+				this.terms.forEach((term) =>{
+					term.initSelectedState();
+				});
+			}
+			term.selectedState = Term.STATE_SELECTED;
+			term.selectedShortTerms.add(li);
+			term.setActive(true);
+			this.recursiveActivate(term); //set the selected state of its children and add to selected terms set
+
+			//update the short list
+
+			//populateTreeRecursive 
+
+			//update the selected set
+
+		});
+		if(child.children.length > 0){
+			li.addEventListener('click', () =>{
+				console.log("Single click to toggle for " + term.getName());
+				//check to see if its children are currently visible
+				//if visible, remove from tree
+
+				//if not visible, add to tree
+			});
+		}
 	},
 
   setShortListListeners : function() {
