@@ -877,9 +877,7 @@ GoTerm.prototype = {
 			const li = document.createElement('li');
 			const term = child.getUserObject();
 			li.innerHTML = term.toString();
-			console.log(this.findHtmlElement(term));
-			console.log(this.selectedShortTerms.has(this.findHtmlElement(term)));
-			if(term.isActive() || this.findHtmlElement(term).className.includes("highlight")){
+			if(term.isActive() || this.findHtmlElement(term).className.includes("highlight") || this.selectedShortTerms.has(this.findHtmlElement(term))){
 				li.className = 'selected';
 			}else{
 				li.className = '';
