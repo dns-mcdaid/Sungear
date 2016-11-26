@@ -120,6 +120,7 @@ GeneList.prototype = {
     getAllGenes : function() {
 	    const genesSet = new SortedSet();
 	    this.master.forEach(value => genesSet.push(value));
+      return genesSet;
     },
     /**
      * Gets the full set of genes for this experiment.

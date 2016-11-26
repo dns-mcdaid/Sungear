@@ -190,6 +190,7 @@ GoTerm.prototype = {
 	    this.roots.forEach((root) => {
 	    	root.updateStoredCount(this.assocGenes);
 	    });
+
     },
     /**
      * Initiates the recursive process of determining the full set of genes
@@ -476,13 +477,23 @@ GoTerm.prototype = {
 		const items = this.tree.getElementsByTagName("li");
 		const cL = this.genes.getSource().getAttributes().get("categoriesLabel", "categories");
 		const rootMatcher = this.capFirst(cL);
-		if(expand){
-			this.makeTreeFromDAG();
-			this.makeTree();
+		//check to see if a narrow operation has occurred and create the tree accordingly
+		if(this.genes.getActiveSet().size != this.genes.getAllGenes().size){
+			if(expand){
+					this.makeTreeFromNarrow();
+			}else{
+				this.makeCollapsedTreeFromNarrow();
+			}
 			this.populateTreeRecursive(this.treeModel.getRoot(), this.tree);
-		}else{
-			this.makeCollapsedTreeFromDAG();
+		}else{ //regular list
+			if(expand){
+				this.makeTreeFromDAG();
+				this.makeTree();
+			}else{
+				this.makeCollapsedTreeFromDAG();
+			}
 			this.populateTreeRecursive(this.treeModel.getRoot(), this.tree);
+
 		}
 
 
@@ -666,7 +677,6 @@ GoTerm.prototype = {
 	//only called when a narrow operation occurs
 	//only keeps terms in the hierarchy that the active set has
 	makeTreeFromNarrow : function(){
-		const newSet = new SortedSet();
 		const cL = this.genes.getSource().getAttributes().get("categoriesLabel", "categories");
 		const root = new TreeNode(this.capFirst(cL));
 		this.nodes = [];
@@ -699,6 +709,31 @@ GoTerm.prototype = {
 				next = it.next();
 			}
 		}
+	},
+	makeCollapsedTreeFromNarrow : function(){
+		const cL = this.genes.getSource().getAttributes().get("categoriesLabel", "categories");
+		const root = new TreeNode(this.capFirst(cL));
+		this.nodes = [];
+		const rt = this.roots.iterate();
+		let next = rt.next();
+
+		var activeSet = this.genes.getActiveSet();
+		while (!next.done) {
+			const newTerm = next.value;
+			var add = false;
+			newTerm.getAllGenes().forEach((gene) =>{
+				if(activeSet.has(gene)){
+					add = true;
+				}
+			});
+			if(add){
+				const newNode = new TreeNode(newTerm);
+				root.add(newNode);
+				this.nodes.push(newNode);
+			}
+			next = rt.next();
+		}
+		this.treeModel.setRoot(root);
 	},
   addNodes : function(r, n) {
     if (n.isActive()) {
@@ -760,9 +795,9 @@ GoTerm.prototype = {
 								this.recursiveDeactivate(term);
 							});
 							this.selectedShortTerms.clear();
+							this.setGeneThreshold(1);
 							this.makeTreeFromNarrow();
 							this.populateTreeRecursive(this.treeModel.getRoot(), this.tree);
-							this.setGeneThreshold(1);
             	this.copyTerms();
               break;
           case GeneEvent.SELECT:
@@ -877,11 +912,21 @@ GoTerm.prototype = {
 			const li = document.createElement('li');
 			const term = child.getUserObject();
 			li.innerHTML = term.toString();
-			if(term.isActive() || this.findHtmlElement(term).className.includes("highlight") || this.selectedShortTerms.has(this.findHtmlElement(term))){
-				li.className = 'selected';
+			var goHtml = this.findHtmlElement(term);
+			if(goHtml != null){
+				if(term.isActive() || this.findHtmlElement(term).className.includes("highlight") || this.selectedShortTerms.has(this.findHtmlElement(term))){
+					li.className = 'selected';
+				}else{
+					li.className = '';
+				}
 			}else{
-				li.className = '';
+				if(term.isActive()){
+					li.className = 'selected';
+				}else{
+					li.className = '';
+				}
 			}
+
 			element.appendChild(li);
 			if (child.children.length > 0) {
 				const ul = document.createElement('ul');
