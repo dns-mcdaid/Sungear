@@ -220,13 +220,24 @@ tr {
 }
 
 #goHierarchy ul {
-    padding-left: 20px;
+    padding-left: 10px;
     /*list-style-position: inside;*/
 }
 
 ul {
     cursor: pointer;
+    list-style:none;
 }
+#goTree span + li{
+  display: inline-block;
+  font-family : 'Noto Sans', sans-serif;
+  margin-left: 10px;
+}
+
+#goTree ul > li {
+    margin-left: 10px;
+}
+
 
 /*#goHier {*/
     /*list-style-type: none;*/

@@ -464,10 +464,10 @@ GoTerm.prototype = {
 		//noinspection JSUnresolvedFunction
 		t.addEach(this.genes.getSelectedSet());
 		this.trimDAG(t);
-		console.log("Synchronizing tree to DAG with root: ");
-		console.log(this.treeModel.getRoot());
-		console.log("and this set of terms to populate it with: ");
-		console.log(this.roots);
+		// console.log("Synchronizing tree to DAG with root: ");
+		// console.log(this.treeModel.getRoot());
+		// console.log("and this set of terms to populate it with: ");
+		// console.log(this.roots);
 		this.synchronizeTreeToDAG(this.treeModel.getRoot(), this.roots);
 		// this.updateShortList();
 	},
@@ -489,7 +489,7 @@ GoTerm.prototype = {
 				this.isCollapsed = true;
 				this.makeCollapsedTreeFromNarrow();
 			}
-			this.populateTreeRecursive(this.treeModel.getRoot(), this.tree);
+			this.populateTreeRecursive(this.treeModel.getRoot(), this.tree, true);
 		}else{ //regular list
 			if(expand){
 				this.isCollapsed = false;
@@ -814,7 +814,6 @@ GoTerm.prototype = {
             	this.copyTerms();
               break;
           case GeneEvent.SELECT:
-						console.log(e.getSource());
 						if(e.getSource() !== this){
 							// this.findGeneUnions();
 							// this.updateGeneTerms();
@@ -916,8 +915,14 @@ GoTerm.prototype = {
 			$("#findD").modal('show');
 		}
 	},
-
-	populateTreeRecursive : function(node, element) { //(treenode, its corresponding html LI element)
+	/**
+	* Creates the nested Term hieararchy via HTML elements recursively.
+	*
+	* @param {TreeNode} node to represent as HTML
+	* @param {HTML} element parent to add the HTMl representation of this term to
+	* @param {Boolean} narrowed mostly used for deciding whether to use the right or down chevron arrow
+	*/
+	populateTreeRecursive : function(node, element, narrowed=false) {
 		while (element.hasChildNodes()) {
 			element.removeChild(this.tree.firstChild);
 		}
@@ -943,14 +948,43 @@ GoTerm.prototype = {
 					li.className = '';
 				}
 			}
-			this.setHierarchyListeners(child,li, term);
-			element.appendChild(li);
-			if (child.children.length > 0) {
-				const ul = document.createElement('ul');
 
-				this.populateTreeRecursive(child, ul);
-				element.appendChild(ul);
+			this.setHierarchyListeners(child,li, term);
+			if((!this.isCollapsed || narrowed) && child.children.length > 0){
+				//create the span surrounding the parent
+				const span = document.createElement('span');
+				span.className = "glyphicon glyphicon-chevron-down";
+				this.addArrowListener(span, li, term);
+				element.appendChild(span);
+				element.appendChild(li);
+
+					const ul = document.createElement('ul');
+					this.populateTreeRecursive(child, ul);
+					element.appendChild(ul);
+					//its a leave, so just append the li
+			}else if(this.isCollapsed){
+				//create the span surrounding the parent
+				const span = document.createElement('span');
+				span.className = "glyphicon glyphicon-chevron-right";
+				this.addArrowListener(span, li, term);
+				element.appendChild(span);
+				element.appendChild(li);
+				element.appendChild(document.createElement("br"));
+			}else{
+				element.appendChild(li);
 			}
+		});
+	},
+	/**
+	* Adds an event listener to the arrow for parent terms to toggle the hierarchy view.
+	*
+	* @param {HTML} span element to set listener to
+	* @param {HTML} li element, a parent term whose chilren will be toggled based on this event listener
+	* @param {Term} term javascript object to manipulate
+	*/
+	addArrowListener : function(span, li, term){
+		span.addEventListener('click', () =>{
+			console.log("Toggling lol");
 		});
 	},
 	/**
@@ -961,57 +995,69 @@ GoTerm.prototype = {
 	* @param {Term} term to select
 	*/
 	setHierarchyListeners : function(child,li,term){
-		li.addEventListener('dblclick', () => {
-			console.log("Double click to select for " + term.getName());
+		// li.addEventListener('click', () => {
+		// 	if(window.event.ctrlKey || window.event.metaKey){
+		// 		console.log("Alt/Meta click to toggle for " + term.getName());
+		// 	}else{
+		//
+		// 		//reset all highlights!
+		// 		if(!window.event.ctrlKey && !window.event.metaKey){
+		// 			this.selectedShortTerms.clear();
+		// 			this.terms.forEach((term) =>{
+		// 				term.initSelectedState();
+		// 			});
+		// 		}
+		// 		//set the active state of the term and its children
+		// 		if(term.selectedState = Term.STATE_SELECTED){
+		// 			console.log("selecting term via hierarchy");
+		// 			term.selectedState = Term.STATE_SELECTED;
+		// 			term.setActive(true);
+		// 			this.recursiveActivate(term);
+		// 		}else{
+		// 			console.log("UNselecting term via hierarchy");
+		// 			term.selectedState = Term.STATE_UNKNOWN;
+		// 			term.setActive(false);
+		// 			this.recursiveDeactivate(term);
+		// 		}
+		//
+		//
+		// 		//populateTreeRecursive
+		// 		if(this.genes.getActiveSet().size != this.genes.getAllGenes().size){
+		// 			if(!this.isCollapsed){
+		// 					this.makeTreeFromNarrow();
+		// 			}else{
+		// 				this.makeCollapsedTreeFromNarrow();
+		// 			}
+		// 			this.populateTreeRecursive(this.treeModel.getRoot(), this.tree);
+		// 		}else{ //regular list
+		// 			if(!this.isCollapsed){
+		// 				this.makeTreeFromDAG();
+		// 				this.makeTree();
+		// 			}else{
+		// 				this.makeCollapsedTreeFromDAG();
+		// 			}
+		// 			this.populateTreeRecursive(this.treeModel.getRoot(), this.tree);
+		//
+		// 		}
+		//
+		// 		//update the short list (this also updates the selected set)
+		// 		//TODO: check the affect of the multiselect being passed through this function. should it just be false?
+		// 		this.selectTerm(term, window.event.ctrlKey || window.event.metaKey, this.findHtmlElement(term));
+		//
+		//
+		// 	});
+		// 	if(child.children.length > 0){
+		// 		li.addEventListener('click', () =>{
+		// 				console.log("Single click to select for " + term.getName());
+		//
+		// 			//check to see if its children are currently visible
+		// 			//if visible, remove from tree
+		//
+		// 			//if not visible, add to tree
+		// 		});
+		// 	}
+		// }
 
-			//reset all highlights!
-			if(!window.event.ctrlKey && !window.event.metaKey){
-				this.selectedShortTerms.clear();
-				this.terms.forEach((term) =>{
-					term.initSelectedState();
-				});
-			}
-
-			//set the active state of the term and its children
-			term.selectedState = Term.STATE_SELECTED;
-			term.setActive(true);
-			this.recursiveActivate(term);
-
-			//populateTreeRecursive
-			if(this.genes.getActiveSet().size != this.genes.getAllGenes().size){
-				if(!this.isCollapsed){
-						this.makeTreeFromNarrow();
-				}else{
-					this.makeCollapsedTreeFromNarrow();
-				}
-				this.populateTreeRecursive(this.treeModel.getRoot(), this.tree);
-			}else{ //regular list
-				if(!this.isCollapsed){
-					this.makeTreeFromDAG();
-					this.makeTree();
-				}else{
-					this.makeCollapsedTreeFromDAG();
-				}
-				this.populateTreeRecursive(this.treeModel.getRoot(), this.tree);
-
-			}
-
-			//update the short list (this also updates the selected set)
-			//TODO: check the affect of the multiselect being passed through this function. should it just be false?
-			this.selectTerm(term, window.event.ctrlKey || window.event.metaKey, this.findHtmlElement(term));
-
-
-		});
-		if(child.children.length > 0){
-			li.addEventListener('click', () =>{
-				console.log("Single click to toggle for " + term.getName());
-				console.log(li);
-				//check to see if its children are currently visible
-				//if visible, remove from tree
-
-				//if not visible, add to tree
-			});
-		}
 	},
 
   setShortListListeners : function() {
