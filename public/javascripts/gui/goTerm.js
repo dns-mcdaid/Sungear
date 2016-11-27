@@ -40,7 +40,10 @@ function GoTerm(genes, fd) {
     this.listModel = new GOListModel();      /** {GOListModel} List data model - used over entire life of tree */
 
     this.tree = document.getElementById('goTree');              /** GO term hierarchy display component */
+		this.isCollapsed = false; 																	/** Boolean for collapsed or expanded state of hierarchy*/
     this.shortList = document.getElementById('goList');         /** GO term list display component */
+
+
 
     this.expandB = document.getElementById('goExpandB');        /** GO hierarchy expand all button */
     this.expandB.title = "Show all categories in the hierarchy";
@@ -480,16 +483,20 @@ GoTerm.prototype = {
 		//check to see if a narrow operation has occurred and create the tree accordingly
 		if(this.genes.getActiveSet().size != this.genes.getAllGenes().size){
 			if(expand){
+					this.isCollapsed = false;
 					this.makeTreeFromNarrow();
 			}else{
+				this.isCollapsed = true;
 				this.makeCollapsedTreeFromNarrow();
 			}
 			this.populateTreeRecursive(this.treeModel.getRoot(), this.tree);
 		}else{ //regular list
 			if(expand){
+				this.isCollapsed = false;
 				this.makeTreeFromDAG();
 				this.makeTree();
 			}else{
+				this.isCollapsed = true;
 				this.makeCollapsedTreeFromDAG();
 			}
 			this.populateTreeRecursive(this.treeModel.getRoot(), this.tree);
@@ -620,6 +627,7 @@ GoTerm.prototype = {
 		let next = tit.next();
 		while (!next.done) {
 			const t = next.value;
+			t.setActive(false);
 			// if (t.isActive()) {
 				if (idx >= parent.getChildCount() || t != parent.getChildAt(idx).getUserObject())
 					this.treeModel.insertNodeInto(new TreeNode(t), parent, idx);
@@ -751,12 +759,16 @@ GoTerm.prototype = {
   listUpdated : function(e) {
       switch (e.getType()) {
           case GeneEvent.NEW_SOURCE:
-          	console.log("New source!");
+          		console.log("New source!");
               this.set(this.genes.getSource());
               break;
           case GeneEvent.NEW_LIST:
+						console.log("New list!");
             $("#findD").modal('hide');
 							this.justNarrowed = false;
+							this.terms.forEach((term) =>{
+								this.recursiveDeactivate(term);
+							});
               this.findGeneUnions();
               this.updateGeneTerms();
               this.updateActiveGeneCounts();
@@ -765,10 +777,12 @@ GoTerm.prototype = {
               this.updateGUI();
             	this.copyTerms();
 							this.setGeneThreshold(1);
-            	this.setShortListListeners();
-            	this.populateTreeRecursive(this.treeModel.getRoot(), this.tree);
               break;
           case GeneEvent.RESTART:
+						this.selectedShortTerms.clear();
+						this.terms.forEach((term) =>{
+							this.recursiveDeactivate(term);
+						});
 						this.justNarrowed = false;
 						this.findGeneUnions();
 						this.updateGeneTerms();
@@ -777,15 +791,14 @@ GoTerm.prototype = {
 						this.makeTree();
 						this.updateGUI();
 						this.copyTerms();
-						this.selectedShortTerms.clear();
 						this.setGeneThreshold(1);
-						this.populateTreeRecursive(this.treeModel.getRoot(), this.tree);
 						break;
           case GeneEvent.NARROW:
 							console.log("NARROW GO TERM EVT");
 							this.justNarrowed = true;
             	$("#findD").modal('hide');
               this.highTerm = null;
+							this.isCollapsed = false;
 							this.findGeneUnions();
 							this.updateGeneTerms();
               this.updateActiveGeneCounts();
@@ -915,6 +928,10 @@ GoTerm.prototype = {
 			var goHtml = this.findHtmlElement(term);
 			if(goHtml != null){
 				if(term.isActive() || this.findHtmlElement(term).className.includes("highlight") || this.selectedShortTerms.has(this.findHtmlElement(term))){
+					// console.log("Selection for term: " + term.getName());
+					// console.log(term.isActive());
+					// console.log(this.findHtmlElement(term).className.includes("highlight"));
+					// console.log(this.selectedShortTerms.has(this.findHtmlElement(term)));
 					li.className = 'selected';
 				}else{
 					li.className = '';
@@ -936,11 +953,16 @@ GoTerm.prototype = {
 			}
 		});
 	},
+	/**
+	* Sets the double click (to select) and single click (to toggle view) event listeners for the hierarchy.
+	*
+	* @param {TreeNode} child to setup
+	* @param {HTML} li representation in the hierarchy (Please note, this is NOT the same as the short list. Thus, this li element should never be added to the selectedShortTerms set)
+	* @param {Term} term to select
+	*/
 	setHierarchyListeners : function(child,li,term){
 		li.addEventListener('dblclick', () => {
 			console.log("Double click to select for " + term.getName());
-
-			//select this node and all of its children, and its parents
 
 			//reset all highlights!
 			if(!window.event.ctrlKey && !window.event.metaKey){
@@ -949,21 +971,41 @@ GoTerm.prototype = {
 					term.initSelectedState();
 				});
 			}
+
+			//set the active state of the term and its children
 			term.selectedState = Term.STATE_SELECTED;
-			term.selectedShortTerms.add(li);
 			term.setActive(true);
-			this.recursiveActivate(term); //set the selected state of its children and add to selected terms set
+			this.recursiveActivate(term);
 
-			//update the short list
+			//populateTreeRecursive
+			if(this.genes.getActiveSet().size != this.genes.getAllGenes().size){
+				if(!this.isCollapsed){
+						this.makeTreeFromNarrow();
+				}else{
+					this.makeCollapsedTreeFromNarrow();
+				}
+				this.populateTreeRecursive(this.treeModel.getRoot(), this.tree);
+			}else{ //regular list
+				if(!this.isCollapsed){
+					this.makeTreeFromDAG();
+					this.makeTree();
+				}else{
+					this.makeCollapsedTreeFromDAG();
+				}
+				this.populateTreeRecursive(this.treeModel.getRoot(), this.tree);
 
-			//populateTreeRecursive 
+			}
 
-			//update the selected set
+			//update the short list (this also updates the selected set)
+			//TODO: check the affect of the multiselect being passed through this function. should it just be false?
+			this.selectTerm(term, window.event.ctrlKey || window.event.metaKey, this.findHtmlElement(term));
+
 
 		});
 		if(child.children.length > 0){
 			li.addEventListener('click', () =>{
 				console.log("Single click to toggle for " + term.getName());
+				console.log(li);
 				//check to see if its children are currently visible
 				//if visible, remove from tree
 
@@ -1034,7 +1076,6 @@ GoTerm.prototype = {
 																	this.recursiveActivate(item); //set the selected state of its children and add to selected terms set
 																	this.selectTerm(item, window.event.ctrlKey || window.event.metaKey, li);
 																}
-																console.log(this.selectedShortTerms);
 																this.populateTreeRecursive(this.treeModel.getRoot(), this.tree);
                         }
                         if (!window.event.shiftKey) this.lastRowList = i;
