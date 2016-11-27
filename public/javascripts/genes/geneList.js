@@ -152,7 +152,7 @@ GeneList.prototype = {
      */
     setSelection : function(src, sel, sendEvent = true, addHist = true) {
         // this.selectionS.clear();
-        if( this.notNewSelection(new SortedSet(sel)) ){
+        if( this.notNewSelection(new SortedSet(sel))){
           return;
         }
         this.selectionS = new SortedSet(sel);
@@ -195,25 +195,6 @@ GeneList.prototype = {
         }
       }//end count if
       return false;
-
-      // var testCount = testSet.size;
-      // var curCount = this.selectionS.size;
-      // if(testCount === curCount){
-      //   var geneEquals = 0; //if they're the same set, then this number will equal the size of the two sets
-      //   var testIterator = testSet.iterate();
-      //   var currentIterator = this.selectionS.iterate();
-      //   var firstTest = testIterator.next();
-      //   var currentTest = currentIterator.next();
-      //   while(!firstTest.done || !currentTest.done){
-      //     if(firstTest.toString() != currentTest.toString()){ //if they're not equal, return false
-      //       return false;
-      //     }
-      //     firstTest = testIterator.next();
-      //     currentTest = currentIterator.next();
-      //   }
-      //   return true;
-      //   }
-      //   return true;
     },
     /**
      * Performs a Narrow operation: updates the active set by setting to all currently selected genes.
@@ -239,10 +220,10 @@ GeneList.prototype = {
     setActive : function(src, s, sendEvent = true) {
 
         this.activeS.clear();
+        this.selectionS = new SortedSet();
 
         //noinspection JSUnresolvedFunction
-	       this.activeS.addEach(s);
-
+	      this.activeS.addEach(s);
         this.hist.clear();
         this.setSelection(src, this.activeS, false, true);
         if (sendEvent) {
@@ -365,7 +346,7 @@ GeneList.prototype = {
     forward : function(src) {
         const s = this.hist.forward();
         if (s !== null){
-        	this.setSelection(this, s, true, false);
+        	this.setSelection(src, s, true, false);
         }
     },
     /**
@@ -376,7 +357,7 @@ GeneList.prototype = {
     back : function(src) {
         const s = this.hist.back();
         if (s !== null){
-        	this.setSelection(this, s, true, false);
+        	this.setSelection(src, s, true, false);
         }
     }
 };

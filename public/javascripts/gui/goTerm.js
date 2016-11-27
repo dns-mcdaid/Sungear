@@ -814,7 +814,7 @@ GoTerm.prototype = {
             	this.copyTerms();
               break;
           case GeneEvent.SELECT:
-						console.log("SELECT GO TERM EVT");
+						console.log(e.getSource());
 						if(e.getSource() !== this){
 							// this.findGeneUnions();
 							// this.updateGeneTerms();
@@ -822,7 +822,7 @@ GoTerm.prototype = {
 								if(e.getSource() instanceof Controls){
 									console.log("Controls event!");
 									this.terms.forEach((term) =>{
-										term.setActive(false);
+										this.recursiveDeactivate(term);
 									});
 									this.updateGUI();
 									this.setActiveTerms();
