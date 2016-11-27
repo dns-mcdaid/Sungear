@@ -941,36 +941,44 @@ GoTerm.prototype = {
 				}else{
 					li.className = '';
 				}
-			}else{
-				if(term.isActive()){
+			}else if(term.isActive()){
 					li.className = 'selected';
-				}else{
-					li.className = '';
-				}
+			}else{
+				li.className = '';
 			}
 
 			this.setHierarchyListeners(child,li, term);
-			if((!this.isCollapsed || narrowed) && child.children.length > 0){
+			if((!this.isCollapsed || narrowed) && child.children.length > 0){ //not collapsed or narrowed and this child has children
 				//create the span surrounding the parent
 				const span = document.createElement('span');
-				span.className = "glyphicon glyphicon-chevron-down";
-				this.addArrowListener(span, li, term);
-				element.appendChild(span);
-				element.appendChild(li);
+				if(child.isCollapsed()){ //if its collapsed, don't show the children
+					console.log("Child is collapsed");
+					span.className = "glyphicon glyphicon-chevron-right";
+					this.addArrowListener(span, li, term, child);
+					element.appendChild(span);
+					element.appendChild(li);
+					element.appendChild(document.createElement("br"));
+				}else{ //its not collapsed, so display children too
+					console.log("Child is expanded");
+					span.className = "glyphicon glyphicon-chevron-down";
+					this.addArrowListener(span, li, term, child);
+					element.appendChild(span);
+					element.appendChild(li);
 
 					const ul = document.createElement('ul');
 					this.populateTreeRecursive(child, ul);
 					element.appendChild(ul);
-					//its a leave, so just append the li
-			}else if(this.isCollapsed){
+				}
+
+			}else if(this.isCollapsed){ //collapsed state is set, so all of these children are just roots. don't have to recursively call the function.
 				//create the span surrounding the parent
 				const span = document.createElement('span');
 				span.className = "glyphicon glyphicon-chevron-right";
-				this.addArrowListener(span, li, term);
+				this.addArrowListener(span, li, term, child);
 				element.appendChild(span);
 				element.appendChild(li);
 				element.appendChild(document.createElement("br"));
-			}else{
+			}else{ //its a leaf, so just append
 				element.appendChild(li);
 			}
 		});
@@ -981,10 +989,14 @@ GoTerm.prototype = {
 	* @param {HTML} span element to set listener to
 	* @param {HTML} li element, a parent term whose chilren will be toggled based on this event listener
 	* @param {Term} term javascript object to manipulate
+	* @param {TreeNode} node that represents this term
 	*/
-	addArrowListener : function(span, li, term){
+	addArrowListener : function(span, li, term, node){
 		span.addEventListener('click', () =>{
 			console.log("Toggling lol");
+			node.setCollapsed(!node.isCollapsed());
+			console.log(node.isCollapsed());
+			this.populateTreeRecursive(this.treeModel.getRoot(), this.tree)
 		});
 	},
 	/**

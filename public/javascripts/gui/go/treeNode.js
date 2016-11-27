@@ -8,9 +8,10 @@
 function TreeNode(object = null, allowsChildren = true) {
 	this.allowsChildren = allowsChildren;
 	//noinspection JSUnresolvedVariable
-	this.children = []; /** {Array} */
+	this.children = []; /** {TreeNode} children  */
 	this.userObject = object;
 	this.parent = null;
+	this.collapsed = false;
 }
 
 TreeNode.prototype = {
@@ -18,7 +19,7 @@ TreeNode.prototype = {
 	/**
 	 * Returns the child at the specified index in this node's child array.
 	 * @param index {Number} an index into this node's child array
-	 * @returns {object} the TreeNode in this node's child array at the specified index
+	 * @returns {TreeNode} in this node's child array at the specified index
 	 */
 	getChildAt : function(index) {
 		return this.children[index];
@@ -147,6 +148,19 @@ TreeNode.prototype = {
 			myStack = myStack.concat(child.postorderEnumeration());
 		});
 		return myStack.reverse();
+	},
+	/**
+	* Queries if this Tree Node is currently represented in a collapsed or expanded state
+	*/
+	isCollapsed : function(){
+		return this.collapsed;
+	},
+	/**
+	* Sets the collapsed state of the Tree Node
+	* @param {Boolean} b true if collapsed, false if expanded
+	*/
+	setCollapsed : function(b){
+		this.collapsed = b;
 	}
 };
 
