@@ -259,7 +259,7 @@ GoTerm.prototype = {
 					this.terms.forEach((term)=>{
 						console.log(term.isActive());
 					});
-					this.populateTreeRecursive(this.treeModel.getRoot(), this.tree);
+					// this.populateTreeRecursive(this.treeModel.getRoot(), this.tree);
 	        this.genes.setSelection(this, r);
 
 	    } else {
@@ -274,7 +274,7 @@ GoTerm.prototype = {
 				this.selectedShortTerms.forEach((li) =>{
 					$(li).addClass('highlight', true);
 				});
-				this.populateTreeRecursive(this.treeModel.getRoot(), this.tree);
+				// this.populateTreeRecursive(this.treeModel.getRoot(), this.tree);
 	      this.genes.setSelection(this, s);
 	    }
 			this.updateActiveGeneCounts();
@@ -465,18 +465,18 @@ GoTerm.prototype = {
 	showLocateMenu : function(match, comp, x, y) {
 		// TODO: Figure this out
 	},
-	makeTree : function() {
-		const t = new SortedSet();
-		//noinspection JSUnresolvedFunction
-		t.addEach(this.genes.getSelectedSet());
-		this.trimDAG(t);
-		// console.log("Synchronizing tree to DAG with root: ");
-		// console.log(this.treeModel.getRoot());
-		// console.log("and this set of terms to populate it with: ");
-		// console.log(this.roots);
-		this.synchronizeTreeToDAG(this.treeModel.getRoot(), this.roots);
-		// this.updateShortList();
-	},
+	// makeTree : function() {
+	// 	const t = new SortedSet();
+	// 	//noinspection JSUnresolvedFunction
+	// 	t.addEach(this.genes.getSelectedSet());
+	// 	this.trimDAG(t);
+	// 	// console.log("Synchronizing tree to DAG with root: ");
+	// 	// console.log(this.treeModel.getRoot());
+	// 	// console.log("and this set of terms to populate it with: ");
+	// 	// console.log(this.roots);
+	// 	this.synchronizeTreeToDAG(this.treeModel.getRoot(), this.roots);
+	// 	// this.updateShortList();
+	// },
 	/**
 	 * @param expand {boolean}
 	 */
@@ -643,38 +643,38 @@ GoTerm.prototype = {
 		}
 		this.copyB.value = b;
 	},
-	/**
-	 * Synchronizes the hierarchy with the active nodes in the DAG.
-	 * The parent parameter's children are synchronized with the passed collection,
-	 * and this process is continued recursively for the children.
-	 *
-	 * @param parent {TreeNode} the parent node at which to start synchronizing
-	 * @param terms {SortedSet} the list of nodes with which the parent's children will be synchronized
-	 */
-	synchronizeTreeToDAG : function(parent, terms) {
-		const tit = terms.iterate();
-		let idx = 0;
-		let next = tit.next();
-		while (!next.done) {
-			const t = next.value;
-			t.setActive(false);
-			// if (t.isActive()) {
-				if (idx >= parent.getChildCount() || t != parent.getChildAt(idx).getUserObject())
-					this.treeModel.insertNodeInto(new TreeNode(t), parent, idx);
-				idx++;
-			// }
-			// } else {
-			// 	if (idx < parent.getChildCount() && t == parent.getChildAt(idx).getUserObject())
-			// 		console.log("Am i ever used or...");
-			// 		this.treeModel.removeNodeFromParent(parent.getChildAt(idx));
-			// }
-			next = tit.next();
-		}
-		for (let i = 0; i < parent.getChildCount(); i++) {
-			const n = parent.getChildAt(i);
-			this.synchronizeTreeToDAG(n, n.getUserObject().getChildren());
-		}
-	},
+	// /**
+	//  * Synchronizes the hierarchy with the active nodes in the DAG.
+	//  * The parent parameter's children are synchronized with the passed collection,
+	//  * and this process is continued recursively for the children.
+	//  *
+	//  * @param parent {TreeNode} the parent node at which to start synchronizing
+	//  * @param terms {SortedSet} the list of nodes with which the parent's children will be synchronized
+	//  */
+	// synchronizeTreeToDAG : function(parent, terms) {
+	// 	const tit = terms.iterate();
+	// 	let idx = 0;
+	// 	let next = tit.next();
+	// 	while (!next.done) {
+	// 		const t = next.value;
+	// 		t.setActive(false);
+	// 		// if (t.isActive()) {
+	// 			if (idx >= parent.getChildCount() || t != parent.getChildAt(idx).getUserObject())
+	// 				this.treeModel.insertNodeInto(new TreeNode(t), parent, idx);
+	// 			idx++;
+	// 		// }
+	// 		// } else {
+	// 		// 	if (idx < parent.getChildCount() && t == parent.getChildAt(idx).getUserObject())
+	// 		// 		console.log("Am i ever used or...");
+	// 		// 		this.treeModel.removeNodeFromParent(parent.getChildAt(idx));
+	// 		// }
+	// 		next = tit.next();
+	// 	}
+	// 	for (let i = 0; i < parent.getChildCount(); i++) {
+	// 		const n = parent.getChildAt(i);
+	// 		this.synchronizeTreeToDAG(n, n.getUserObject().getChildren());
+	// 	}
+	// },
 	/**
 	 * Builds the displayed tree from the DAG.  Nodes with multiple
 	 * parents are represented as repeated sub-graphs in the tree.
@@ -854,9 +854,11 @@ GoTerm.prototype = {
 									this.setGeneThreshold();
 									this.copyTerms();
 								}else{
+									console.log("Select event");
 									this.terms.forEach((term) =>{
 										this.recursiveDeactivate(term);
 									});
+									console.log("deactivated all terms, now setting active terms");
 									this.setActiveTerms();
 									this.updateActiveGeneCounts();
 									this.setGeneThreshold();
@@ -1102,7 +1104,7 @@ GoTerm.prototype = {
                     // } else {
 											var li = this.findHtmlElement(item);
 											this.terms.forEach((term) =>{
-												term.setActive(false);
+												this.recursiveDeactivate(term);
 											});
 
                         if (window.event.altKey) {
@@ -1158,7 +1160,7 @@ GoTerm.prototype = {
 																	this.selectTerm(item, window.event.ctrlKey || window.event.metaKey, li);
 																}
 																console.log("Updating hierarchy");
-
+																this.setActiveTerms();
 																this.populateTreeRecursive(this.treeModel.getRoot(), this.tree);
                         }
                         if (!window.event.shiftKey) this.lastRowList = i;
