@@ -576,8 +576,9 @@ ExportModel.prototype = {
           }());
         }
         //scroll to bottom of table
-        $('group-table-scroll').scrollTop(1E10);
-
+        if(this.exportList.length > 1){
+          $('#group-table-scroll').scrollTop(1E10);
+        }
 
     },
     nameSetup : function(currentTr, currentHtml){
