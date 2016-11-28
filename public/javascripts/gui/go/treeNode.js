@@ -103,8 +103,8 @@ TreeNode.prototype = {
 	 * Only useful in the restrictive communist Java language.
 	 * #fuckStaticallyTypedLanguages
 	 */
-	setUserObject : function() {
-		console.log("Hello! This function is useless.");
+	setUserObject : function(obj) {
+		this.userObject = obj;
 	},
 	removeFromParent : function() {
 		const oldParent = this.parent;

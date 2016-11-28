@@ -109,15 +109,19 @@ block content
                     li(class='dropdown')
                         button(class='btn btn-primary dropdown-toggle', id='coolB', role='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false') Find Cool
                         ul(class='dropdown-menu', id='coolM')
-
-                table(class='table table-striped img-rounded', id='controlFtable')
-                    thead(id='controlFtableHeader')
-                        tr
-                            th(id='controlFtableAdd') +/-
-                            th Name
-                            th # of Genes
-                            th View Group
-                    tbody(id='controlFtableBody')
+                div(id='table-wrapper')
+                    div(id='group-table-scroll')        
+                      table(class='table table-striped img-rounded', id='controlFtable')
+                          thead(id='controlFtableHeader')
+                              tr
+                                  th(id='controlFtableAdd', class="col-md-1") +/-
+                                  th(class="col-md-4") Name
+                                  th(class="col-md-3") # of Genes
+                                  th(class="col-md-1", id='controlFtableUnion') 
+                                  th(class="col-md-1", id='controlFtableIntersect')
+                                  th(class="col-md-1", id='controlFtableSubtract')
+                                  th(class="col-md-1", id='controlFtableSelect')
+                          tbody(id='controlFtableBody')
 
                 div(id='controlFbottom')
                     a(class='btn btn-primary', id='removeB', role='button') Remove

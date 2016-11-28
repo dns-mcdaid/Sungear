@@ -39,7 +39,7 @@ function Attributes(queryString) {
         nvp.forEach((piece) => {
         	const s = DataReader.trimAll(piece.split("="));
 	        const v = (s.length > 1) ? s[1] : "";
-	        this.attrib.set(s[0], decodeURIComponent(v));
+	        this.attrib.set(s[0], decodeURIComponent(v)); 
         });
     }
 }

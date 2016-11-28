@@ -234,7 +234,14 @@ ul {
   margin-left: 10px;
 }
 
-
+#group-table-scroll{
+  height:100px;
+  overflow:auto;
+}
+/*
+#goTree li + ul{
+  position: absolute;
+}*/
 
 /*#goHier {*/
     /*list-style-type: none;*/

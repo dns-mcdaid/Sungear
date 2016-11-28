@@ -12,6 +12,7 @@ const CompareName = require('./go/compareName');
 const CompareCount = require('./go/compareCount');
 const SearchResults = require('./go/searchResults');
 const Set = require("collections/set");
+const ExportList = require('./exportList');
 
 const TreeModel = require('./go/treeModel');
 const TreeNode = require('./go/treeNode');
@@ -815,10 +816,8 @@ GoTerm.prototype = {
               break;
           case GeneEvent.SELECT:
 						if(e.getSource() !== this){
-							// this.findGeneUnions();
-							// this.updateGeneTerms();
-							this.selectedShortTerms.clear();
-								if(e.getSource() instanceof Controls){
+								this.selectedShortTerms.clear();
+								if(e.getSource() instanceof Controls || e.getSource() instanceof ExportList){
 									console.log("Controls event!");
 									this.terms.forEach((term) =>{
 										this.recursiveDeactivate(term);
@@ -930,19 +929,8 @@ GoTerm.prototype = {
 			const li = document.createElement('li');
 			const term = child.getUserObject();
 			li.innerHTML = term.toString();
-			var goHtml = this.findHtmlElement(term);
-			if(goHtml != null){
-				if(term.isActive() || this.findHtmlElement(term).className.includes("highlight") || this.selectedShortTerms.has(this.findHtmlElement(term))){
-					// console.log("Selection for term: " + term.getName());
-					// console.log(term.isActive());
-					// console.log(this.findHtmlElement(term).className.includes("highlight"));
-					// console.log(this.selectedShortTerms.has(this.findHtmlElement(term)));
-					li.className = 'selected';
-				}else{
-					li.className = '';
-				}
-			}else if(term.isActive()){
-					li.className = 'selected';
+			if(term.isActive()){
+				li.className = 'selected';
 			}else{
 				li.className = '';
 			}
@@ -952,14 +940,12 @@ GoTerm.prototype = {
 				//create the span surrounding the parent
 				const span = document.createElement('span');
 				if(child.isCollapsed()){ //if its collapsed, don't show the children
-					console.log("Child is collapsed");
 					span.className = "glyphicon glyphicon-chevron-right";
 					this.addArrowListener(span, li, term, child);
 					element.appendChild(span);
 					element.appendChild(li);
 					element.appendChild(document.createElement("br"));
 				}else{ //its not collapsed, so display children too
-					console.log("Child is expanded");
 					span.className = "glyphicon glyphicon-chevron-down";
 					this.addArrowListener(span, li, term, child);
 					element.appendChild(span);
@@ -981,7 +967,17 @@ GoTerm.prototype = {
 			}else{ //its a leaf, so just append
 				element.appendChild(li);
 			}
+
 		});
+	},
+	findCorrespondingTermObject : function(treeNodeTerm){
+		var retTerm = null;
+		this.terms.forEach((term) =>{
+			if(treeNodeTerm.getName() === term.getName()){
+				retTerm = term;
+			}
+		});
+		return retTerm;
 	},
 	/**
 	* Adds an event listener to the arrow for parent terms to toggle the hierarchy view.
@@ -993,9 +989,7 @@ GoTerm.prototype = {
 	*/
 	addArrowListener : function(span, li, term, node){
 		span.addEventListener('click', () =>{
-			console.log("Toggling lol");
 			node.setCollapsed(!node.isCollapsed());
-			console.log(node.isCollapsed());
 			this.populateTreeRecursive(this.treeModel.getRoot(), this.tree)
 		});
 	},
@@ -1007,71 +1001,71 @@ GoTerm.prototype = {
 	* @param {Term} term to select
 	*/
 	setHierarchyListeners : function(child,li,term){
-		// li.addEventListener('click', () => {
-		// 	if(window.event.ctrlKey || window.event.metaKey){
-		// 		console.log("Alt/Meta click to toggle for " + term.getName());
-		// 	}else{
-		//
-		// 		//reset all highlights!
-		// 		if(!window.event.ctrlKey && !window.event.metaKey){
-		// 			this.selectedShortTerms.clear();
-		// 			this.terms.forEach((term) =>{
-		// 				term.initSelectedState();
-		// 			});
-		// 		}
-		// 		//set the active state of the term and its children
-		// 		if(term.selectedState = Term.STATE_SELECTED){
-		// 			console.log("selecting term via hierarchy");
-		// 			term.selectedState = Term.STATE_SELECTED;
-		// 			term.setActive(true);
-		// 			this.recursiveActivate(term);
-		// 		}else{
-		// 			console.log("UNselecting term via hierarchy");
-		// 			term.selectedState = Term.STATE_UNKNOWN;
-		// 			term.setActive(false);
-		// 			this.recursiveDeactivate(term);
-		// 		}
-		//
-		//
-		// 		//populateTreeRecursive
-		// 		if(this.genes.getActiveSet().size != this.genes.getAllGenes().size){
-		// 			if(!this.isCollapsed){
-		// 					this.makeTreeFromNarrow();
-		// 			}else{
-		// 				this.makeCollapsedTreeFromNarrow();
-		// 			}
-		// 			this.populateTreeRecursive(this.treeModel.getRoot(), this.tree);
-		// 		}else{ //regular list
-		// 			if(!this.isCollapsed){
-		// 				this.makeTreeFromDAG();
-		// 				this.makeTree();
-		// 			}else{
-		// 				this.makeCollapsedTreeFromDAG();
-		// 			}
-		// 			this.populateTreeRecursive(this.treeModel.getRoot(), this.tree);
-		//
-		// 		}
-		//
-		// 		//update the short list (this also updates the selected set)
-		// 		//TODO: check the affect of the multiselect being passed through this function. should it just be false?
-		// 		this.selectTerm(term, window.event.ctrlKey || window.event.metaKey, this.findHtmlElement(term));
-		//
-		//
-		// 	});
-		// 	if(child.children.length > 0){
-		// 		li.addEventListener('click', () =>{
-		// 				console.log("Single click to select for " + term.getName());
-		//
-		// 			//check to see if its children are currently visible
-		// 			//if visible, remove from tree
-		//
-		// 			//if not visible, add to tree
-		// 		});
-		// 	}
-		// }
+		li.addEventListener('click', () => {
+				//rcheck for multiselect!
+				const multi = window.event.ctrlKey || window.event.metaKey;
+				if(!window.event.ctrlKey && !window.event.metaKey){
+					console.log("Clearing everything");
+					this.selectedShortTerms.clear();
+					this.terms.forEach((term) =>{
+						term.initSelectedState();
+					});
+				}
+				//check to see if it's already highlighted and act accordingly
+				if(term.isActive()){
+					console.log("UNselecting term via hierarchy");
+					term.selectedState = Term.STATE_UNKNOWN;
+				}else{
+					console.log("selecting term via hierarchy");
+					term.selectedState = Term.STATE_SELECTED;
+				}
+				if(multi){
+					var current = this.genes.getSelectedSet();
+					term.localGenes.forEach((local) =>{
+						
+					});
+				}
+				//TODO: loop through all tree nodes and see if any are collapsed
 
+				if(this.genes.getActiveSet().size != this.genes.getAllGenes().size){
+					if(!this.isCollapsed){
+							this.makeTreeFromNarrow();
+					}else{
+						this.makeCollapsedTreeFromNarrow();
+					}
+					//activate the term recursively now that the tree has been set
+					if(term.getSelectedState() == Term.STATE_SELECTED){
+						term.setActive(true);
+						this.recursiveActivate(term);
+					}else{
+						term.setActive(false);
+						this.recursiveDeactivate(term);
+					}
+					this.populateTreeRecursive(this.treeModel.getRoot(), this.tree);
+				}else{ //regular list
+					if(!this.isCollapsed){
+						this.makeTreeFromDAG();
+						this.makeTree();
+					}else{
+						this.makeCollapsedTreeFromDAG();
+					}
+
+					if(term.getSelectedState() == Term.STATE_SELECTED){
+						term.setActive(true);
+						this.recursiveActivate(term);
+
+					}else{
+						term.setActive(false);
+						this.recursiveDeactivate(term);
+					}
+					this.populateTreeRecursive(this.treeModel.getRoot(), this.tree);
+
+				}
+			//update the short list (this also updates the selected set)
+			//TODO: check the affect of the multiselect being passed through this function. should it just be false?
+			this.selectTerm(term, window.event.ctrlKey || window.event.metaKey, this.findHtmlElement(term));
+		});
 	},
-
   setShortListListeners : function() {
 	    while (this.shortList.hasChildNodes()) {
 		    this.shortList.removeChild(this.shortList.firstChild);
@@ -1112,7 +1106,7 @@ GoTerm.prototype = {
                                 this.genes.setSelection(this, s);
                             } else {
 																if(this.selectedShortTerms.has(li)){ //deselect this and all of its children
-																	console.log("Unselecting!");
+																	console.log("Unselecting via short list");
 																	item.setActive(false);
 																	item.selectedState = Term.STATE_UNKNOWN;
 																	this.selectedShortTerms.delete(li);
@@ -1120,7 +1114,7 @@ GoTerm.prototype = {
 																	this.deselectTerm(item,window.event.ctrlKey || window.event.metaKey, li);
 
 																}else{ //SELECT this term and all its children
-
+																	console.log("Selecting via short list");
 																	//reset all highlights!
 																	if(!window.event.ctrlKey && !window.event.metaKey){
 																		this.selectedShortTerms.clear();
@@ -1133,6 +1127,20 @@ GoTerm.prototype = {
 																	item.setActive(true);
 																	this.recursiveActivate(item); //set the selected state of its children and add to selected terms set
 																	this.selectTerm(item, window.event.ctrlKey || window.event.metaKey, li);
+																}
+																if(this.genes.getActiveSet().size != this.genes.getAllGenes().size){
+																	if(!this.isCollapsed){
+																			this.makeTreeFromNarrow();
+																	}else{
+																		this.makeCollapsedTreeFromNarrow();
+																	}
+																}else{ //regular list
+																	if(!this.isCollapsed){
+																		this.makeTreeFromDAG();
+																		this.makeTree();
+																	}else{
+																		this.makeCollapsedTreeFromDAG();
+																	}
 																}
 																this.populateTreeRecursive(this.treeModel.getRoot(), this.tree);
                         }
@@ -1154,7 +1162,6 @@ GoTerm.prototype = {
 			if(item.children.size > 0){
 				item.children.forEach((child) =>{
 					if(this.listModel.data.has(child)){
-
 						child.setActive(true);
 						child.selectedState = Term.STATE_SELECTED;
 						this.selectedShortTerms.add(this.findHtmlElement(child));
@@ -1175,7 +1182,6 @@ GoTerm.prototype = {
 		* @param parent {Term} node to check if we have to activate
 		*/
 		recursiveActivateParent : function(parent){
-
 			parent.setActive(true);
 			parent.selectedState = Term.STATE_SELECTED;
 			this.selectedShortTerms.add(this.findHtmlElement(parent));
@@ -1196,6 +1202,9 @@ GoTerm.prototype = {
 		recursiveDeactivate : function(item){
 			item.setActive(false);
 			item.selectedState = Term.STATE_UNKNOWN;
+			if(this.selectedShortTerms.has(item)){
+				this.selectedShortTerms.delete(item);
+			}
 			if(item.children.size > 0){
 				item.children.forEach((child) =>{
 					if(this.listModel.data.has(child)){
@@ -1226,6 +1235,9 @@ GoTerm.prototype = {
 		recursiveDeactivateParent : function(parent){
 			parent.setActive(false);
 			parent.selectedState = Term.STATE_UNKNOWN;
+			if(this.selectedShortTerms.has(parent)){
+				this.selectedShortTerms.delete(parent);
+			}
 			if(this.listModel.data.has(parent)){
 				var parentElement = this.findHtmlElement(parent);
 				if(this.selectedShortTerms.has(parentElement)){

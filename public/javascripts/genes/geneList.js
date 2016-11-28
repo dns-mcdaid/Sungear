@@ -152,10 +152,14 @@ GeneList.prototype = {
      */
     setSelection : function(src, sel, sendEvent = true, addHist = true) {
         // this.selectionS.clear();
+        console.log(sel);
+        console.log(this.selectionS);
         if( this.notNewSelection(new SortedSet(sel))){
           return;
         }
+        console.log("new set");
         this.selectionS = new SortedSet(sel);
+        console.log(this.selectionS);
         //noinspection JSUnresolvedFunction
 	      this.selectionS = this.selectionS.intersection(this.activeS);
         if (addHist){
@@ -183,6 +187,7 @@ GeneList.prototype = {
         var geneEquals = 0; //if they're the same set, then this number will equal the size of the two sets
         testSet.forEach((gene) =>{
           this.selectionS.forEach((selGene)=>{
+
             if(gene.compareTo(selGene) === 0){ //i.e. if they're the same gene
               geneEquals++;
             }
@@ -305,8 +310,9 @@ GeneList.prototype = {
      * @param l {Object} a GeneListener. the object to register
      */
     addGeneListener : function(l) {
-        if (this.listeners.indexOf(l) < 0)
+        if (this.listeners.indexOf(l) < 0){
             this.listeners.push(l);
+          }
     },
     /**
      * Removes an object from the list of {@link GeneEvent} listeners.

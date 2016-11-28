@@ -881,16 +881,17 @@ SunGear.prototype = {
                             }
                         }
                         v.selectAllGenes();
-                    }
-                    let sel = new SortedSet();
-                    for (let i = 0; i < this.vessels.length; i++) {
-                        const selectedArray = this.vessels[i].selectedGenes.toArray();
-                        for (let j = 0; j < selectedArray.length; j++) {
-                            sel.push(selectedArray[j]); // selectedarRAY J - Get it??????
+                        let sel = new SortedSet();
+                        for (let i = 0; i < this.vessels.length; i++) {
+                            const selectedArray = this.vessels[i].selectedGenes.toArray();
+                            for (let j = 0; j < selectedArray.length; j++) {
+                                sel.push(selectedArray[j]); // selectedarRAY J - Get it??????
+                            }
+                            this.vessels[i].setSelect(false);
                         }
-                        this.vessels[i].setSelect(false);
+                        this.genes.setSelection(this, sel);
                     }
-                    this.genes.setSelection(this, sel);
+
                 }
                 this.lastVessel = null;
                 this.checkHighlight();
