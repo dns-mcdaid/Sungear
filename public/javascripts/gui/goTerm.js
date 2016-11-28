@@ -256,6 +256,10 @@ GoTerm.prototype = {
 						}
 					});
 					r.addEach(s);
+					this.terms.forEach((term)=>{
+						console.log(term.isActive());
+					});
+					this.populateTreeRecursive(this.treeModel.getRoot(), this.tree);
 	        this.genes.setSelection(this, r);
 
 	    } else {
@@ -270,6 +274,7 @@ GoTerm.prototype = {
 				this.selectedShortTerms.forEach((li) =>{
 					$(li).addClass('highlight', true);
 				});
+				this.populateTreeRecursive(this.treeModel.getRoot(), this.tree);
 	      this.genes.setSelection(this, s);
 	    }
 			this.updateActiveGeneCounts();
@@ -653,8 +658,6 @@ GoTerm.prototype = {
 	makeTreeFromDAG : function() {
 		const t = new SortedSet();
 		//noinspection JSUnresolvedFunction
-		t.addEach(this.genes.getSelectedSet());
-		this.trimDAG(t);
 		const cL = this.genes.getSource().getAttributes().get("categoriesLabel", "categories");
 		const root = new TreeNode(this.capFirst(cL));
 		this.nodes = [];
@@ -816,6 +819,7 @@ GoTerm.prototype = {
               break;
           case GeneEvent.SELECT:
 						if(e.getSource() !== this){
+								console.log(e.getSource());
 								this.selectedShortTerms.clear();
 								if(e.getSource() instanceof Controls || e.getSource() instanceof ExportList){
 									console.log("Controls event!");
@@ -967,18 +971,9 @@ GoTerm.prototype = {
 			}else{ //its a leaf, so just append
 				element.appendChild(li);
 			}
+		});
+	},
 
-		});
-	},
-	findCorrespondingTermObject : function(treeNodeTerm){
-		var retTerm = null;
-		this.terms.forEach((term) =>{
-			if(treeNodeTerm.getName() === term.getName()){
-				retTerm = term;
-			}
-		});
-		return retTerm;
-	},
 	/**
 	* Adds an event listener to the arrow for parent terms to toggle the hierarchy view.
 	*
@@ -990,7 +985,7 @@ GoTerm.prototype = {
 	addArrowListener : function(span, li, term, node){
 		span.addEventListener('click', () =>{
 			node.setCollapsed(!node.isCollapsed());
-			this.populateTreeRecursive(this.treeModel.getRoot(), this.tree)
+			this.populateTreeRecursive(this.treeModel.getRoot(), this.tree);
 		});
 	},
 	/**
@@ -1020,13 +1015,17 @@ GoTerm.prototype = {
 					term.selectedState = Term.STATE_SELECTED;
 				}
 				if(multi){
+					console.log("Multiselect in goTerm. Please finish me!");
 					var current = this.genes.getSelectedSet();
 					term.localGenes.forEach((local) =>{
-						
+						//TODO: finish me!
 					});
 				}
-				//TODO: loop through all tree nodes and see if any are collapsed
-
+				this.treeModel.getRoot().children.forEach((child)=>{
+					if(child.children.length > 0){
+						console.log(child.isCollapsed());
+					}
+				});
 				if(this.genes.getActiveSet().size != this.genes.getAllGenes().size){
 					if(!this.isCollapsed){
 							this.makeTreeFromNarrow();
@@ -1105,6 +1104,20 @@ GoTerm.prototype = {
                                 });
                                 this.genes.setSelection(this, s);
                             } else {
+																if(this.genes.getActiveSet().size != this.genes.getAllGenes().size){
+																	if(!this.isCollapsed){
+																			this.makeTreeFromNarrow();
+																	}else{
+																		this.makeCollapsedTreeFromNarrow();
+																	}
+																}else{ //regular list
+																	if(!this.isCollapsed){
+																		this.makeTreeFromDAG();
+																		this.makeTree();
+																	}else{
+																		this.makeCollapsedTreeFromDAG();
+																	}
+																}
 																if(this.selectedShortTerms.has(li)){ //deselect this and all of its children
 																	console.log("Unselecting via short list");
 																	item.setActive(false);
@@ -1128,20 +1141,8 @@ GoTerm.prototype = {
 																	this.recursiveActivate(item); //set the selected state of its children and add to selected terms set
 																	this.selectTerm(item, window.event.ctrlKey || window.event.metaKey, li);
 																}
-																if(this.genes.getActiveSet().size != this.genes.getAllGenes().size){
-																	if(!this.isCollapsed){
-																			this.makeTreeFromNarrow();
-																	}else{
-																		this.makeCollapsedTreeFromNarrow();
-																	}
-																}else{ //regular list
-																	if(!this.isCollapsed){
-																		this.makeTreeFromDAG();
-																		this.makeTree();
-																	}else{
-																		this.makeCollapsedTreeFromDAG();
-																	}
-																}
+																console.log("Updating hierarchy");
+
 																this.populateTreeRecursive(this.treeModel.getRoot(), this.tree);
                         }
                         if (!window.event.shiftKey) this.lastRowList = i;
@@ -1152,6 +1153,22 @@ GoTerm.prototype = {
 	        i++;
         });
     },
+		setupTree : function(){
+			if(this.genes.getActiveSet().size != this.genes.getAllGenes().size){
+				if(!this.isCollapsed){
+						this.makeTreeFromNarrow();
+				}else{
+					this.makeCollapsedTreeFromNarrow();
+				}
+			}else{ //regular list
+				if(!this.isCollapsed){
+					this.makeTreeFromDAG();
+					this.makeTree();
+				}else{
+					this.makeCollapsedTreeFromDAG();
+				}
+			}
+		},
 		/**
 		* Sets the term's selected state to SELECTED, adds its HTML element to the selected set,
 		* and recursively does the same for all the term's children

@@ -17,7 +17,7 @@ function ExportList(g, context) {
     this.localUpdate = false;
     this.groupCnt = 0;
     this.table = document.getElementById('controlFtable');
-    this.model = new ExportModel(this.genes);
+    this.model = new ExportModel(this, this.genes);
 
     this.removeB = document.getElementById('removeB');
     this.removeB.title = "Remove the selected sets of items";
@@ -412,7 +412,8 @@ ListEntry.prototype = {
     }
 };
 
-function ExportModel(genes) {
+function ExportModel(parent, genes) {
+    this.parent = parent;
     this.titles = [ "+/-", "Name", "", "", "", "", "" ];
     this.setType("items");
     this.goI = "glyphicon glyphicon-play";
@@ -499,6 +500,7 @@ ExportModel.prototype = {
         //generate table based on export list array of ListEntry objects
         var localList = this.exportList;
         var self = this;
+        var exportListObj = this.parent;
         var multiselectable = MultiSelectable;
         for(var i = 0; i < this.exportList.length; i++){
           (function () {
@@ -530,7 +532,7 @@ ExportModel.prototype = {
 
             //run a union on the selected set with the genes kept in this row
             unImg.addEventListener('click', ()=>{
-              e.master.finishMultiSelect(self, multiselectable.UNION);
+              e.master.finishMultiSelect(exportListObj, multiselectable.UNION);
             });
 
             var intImg = document.createElement('span');
@@ -538,7 +540,7 @@ ExportModel.prototype = {
             intImg.title = 'Intersect this group with the current selection';
 
             intImg.addEventListener('click', () =>{
-              e.master.finishMultiSelect(self, multiselectable.INTERSECT);
+              e.master.finishMultiSelect(exportListObj, multiselectable.INTERSECT);
             });
 
             var subImg = document.createElement('span');
@@ -554,7 +556,7 @@ ExportModel.prototype = {
                   newSet.push(selectGene);
                 }
               });
-              e.master.setSelection(self, newSet);
+              e.master.setSelection(exportListObj, newSet);
             });
 
             var goImg = document.createElement('span');
@@ -562,7 +564,7 @@ ExportModel.prototype = {
             goImg.title = 'Make this group the working set';
 
             goImg.addEventListener('click', () =>{
-              e.master.setSelection(self, e.genes);
+              e.master.setSelection(exportListObj, e.genes);
             });
 
             union.appendChild(unImg);

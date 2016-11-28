@@ -124,6 +124,12 @@ Term.prototype = {
 	getName : function() {
 		return this.name;
 	},
+	isCollapsed : function(){
+		return this.collapsed;
+	},
+	setCollapsed : function(b){
+		this.collapsed = b;
+	},
 	/**
 	 * Calculates the number of genes at this node and its descendents
 	 * that are in the intersection with the given set (usually the current

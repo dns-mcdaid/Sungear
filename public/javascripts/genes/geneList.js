@@ -152,14 +152,10 @@ GeneList.prototype = {
      */
     setSelection : function(src, sel, sendEvent = true, addHist = true) {
         // this.selectionS.clear();
-        console.log(sel);
-        console.log(this.selectionS);
         if( this.notNewSelection(new SortedSet(sel))){
           return;
         }
-        console.log("new set");
         this.selectionS = new SortedSet(sel);
-        console.log(this.selectionS);
         //noinspection JSUnresolvedFunction
 	      this.selectionS = this.selectionS.intersection(this.activeS);
         if (addHist){

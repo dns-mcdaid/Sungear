@@ -153,14 +153,14 @@ TreeNode.prototype = {
 	* Queries if this Tree Node is currently represented in a collapsed or expanded state
 	*/
 	isCollapsed : function(){
-		return this.collapsed;
+		return this.userObject.isCollapsed();
 	},
 	/**
 	* Sets the collapsed state of the Tree Node
 	* @param {Boolean} b true if collapsed, false if expanded
 	*/
 	setCollapsed : function(b){
-		this.collapsed = b;
+		this.userObject.setCollapsed(b);
 	}
 };
 

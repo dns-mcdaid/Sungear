@@ -58,6 +58,7 @@ function Term(id, name) {
     this.p_t = 0;           /** @type double z-score calculation term */
     this.active = false;    /** Denotes whether any genes are associated with this term in the current experiment set */
     this.selectedState = Term.STATE_UNKNOWN;    /** @type int */
+    this.collapsed = false;
 }
 
 /** Selected state flag: state undetermined */
@@ -127,6 +128,12 @@ Term.prototype = {
     },
     getName : function() {
         return this.name;
+    },
+    isCollapsed : function(){
+      return this.collapsed;
+    },
+    setCollapsed : function(b){
+      this.collapsed = b;
     },
 	/**
 	 * Calculates the number of genes at this node and its descendents
