@@ -507,7 +507,6 @@ ExportModel.prototype = {
             var e = self.exportList[i];
             var bold = false;
             if(self.curr == e){
-              console.log("bolding!");
               bold = true;
             }
             var row = document.createElement('tr');
@@ -656,7 +655,6 @@ ExportModel.prototype = {
         const e = new ListEntry(name, s, this.curr, this.genes);
         this.exportList.push(e);
         this.setCurrent(e);
-        console.log(this.curr);
         this.buildList();
         // this.scrollTo(e); //TODO: needed?
         return e;

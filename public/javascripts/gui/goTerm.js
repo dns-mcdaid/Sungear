@@ -256,9 +256,7 @@ GoTerm.prototype = {
 						}
 					});
 					r.addEach(s);
-					this.terms.forEach((term)=>{
-						console.log(term.isActive());
-					});
+
 					// this.populateTreeRecursive(this.treeModel.getRoot(), this.tree);
 	        this.genes.setSelection(this, r);
 
@@ -1026,10 +1024,11 @@ GoTerm.prototype = {
 					console.log("Clearing everything");
 					this.selectedShortTerms.clear();
 					this.terms.forEach((term) =>{
-						term.initSelectedState();
+						this.recursiveDeactivate(term);
 					});
 				}
 				//check to see if it's already highlighted and act accordingly
+
 				if(term.isActive()){
 					console.log("UNselecting term via hierarchy");
 					term.selectedState = Term.STATE_UNKNOWN;
@@ -1038,18 +1037,15 @@ GoTerm.prototype = {
 					term.selectedState = Term.STATE_SELECTED;
 				}
 				if(multi){
-					console.log("Multiselect in goTerm. Please finish me!");
-					var current = this.genes.getSelectedSet();
-					term.localGenes.forEach((local) =>{
-						//TODO: finish me!
-					});
-				}
-				if(this.genes.getActiveSet().size != this.genes.getAllGenes().size){
-					if(!this.isCollapsed){
-							this.makeTreeFromNarrow();
-					}else{
-						this.makeCollapsedTreeFromNarrow();
+					var selected = (term.selectedState == Term.STATE_SELECTED) ? true : false;
+					if(selected){ //when i multiselect something, i want to activate the selected term and all of its children
+							term.setActive(true);
+							this.recursiveActivate(term);
+					}else{ //when i multi-deselect something, i want to deactivate the selected term and all of its children
+						term.setActive(false);
+						this.recursiveDeactivate(term);
 					}
+				}else{
 					//activate the term recursively now that the tree has been set
 					if(term.getSelectedState() == Term.STATE_SELECTED){
 						term.setActive(true);
@@ -1058,6 +1054,15 @@ GoTerm.prototype = {
 						term.setActive(false);
 						this.recursiveDeactivate(term);
 					}
+				}
+
+				if(this.genes.getActiveSet().size != this.genes.getAllGenes().size){
+					if(!this.isCollapsed){
+							this.makeTreeFromNarrow();
+					}else{
+						this.makeCollapsedTreeFromNarrow();
+					}
+
 					this.populateTreeRecursive(this.treeModel.getRoot(), this.tree);
 				}else{ //regular list
 					if(!this.isCollapsed){
@@ -1066,21 +1071,23 @@ GoTerm.prototype = {
 					}else{
 						this.makeCollapsedTreeFromDAG();
 					}
-
-					if(term.getSelectedState() == Term.STATE_SELECTED){
-						term.setActive(true);
-						this.recursiveActivate(term);
-
-					}else{
-						term.setActive(false);
-						this.recursiveDeactivate(term);
-					}
 					this.populateTreeRecursive(this.treeModel.getRoot(), this.tree);
-
 				}
 			//update the short list (this also updates the selected set)
 			//TODO: check the affect of the multiselect being passed through this function. should it just be false?
-			this.selectTerm(term, window.event.ctrlKey || window.event.metaKey, this.findHtmlElement(term));
+			this.updateShortList();
+			this.setShortListListeners();
+
+			//now update the selected set
+			var newSet = new SortedSet();
+			this.terms.forEach((term) =>{
+				if(term.selectedState == Term.STATE_SELECTED){
+					newSet.addEach(term.localGenes);
+				}
+			});
+
+			this.genes.setSelection(this, newSet);
+
 		});
 	},
   setShortListListeners : function() {
@@ -1136,6 +1143,7 @@ GoTerm.prototype = {
 																		this.makeCollapsedTreeFromDAG();
 																	}
 																}
+																console.log(this.selectedShortTerms);
 																if(this.selectedShortTerms.has(li)){ //deselect this and all of its children
 																	console.log("Unselecting via short list");
 																	item.setActive(false);
@@ -1157,6 +1165,7 @@ GoTerm.prototype = {
 																	this.selectedShortTerms.add(li);
 																	item.setActive(true);
 																	this.recursiveActivate(item); //set the selected state of its children and add to selected terms set
+																	console.log(this.selectedShortTerms);
 																	this.selectTerm(item, window.event.ctrlKey || window.event.metaKey, li);
 																}
 																console.log("Updating hierarchy");
