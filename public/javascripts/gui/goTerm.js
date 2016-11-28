@@ -825,6 +825,7 @@ GoTerm.prototype = {
             	$("#findD").modal('hide');
               this.highTerm = null;
 							this.isCollapsed = false;
+							this.collapsed = false;
 							this.findGeneUnions();
 							this.updateGeneTerms();
               this.updateActiveGeneCounts();
@@ -1036,7 +1037,7 @@ GoTerm.prototype = {
 					console.log("selecting term via hierarchy");
 					term.selectedState = Term.STATE_SELECTED;
 				}
-				if(multi){
+				// if(multi){
 					var selected = (term.selectedState == Term.STATE_SELECTED) ? true : false;
 					if(selected){ //when i multiselect something, i want to activate the selected term and all of its children
 							term.setActive(true);
@@ -1045,16 +1046,16 @@ GoTerm.prototype = {
 						term.setActive(false);
 						this.recursiveDeactivate(term);
 					}
-				}else{
-					//activate the term recursively now that the tree has been set
-					if(term.getSelectedState() == Term.STATE_SELECTED){
-						term.setActive(true);
-						this.recursiveActivate(term);
-					}else{
-						term.setActive(false);
-						this.recursiveDeactivate(term);
-					}
-				}
+				// }else{
+				// 	//activate the term recursively now that the tree has been set
+				// 	if(term.getSelectedState() == Term.STATE_SELECTED){
+				// 		term.setActive(true);
+				// 		this.recursiveActivate(term);
+				// 	}else{
+				// 		term.setActive(false);
+				// 		this.recursiveDeactivate(term);
+				// 	}
+				// }
 
 				if(this.genes.getActiveSet().size != this.genes.getAllGenes().size){
 					if(!this.isCollapsed){
@@ -1277,22 +1278,32 @@ GoTerm.prototype = {
 		*
 		*/
 		recursiveDeactivateParent : function(parent){
-			parent.setActive(false);
-			parent.selectedState = Term.STATE_UNKNOWN;
-			if(this.selectedShortTerms.has(parent)){
-				this.selectedShortTerms.delete(parent);
-			}
-			if(this.listModel.data.has(parent)){
-				var parentElement = this.findHtmlElement(parent);
-				if(this.selectedShortTerms.has(parentElement)){
-					this.selectedShortTerms.delete(parentElement);
+			//only deactivate the parent if ALL of its children are unactive
+			var deactivate = true;
+			parent.children.forEach((child) =>{
+				if(child.selectedState == Term.STATE_SELECTED || child.isActive()){
+					deactivate = false;
+				}
+			});
+			if(deactivate){
+				parent.setActive(false);
+				parent.selectedState = Term.STATE_UNKNOWN;
+				if(this.selectedShortTerms.has(parent)){
+					this.selectedShortTerms.delete(parent);
+				}
+				if(this.listModel.data.has(parent)){
+					var parentElement = this.findHtmlElement(parent);
+					if(this.selectedShortTerms.has(parentElement)){
+						this.selectedShortTerms.delete(parentElement);
+					}
+				}
+				if(parent.parents.size > 0){
+					parent.parents.forEach((superParent) =>{
+						this.recursiveDeactivateParent(superParent);
+					});
 				}
 			}
-			if(parent.parents.size > 0){
-				parent.parents.forEach((superParent) =>{
-					this.recursiveDeactivateParent(superParent);
-				});
-			}
+
 		},
 		/**
 		* Finds html LI element for a term object.
