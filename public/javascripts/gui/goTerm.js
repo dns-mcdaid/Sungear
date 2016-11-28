@@ -488,29 +488,53 @@ GoTerm.prototype = {
 		const rootMatcher = this.capFirst(cL);
 		//check to see if a narrow operation has occurred and create the tree accordingly
 		if(this.genes.getActiveSet().size != this.genes.getAllGenes().size){
-			if(expand){
+			if(expand){ //expanding, so set all term's collapsed state to false
 					this.isCollapsed = false;
+					this.expandOrCollapseAllNodes(false);
 					this.makeTreeFromNarrow();
 			}else{
 				this.isCollapsed = true;
+				this.expandOrCollapseAllNodes(true);
 				this.makeCollapsedTreeFromNarrow();
 			}
-			this.populateTreeRecursive(this.treeModel.getRoot(), this.tree, true);
 		}else{ //regular list
 			if(expand){
+				console.log("Inside regular list expand");
 				this.isCollapsed = false;
+				this.expandOrCollapseAllNodes(false);
 				this.makeTreeFromDAG();
-				this.makeTree();
 			}else{
 				this.isCollapsed = true;
+				this.expandOrCollapseAllNodes(true);
 				this.makeCollapsedTreeFromDAG();
 			}
-			this.populateTreeRecursive(this.treeModel.getRoot(), this.tree);
-
+		}
+		this.setActiveTerms();
+		this.terms.forEach((term) =>{
+			if(term.isActive()){
+				console.log(term.getName() + " is active and will be highlighted");
+			}
+		});
+		this.populateTreeRecursive(this.treeModel.getRoot(), this.tree);
+	},
+	expandOrCollapseAllNodes : function(b){
+		const rt = this.roots.iterate();
+		let next = rt.next();
+		while (!next.done) {
+			this.expandOrCollapseRecursive(next.value, b);
+			next = rt.next();
+		}
+	},
+	expandOrCollapseRecursive : function(node, collapsed){
+		node.setCollapsed(collapsed);
+		if(node.children > 0){
+			node.children.forEach((child) =>{
+				this.expandOrCollapseRecursive(child, collapsed);
+			});
 		}
 
-
 	},
+
 	/**
 	 * Determines the active terms in the GO term DAG based on the current
 	 * set of selected genes.
@@ -748,7 +772,7 @@ GoTerm.prototype = {
 		this.treeModel.setRoot(root);
 	},
   addNodes : function(r, n) {
-    if (n.isActive()) {
+    // if (n.isActive()) {
     	const curr = new TreeNode(n);
       r.add(curr);
       this.nodes.push(curr);
@@ -758,7 +782,7 @@ GoTerm.prototype = {
       	this.addNodes(curr, next.value);
         next = it.next();
       }
-    }
+    // }
   },
   listUpdated : function(e) {
       switch (e.getType()) {
@@ -777,7 +801,7 @@ GoTerm.prototype = {
               this.updateGeneTerms();
               this.updateActiveGeneCounts();
               this.makeTreeFromDAG();
-              this.makeTree();
+              // this.makeTree();
               this.updateGUI();
             	this.copyTerms();
 							this.setGeneThreshold(1);
@@ -792,7 +816,7 @@ GoTerm.prototype = {
 						this.updateGeneTerms();
 						this.updateActiveGeneCounts();
 						this.makeTreeFromDAG();
-						this.makeTree();
+						// this.makeTree();
 						this.updateGUI();
 						this.copyTerms();
 						this.setGeneThreshold(1);
@@ -819,10 +843,8 @@ GoTerm.prototype = {
               break;
           case GeneEvent.SELECT:
 						if(e.getSource() !== this){
-								console.log(e.getSource());
 								this.selectedShortTerms.clear();
 								if(e.getSource() instanceof Controls || e.getSource() instanceof ExportList){
-									console.log("Controls event!");
 									this.terms.forEach((term) =>{
 										this.recursiveDeactivate(term);
 									});
@@ -832,9 +854,8 @@ GoTerm.prototype = {
 									this.setGeneThreshold();
 									this.copyTerms();
 								}else{
-									console.log("Event source isn't go term or controls!");
 									this.terms.forEach((term) =>{
-										term.setActive(false);
+										this.recursiveDeactivate(term);
 									});
 									this.setActiveTerms();
 									this.updateActiveGeneCounts();
@@ -1021,11 +1042,6 @@ GoTerm.prototype = {
 						//TODO: finish me!
 					});
 				}
-				this.treeModel.getRoot().children.forEach((child)=>{
-					if(child.children.length > 0){
-						console.log(child.isCollapsed());
-					}
-				});
 				if(this.genes.getActiveSet().size != this.genes.getAllGenes().size){
 					if(!this.isCollapsed){
 							this.makeTreeFromNarrow();
@@ -1044,7 +1060,7 @@ GoTerm.prototype = {
 				}else{ //regular list
 					if(!this.isCollapsed){
 						this.makeTreeFromDAG();
-						this.makeTree();
+						// this.makeTree();
 					}else{
 						this.makeCollapsedTreeFromDAG();
 					}
@@ -1113,7 +1129,7 @@ GoTerm.prototype = {
 																}else{ //regular list
 																	if(!this.isCollapsed){
 																		this.makeTreeFromDAG();
-																		this.makeTree();
+																		// this.makeTree();
 																	}else{
 																		this.makeCollapsedTreeFromDAG();
 																	}
@@ -1163,7 +1179,7 @@ GoTerm.prototype = {
 			}else{ //regular list
 				if(!this.isCollapsed){
 					this.makeTreeFromDAG();
-					this.makeTree();
+					// this.makeTree();
 				}else{
 					this.makeCollapsedTreeFromDAG();
 				}
