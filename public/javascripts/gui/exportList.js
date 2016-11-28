@@ -501,10 +501,15 @@ ExportModel.prototype = {
         var localList = this.exportList;
         var self = this;
         var exportListObj = this.parent;
-        var multiselectable = MultiSelectable;
+        const multiselectable = MultiSelectable;
         for(var i = 0; i < this.exportList.length; i++){
           (function () {
             var e = self.exportList[i];
+            var bold = false;
+            if(self.curr == e){
+              console.log("bolding!");
+              bold = true;
+            }
             var row = document.createElement('tr');
 
             //create cells in the row
@@ -520,12 +525,22 @@ ExportModel.prototype = {
             checkbox.appendChild(self.createCheckbox(e.name));
             name.innerHTML = e.name;
             name.className = 'name';
+            if(bold){
+              name.style.fontWeight = "bold";
+            }
             name.addEventListener('dblclick', () =>{
-              self.nameSetup(name, name.innerHTML);
+              self.nameSetup(name, name.innerHTML, e);
+              if(bold){
+                name.style.fontWeight = "bold";
+              }
             }, false);
 
             count.innerHTML = e.genes.size;
             count.className = 'count';
+            if(bold){
+              count.style.fontWeight = "bold";
+            }
+
             var unImg = document.createElement('span');
             unImg.className = self.unI;
             unImg.title = 'Union this group with the current selection';
@@ -583,7 +598,7 @@ ExportModel.prototype = {
         }
 
     },
-    nameSetup : function(currentTr, currentHtml){
+    nameSetup : function(currentTr, currentHtml, e){
       currentTr.innerHTML = '<input class="editing", id="editing" type="text" value="' + currentHtml + '" />';
       $(".editing").focus();
 
@@ -598,6 +613,7 @@ ExportModel.prototype = {
         if(value != ""){
           currentTr.innerHTML = value;
           currentTr.className = 'name';
+          e.name = value;
           document.removeEventListener('click', handler);
         }else{
           alert("Please enter a valid group name. ");
@@ -640,6 +656,7 @@ ExportModel.prototype = {
         const e = new ListEntry(name, s, this.curr, this.genes);
         this.exportList.push(e);
         this.setCurrent(e);
+        console.log(this.curr);
         this.buildList();
         // this.scrollTo(e); //TODO: needed?
         return e;
