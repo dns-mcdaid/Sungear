@@ -68,7 +68,9 @@ Stats.prototype = {
     },
     handleSelect : function(row) {
         const rowInt = row.rowIndex-1;
-        // TODO: Implement EventListener
+        var info = this.model.vlist[rowInt];
+        var genes = new SortedSet(info.genes);
+        this.genes.setSelection(this, genes);
     }
 };
 
