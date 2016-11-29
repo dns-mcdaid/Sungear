@@ -764,6 +764,12 @@ SunGear.prototype = {
             }
         }
     },
+    cmdClickMac : function(p5) {
+        return window.navigator.platform.toLowerCase().indexOf("mac") > -1 && (p5.keyCode == 91 || p5.keyCode == 93);
+    },
+    ctrlClickWin : function(p5) {
+        return window.navigator.platform.toLowerCase().indexOf("mac") < 0  && p5.keyCode == p5.CONTROL;
+    },
     /**
      * Updates the selected state of anchors/vessels based on mouse location.
      * Changes the current selected set if appropriate.
@@ -777,7 +783,7 @@ SunGear.prototype = {
         if (a !== null) {
             if (this.multi) {
                 if (p5.keyIsPressed) {
-                    if (p5.keyCode == p5.CONTROL) {
+                    if (this.cmdClickMac(p5) || this.ctrlClickWin(p5)) {
                         console.log("aight");
                         a.setSelect(!a.getSelect());
                     }
@@ -791,7 +797,7 @@ SunGear.prototype = {
                     if (p5.keyCode == p5.ALT && a !== null) {
                         this.genes.startMultiSelect(this);
                         a.setSelect(true);
-                    } else if (p5.keyCode == p5.CONTROL) {
+                    } else if (this.cmdClickMac(p5) || this.ctrlClickWin(p5)) {
                         const ag = new SortedSet();
                         let add = true;
                         for (let i = 0; i < a.vessels.length; i++) {
@@ -836,15 +842,13 @@ SunGear.prototype = {
         }
         if (a === null) {
             let v = this.getVessel();
-            if (this.multi) {
-                if (v !== null) {
-                    if (p5.keyIsPressed) {
-                        if (p5.keyCode == p5.CONTROL) {
-                            v.setSelect(!v.getSelect());
-                        } else {
-                            for (let i = 0; i < this.vessels.length; i++) {
-                                this.vessels[i].setSelect(this.vessels[i] == v);
-                            }
+            if (this.multi && v !== null) {
+                if (p5.keyIsPressed) {
+                    if (this.cmdClickMac(p5) || this.ctrlClickWin(p5)) {
+                        v.setSelect(!v.getSelect());
+                    } else {
+                        for (let i = 0; i < this.vessels.length; i++) {
+                            this.vessels[i].setSelect(this.vessels[i] == v);
                         }
                     }
                 }
@@ -853,7 +857,7 @@ SunGear.prototype = {
                     if (p5.keyCode == p5.ALT && v !== null) {
                         this.genes.startMultiSelect(this);
                         v.setSelect(true);
-                    } else if (p5.keyCode == p5.CONTROL) {
+                    } else if (this.cmdClickMac(p5) || this.ctrlClickWin(p5)) {
                         if (v !== null) {
                             let sel = this.genes.getSelectedSet();
                             if (v.getSelectedCount() > 0) {
@@ -864,6 +868,7 @@ SunGear.prototype = {
                                     }
                                 }
                             } else {
+                                // sel.push(v.activeGenes);
                                 var vActive = v.activeGenes.toArray();
                                 for (let i = 0; i < vActive.length; i++) {
                                     sel.push(vActive[i]);
