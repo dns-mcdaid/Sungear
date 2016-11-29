@@ -406,6 +406,7 @@ GoTerm.prototype = {
     },
 
     findTermMatches : function() {
+			this.trimDAG(this.genes.getActiveSet());
 			const v = [];
 			if(this.findF.value === ""){
 				this.results.setResults(v);

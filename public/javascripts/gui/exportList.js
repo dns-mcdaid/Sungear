@@ -691,6 +691,7 @@ ExportModel.prototype = {
           }
         });
         //update the table
+        this.curr = this.exportList[this.exportList.length-1];
         this.buildList();
         // const rootList = [];
         // this.exportList.forEach((item) => {
