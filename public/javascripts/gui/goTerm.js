@@ -497,7 +497,6 @@ GoTerm.prototype = {
 			}
 		}else{ //regular list
 			if(expand){
-				console.log("Inside regular list expand");
 				this.isCollapsed = false;
 				this.expandOrCollapseAllNodes(false);
 				this.makeTreeFromDAG();
@@ -507,12 +506,8 @@ GoTerm.prototype = {
 				this.makeCollapsedTreeFromDAG();
 			}
 		}
+
 		this.setActiveTerms();
-		this.terms.forEach((term) =>{
-			if(term.isActive()){
-				console.log(term.getName() + " is active and will be highlighted");
-			}
-		});
 		this.populateTreeRecursive(this.treeModel.getRoot(), this.tree);
 	},
 	expandOrCollapseAllNodes : function(b){
@@ -842,6 +837,7 @@ GoTerm.prototype = {
               break;
           case GeneEvent.SELECT:
 						if(e.getSource() !== this){
+								console.log("Clearing selected term");
 								this.selectedShortTerms.clear();
 								if(e.getSource() instanceof Controls || e.getSource() instanceof ExportList){
 									this.terms.forEach((term) =>{
@@ -885,7 +881,14 @@ GoTerm.prototype = {
 
 			if((!this.genes.hasPrev() && !this.justNarrowed) || (selected == active)){
 				this.collapsed = false;
+				console.log("Clearing selected short terms");
 				this.selectedShortTerms.clear();
+				this.terms.forEach((term) =>{
+					this.recursiveDeactivate(term);
+					this.recursiveChildUnhighlight(term);
+					//only unhighlight the parent if all of its children aren't in the selected set
+					this.recursiveParentUnhighlight(term);
+				});
 				return;
 			}
 
@@ -967,13 +970,13 @@ GoTerm.prototype = {
 				const span = document.createElement('span');
 				if(child.isCollapsed()){ //if its collapsed, don't show the children
 					span.className = "glyphicon glyphicon-chevron-right";
-					this.addArrowListener(span, li, term, child);
+					this.addArrowListener(span,child);
 					element.appendChild(span);
 					element.appendChild(li);
 					element.appendChild(document.createElement("br"));
 				}else{ //its not collapsed, so display children too
 					span.className = "glyphicon glyphicon-chevron-down";
-					this.addArrowListener(span, li, term, child);
+					this.addArrowListener(span,  child);
 					element.appendChild(span);
 					element.appendChild(li);
 
@@ -986,7 +989,7 @@ GoTerm.prototype = {
 				//create the span surrounding the parent
 				const span = document.createElement('span');
 				span.className = "glyphicon glyphicon-chevron-right";
-				this.addArrowListener(span, li, term, child);
+				this.addArrowListener(span, child);
 				element.appendChild(span);
 				element.appendChild(li);
 				element.appendChild(document.createElement("br"));
@@ -1000,13 +1003,16 @@ GoTerm.prototype = {
 	* Adds an event listener to the arrow for parent terms to toggle the hierarchy view.
 	*
 	* @param {HTML} span element to set listener to
-	* @param {HTML} li element, a parent term whose chilren will be toggled based on this event listener
-	* @param {Term} term javascript object to manipulate
 	* @param {TreeNode} node that represents this term
 	*/
-	addArrowListener : function(span, li, term, node){
+	addArrowListener : function(span, node){
 		span.addEventListener('click', () =>{
 			node.setCollapsed(!node.isCollapsed());
+			console.log(node.userObject.name + " is collapsed?  " + node.isCollapsed());
+			if(this.isCollapsed && !node.isCollapsed()){
+				this.isCollapsed = false;
+				this.setupTree();
+			}
 			this.populateTreeRecursive(this.treeModel.getRoot(), this.tree);
 		});
 	},
@@ -1029,7 +1035,6 @@ GoTerm.prototype = {
 					});
 				}
 				//check to see if it's already highlighted and act accordingly
-
 				if(term.isActive()){
 					console.log("UNselecting term via hierarchy");
 					term.selectedState = Term.STATE_UNKNOWN;
@@ -1046,38 +1051,6 @@ GoTerm.prototype = {
 						term.setActive(false);
 						this.recursiveDeactivate(term);
 					}
-				// }else{
-				// 	//activate the term recursively now that the tree has been set
-				// 	if(term.getSelectedState() == Term.STATE_SELECTED){
-				// 		term.setActive(true);
-				// 		this.recursiveActivate(term);
-				// 	}else{
-				// 		term.setActive(false);
-				// 		this.recursiveDeactivate(term);
-				// 	}
-				// }
-
-				if(this.genes.getActiveSet().size != this.genes.getAllGenes().size){
-					if(!this.isCollapsed){
-							this.makeTreeFromNarrow();
-					}else{
-						this.makeCollapsedTreeFromNarrow();
-					}
-
-					this.populateTreeRecursive(this.treeModel.getRoot(), this.tree);
-				}else{ //regular list
-					if(!this.isCollapsed){
-						this.makeTreeFromDAG();
-						// this.makeTree();
-					}else{
-						this.makeCollapsedTreeFromDAG();
-					}
-					this.populateTreeRecursive(this.treeModel.getRoot(), this.tree);
-				}
-			//update the short list (this also updates the selected set)
-			//TODO: check the affect of the multiselect being passed through this function. should it just be false?
-			this.updateShortList();
-			this.setShortListListeners();
 
 			//now update the selected set
 			var newSet = new SortedSet();
@@ -1086,6 +1059,29 @@ GoTerm.prototype = {
 					newSet.addEach(term.localGenes);
 				}
 			});
+			//now check if the selected genes are all genes; if so, don't highlight anything
+			var all = true;
+			this.genes.getActiveSet().forEach((activeGene) =>{
+				//if the selected genes don't have a gene in the active set, then we're not selecting all genes
+				if(!newSet.has(activeGene)){
+					all = false;
+				}
+			});
+			if(all){ //we're selecting all genes, so don't highlight anything
+				this.selectedShortTerms.clear();
+				this.terms.forEach((term) =>{
+					this.recursiveDeactivate(term);
+					this.recursiveChildUnhighlight(term);
+					//only unhighlight the parent if all of its children aren't in the selected set
+					this.recursiveParentUnhighlight(term);
+				});
+			}
+
+			this.setupTree();
+			//update the short list (this also updates the selected set)
+			this.updateShortList();
+			this.setShortListListeners();
+			this.populateTreeRecursive(this.treeModel.getRoot(), this.tree);
 
 			this.genes.setSelection(this, newSet);
 
@@ -1105,82 +1101,57 @@ GoTerm.prototype = {
 							li.className = "list-group-item";
 						}
 
-            li.addEventListener('click', () => {
-                // if (!this.multi && i > -1) {
-                    // if (false) {
-                    //     // if it is a popup trigger
-                    // } else {
-											var li = this.findHtmlElement(item);
-											this.terms.forEach((term) =>{
-												this.recursiveDeactivate(term);
-											});
+      li.addEventListener('click', () => {
+					var li = this.findHtmlElement(item);
+            if (window.event.altKey) {
+                this.genes.startMultiSelect(this); //notifies all gene listeners for MULTI_START
+            } else {
+                if (this.lastRowList != -1 && window.event.shiftKey) {
+                    let s = new SortedSet();
+                    const sublist = this.listModel.data.splice(Math.min(i, this.lastRowList), Math.max(i, this.lastRowList)+1);
+                    sublist.forEach((item) => {
+												item.setActive(true);
+												item.selectedState = Term.STATE_SELECTED;
+												this.selectedShortTerms.add(li);
+                        //noinspection JSUnresolvedFunction
+                        s.addEach(item.getAllGenes());
+                    });
+                    this.genes.setSelection(this, s);
+                } else {
+										this.setupTree();
+										if(this.selectedShortTerms.has(li)){ //deselect this and all of its children
+											console.log("Unselecting via short list");
+											item.setActive(false);
+											item.selectedState = Term.STATE_UNKNOWN;
+											this.selectedShortTerms.delete(li);
+											this.recursiveDeactivate(item);
+											this.deselectTerm(item,window.event.ctrlKey || window.event.metaKey, li);
 
-                        if (window.event.altKey) {
-                            this.genes.startMultiSelect(this); //notifies all gene listeners for MULTI_START
-                        } else {
-                            if (this.lastRowList != -1 && window.event.shiftKey) {
-                                let s = new SortedSet();
-                                const sublist = this.listModel.data.splice(Math.min(i, this.lastRowList), Math.max(i, this.lastRowList)+1);
-                                sublist.forEach((item) => {
-																		item.setActive(true);
-																		item.selectedState = Term.STATE_SELECTED;
-																		this.selectedShortTerms.add(li);
-                                    //noinspection JSUnresolvedFunction
-                                    s.addEach(item.getAllGenes());
-                                });
-                                this.genes.setSelection(this, s);
-                            } else {
-																if(this.genes.getActiveSet().size != this.genes.getAllGenes().size){
-																	if(!this.isCollapsed){
-																			this.makeTreeFromNarrow();
-																	}else{
-																		this.makeCollapsedTreeFromNarrow();
-																	}
-																}else{ //regular list
-																	if(!this.isCollapsed){
-																		this.makeTreeFromDAG();
-																		// this.makeTree();
-																	}else{
-																		this.makeCollapsedTreeFromDAG();
-																	}
-																}
-																console.log(this.selectedShortTerms);
-																if(this.selectedShortTerms.has(li)){ //deselect this and all of its children
-																	console.log("Unselecting via short list");
-																	item.setActive(false);
-																	item.selectedState = Term.STATE_UNKNOWN;
-																	this.selectedShortTerms.delete(li);
-																	this.recursiveDeactivate(item);
-																	this.deselectTerm(item,window.event.ctrlKey || window.event.metaKey, li);
-
-																}else{ //SELECT this term and all its children
-																	console.log("Selecting via short list");
-																	//reset all highlights!
-																	if(!window.event.ctrlKey && !window.event.metaKey){
-																		this.selectedShortTerms.clear();
-																		this.terms.forEach((term) =>{
-																			term.initSelectedState();
-																		});
-																	}
-																	item.selectedState = Term.STATE_SELECTED;
-																	this.selectedShortTerms.add(li);
-																	item.setActive(true);
-																	this.recursiveActivate(item); //set the selected state of its children and add to selected terms set
-																	console.log(this.selectedShortTerms);
-																	this.selectTerm(item, window.event.ctrlKey || window.event.metaKey, li);
-																}
-																console.log("Updating hierarchy");
-																this.setActiveTerms();
-																this.populateTreeRecursive(this.treeModel.getRoot(), this.tree);
-                        }
-                        if (!window.event.shiftKey) this.lastRowList = i;
-                    }
-                // }
-            }, false);
-            this.shortList.appendChild(li);
-	        i++;
-        });
-    },
+										}else{ //SELECT this term and all its children
+											console.log("Selecting via short list");
+											//reset all highlights!
+											if(!window.event.ctrlKey && !window.event.metaKey){
+												this.selectedShortTerms.clear();
+												this.terms.forEach((term) =>{
+													term.initSelectedState();
+												});
+											}
+											item.selectedState = Term.STATE_SELECTED;
+											this.selectedShortTerms.add(li);
+											item.setActive(true);
+											this.recursiveActivate(item); //set the selected state of its children and add to selected terms set
+											this.selectTerm(item, window.event.ctrlKey || window.event.metaKey, li);
+										}
+										this.setActiveTerms();
+										this.populateTreeRecursive(this.treeModel.getRoot(), this.tree);
+            }
+            if (!window.event.shiftKey) this.lastRowList = i;
+        }
+      }, false);
+      this.shortList.appendChild(li);
+	    i++;
+    });
+  },
 		setupTree : function(){
 			if(this.genes.getActiveSet().size != this.genes.getAllGenes().size){
 				if(!this.isCollapsed){
