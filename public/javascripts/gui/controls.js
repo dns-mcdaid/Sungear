@@ -190,6 +190,7 @@ Controls.prototype = {
 
             case GeneEvent.NEW_LIST:
                 this.updateGUI();
+                console.log("Done with new list from controls");
                 break;
             case GeneEvent.RESTART:
             case GeneEvent.NARROW:

@@ -111,7 +111,7 @@ router.get('/', function(req, res, next) {
                     {
                         "id": "GOT:001",
 	                    "description": "noble",
-                        "zScore": 0.77419354835,
+                        "p_t": 0.77419354835,
                         "items": [],
                         "parents": [],
                         "children": [
@@ -125,7 +125,7 @@ router.get('/', function(req, res, next) {
                     {
                         "id": "GOT:002",
                         "description": "commoner",
-                        "zScore": 0.09677419354,
+                        "p_t": 0.09677419354,
                         "items": [],
                         "parents": [],
                         "children": [
@@ -136,7 +136,7 @@ router.get('/', function(req, res, next) {
                     {
                         "id": "GOT:003",
                         "description": "bastard",
-                        "zScore": 0.12903225806,
+                        "p_t": 0.12903225806,
                         "items": [],
                         "parents": [],
                         "children": [
@@ -147,7 +147,7 @@ router.get('/', function(req, res, next) {
                     {
                         "id": "GOT:004",
                         "description": "arryn",
-                        "zScore": 0.06451612903,
+                        "p_t": 0.06451612903,
                         "items": [
                             "lysaarryn", "robinarry"
                         ],
@@ -158,7 +158,7 @@ router.get('/', function(req, res, next) {
                     {
                         "id": "GOT:005",
                         "description": "frey",
-                        "zScore": 0.06451612903,
+                        "p_t": 0.06451612903,
                         "items": [
                             "roosebolt", "walderfre"
                         ],
@@ -169,7 +169,7 @@ router.get('/', function(req, res, next) {
                     {
                         "id": "GOT:006",
                         "description": "greyjoy",
-                        "zScore": 0.09677419354,
+                        "p_t": 0.09677419354,
                         "items": [
                             "theongrey", "yaragreyj",
                             "eurongrey"
@@ -181,7 +181,7 @@ router.get('/', function(req, res, next) {
                     {
                         "id": "GOT:007",
                         "description": "lannister",
-                        "zScore": 0.09677419354,
+                        "p_t": 0.09677419354,
                         "items": [
                             "jaimelann", "cerseilan",
                             "tyrionlan"
@@ -193,7 +193,7 @@ router.get('/', function(req, res, next) {
                     {
                         "id": "GOT:008",
                         "description": "stark",
-                        "zScore": 0.22580645161,
+                        "p_t": 0.22580645161,
                         "items": [
                             'eddardsta', 'catelynst',
                             'aryastark', 'sansastar',
@@ -207,7 +207,7 @@ router.get('/', function(req, res, next) {
                     {
                         "id": "GOT:009",
                         "description": "targaryen",
-                        "zScore": 0.09677419354,
+                        "p_t": 0.09677419354,
                         "items": [
                             "daenaryst", "viserysta",
                             "rahegarta"
@@ -219,7 +219,7 @@ router.get('/', function(req, res, next) {
                     {
                         "id": "GOT:010",
                         "description": "tyrell",
-                        "zScore": 0.12903225806,
+                        "p_t": 0.12903225806,
                         "items": [
                             "olennatyr", "macetyrel",
                             "margaeryt", "lorastyre"
@@ -231,7 +231,7 @@ router.get('/', function(req, res, next) {
                     {
                         "id": "GOT:011",
                         "description": "westerosi",
-                        "zScore": 0.06451612903,
+                        "p_t": 0.06451612903,
                         "items": [
                             "littlefin",
 	                        "jorahmorm"
@@ -243,7 +243,7 @@ router.get('/', function(req, res, next) {
                     {
                         "id": "GOT:012",
                         "description": "essosi",
-                        "zScore": 0.03225806451,
+                        "p_t": 0.03225806451,
                         "items": [
                             "greyworm"
                         ],
@@ -254,7 +254,7 @@ router.get('/', function(req, res, next) {
                     {
                         "id": "GOT:013",
                         "description": "snow",
-                        "zScore": 0.06451612903,
+                        "p_t": 0.06451612903,
                         "items": [
                             "jonsnow", "ramseybol"
                         ],
@@ -265,7 +265,7 @@ router.get('/', function(req, res, next) {
                     {
                         "id": "GOT:014",
                         "description": "waters",
-                        "zScore": 0.06451612903,
+                        "p_t": 0.06451612903,
                         "items": [
                             "joffreyba", "tommenbar"
                         ],

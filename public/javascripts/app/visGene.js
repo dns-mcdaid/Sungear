@@ -346,11 +346,8 @@ VisGene.prototype = {
 
         var exp = vis.exp.exp;
         this.exp = new ExperimentList(exp, loadBody);
-
         this.reader = new DataReader(vis.src.attrib);
         this.reader.addPassedData(vis.src.reader);
-
-
 
         this.src = new DataSource(this.dataDir);
         this.src.reader = this.reader;

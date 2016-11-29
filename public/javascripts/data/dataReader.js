@@ -8,7 +8,7 @@ const SortedSet = require("collections/sorted-set");
 
 const Anchor = require('../genes/anchor');
 const Gene = require('../genes/gene');
-const Term = require('../genes/noHypeTerm');
+const Term = require('../genes/term');
 const Vessel = require('../genes/vessel');
 
 /**
@@ -102,10 +102,11 @@ DataReader.prototype = {
 			            rootsMap.delete(c.getId());
 				    }
 			    });
-			    if (category.zScore === null) {
-			    	// TODO: Something? Maybe remove?
+			    if (category.p_t === null) {
+            console.log("Yikes. there's no p_t property for this term! " + category.description);
 			    } else {
-			    	thisTerm.setRatio(category.zScore);
+
+			    	thisTerm.setRatio(category.p_t);
 			    }
 			    category.items.forEach((item) => {
 			    	const gName = item.toLowerCase();
@@ -124,7 +125,7 @@ DataReader.prototype = {
 			    });
 		    }
 	    });
-	    rootsMap.forEach(value => { this.roots.push(value) });
+	    rootsMap.forEach(value => { this.roots.push(value); });
     }
 };
 

@@ -96,6 +96,9 @@ Term.prototype = {
     setRatio : function(p_t) {
         this.p_t = p_t;
     },
+    getScore: function(){
+      return this.p_t;
+    },
     addChild : function(c) {
         this.children.push(c);
     },
@@ -172,7 +175,7 @@ Term.prototype = {
     	var Dig = 100000;
         Term.Hyp = (Term.Hyp * Dig)/Dig;
         var v = (!Number.isFinite(Term.Hyp) || Number.isNaN(Term.Hyp)) ? Number.toString(Term.Hyp) : Term.Hyp + "";
-        return "(" + v + " ; " + this.getStoredCount() + " ) " + this.name;
+        return "(" + v + ";" + this.getStoredCount() + ") " + this.name;
     },
     getHyp: function(){
         return Term.Hyp;
@@ -184,8 +187,6 @@ Term.prototype = {
         this.storedCount = -1;
     },
     updateStoredCount : function(aSet) {
-      console.log("updating hyp");
-
         if (this.storedCount == -1) {
 	        const it = this.children.iterate();
 	        let next = it.next();
@@ -197,28 +198,28 @@ Term.prototype = {
 	        //noinspection JSUnresolvedFunction
 	        s = s.intersection(aSet.toArray());
 	        this.storedCount = s.length;
-          this.updateHyp(aSet.size());
+          this.updateHyp(aSet.size);
         }
     },
     initUnion : function() {
         this.allGenes = null;
     },
     findUnion : function(global) {
-        if (this.allGenes == null) {
-	        this.allGenes = new SortedSet();
-	        this.allGenes = this.allGenes.union(this.localGenes);
-	        const it = this.children.iterate();
-	        let next = it.next();
-	        while (!next.done) {
-		        const ch = next.value;
-		        ch.findUnion(global);
-		        this.allGenes = this.allGenes.union(ch.allGenes);
-	        }
-	        this.allGenes = this.allGenes.intersection(global);
-        }
+      if (this.allGenes === null) {
+  			this.allGenes = new SortedSet(this.localGenes);
+  			const it = this.children.iterate();
+  			let next = it.next();
+  			while (!next.done) {
+  				const ch = next.value;
+  				ch.findUnion(global);
+  				this.allGenes = this.allGenes.union(ch.allGenes);
+  				next = it.next();
+  			}
+  			this.allGenes = this.allGenes.intersection(global);
+  		}
     },
     updateHyp: function(Q){
-      Term.Hyp = calcHyp(this.getStoredCount(), Q);
+      Term.Hyp = this.calcHyp(this.getStoredCount(), Q);
     },
     setTotal: function(t){
       Term.Total = t;
@@ -227,11 +228,10 @@ Term.prototype = {
       return Term.Total;
     },
     calcHyp: function(Q_t, Q){
-      var A = this.getTotal();
+        var A = Q;
         var A_t = this.p_t * A;
         Term.H = new HypergeometricDistribution(A, A_t, Q);
-        console.log(H.upperCumulativeProbability(Q_t));
-        return H.upperCumulativeProbability(Q_t);
+        return Term.H.upperCumulativeProbability(Q_t);
 
     },
 	/**
@@ -251,7 +251,6 @@ Term.prototype = {
      */
     updateSelectedState : function(s) {
         if (!this.active) {
-            console.log("unselected");
             this.selectedState = Term.STATE_UNSELECTED;
         } else {
 	        const it = this.children.iterate();

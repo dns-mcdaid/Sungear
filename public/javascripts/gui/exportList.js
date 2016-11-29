@@ -301,6 +301,7 @@ ExportList.prototype = {
                 const hasExport = this.genes.getSource().getAttributes().get("export_url");
                 this.exportB.className = (typeof hasExport !== 'undefined' ? ExportList.ENABLED : ExportList.DISABLED);
                 this.updateGUI();
+                console.log("Done with new list event in exportlit");
                 break;
             case GeneEvent.RESTART:
                 this.model.resetCurrent();

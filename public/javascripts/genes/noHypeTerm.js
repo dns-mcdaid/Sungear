@@ -26,7 +26,7 @@
  *
  * {@link #getIntersectCount(SortedSet)} is the dynamic version of {@link #getStoredCount()}
  * in that it dynamically determines the size of the intersection set.  It is intended for
- * use on very small sets of terms, such as will fit on one screen in a list component.
+ * use on very small sets of terms, such as will fit on one screen in a  list component.
  *
  * {@link #selectedState}, which is returned by {@link #getSelectedState()}, is
  * a more effecient way to see if a term (or any of its children) has genes in the

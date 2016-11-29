@@ -238,6 +238,10 @@ ul {
   height:100px;
   overflow:auto;
 }
+#goList{
+    text-align: center;
+}
+
 /*
 #goTree li + ul{
   position: absolute;

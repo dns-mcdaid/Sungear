@@ -785,8 +785,8 @@ GoTerm.prototype = {
               this.set(this.genes.getSource());
               break;
           case GeneEvent.NEW_LIST:
-						console.log("New list!");
-            $("#findD").modal('hide');
+							console.log("New list!");
+            	// $("#findD").modal('hide');
 							this.justNarrowed = false;
 							this.terms.forEach((term) =>{
 								this.recursiveDeactivate(term);
@@ -882,7 +882,6 @@ GoTerm.prototype = {
 
 			if((!this.genes.hasPrev() && !this.justNarrowed) || (selected == active)){
 				this.collapsed = false;
-				console.log("Clearing selected short terms");
 				this.selectedShortTerms.clear();
 				this.terms.forEach((term) =>{
 					this.recursiveDeactivate(term);
@@ -1009,7 +1008,6 @@ GoTerm.prototype = {
 	addArrowListener : function(span, node){
 		span.addEventListener('click', () =>{
 			node.setCollapsed(!node.isCollapsed());
-			console.log(node.userObject.name + " is collapsed?  " + node.isCollapsed());
 			if(this.isCollapsed && !node.isCollapsed()){
 				this.isCollapsed = false;
 				this.setupTree();
@@ -1029,7 +1027,6 @@ GoTerm.prototype = {
 				//rcheck for multiselect!
 				const multi = window.event.ctrlKey || window.event.metaKey;
 				if(!window.event.ctrlKey && !window.event.metaKey){
-					console.log("Clearing everything");
 					this.selectedShortTerms.clear();
 					this.terms.forEach((term) =>{
 						this.recursiveDeactivate(term);
@@ -1037,10 +1034,8 @@ GoTerm.prototype = {
 				}
 				//check to see if it's already highlighted and act accordingly
 				if(term.isActive()){
-					console.log("UNselecting term via hierarchy");
 					term.selectedState = Term.STATE_UNKNOWN;
 				}else{
-					console.log("selecting term via hierarchy");
 					term.selectedState = Term.STATE_SELECTED;
 				}
 				// if(multi){
@@ -1121,7 +1116,6 @@ GoTerm.prototype = {
                 } else {
 										this.setupTree();
 										if(this.selectedShortTerms.has(li)){ //deselect this and all of its children
-											console.log("Unselecting via short list");
 											item.setActive(false);
 											item.selectedState = Term.STATE_UNKNOWN;
 											this.selectedShortTerms.delete(li);
@@ -1129,7 +1123,6 @@ GoTerm.prototype = {
 											this.deselectTerm(item,window.event.ctrlKey || window.event.metaKey, li);
 
 										}else{ //SELECT this term and all its children
-											console.log("Selecting via short list");
 											//reset all highlights!
 											if(!window.event.ctrlKey && !window.event.metaKey){
 												this.selectedShortTerms.clear();
