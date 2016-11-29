@@ -20,7 +20,7 @@ function Controls(gn, el) {
     this.gear = null;
     this.export = el;
     this.coolMethod = 0;
-    this.cool = [];
+    this.cool = null;
 
     this.restartB = document.getElementById('restartB');
     this.restartB.title = "Work with the original active set";
@@ -100,8 +100,6 @@ Controls.prototype = {
         }
     },
     getCachedCool : function() {
-        console.log("getting cached cool");
-        console.log(this.coolMethod);
         var v = this.export.getExtra(this);
         if(v !== null && v.length > this.coolMethod){
           return v[this.coolMethod];
@@ -114,7 +112,7 @@ Controls.prototype = {
         if (v === null) {
             v = [];
         }
-        while(v.size() <= this.coolMethod) {
+        while(v.length <= this.coolMethod) {
             v.push(null);
         }
         v[this.coolMethod] = this.cool;
@@ -124,7 +122,6 @@ Controls.prototype = {
      * @param m {number}
      */
     setCoolMethod : function(m) {
-        console.log("Setting cool method");
         this.coolMethod = m;
         this.cool = null;
         this.updateCool(false);
@@ -155,7 +152,7 @@ Controls.prototype = {
                 var node = document.createElement('li');
                 var nodeText = (i+1) + ": score " + Math.round(this.cool[i].score);
                 node.innerHTML = nodeText;
-                node.addEventListener('click', this.coolL(nodeText).bind(this));
+                node.addEventListener('click', this.coolL.bind(this, i));
                 this.coolM.appendChild(node);
             }
         }
@@ -193,7 +190,6 @@ Controls.prototype = {
 
             case GeneEvent.NEW_LIST:
                 this.updateGUI();
-                console.log("Done with new list from controls");
                 break;
             case GeneEvent.RESTART:
             case GeneEvent.NARROW:
@@ -250,13 +246,15 @@ Controls.prototype = {
             }
         }
         if(this.cool.length > 0){
-            //show the cool options with dropdown menu
+            //show the cool options with dropdown menu - possibly already implemented?
         }
 
     },
     coolL : function(s) {
-        var idx = Number(s.substr(0, s.indexOf(':'))) - 1;
-        this.genes.setSelection(this, this.cool[idx].vessel.activeGenes);
+        // var idx = Number(s.substr(0, s.indexOf(':'))) - 1;
+        console.log("COOLL!");
+        console.log(s);
+        this.genes.setSelection(this, this.cool[s].vessel.activeGenes);
     },
     updateGenes: function(){
 

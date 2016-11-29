@@ -287,100 +287,68 @@ SunGear.prototype = {
         const cool = new SortedSet();
         let debug = true; // TODO: Change this in production
         let ag = this.getAssocGenes();
-        for (let i = 0; i < this.vessels.length; i++) {
-            if (this.vessels[i].getActiveCount() == 0) {
-                continue;
-            }
-            if (debug) {
-                console.log("sz: " + this.vessels[i].activeGenes.length);
-            }
-            const tt = this.getTerms(this.vessels[i].activeGenes).toArray();
-            const ct = [];
-            for (let it = 0; it < tt.length; it++) {
-                const t = tt[it];
-                const cnt = new SortedSet();
-                const cnt2 = new SortedSet();
-                const preCnt = t.getAllGenes().toArray();
-                const preCnt2 = this.vessels[i].activeGenes.toArray();
-                for (let j = 0; j < preCnt.length; j++) {
-                    if (preCnt2.indexOf(preCnt[j]) > -1) {
-                        cnt.add(preCnt[j]);
+        console.log("associated genes:");
+        console.log(ag);
+        this.vessels.forEach((vessel) => {
+            // TODO: replace with break
+            if (vessel.getActiveCount() != 0) {
+                if (debug) console.log("sz:", vessel.getActiveCount());
+                
+                const tt = this.getTerms(vessel.activeGenes);
+                const ct = [];
+                tt.forEach((term) => {
+                    const cnt = term.getAllGenes().intersection(vessel.activeGenes);
+                    const cnt2 = vessel.activeGenes.intersection(ag);
+                    const z = term.calcScore(cnt.length, cnt2.length);
+                    if (z >= minScore) {
+                        ct.push(new CoolTerm(z, cnt.length));
+                    }
+                });
+                // per-method stuff - calculate score from cool terms
+                let c;
+                switch(method) {
+                    case 1:
+                        // threshold and multiply
+                        if (debug) console.log("  ct:", ct.length);
+                        let score = 0;
+                        ct.forEach((coolTerm) => {
+                            score += coolTerm.score * coolTerm.count;
+                        });
+                        score /= vessel.activeGenes.length;
+                        if (debug) console.log(" score:", score);
+                        c = new Comp.CoolVessel(vessel, score, vessel.activeGenes.length);
+                        break;
+                    default:
+                        // threshold only
+                        if (debug) console.log("  ct:", ct.length);
+                        let acnt = 0;
+                        ct.forEach((coolTerm) => {
+                            if (coolTerm.count >= 2) acnt++;
+                        });
+                        if (debug) console.log(" acnt:", acnt);
+                        c = new Comp.CoolVessel(vessel, acnt, vessel.activeGenes.length);
+                        break;
+                }
+                // more generic processing - update cool list if necessary
+                const coolArr = cool.toArray();
+                let last = coolArr[coolArr.length-1];
+                if (cool.length < maxVessels || c.compareTo(last) < 0) {
+                    if (debug) console.log("added");
+                    cool.push(c);
+                    while(cool.length > maxVessels) {
+                        cool.pop();
                     }
                 }
-                for (let j = 0; j < preCnt2.length; j++) {
-                    if (ag.contains(preCnt2[j])) {
-                        cnt2.add(preCnt2[j]);
-                    }
-                }
-                let z = t.calcHyp(cnt.length, cnt2.length);
-                if (z >= minScore) {
-                    ct.push(new CoolTerm(z, cnt.length));
-                }
             }
-            // per-method stuff - calculate score from cool terms
-            let c;
-            switch (method) {
-                case 1:
-                    // threshhold and multiply
-                    if (debug) {
-                        console.log("\tct: " + ct.length);
-                    }
-                    var score = 0;
-                    for (let it = 0; it < ct.length; it++) {
-                        const t = ct[it];
-                        score += t.score * t.count;
-                    }
-                    score /= this.vessels[i].activeGenes.length;
-                    if (debug) {
-                        console.log("\tscore: " + score);
-                    }
-                    c = new Comp.CoolVessel(this.vessels[i], score, this.vessels[i].activeGenes.length);
-                    break;
-                default:
-                    // threshhold only
-                    if (debug) {
-                        console.log("\tct: " + ct.length);
-                    }
-                    var acnt = 0;
-                    for (let it = 0; it < ct.length; it++) {
-                        const t = ct[it];
-                        if (t.count >= 2) {
-                            acnt++;
-                        }
-                    }
-                    if (debug) {
-                        console.log("\tacnt: " + acnt);
-                    }
-                    c = Comp.CoolVessel(this.vessels[i], acnt, this.vessels[i].activeGenes.length);
-                    break;
-            }
-            // more generic processing - update cool list if necessary
-            let coolArray = cool.toArray();
-            let last = coolArray[coolArray.length-1];
-            if (cool.length < maxVessels || c.compareTo(last) < 0) {
-                if (debug) {
-                    console.log("\tadded");
-                }
-                cool.push(c);
-                while(cool.length > maxVessels) {
-                    coolArray = cool.toArray();
-                    last = coolArray[coolArray.length-1];
-                    cool.remove(last);
-                }
-            }
-            if (debug) {
-                console.log();
-            }
-        }
-        if (debug) {
-            console.log("Final scores:");
-            console.log(cool);
-            let coolArray = cool.toArray();
-            for (let it = 0; it < coolArray.length; it++) {
-                console.log(coolArray[it].score);
-            }
-        }
-        return (cool.toArray());
+        });
+        console.log("Final scores:");
+        cool.forEach((coolTerm) => {
+            console.log(coolTerm.score);
+        });
+        
+        console.log(cool);
+        
+        return cool.toArray();
     },
     /**
      * TODO: Find out what this function does.
