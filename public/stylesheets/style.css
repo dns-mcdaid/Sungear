@@ -231,7 +231,11 @@ ul {
 #goTree span + li{
   display: inline-block;
   font-family : 'Noto Sans', sans-serif;
-  margin-left: 10px;
+  margin-left: 5px;
+}
+
+#goTree span + li + ul{
+  margin-left: 25px;
 }
 
 #group-table-scroll{

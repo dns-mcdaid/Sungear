@@ -980,6 +980,7 @@ GoTerm.prototype = {
 					element.appendChild(span);
 					element.appendChild(li);
 
+
 					const ul = document.createElement('ul');
 					this.populateTreeRecursive(child, ul);
 					element.appendChild(ul);
