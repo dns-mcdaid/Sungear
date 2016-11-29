@@ -16,7 +16,7 @@
  */
 
 const SortedSet = require("collections/sorted-set");
-
+const sunGear = require('../gui/sunGear');
 const GeneEvent = require('./geneEvent');
 const MultiSelectable = require('./multiSelectable');
 
@@ -152,7 +152,10 @@ GeneList.prototype = {
      */
     setSelection : function(src, sel, sendEvent = true, addHist = true) {
         // this.selectionS.clear();
-        if(this.notNewSelection(new SortedSet(sel))){
+        console.log(src);
+        //&& !(src instanceof sunGear)
+        if( this.notNewSelection(new SortedSet(sel)) && !(src instanceof sunGear) ){
+          console.log("not new selection, returning");
           return;
         }
         this.selectionS = new SortedSet(sel);
