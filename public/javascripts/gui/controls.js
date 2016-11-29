@@ -20,7 +20,7 @@ function Controls(gn, el) {
     this.gear = null;
     this.export = el;
     this.coolMethod = 0;
-    this.cool = new CoolVessel();
+    this.cool = [];
 
     this.restartB = document.getElementById('restartB');
     this.restartB.title = "Work with the original active set";
@@ -122,6 +122,7 @@ Controls.prototype = {
      * @param m {number}
      */
     setCoolMethod : function(m) {
+        console.log("Setting cool method");
         this.coolMethod = m;
         this.cool = null;
         this.updateCool(false);
@@ -238,6 +239,7 @@ Controls.prototype = {
         }
     },
     runCool : function() {
+        console.log("Cool:", this.cool);
         if (this.cool === null) {
             this.updateCool(true);
             if (this.cool.length === 0) {
@@ -246,7 +248,7 @@ Controls.prototype = {
                 this.coolM.appendChild(errMsg);
             }
         }
-        if(cool.length > 0){
+        if(this.cool.length > 0){
             //show the cool options with dropdown menu
         }
 
