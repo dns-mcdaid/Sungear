@@ -292,9 +292,9 @@ SunGear.prototype = {
                 continue;
             }
             if (debug) {
-                console.log("sz: " + this.vessels[i].activeGenes.size());
+                console.log("sz: " + this.vessels[i].activeGenes.length);
             }
-            const tt = this.getTerms(this.vessels[i].activeGenes);
+            const tt = this.getTerms(this.vessels[i].activeGenes).toArray();
             const ct = [];
             for (let it = 0; it < tt.length; it++) {
                 const t = tt[it];
@@ -312,9 +312,9 @@ SunGear.prototype = {
                         cnt2.add(preCnt2[j]);
                     }
                 }
-                let z = t.calcHyp(cnt.size(), cnt2.size());
+                let z = t.calcHyp(cnt.length, cnt2.length);
                 if (z >= minScore) {
-                    ct.push(new CoolTerm(z, cnt.size()));
+                    ct.push(new CoolTerm(z, cnt.length));
                 }
             }
             // per-method stuff - calculate score from cool terms
@@ -351,7 +351,7 @@ SunGear.prototype = {
                     if (debug) {
                         console.log("\tacnt: " + acnt);
                     }
-                    c = Comp.CoolVessel(vessels[i], acnt, vessels[i].activeGenes.size());
+                    c = Comp.CoolVessel(this.vessels[i], acnt, this.vessels[i].activeGenes.length);
                     break;
             }
             // more generic processing - update cool list if necessary
@@ -374,6 +374,7 @@ SunGear.prototype = {
         }
         if (debug) {
             console.log("Final scores:");
+            console.log(cool);
             let coolArray = cool.toArray();
             for (let it = 0; it < coolArray.length; it++) {
                 console.log(coolArray[it].score);

@@ -100,15 +100,17 @@ Controls.prototype = {
         }
     },
     getCachedCool : function() {
-        var v = this.export.getExtra(this); // TODO: Ensure this works.
-        let cc = null;
-        if(v != null && v.size > this.coolMethod){
-          cc = v.elementAt(this.coolMethod);
+        console.log("getting cached cool");
+        console.log(this.coolMethod);
+        var v = this.export.getExtra(this);
+        if(v !== null && v.length > this.coolMethod){
+          return v[this.coolMethod];
+        } else {
+            return null;
         }
-        return cc;
     },
     addCachedCool : function() {
-        var v = this.export.get().getExtra(this);
+        var v = this.export.getExtra(this);
         if (v === null) {
             v = [];
         }
@@ -116,7 +118,7 @@ Controls.prototype = {
             v.push(null);
         }
         v[this.coolMethod] = this.cool;
-        this.export.get().addExtra(this, v);
+        this.export.addExtra(this, v);
     },
     /**
      * @param m {number}
@@ -239,7 +241,6 @@ Controls.prototype = {
         }
     },
     runCool : function() {
-        console.log("Cool:", this.cool);
         if (this.cool === null) {
             this.updateCool(true);
             if (this.cool.length === 0) {

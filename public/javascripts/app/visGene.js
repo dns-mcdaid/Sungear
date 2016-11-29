@@ -137,6 +137,7 @@ VisGene.prototype = {
         this.controlF = document.getElementById("controlF");
         this.export = new ExportList(this.geneList, this.context);
         this.control = new Controls(this.geneList, this.export);
+        this.control.setGear(this.gear);
 
 
         // Picking up from 388
