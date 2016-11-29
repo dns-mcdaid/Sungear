@@ -179,7 +179,6 @@ GeneList.prototype = {
     notNewSelection : function(testSet){
       var testCount = testSet.size;
       var curCount = this.selectionS.size;
-        console.log("TEST COUNT", testCount);
       if(testCount === curCount){
         var geneEquals = 0; //if they're the same set, then this number will equal the size of the two sets
         testSet.forEach((gene) =>{
