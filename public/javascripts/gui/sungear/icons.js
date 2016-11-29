@@ -53,7 +53,7 @@ ArrowIcon.prototype = {
         p5.scale(this.scale, this.scale);
         p5.noStroke();
 
-        if (p5.dist(p5.mouseX, p5.mouseY, x+8, y+8) < this.scale*2) {
+        if (p5.dist(p5.mouseX, p5.mouseY, x+(this.type * 9), y+8) < this.scale*2) {
             this.contains = true;
             if (p5.mouseIsPressed) {
                 p5.fill(SunValues.C_SELECT);
