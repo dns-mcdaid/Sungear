@@ -27,6 +27,7 @@ function AnchorDisplay(anchor) {
     this.position = {};       /** {object with x and y coordinates} */
     this.contains = false;
     this.debug = true;
+    this.physLocation = {}; /** X & Y locations of name in sungear */
 }
 
 AnchorDisplay.NAME_SEPARATOR = ";";
@@ -121,6 +122,8 @@ AnchorDisplay.prototype = {
         const l = this.showLongDesc ? this.longDesc : this.shortDesc;
 
         const location = this.findAnchorCorner(tx, ty, tm, off);
+        this.physLocation.x = location.x;
+        this.physLocation.y = location.y;
 
         p5.translate(tx, ty);
         p5.rotate(this.angle);
@@ -143,6 +146,7 @@ AnchorDisplay.prototype = {
         p5.fill(color);
         p5.text(l, 0, 0);
         p5.pop();
+
         // TODO: Make shape around AnchorDisplay text?
     },
     /**

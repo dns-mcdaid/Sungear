@@ -303,10 +303,10 @@ ExportList.prototype = {
                 this.updateGUI();
                 console.log("Done with new list event in exportlit");
                 break;
-            case GeneEvent.RESTART:
-                this.model.resetCurrent();
-                this.model.setCurrent(this.addGroup());
-                break;
+            // case GeneEvent.RESTART:
+            //     this.model.resetCurrent();
+            //     this.model.setCurrent(this.addGroup());
+            //     break;
             case GeneEvent.NARROW:
               console.log("Narrow in export list. local update is: " + this.localUpdate);
                 if (!this.localUpdate){

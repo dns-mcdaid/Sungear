@@ -293,7 +293,7 @@ SunGear.prototype = {
             // TODO: replace with break
             if (vessel.getActiveCount() != 0) {
                 if (debug) console.log("sz:", vessel.getActiveCount());
-                
+
                 const tt = this.getTerms(vessel.activeGenes);
                 const ct = [];
                 tt.forEach((term) => {
@@ -345,9 +345,9 @@ SunGear.prototype = {
         cool.forEach((coolTerm) => {
             console.log(coolTerm.score);
         });
-        
+
         console.log(cool);
-        
+
         return cool.toArray();
     },
     /**
@@ -748,6 +748,7 @@ SunGear.prototype = {
             x : p5.mouseX,
             y : p5.mouseY
         };
+
         let a = this.getAnchor();
         if (a !== null) {
             if (this.multi) {
@@ -870,7 +871,14 @@ SunGear.prototype = {
                 this.lastVessel = null;
                 this.checkHighlight();
             }
+            console.log(p.x, p.y);
+
+            this.anchors.forEach((anchor) =>{
+              console.log(anchor.longDesc);
+              console.log(anchor.physLocation.x,  anchor.physLocation.y);
+            });
         }
+
     },
     highlightVessel : function(v) {
         for (let i = 0; i < this.vessels.length; i++) {
