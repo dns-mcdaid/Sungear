@@ -285,7 +285,7 @@ GeneList.prototype = {
         }
         this.multiSelectable.forEach((multi) => {
         	const g = multi.getMultiSelection(operation);
-	        if (g !== null) {
+	        if (g !== null && typeof g !== 'undefined') {
 	        	if (operation == MultiSelectable.UNION) {
 			        //noinspection JSUnresolvedFunction
 			        s.addEach(g);
