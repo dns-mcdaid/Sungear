@@ -231,7 +231,7 @@ Term.prototype = {
       return Term.Total;
     },
     calcHyp: function(Q_t, Q){
-        //note that if getTotal() is null or 0, this means there was no Total attribute to use HypergeometricDistribution
+        // note that if getTotal() is null or 0, this means there was no Total attribute to use HypergeometricDistribution
         if(this.getTotal() == 0 || this.getTotal() == null){
           return this.calcScore(Q_t, Q);
         }

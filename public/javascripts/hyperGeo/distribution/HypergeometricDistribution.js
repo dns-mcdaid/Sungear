@@ -122,25 +122,53 @@ HypergeometricDistribution.numericalVariance = Math.NaN;
 		return ret;
 
 	};
+
+	//taken from: https://gist.github.com/trevnorris/c39ac96740842e05303f
+	HypergeometricDistribution.prototype.helper = function(x, n, m, nn){
+		var nz, mz;
+	  // best to have n<m
+	  if (m < n) {
+	    nz = m;
+	    mz = n
+	  } else {
+	    nz = n;
+	    mz = m
+	  }
+	  var h=1;
+	  var s=1;
+	  var k=0;
+	  var i=0;
+	  while (i < x) {
+	    while (s > 1 && k < nz) {
+	      h = h * (1 - mz / (nn - k));
+	      s = s * (1 -mz / (nn - k));
+	      k = k + 1;
+	    }
+	    h = h * (nz - i) * (mz - i) / (i + 1) / (nn - nz - mz + i + 1);
+	    s = s + h;
+	    i = i + 1;
+	  }
+	  while (k < nz) {
+	    s = s * (1 - mz / (nn - k));
+	    k = k + 1;
+	  }
+	  return s;
+	};
 	HypergeometricDistribution.prototype.upperCumulativeProbability = function(x){
-		    var ret;
-
-	      var domain = this.getDomain(this.getPopulationSize(), this.getNumberOfSuccesses(), this.getSampleSize());
-				console.log(domain);
-				console.log(x);
-	      if (x <= domain[0]) {
-	          ret = 1.0;
-
-	      } else if (x > domain[1]) {
-	          ret = 0.0;
-	      } else {
-	          ret = this.innerCumulativeProbability(domain[1], x, -1);
-						console.log(ret);
-
-	      }
-				console.log(ret);
-
-	      return ret;
+				var prob;
+		  	if (2 * this.numberOfSuccesses > this.populationSize) {
+		      if (2 * this.sampleSize > this.populationSize) {
+		        prob = this.helper(this.populationSize - this.numberOfSuccesses - this.sampleSize + x, this.populationSize - this.sampleSize, this.populationSize - this.numberOfSuccesses, this.populationSize);
+		      } else {
+		        prob = 1 - this.helper(this.sampleSize - x - 1, this.sampleSize, this.populationSize - this.numberOfSuccesses, this.populationSize);
+		      }
+		    } else if (2 * this.sampleSize > this.populationSize) {
+		      prob = 1 - this.helper(this.numberOfSuccesses - x - 1, this.numberOfSuccesses, this.populationSize - this.sampleSize, this.populationSize);
+		    } else {
+		      prob = this.helper(x, this.sampleSize, this.numberOfSuccesses, this.populationSize);
+		    }
+		  prob = Math.round(prob * 100000) / 100000;
+			return prob;
 	};
 
 	HypergeometricDistribution.prototype.getNumericalMean = function(){
