@@ -5,9 +5,10 @@ Porting Sungear from Java to Javascript,
 Translated from Ilyas Mounaime's Java code
 
 */
-    function FastMath(){}
-
-    FastMath.E = 2850325.0 / 1048576.0 + 8.254840070411028747e-8;
+var FastMathLiteralArrays = require('./FastMathLiteralArrays');
+function FastMath(){}
+    FastMath.PI = (105414357.0 / 33554432.0) + 1.984187159361080883e-9;
+    FastMath.E = (2850325.0 / 1048576.0) + 8.254840070411028747e-8;
 
 	FastMath.RECOMPUTE_TABLES_AT_RUNTIME  = false;
 
@@ -60,22 +61,22 @@ Translated from Ilyas Mounaime's Java code
 		[-0.16624879837036133, -2.6033824355191673E-8]
 	];
 
-	// 	lnMant: function(){
-	// 	// 	if (RECOMPUTE_TABLES_AT_RUNTIME) {
-	// 	// 	LN_MANT = new double[FastMath.LN_MANT_LEN][];
-	// 	//
-	// 	// 	// Populate lnMant table
-	// 	// 	for (int i = 0; i < LN_MANT.length; i++) {
-	// 	// 		final double d = Double.longBitsToDouble( (((long) i) << 42) | 0x3ff0000000000000L );
-	// 	// 		LN_MANT[i] = FastMathCalc.slowLog(d);
-	// 	// 	}
-	// 	// } else { FIXME: IGNORING THIS FOR NOW!
-	// 		// LN_MANT = FastMathLiteralArraysLoadLnMant();
-	// 	//}
-	//
-	//
-	//
-	// },
+		FastMath.lnMant = function(){
+		// 	if (RECOMPUTE_TABLES_AT_RUNTIME) {
+		// 	LN_MANT = new double[FastMath.LN_MANT_LEN][];
+		//
+		// 	// Populate lnMant table
+		// 	for (int i = 0; i < LN_MANT.length; i++) {
+		// 		final double d = Double.longBitsToDouble( (((long) i) << 42) | 0x3ff0000000000000L );
+		// 		LN_MANT[i] = FastMathCalc.slowLog(d);
+		// 	}
+		// } else { FIXME: IGNORING THIS FOR NOW!
+			LN_MANT = FastMathLiteralArrays.LoadLnMant();
+		//}
+
+
+
+	};
 
 
 	// 	ExpIntTable: function(){
@@ -139,7 +140,7 @@ FastMath.Floor = function(x){
 			if(isNaN(x)){
 				return x;
 			}
-			if (x >= TWO_POWER_52 || x <= -TWO_POWER_52) {
+			if (x >= FastMath.TWO_POWER_52 || x <= -FastMath.TWO_POWER_52) {
 				return x;
 			}
 			return Math.floor(x);
@@ -158,7 +159,7 @@ FastMath.Log1p = function(x){ //needed in Gamma.js
 					var xpa = 1 + x;
 					var xpb = -(xpa - 1 - x);
 					hiPrec = [];
-					var lores = Math.Log(xpa, hiPrec);
+					var lores = FastMath.Log(xpa, hiPrec);
 					if(!isFinite(lores)){
 						return lores;
 					}

@@ -4,7 +4,6 @@ const mongodb = require('mongodb');
 
 const VisGene = require('../lib/visGene');
 const SortedSet = require('collections/sorted-set');
-
 /* GET home page. */
 router.get('/', function(req, res, next) {
     var args = [ "--version", "-data_dir", "data/" ];

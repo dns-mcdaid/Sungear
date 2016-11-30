@@ -9,6 +9,7 @@ Translated from Ilyas Mounaime's Java code
 var SaddlePointExpansion = require("./SaddlePointExpansion");
 var AbstractIntegerDistribution = require("./AbstractIntegerDistribution");
 var seedrandom = require("seedrandom");
+var Well19937c = require('../random/Well19937c');
 var LocalizedFormats = require("../exception/util/LocalizedFormats");
 var NotStrictlyPositiveException = require("../exception/NotStrictlyPositiveException");
 var NotPositiveException = require("../exception/NotPositiveException");
@@ -25,8 +26,8 @@ HypergeometricDistribution.numericalVariance = Math.NaN;
 	function HypergeometricDistribution(populationSize, numberOfSuccesses, sampleSize, rng){
 		var passedRNG;
 		//ok so it doesn't really use the rng, just for calling the super class
-        if(arguments.length < 4){
-			passedRNG= seedrandom();
+    if(arguments.length < 4){
+			passedRNG= new Well19937c();
 		}else{
 			passedRNG = rng;
 		}
@@ -71,7 +72,6 @@ HypergeometricDistribution.numericalVariance = Math.NaN;
 	HypergeometricDistribution.prototype.getUpperDomain= function(m,k){
 		return Math.min(k,m);
 	};
-
 
 	HypergeometricDistribution.prototype.getDomain = function(n, m, k){
 		var ret1 = this.getLowerDomain(n,m,k);

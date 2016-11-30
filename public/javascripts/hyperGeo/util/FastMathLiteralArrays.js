@@ -2,7 +2,7 @@
 Rahika Mattoo, November 2015 N.Y.
 
 Porting Sungear from Java to Javascript,
-Translate from Ilyas Mounaime's Java coe 
+Translate from Ilyas Mounaime's Java coe
 
 */
     /** Exponential evaluate at integer values,
@@ -6118,7 +6118,7 @@ EXP_FRAC_B : [
  *
  * @return a clone of the ata array.
  */
- FastMathLiteralArraysLoadExpIntA: function() {
+ LoadExpIntA :  function() {
     return FastMathLiteralArrays.EXP_INT_A;
 },
 /**
@@ -6126,7 +6126,7 @@ EXP_FRAC_B : [
  *
  * @return a clone of the ata array.
  */
- FastMathLiteralArraysLoadExpIntB: function() {
+ LoadExpIntB : function() {
     return FastMathLiteralArrays.EXP_INT_B;
 },
 /**
@@ -6134,7 +6134,7 @@ EXP_FRAC_B : [
  *
  * @return a clone of the ata array.
  */
- FastMathLiteralArraysLoadExpFracA: function() {
+ LoadExpFracA :  function() {
     return FastMathLiteralArrays.EXP_FRAC_A;
 },
 /**
@@ -6142,7 +6142,7 @@ EXP_FRAC_B : [
  *
  * @return a clone of the ata array.
  */
- FastMathLiteralArraysLoadExpFracB: function() {
+ LoadExpFracB :  function() {
     return FastMathLiteralArrays.EXP_FRAC_B;
 },
 /**
@@ -6150,7 +6150,7 @@ EXP_FRAC_B : [
  *
  * @return a clone of the ata array.
  */
- FastMathLiteralArraysLoadLnMant: function() {
+ LoadLnMant:  function() {
     return FastMathLiteralArrays.LN_MANT;
 }
 };

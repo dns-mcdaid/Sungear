@@ -8,129 +8,130 @@ Translated from Ilyas Mounaime's Java code
 var FastMath = require("../util/FastMath");
 var ContinuedFraction = require("../util/ContinuedFraction");
 var MaxCountExceededException = require("../exception/MaxCountExceededException");
+var FastMath = require('../util/FastMath');
 function Gamma(){}
+Gamma.INV_GAMMA1P_M1_A0 = 0.611609510448141581788E-08;
+Gamma.INV_GAMMA1P_M1_A1 = 0.624730830116465516210E-08
 
-Gamma = {
 
-
- INV_GAMMA1P_M1_A0 : 0.611609510448141581788E-08,
+ // INV_GAMMA1P_M1_A0 : 0.611609510448141581788E-08,
 
 /** The constant {@code A1} defined in {@code DGAM1}. */
- INV_GAMMA1P_M1_A1 : 0.624730830116465516210E-08,
+
 
 /** The constant {@code B1} defined in {@code DGAM1}. */
- INV_GAMMA1P_M1_B1 : 0.203610414066806987300E+00,
+ Gamma.INV_GAMMA1P_M1_B1 = 0.203610414066806987300E+00;
 
 /** The constant {@code B2} defined in {@code DGAM1}. */
- INV_GAMMA1P_M1_B2 : 0.266205348428949217746E-01,
+ Gamma.INV_GAMMA1P_M1_B2 = 0.266205348428949217746E-01;
 
 /** The constant {@code B3} defined in {@code DGAM1}. */
- INV_GAMMA1P_M1_B3 : 0.493944979382446875238E-03,
+ Gamma.INV_GAMMA1P_M1_B3 = 0.493944979382446875238E-03;
 
 /** The constant {@code B4} defined in {@code DGAM1}. */
- INV_GAMMA1P_M1_B4 : -0.851419432440314906588E-05,
+ Gamma.INV_GAMMA1P_M1_B4 = -0.851419432440314906588E-05;
 
 /** The constant {@code B5} defined in {@code DGAM1}. */
- INV_GAMMA1P_M1_B5 : -0.643045481779353022248E-05,
+Gamma.INV_GAMMA1P_M1_B5 = -0.643045481779353022248E-05;
 
 /** The constant {@code B6} defined in {@code DGAM1}. */
- INV_GAMMA1P_M1_B6 : 0.992641840672773722196E-06,
+Gamma.INV_GAMMA1P_M1_B6 = 0.992641840672773722196E-06;
 
 /** The constant {@code B7} defined in {@code DGAM1}. */
- INV_GAMMA1P_M1_B7 : -0.607761895722825260739E-07,
+ Gamma.INV_GAMMA1P_M1_B7 = -0.607761895722825260739E-07;
 
 /** The constant {@code B8} defined in {@code DGAM1}. */
- INV_GAMMA1P_M1_B8 : 0.195755836614639731882E-09,
+ Gamma.INV_GAMMA1P_M1_B8 = 0.195755836614639731882E-09;
 
 /** The constant {@code P0} defined in {@code DGAM1}. */
- INV_GAMMA1P_M1_P0 : 0.6116095104481415817861E-08,
+ Gamma.INV_GAMMA1P_M1_P0 = 0.6116095104481415817861E-08;
 
 /** The constant {@code P1} defined in {@code DGAM1}. */
- INV_GAMMA1P_M1_P1 : 0.6871674113067198736152E-08,
+ Gamma.INV_GAMMA1P_M1_P1 = 0.6871674113067198736152E-08;
 
 /** The constant {@code P2} defined in {@code DGAM1}. */
- INV_GAMMA1P_M1_P2 : 0.6820161668496170657918E-09,
+ Gamma.INV_GAMMA1P_M1_P2 = 0.6820161668496170657918E-09;
 
 /** The constant {@code P3} defined in {@code DGAM1}. */
- INV_GAMMA1P_M1_P3 : 0.4686843322948848031080E-10,
+ Gamma.INV_GAMMA1P_M1_P3 = 0.4686843322948848031080E-10;
 
 /** The constant {@code P4} defined in {@code DGAM1}. */
- INV_GAMMA1P_M1_P4 : 0.1572833027710446286995E-11,
+Gamma.INV_GAMMA1P_M1_P4 = 0.1572833027710446286995E-11;
 
 /** The constant {@code P5} defined in {@code DGAM1}. */
- INV_GAMMA1P_M1_P5 : -0.1249441572276366213222E-12,
+ Gamma.INV_GAMMA1P_M1_P5 = -0.1249441572276366213222E-12;
 
 /** The constant {@code P6} defined in {@code DGAM1}. */
- INV_GAMMA1P_M1_P6 : 0.4343529937408594255178E-14,
+ Gamma.INV_GAMMA1P_M1_P6 = 0.4343529937408594255178E-14;
 
 /** The constant {@code Q1} defined in {@code DGAM1}. */
- INV_GAMMA1P_M1_Q1 : 0.3056961078365221025009E+00,
+ Gamma.INV_GAMMA1P_M1_Q1 = 0.3056961078365221025009E+00;
 
 /** The constant {@code Q2} defined in {@code DGAM1}. */
- INV_GAMMA1P_M1_Q2 : 0.5464213086042296536016E-01,
+ Gamma.INV_GAMMA1P_M1_Q2 = 0.5464213086042296536016E-01;
 
 /** The constant {@code Q3} defined in {@code DGAM1}. */
- INV_GAMMA1P_M1_Q3 : 0.4956830093825887312020E-02,
+ Gamma.INV_GAMMA1P_M1_Q3 = 0.4956830093825887312020E-02;
 
 /** The constant {@code Q4} defined in {@code DGAM1}. */
- INV_GAMMA1P_M1_Q4 : 0.2692369466186361192876E-03,
+ Gamma.INV_GAMMA1P_M1_Q4 = 0.2692369466186361192876E-03;
 
 /** The constant {@code C} defined in {@code DGAM1}. */
- INV_GAMMA1P_M1_C : -0.422784335098467139393487909917598E+00,
+ Gamma.INV_GAMMA1P_M1_C = -0.422784335098467139393487909917598E+00;
 
 /** The constant {@code C0} defined in {@code DGAM1}. */
- INV_GAMMA1P_M1_C0 : 0.577215664901532860606512090082402E+00,
+ Gamma.INV_GAMMA1P_M1_C0 = 0.577215664901532860606512090082402E+00;
 
 /** The constant {@code C1} defined in {@code DGAM1}. */
- INV_GAMMA1P_M1_C1 : -0.655878071520253881077019515145390E+00,
+ Gamma.INV_GAMMA1P_M1_C1 = -0.655878071520253881077019515145390E+00;
 
 /** The constant {@code C2} defined in {@code DGAM1}. */
- INV_GAMMA1P_M1_C2 : -0.420026350340952355290039348754298E-01,
+ Gamma.INV_GAMMA1P_M1_C2 = -0.420026350340952355290039348754298E-01;
 
 /** The constant {@code C3} defined in {@code DGAM1}. */
- INV_GAMMA1P_M1_C3 : 0.166538611382291489501700795102105E+00,
+ Gamma.INV_GAMMA1P_M1_C3 = 0.166538611382291489501700795102105E+00;
 
 /** The constant {@code C4} defined in {@code DGAM1}. */
- INV_GAMMA1P_M1_C4 : -0.421977345555443367482083012891874E-01,
+ Gamma.INV_GAMMA1P_M1_C4 = -0.421977345555443367482083012891874E-01;
 
 /** The constant {@code C5} defined in {@code DGAM1}. */
- INV_GAMMA1P_M1_C5 : -0.962197152787697356211492167234820E-02,
+ Gamma.INV_GAMMA1P_M1_C5 = -0.962197152787697356211492167234820E-02;
 
 /** The constant {@code C6} defined in {@code DGAM1}. */
- INV_GAMMA1P_M1_C6 : 0.721894324666309954239501034044657E-02,
+ Gamma.INV_GAMMA1P_M1_C6 = 0.721894324666309954239501034044657E-02;
 
 /** The constant {@code C7} defined in {@code DGAM1}. */
- INV_GAMMA1P_M1_C7 : -0.116516759185906511211397108401839E-02,
+ Gamma.INV_GAMMA1P_M1_C7 = -0.116516759185906511211397108401839E-02;
 
 /** The constant {@code C8} defined in {@code DGAM1}. */
- INV_GAMMA1P_M1_C8 : -0.215241674114950972815729963053648E-03,
+ Gamma.INV_GAMMA1P_M1_C8 = -0.215241674114950972815729963053648E-03;
 
 /** The constant {@code C9} defined in {@code DGAM1}. */
- INV_GAMMA1P_M1_C9 : 0.128050282388116186153198626328164E-03,
+ Gamma.INV_GAMMA1P_M1_C9 = 0.128050282388116186153198626328164E-03;
 
 /** The constant {@code C10} defined in {@code DGAM1}. */
- INV_GAMMA1P_M1_C10 : -0.201348547807882386556893914210218E-04,
+ Gamma.INV_GAMMA1P_M1_C10 = -0.201348547807882386556893914210218E-04;
 
 /** The constant {@code C11} defined in {@code DGAM1}. */
- INV_GAMMA1P_M1_C11 : -0.125049348214267065734535947383309E-05,
+ Gamma.INV_GAMMA1P_M1_C11 = -0.125049348214267065734535947383309E-05;
 
 /** The constant {@code C12} defined in {@code DGAM1}. */
- INV_GAMMA1P_M1_C12 : 0.113302723198169588237412962033074E-05,
+ Gamma.INV_GAMMA1P_M1_C12 = 0.113302723198169588237412962033074E-05;
 
 /** The constant {@code C13} defined in {@code DGAM1}. */
- INV_GAMMA1P_M1_C13 : -0.205633841697760710345015413002057E-06,
+ Gamma.INV_GAMMA1P_M1_C13 = -0.205633841697760710345015413002057E-06;
 
- HALF_LOG_2_PI : 0.5 * Math.log((2.0 * Math.PI)),
+ Gamma.HALF_LOG_2_PI = 0.5 * FastMath.Log((2.0 * FastMath.PI));
 
- DEFAULT_EPSILON : 10e-15,
+ Gamma.DEFAULT_EPSILON = 10e-15;
 
- LANCZOS_G : 607.0 / 128.0,
+ Gamma.LANCZOS_G = 607.0 / 128.0;
 
- GAMMA : 0.577215664901532860606512090082,
-	C_LIMIT: 49,
-	S_LIMIT: 1E-5,
+ Gamma.GAMMA = 0.577215664901532860606512090082;
+	Gamma.C_LIMIT= 49;
+	Gamma.S_LIMIT= 1E-5;
 
- LANCZOS : [
+ Gamma.LANCZOS = [
         0.99999999999999709182,
         57.156235665862923517,
         -59.597960355475491248,
@@ -146,8 +147,8 @@ Gamma = {
         0.84418223983852743293e-4,
         -0.26190838401581408670e-4,
         0.36899182659531622704e-5,
-    ],
-
+    ];
+Gamma = {
  invGamma1pm1: function(x) {
   console.log("Inside invGamma1pm1");
 	if (x < -0.5) {
@@ -156,7 +157,6 @@ Gamma = {
 	if (x > 1.5) {
 		console.log("Throw Number is Too Large exception from invGamma1pm1 function");
 	}
-
 	var ret;
 	var t = x <= 0.5 ? x : (x - 0.5) - 0.5;
 	if (t < 0.0) {
@@ -239,7 +239,7 @@ Gamma = {
 		document.getElementById("output").innerHTML = "Throw Number is Too Large exception from logGamma1p function";
 	}
   console.log("Leaving logGamma1p");
-	return -FastMath.Log1p(invGamma1pm1(x)); //FIXME!
+	return -FastMath.Log1p(this.invGamma1pm1(x));
 
 },
 

@@ -7,16 +7,18 @@ Translated from Ilyas Mounaime's Java code
 */
 var Gamma = require("../special/Gamma");
 var MathUtils = require("../util/MathUtils");
+var FastMath = require('../util/FastMath');
 function SaddlePointExpansion(){}
 SaddlePointExpansion = {
    getStirlingError: function(z){
   	var ret;
   	if(z < 15.0){
   		var z2 = 2.0 * z;
-  		if (Math.floor(z2) == z2){
+  		if (FastMath.Floor(z2) == z2){
+
   			ret = SaddlePointExpansion.EXACT_STIRLING_ERRORS[z2];
   		}else{
-  			ret = Gamma.logGamma(z + 1.0) - (z + 0.5) * Math.log(z) + z - SaddlePointExpansion.HALF_LOG_2_PI;
+  			ret = Gamma.logGamma(z + 1.0) - (z + 0.5) * Math.log(z) + z - this.HALF_LOG_2_PI;
   		}
   	}else{
   		var z2 = z * z;
@@ -27,6 +29,7 @@ SaddlePointExpansion = {
                                               0.0008417508417508417508417508 /
                                               z2) / z2) / z2) / z2) / z;
   	}
+
   	return ret;
   },
 
@@ -48,9 +51,12 @@ SaddlePointExpansion = {
           	++j;
   		}
   		ret = s1;
+
   	}else{
-  		ret = x * Math.log((x / mu)) + mu - x;
+  		ret = x * FastMath.Log((x / mu)) + mu - x;
+
   	}
+
   	return ret;
   },
 
@@ -58,29 +64,36 @@ SaddlePointExpansion = {
   	var ret;
   	if (x === 0) {
   		if (p < 0.1) {
-  			ret = -SaddlePointExpansion.getDeviancePart(n, n * q) - n * p;
+  			ret = -this.getDeviancePart(n, n * q) - n * p;
+
   		} else {
-  			ret = n * Math.log(q);
+  			ret = n * FastMath.Log(q);
+
   		}
   	} else if (x == n) {
   		if (q < 0.1) {
-  			ret = -SaddlePointExpansion.getDeviancePart(n, n * p) - n * q;
+  			ret = -this.getDeviancePart(n, n * p) - n * q;
+
   		} else {
-  			ret = n * Math.log(p);
+  			ret = n * FastMath.Log(p);
+
   		}
+
   	} else {
-  		ret = SaddlePointExpansion.getStirlingError(n) - SaddlePointExpansion.getStirlingError(x) -
-  			  SaddlePointExpansion.getStirlingError(n - x) - SaddlePointExpansion.getDeviancePart(x, n * p) -
-  			  SaddlePointExpansion.getDeviancePart(n - x, n * q);
-  		var f = (MathUtils.TWO_PI * x * (n - x)) / n;
-  		ret = -0.5 * Math.log(f) + ret;
+  		ret = this.getStirlingError(n) - this.getStirlingError(x) -
+  			  this.getStirlingError(n - x) - this.getDeviancePart(x, n * p) -
+  			  this.getDeviancePart(n - x, n * q);
+
+  		var f = ((FastMath.PI *2) * x * (n - x)) / n;
+  		ret = -0.5 * FastMath.Log(f) + ret;
+
   	}
   	return ret;
   }
   };
 
 
-SaddlePointExpansion.HALF_LOG_2_PI = 0.5 * Math.log(Gamma.TWO_PI);
+SaddlePointExpansion.HALF_LOG_2_PI = 0.5 * FastMath.Log(Gamma.TWO_PI);
 
 SaddlePointExpansion.EXACT_STIRLING_ERRORS = [0.0, /* 0.0 */
 	0.1534264097200273452913848, /* 0.5 */
