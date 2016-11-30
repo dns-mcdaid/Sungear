@@ -27,7 +27,7 @@ function AnchorDisplay(anchor) {
     this.position = {};       /** {object with x and y coordinates} */
     this.contains = false;
     this.debug = true;
-    this.physLocation = {}; /** X & Y locations of name in sungear */
+    // this.physLocation = {}; /** X & Y locations of name in sungear */
 }
 
 AnchorDisplay.NAME_SEPARATOR = ";";
@@ -122,18 +122,21 @@ AnchorDisplay.prototype = {
         const l = this.showLongDesc ? this.longDesc : this.shortDesc;
 
         const location = this.findAnchorCorner(tx, ty, tm, off);
-        this.physLocation.x = location.x;
-        this.physLocation.y = location.y;
+
 
         p5.translate(tx, ty);
         p5.rotate(this.angle);
-        p5.translate(off + tm/1.2, 0);
-        p5.rotate(this.angle < Math.PI ? -Math.PI/2.0 : Math.PI/2.0);
-        p5.translate(-0.5, 7*scale);
+        const anotherRotateX = off + tm/1.2;
+        p5.translate(anotherRotateX, 0);
+        const newAngle = this.angle < Math.PI ? -Math.PI/2.0 : Math.PI/2.0;
+        p5.rotate(newAngle);
+        const finalRotateX = -0.5;
+        const finalRotateY = 7*scale;
+        p5.translate(finalRotateX, finalRotateY);
 
         let color = SunValues.C_PLAIN;
         color = (this.select ? SunValues.C_SELECT : (this.highlight ? SunValues.C_HIGHLIGHT : color));
-        if (p5.dist(p5.mouseX, p5.mouseY, location.x, location.y) < l.length) {
+        if (p5.dist(p5.mouseX, p5.mouseY, location.x, location.y) < (l.length*4)) {
             if (p5.mouseIsPressed) {
                 color = SunValues.C_SELECT;
             } else {
@@ -146,6 +149,27 @@ AnchorDisplay.prototype = {
         p5.fill(color);
         p5.text(l, 0, 0);
         p5.pop();
+
+        // //we have the location wrt the rotated/translated set.
+        // //want to convert these to the original coordinates
+        // var x = 0;
+        // var y = 0;
+        //
+        // x+= finalRotateX;
+        // y+= finalRotateY;
+        // x = x * Math.cos(newAngle) + y * Math.sin(newAngle);
+        // y = -x * Math.sin(newAngle) + y * Math.cos(newAngle);
+        //
+        // x += anotherRotateX;
+        //
+        // x = x * Math.cos(this.angle) + y * Math.sin(this.angle);
+        // y = -x * Math.sin(this.angle) + y * Math.cos(this.angle);
+        //
+        // x+= tx;
+        // y+= ty;
+        //
+        // this.physLocation.x = x;
+        // this.physLocation.y = y;
 
         // TODO: Make shape around AnchorDisplay text?
     },

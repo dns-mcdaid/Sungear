@@ -871,12 +871,6 @@ SunGear.prototype = {
                 this.lastVessel = null;
                 this.checkHighlight();
             }
-            console.log(p.x, p.y);
-
-            this.anchors.forEach((anchor) =>{
-              console.log(anchor.longDesc);
-              console.log(anchor.physLocation.x,  anchor.physLocation.y);
-            });
         }
 
     },
