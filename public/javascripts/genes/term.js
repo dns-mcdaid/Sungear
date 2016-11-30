@@ -59,6 +59,7 @@ function Term(id, name) {
     this.active = false;    /** Denotes whether any genes are associated with this term in the current experiment set */
     this.selectedState = Term.STATE_UNKNOWN;    /** @type int */
     this.collapsed = false;
+    this.stdev = 0.0;
 }
 
 /** Selected state flag: state undetermined */
@@ -95,6 +96,7 @@ Term.prototype = {
 	 */
     setRatio : function(p_t) {
         this.p_t = p_t;
+        this.stdev = Math.sqrt(p_t * (1-p_t));
     },
     getScore: function(){
       return this.p_t;
@@ -172,10 +174,10 @@ Term.prototype = {
 		return this.name.toLowerCase().localeCompare(t.name.toLowerCase());
 	},
     toString : function() {
-    	var Dig = 100000;
+    	  var Dig = 100000;
         Term.Hyp = (Term.Hyp * Dig)/Dig;
-        var v = (!Number.isFinite(Term.Hyp) || Number.isNaN(Term.Hyp)) ? Number.toString(Term.Hyp) : Term.Hyp + "";
-        return "(" + v + ";" + this.getStoredCount() + ") " + this.name;
+        var v = (!Number.isFinite(Term.Hyp ) || Number.isNaN(Term.Hyp )) ? Number.toString(Term.Hyp) : Term.Hyp  + "";
+        return "(" + Math.round(v) + ";" + this.getStoredCount() + ") " + this.name;
     },
     getHyp: function(){
         return Term.Hyp;
@@ -194,6 +196,7 @@ Term.prototype = {
 		        next.value.updateStoredCount(aSet);
 		        next = it.next();
 	        }
+          console.log("Stored count: " + this.storedCount);
 	        let s = new SortedSet(this.allGenes);
 	        //noinspection JSUnresolvedFunction
 	        s = s.intersection(aSet.toArray());
@@ -228,8 +231,13 @@ Term.prototype = {
       return Term.Total;
     },
     calcHyp: function(Q_t, Q){
-        var A = Q;
+        //note that if getTotal() is null or 0, this means there was no Total attribute to use HypergeometricDistribution
+        if(this.getTotal() == 0 || this.getTotal() == null){
+          return this.calcScore(Q_t, Q);
+        }
+        var A = this.getTotal();
         var A_t = this.p_t * A;
+
         Term.H = new HypergeometricDistribution(A, A_t, Q);
         return Term.H.upperCumulativeProbability(Q_t);
 

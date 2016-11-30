@@ -9,7 +9,7 @@ Translated from Ilyas Mounaime's Java code
 var SaddlePointExpansion = require("./SaddlePointExpansion");
 var AbstractIntegerDistribution = require("./AbstractIntegerDistribution");
 var seedrandom = require("seedrandom");
-var Well19937c = require('../random/Well19937c');
+// var Well19937c = require('../random/Well19937c');
 var LocalizedFormats = require("../exception/util/LocalizedFormats");
 var NotStrictlyPositiveException = require("../exception/NotStrictlyPositiveException");
 var NotPositiveException = require("../exception/NotPositiveException");
@@ -27,25 +27,25 @@ HypergeometricDistribution.numericalVariance = Math.NaN;
 		var passedRNG;
 		//ok so it doesn't really use the rng, just for calling the super class
     if(arguments.length < 4){
-			passedRNG= new Well19937c();
+			passedRNG= seedrandom();
 		}else{
 			passedRNG = rng;
 		}
 
 		if (populationSize <= 0) {
-			throw NotStrictlyPositiveException(LocalizedFormats.POPULATION_SIZE,populationSize);
+			throw new NotStrictlyPositiveException(LocalizedFormats.POPULATION_SIZE,populationSize);
 		}
 		if (numberOfSuccesses < 0) {
-		 	throw NotPositiveException(LocalizedFormats.NUMBER_OF_SUCCESSES, numberOfSuccesses);
+		 	throw new NotPositiveException(LocalizedFormats.NUMBER_OF_SUCCESSES, numberOfSuccesses);
 		}
 		if(sampleSize < 0){
-		 	throw NotPositiveException(LocalizedFormats.NUMBER_OF_SAMPLES, sampleSize);
+		 	throw new NotPositiveException(LocalizedFormats.NUMBER_OF_SAMPLES, sampleSize);
 		}
 		if(numberOfSuccesses > populationSize){
-			throw NumberIsTooLargeException(LocalizedFormats.NUMBER_OF_SUCCESS_LARGER_THAN_POPULATION_SIZE,sampleSize, populationSize, true);
+			throw new NumberIsTooLargeException(LocalizedFormats.NUMBER_OF_SUCCESS_LARGER_THAN_POPULATION_SIZE,sampleSize, populationSize, true);
 		}
 		if(sampleSize > populationSize){
-			throw  NumberIsTooLargeException(LocalizedFormats.SAMPLE_SIZE_LARGER_THAN_POPULATION_SIZE, sampleSize, populationSize, true);
+			throw  new NumberIsTooLargeException(LocalizedFormats.SAMPLE_SIZE_LARGER_THAN_POPULATION_SIZE, sampleSize, populationSize, true);
 		}
 		else{
 			this.numberOfSuccesses = numberOfSuccesses;
@@ -126,13 +126,20 @@ HypergeometricDistribution.numericalVariance = Math.NaN;
 		    var ret;
 
 	      var domain = this.getDomain(this.getPopulationSize(), this.getNumberOfSuccesses(), this.getSampleSize());
+				console.log(domain);
+				console.log(x);
 	      if (x <= domain[0]) {
 	          ret = 1.0;
+
 	      } else if (x > domain[1]) {
 	          ret = 0.0;
 	      } else {
 	          ret = this.innerCumulativeProbability(domain[1], x, -1);
+						console.log(ret);
+
 	      }
+				console.log(ret);
+
 	      return ret;
 	};
 

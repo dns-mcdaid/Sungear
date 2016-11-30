@@ -15,7 +15,6 @@ var ExceptionContext = require("./util/ExceptionContext");
 
 function MathIllegalArgumentException(message, args){
 	this.context = new ExceptionContext(this);
-	this.context.addMessage(pattern, args)
 }
 MathIllegalArgumentException.prototype = {
 	getMessage: function(){

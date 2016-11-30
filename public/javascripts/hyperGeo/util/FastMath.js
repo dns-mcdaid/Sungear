@@ -71,7 +71,7 @@ function FastMath(){}
 		// 		LN_MANT[i] = FastMathCalc.slowLog(d);
 		// 	}
 		// } else { FIXME: IGNORING THIS FOR NOW!
-			LN_MANT = FastMathLiteralArrays.LoadLnMant();
+			FastMath.LN_MANT = FastMathLiteralArrays.LoadLnMant();
 		//}
 
 
@@ -168,7 +168,7 @@ FastMath.Log1p = function(x){ //needed in Gamma.js
 					var epsilon =  0.5 * fx1 + 1;
 					return epsilon * fx1 + hiPrec[1] + hiPrec[0];
 				}else{
-					var y = (x * F_1_3 - F_1_2) * x + 1;
+					var y = (x * this.F_1_3 - this.F_1_2) * x + 1;
 					return y * x;
 			}
 		};

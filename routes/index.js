@@ -4,9 +4,13 @@ const mongodb = require('mongodb');
 
 const VisGene = require('../lib/visGene');
 const SortedSet = require('collections/sorted-set');
+// require('../public/javascripts/test/HyperGeoTest').test();
 /* GET home page. */
 router.get('/', function(req, res, next) {
     var args = [ "--version", "-data_dir", "data/" ];
+
+    //NOTE: This data is correct, but for Hypergeo to work properly, the "Total" attrbute must be available to the data.
+    //See: public/javascripts/genes/Term.js line 233 for Hypergeo usage, and test/HyperGeoTest for an outline of how the probability is calculated using Hypergeo.
     var testing = {
         base : "./",
         dataDir : "data/",

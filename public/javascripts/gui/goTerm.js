@@ -221,9 +221,11 @@ GoTerm.prototype = {
         const trm = this.terms.values();
         let cnt = 0;
 	    let next = trm.next();
+			// var total = (this.genes.getSource().getAttributes().get('Total'));
 	    while (!next.done) {
 	    	const t = next.value;
 		    const gi = t.getAllGenes().toArray();
+				// t.setTotal(total);
 		    gi.forEach((gene) => {
 		    	let gv = this.geneToGoIndir.get(gene);
 			    if (typeof gv === 'undefined') gv = [];
