@@ -136,7 +136,7 @@ AnchorDisplay.prototype = {
 
         let color = SunValues.C_PLAIN;
         color = (this.select ? SunValues.C_SELECT : (this.highlight ? SunValues.C_HIGHLIGHT : color));
-        if (p5.dist(p5.mouseX, p5.mouseY, location.x, location.y) < (l.length*4)) {
+        if ( p5.dist(p5.mouseX, p5.mouseY, location.x, location.y) < (l.length*6)  ) {
             if (p5.mouseIsPressed) {
                 color = SunValues.C_SELECT;
             } else {
