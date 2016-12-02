@@ -69,7 +69,7 @@ DataReader.prototype = {
 	    passedAnchors.forEach((anchor) => {
 	    	this.anchors.push(new Anchor(anchor.name));
 	    });
-
+	    
 	    passedItems.forEach((gene) => {
 	    	const exp = [];
 		    const expGene = new Gene(gene.id, gene.description);
@@ -81,9 +81,19 @@ DataReader.prototype = {
 			    }
 		    });
 		    expGene.setExp(exp);
-		    this.expGenes.push(expGene);
-		    this.allGenes.set(gene.id.toLowerCase(), expGene);
+			var has = false;
+			this.expGenes.forEach((current) =>{
+				if(current.compareTo(expGene) === 0){
+					has = true;
+				}
+			});
+		    if(!has){
+				this.expGenes.push(expGene);
+				this.allGenes.set(gene.id.toLowerCase(), expGene);
+		    }
+
 	    });
+	    console.log("GENE SIZE: " + this.expGenes.size);
 
 	    passedCategories.forEach((category) => {
 	    	const newTerm = new Term(category.id, category.description);

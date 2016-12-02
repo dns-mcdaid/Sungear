@@ -106,7 +106,7 @@ VisGene.prototype = {
         }
         this.dataU = DataReader.makeURL(this.base, this.dataDir);
 
-        // prepare for data source
+        // prepare for data source 
         this.src = new DataSource(this.dataU);
         this.geneList = new GeneList();
 
@@ -123,7 +123,7 @@ VisGene.prototype = {
 
         const openB = document.getElementById('openB');
         openB.addEventListener('click', this.loadExperiment.bind(this), false);
-
+		
         screenI.addEventListener("click", this.requestScreenshot.bind(this), false);
         this.geneF = document.getElementById("geneF");
         this.l1 = new CollapsibleList(this.geneList);
@@ -157,7 +157,7 @@ VisGene.prototype = {
 
         this.aboutDLabel = document.getElementById('aboutDLabel');
         this.aboutDBody = document.getElementById('aboutDBody');
-
+		console.log("Collecting passed data!");
         this.collectPasssedData(function() {
             this.run();
         }.bind(this));
@@ -344,7 +344,6 @@ VisGene.prototype = {
         var loadBody = document.getElementById('loadBody');
         var vis = JSON.parse(document.getElementById('vis').value);
         this.dataDir = vis.dataDir;
-
         var exp = vis.exp.exp;
         this.exp = new ExperimentList(exp, loadBody);
         this.reader = new DataReader(vis.src.attrib);

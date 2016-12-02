@@ -163,7 +163,11 @@ Term.prototype = {
 	 * Yields the default sort order, case-insensitive by term name.
 	 */
 	compare : function(t) {
-		return this.name.toLowerCase().localeCompare(t.name.toLowerCase());
+		if(this.name !== null && t.name !== null){
+				return this.name.toLowerCase().localeCompare(t.name.toLowerCase());
+		}else{
+			return this.id.localeCompare(t.id); 
+		}
 	},
 	/**
 	 * See above

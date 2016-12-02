@@ -47,14 +47,18 @@ Gene.prototype = {
      * @returns {number}
      */
     compareTo : function(g){
-        const str1 = this.name.toLowerCase();
-        const str2 = g.getName().toLowerCase();
-        return str1.localeCompare(str2);
+    	if(this.dec == null || g.dec == null){
+    		const str1 = this.name.toLowerCase();
+    		const str2 = g.name.toLowerCase(); 
+    		return str1.localeCompare(str2);
+    	}else{    	
+			const str1 = this.desc.toLowerCase();
+			const str2 = g.desc.toLowerCase();
+			return str1.localeCompare(str2);
+        }
     },
     compare : function(g){
-        const str1 = this.name.toLowerCase();
-        const str2 = g.getName().toLowerCase();
-        return str1.localeCompare(str2);
+    	return this.compareTo(g);
     },
     toString : function(){
         return this.name;
