@@ -81,16 +81,16 @@ DataReader.prototype = {
 			    }
 		    });
 		    expGene.setExp(exp);
-			var has = false;
-			this.expGenes.forEach((current) =>{
-				if(current.compareTo(expGene) === 0){
-					has = true;
-				}
-			});
-		    if(!has){
+			// var has = false;
+			// this.expGenes.forEach((current) =>{
+			// 	if(current.compareTo(expGene) === 0){
+			// 		has = true;
+			// 	}
+			// });
+		    // if(!has){
 				this.expGenes.push(expGene);
 				this.allGenes.set(gene.id.toLowerCase(), expGene);
-		    }
+		    // }
 
 	    });
 	    console.log("GENE SIZE: " + this.expGenes.size);

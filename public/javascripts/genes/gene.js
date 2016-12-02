@@ -50,11 +50,11 @@ Gene.prototype = {
     	if(this.dec == null || g.dec == null){
     		const str1 = this.name.toLowerCase();
     		const str2 = g.name.toLowerCase(); 
-    		return str1.localeCompare(str2);
+    		return str1 === str2;
     	}else{    	
 			const str1 = this.desc.toLowerCase();
 			const str2 = g.desc.toLowerCase();
-			return str1.localeCompare(str2);
+			return str1 === str2;
         }
     },
     compare : function(g){
