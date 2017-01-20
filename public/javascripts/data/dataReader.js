@@ -62,9 +62,9 @@ DataReader.prototype = {
         const passedCategories = data.categories;
         const passedSets = data.expSets;
 
-        passedAnchors.sort(function(a, b) {
-            return a.name.localeCompare(b.name);
-        });
+        // passedAnchors.sort(function(a, b) {
+        //     return a.name.localeCompare(b.name);
+        // });
 
 	    passedAnchors.forEach((anchor) => {
 	    	this.anchors.push(new Anchor(anchor.name));
@@ -105,7 +105,6 @@ DataReader.prototype = {
 			    if (category.p_t === null) {
             console.log("Yikes. there's no p_t property for this term! " + category.description);
 			    } else {
-
 			    	thisTerm.setRatio(category.p_t);
 			    }
 			    category.items.forEach((item) => {
