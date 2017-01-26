@@ -33,6 +33,8 @@ function CollapsibleList(g) {
     this.geneTBody = document.getElementById('geneTBody');
     this.geneFTable = document.getElementById('geneFTable');
 
+    this.customBox = document.getElementById('customBox');
+
     // Difference between this and Java SunGear:
         // queryB opens a modal in both,
         // however querySubmit is added in this version
@@ -53,6 +55,8 @@ function CollapsibleList(g) {
     this.multi = false;
 
     this.populateTable();
+
+    this.customBox.addEventListener("click", this.updateCustomSelect.bind(this));
 }
 
 CollapsibleList.prototype = {
@@ -134,6 +138,38 @@ CollapsibleList.prototype = {
         }
         this.copyB.value = selectedString;
     },
+
+    updateCustomSelect : function() {
+        if (!this.customBox.checked) {
+            this.updateSelect();
+            return;
+        }
+        this.updateStatus();
+        const selGenes = this.genes.getSelectedSet().toArray();
+        if (selGenes.length !== this.model.getData().length) {
+            for (let i = 1; i < this.geneFTable.rows.length; i++) {
+                this.geneFTable.rows[i].className = "faded";
+            }
+            const geneNames = selGenes.map(function(gene) {
+                return gene.getName();
+            });
+            for (let i = 0; i < geneNames.length; i++) {
+                const row = document.getElementById('gene-' + geneNames[i]);
+                if (row !== null) {
+                    row.className = "highlight";
+                }
+            }
+        } else {
+            for (let i = 1; i < this.geneFTable.rows.length; i++) {
+                this.geneFTable.rows[i].className = "";
+            }
+        }
+        let selectedString = '';
+        for (let i = 0; i < selGenes.length; i++) {
+            selectedString += selGenes[i].name + '\n';
+        }
+        this.copyB.value = selectedString;
+    },
     processSelect : function() {
         // TODO: Implement me.
     },
@@ -173,7 +209,11 @@ CollapsibleList.prototype = {
                 this.updateGUI();
                 this.updateList();
                 this.populateTable();
-                this.updateSelect();
+                if (this.customBox.checked) {
+                    this.updateCustomSelect();
+                } else {
+                    this.updateSelect();
+                }
                 break;
             case GeneEvent.RESTART:
             case GeneEvent.NARROW:
@@ -182,6 +222,8 @@ CollapsibleList.prototype = {
             case GeneEvent.SELECT:
                 if (this.collapsed) {
                     this.updateList();
+                } else if (this.customBox.checked) {
+                    this.updateCustomSelect();
                 } else {
                     this.updateSelect();
                 }
