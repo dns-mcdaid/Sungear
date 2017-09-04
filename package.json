@@ -3,27 +3,32 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node ./bin/www",
+    "build": "browserify public/javascripts/main.js -o public/javascripts/out.js -d",
+    "watch": "watchify public/javascripts/main.js -o public/javascripts/out.js -d -v"
   },
   "dependencies": {
     "big-decimal": "^1.0.2",
-    "body-parser": "~1.15.1",
-    "browserify": "~13.0.0",
+    "body-parser": "^1.17.2",
     "clipboard": "^1.5.12",
     "collections": "^5.0.4",
-    "cookie-parser": "~1.4.3",
-    "debug": "~2.2.0",
-    "express": "~4.13.4",
-    "jade": "~1.11.0",
+    "cookie-parser": "^1.4.3",
+    "debug": "^3.0.1",
+    "express": "^4.15.4",
     "javascript.util": "~0.12.12",
     "kerberos": "~0.0.0",
     "mongo-db": "^1.0.1",
-    "mongodb": "~2.0.33",
-    "morgan": "~1.7.0",
+    "mongodb": "^2.2.31",
+    "morgan": "^1.8.2",
     "nodemon": "^1.9.2",
-    "p5": "~0.5.2",
+    "p5": "^0.5.12",
+    "pug": "^2.0.0-rc.3",
     "request": "^2.79.0",
     "seedrandom": "^2.4.2",
-    "serve-favicon": "~2.3.0"
+    "serve-favicon": "^2.4.3"
+  },
+  "devDependencies": {
+    "browserify": "^14.4.0",
+    "watchify": "^3.9.0"
   }
 }
